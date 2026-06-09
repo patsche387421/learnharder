@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LernHub – Login</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body class="page-login">
+  <main class="auth-card">
+    <h1>LernHub</h1>
+    <p class="subtitle">Bitte melde dich an</p>
+
+    <form id="login-form" autocomplete="off">
+      <label>
+        Benutzername
+        <input type="text" id="username" name="username" required />
+      </label>
+      <label>
+        Passwort
+        <input type="password" id="password" name="password" required />
+      </label>
+      <button type="submit">Anmelden</button>
+      <p id="login-error" class="error" hidden>Benutzername oder Passwort falsch.</p>
+    </form>
+
+    <p class="hint">Testuser: <code>test</code> / <code>test123</code></p>
+  </main>
+
+  <script src="/js/auth.js"></script>
+  <script>
+    // Wenn bereits eingeloggt, direkt zum Dashboard
+    if (Auth.isLoggedIn()) {
+      location.href = "/dashboard.html";
+    }
+
+    const form = document.getElementById("login-form");
+    const errorEl = document.getElementById("login-error");
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const user = document.getElementById("username").value.trim();
+      const pass = document.getElementById("password").value;
+
+      if (Auth.login(user, pass)) {
+        location.href = "/dashboard.html";
+      } else {
+        errorEl.hidden = false;
+      }
+    });
+  </script>
+</body>
+</html>

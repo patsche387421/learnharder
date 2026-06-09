@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LernHub – Dashboard</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body class="page-dashboard">
+  <header class="topbar">
+    <span class="brand">LernHub</span>
+    <div class="topbar-right">
+      <span id="welcome"></span>
+      <button id="logout" class="btn-ghost">Abmelden</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>Deine Fächer</h1>
+    <div id="subjects" class="card-grid"></div>
+  </main>
+
+  <script src="/js/auth.js"></script>
+  <script src="/js/app.js"></script>
+  <script>
+    Auth.requireLogin();
+    document.getElementById("welcome").textContent = "Hallo, " + Auth.currentUser();
+    document.getElementById("logout").addEventListener("click", Auth.logout);
+    App.renderDashboard(document.getElementById("subjects"));
+  </script>
+</body>
+</html>
