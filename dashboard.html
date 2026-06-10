@@ -63,6 +63,7 @@
   </main>
 
   <script src="/js/auth.js"></script>
+  <script src="/js/stats.js"></script>
   <script>
     Auth.requireLogin();
 
@@ -73,10 +74,12 @@
 
     document.getElementById("logout").addEventListener("click", Auth.logout);
 
-    // TODO: Stats aus DB laden, sobald Backend vorhanden
-    // document.getElementById("stat-themen").textContent = data.themen;
-    // document.getElementById("stat-quiz").textContent   = data.quizPunkte;
-    // document.getElementById("stat-streak").textContent = data.streak + " Tage";
+    // TODO DB: Stats laden, sobald Backend vorhanden (siehe DB_Integration_Guide.md Phase 5)
+    // Stats.ladeDashboardStats().then(data => {
+    //   document.getElementById("stat-themen").textContent = data.themenBearbeitet;
+    //   document.getElementById("stat-quiz").textContent   = data.quizPunkte;
+    //   document.getElementById("stat-streak").textContent = data.streak + " Tage";
+    // });
   </script>
 
 </body>

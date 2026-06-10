@@ -9,7 +9,7 @@
 </head>
 <body class="page-fach">
   <header class="topbar">
-    <a href="/dashboard.html" class="brand">← LernHub</a>
+    <a href="/faecher.html" class="brand">← Fächer</a>
     <div class="topbar-right">
       <span id="welcome"></span>
       <button id="logout" class="btn-ghost">Abmelden</button>
@@ -60,7 +60,7 @@
       });
     });
 
-    const fachId = new URLSearchParams(location.search).get("fach") || "mathe";
+    const fachId = new URLSearchParams(location.search).get("fach") || "";
     App.renderFach(fachId);
   </script>
 </body>

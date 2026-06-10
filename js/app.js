@@ -105,6 +105,16 @@ const App = (() => {
         if (gefunden) { themaEintrag = gefunden; elternFach = fach; break; }
       }
 
+      // Guard: kein Parameter oder Thema nicht im Manifest gefunden
+      if (!themaId) {
+        document.getElementById("fach-title").textContent = "Kein Thema angegeben";
+        return;
+      }
+      if (!themaEintrag) {
+        document.getElementById("fach-title").textContent = "Thema nicht gefunden: " + themaId;
+        return;
+      }
+
       // Zurück-Link auf übergeordnete Fach-Seite setzen
       const zurueckLink = document.querySelector(".brand");
       if (zurueckLink && elternFach && elternFach.seite) {
