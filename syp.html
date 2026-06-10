@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LernHub – SYP</title>
+  <link rel="stylesheet" href="/css/tokens.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body class="page-fach-seite">
+
+  <header class="topbar">
+    <a href="/faecher.html" class="brand">← Fächer</a>
+    <div class="topbar-right">
+      <span id="welcome-name"></span>
+      <button id="logout" class="btn-ghost">Abmelden</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <div id="fach-header" class="fach-seite-header"></div>
+    <div id="fach-stats" class="fach-stats-bar"></div>
+    <h2 class="themen-titel">Themen</h2>
+    <div id="themen-grid" class="card-grid"></div>
+  </main>
+
+  <script src="/js/auth.js"></script>
+  <script src="/js/stats.js"></script>
+  <script src="/js/app.js"></script>
+  <script>
+    Auth.requireLogin();
+    document.getElementById("welcome-name").textContent = Auth.currentUser();
+    document.getElementById("logout").addEventListener("click", Auth.logout);
+    App.renderFachSeite("syp", {
+      header: document.getElementById("fach-header"),
+      stats:  document.getElementById("fach-stats"),
+      grid:   document.getElementById("themen-grid")
+    });
+  </script>
+
+</body>
+</html>

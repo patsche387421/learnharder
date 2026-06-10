@@ -337,6 +337,99 @@ button {
   margin: -0.5rem 0 1.5rem;
 }
 
+/* ---------- Fach-Seite (Themen-Übersicht je Fach) ---------- */
+.fach-seite-header {
+  margin-bottom: 1.5rem;
+}
+
+.fach-eyebrow {
+  margin: 0 0 0.2rem;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.fach-vollname {
+  margin: 0 0 0.4rem;
+  font-size: 1.75rem;
+}
+
+.fach-beschreibung {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+/* Stats-Leiste: horizontale Reihe von Stat-Pillen */
+.fach-stats-bar {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.stat-pill {
+  background: var(--surface);
+  border: 1px solid var(--surface-2);
+  border-radius: 10px;
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 130px;
+}
+
+.stat-pill-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.stat-pill-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* Überschrift über dem Themen-Grid */
+.themen-titel {
+  margin: 0 0 1rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+}
+
+/* Leer-Zustand wenn noch keine Themen vorhanden */
+.empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3.5rem 2rem;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px dashed var(--surface-2);
+  border-radius: var(--radius);
+}
+
+.empty-icon {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+/* Karten: Vollname als kleiner Untertitel unter dem Kürzel */
+.card-vollname {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 400;
+  margin-bottom: 0.4rem;
+  line-height: 1.3;
+}
+
 /* ---------- Fach-Karten ---------- */
 .card-grid {
   display: grid;

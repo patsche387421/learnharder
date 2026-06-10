@@ -2,62 +2,45 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "manifest.schema.json",
   "title": "LernHub Fächer-Manifest",
-  "description": "Index aller verfügbaren Fächer. Wird von js/app.js geladen, um das Dashboard datengetrieben zu rendern.",
+  "description": "Index aller Fächer mit ihren Themen. Wird von js/app.js geladen.",
   "type": "object",
   "required": ["faecher"],
   "additionalProperties": false,
   "properties": {
-    "$schema": {
-      "type": "string",
-      "description": "Verweis auf dieses Schema (für Editor-Autovervollständigung)."
-    },
+    "$schema": { "type": "string" },
     "faecher": {
       "type": "array",
-      "description": "Liste aller Fächer, die im Dashboard erscheinen.",
       "minItems": 1,
       "items": {
         "type": "object",
-        "required": ["id", "name"],
+        "required": ["id", "name", "seite"],
         "additionalProperties": false,
         "properties": {
-          "id": {
-            "type": "string",
-            "pattern": "^[a-z0-9-]+$",
-            "description": "Eindeutige Kennung. Bestimmt die Dateinamen data/<id>_theorie.json und data/<id>_quiz.json. Nur Kleinbuchstaben, Ziffern und Bindestriche."
-          },
-          "name": {
-            "type": "string",
-            "minLength": 1,
-            "description": "Anzeigename des Fachs, z. B. \"Mathematik\"."
-          },
-          "icon": {
-            "type": "string",
-            "description": "Kurzes Symbol/Emoji für die Fachkarte, z. B. \"∑\"."
-          },
-          "beschreibung": {
-            "type": "string",
-            "description": "Ein Satz Beschreibung für die Fachkarte."
-          },
-          "typ": {
-            "type": "string",
-            "enum": ["fach", "tool"],
-            "description": "\"fach\" = Standard-Theorie/Quiz (Standard, kann weggelassen werden). \"tool\" = eigenständiges Tool-Modul, das via DSTool.mount eingebunden wird."
-          },
-          "toolScript": {
-            "type": "string",
-            "description": "Absoluter Pfad zum Tool-JS-Modul (nur bei typ=tool), z. B. \"/js/pos-datenstrukturen.js\"."
-          },
-          "toolStyle": {
-            "type": "string",
-            "description": "Absoluter Pfad zum Tool-Stylesheet (nur bei typ=tool)."
-          },
-          "toolData": {
-            "type": "string",
-            "description": "Absoluter Pfad zur Tool-Daten-JSON (nur bei typ=tool)."
-          },
-          "toolQuiz": {
-            "type": "string",
-            "description": "Absoluter Pfad zur Tool-Quiz-JSON (nur bei typ=tool)."
+          "id":          { "type": "string", "pattern": "^[a-z0-9-]+$", "description": "Eindeutige Kennung, z.B. \"pos\"." },
+          "name":        { "type": "string", "minLength": 1, "description": "Kürzel, z.B. \"POS\"." },
+          "vollname":    { "type": "string", "description": "Ausgeschriebener Name, z.B. \"Programmieren und Software-Engineering\"." },
+          "icon":        { "type": "string", "description": "Emoji oder Symbol für die Fach-Karte." },
+          "beschreibung":{ "type": "string", "description": "Ein Satz Kurzbeschreibung." },
+          "seite":       { "type": "string", "description": "Absoluter Pfad zur Fach-HTML-Seite, z.B. \"/pos.html\"." },
+          "themen": {
+            "type": "array",
+            "description": "Liste der Themen/Gebiete dieses Fachs.",
+            "items": {
+              "type": "object",
+              "required": ["id", "name"],
+              "additionalProperties": false,
+              "properties": {
+                "id":          { "type": "string", "pattern": "^[a-z0-9-]+$", "description": "Eindeutige Themen-Kennung, z.B. \"pos-datenstrukturen\"." },
+                "name":        { "type": "string", "minLength": 1 },
+                "icon":        { "type": "string" },
+                "beschreibung":{ "type": "string" },
+                "typ":         { "type": "string", "enum": ["fach", "tool"], "description": "\"tool\" = eigenständiges Modul via DSTool.mount. Ohne Angabe = Standard Theorie/Quiz." },
+                "toolScript":  { "type": "string", "description": "Nur bei typ=tool: Pfad zum Tool-JS." },
+                "toolStyle":   { "type": "string", "description": "Nur bei typ=tool: Pfad zum Tool-CSS." },
+                "toolData":    { "type": "string", "description": "Nur bei typ=tool: Pfad zur Daten-JSON." },
+                "toolQuiz":    { "type": "string", "description": "Nur bei typ=tool: Pfad zur Quiz-JSON." }
+              }
+            }
           }
         }
       }

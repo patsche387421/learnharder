@@ -2,15 +2,79 @@
   "$schema": "./schema/manifest.schema.json",
   "faecher": [
     {
-      "id": "pos-datenstrukturen",
-      "name": "POS – Datenstrukturen",
-      "icon": "⚙",
-      "beschreibung": "String, List, Stack, Queue, Dictionary & mehr interaktiv erkunden",
-      "typ": "tool",
-      "toolScript": "/js/pos-datenstrukturen.js",
-      "toolStyle": "/css/pos-datenstrukturen.css",
-      "toolData": "/data/pos-datenstrukturen_data.json",
-      "toolQuiz": "/data/pos-datenstrukturen_quiz.json"
+      "id": "pos",
+      "name": "POS",
+      "vollname": "Programmieren und Software-Engineering",
+      "icon": "💻",
+      "beschreibung": "Algorithmen, Datenstrukturen, OOP und Softwareentwicklung",
+      "seite": "/pos.html",
+      "themen": [
+        {
+          "id": "pos-datenstrukturen",
+          "name": "Datenstrukturen",
+          "icon": "⚙",
+          "beschreibung": "String, List, Stack, Queue, Dictionary & mehr interaktiv erkunden",
+          "typ": "tool",
+          "toolScript": "/js/pos-datenstrukturen.js",
+          "toolStyle": "/css/pos-datenstrukturen.css",
+          "toolData": "/data/pos-datenstrukturen_data.json",
+          "toolQuiz": "/data/pos-datenstrukturen_quiz.json"
+        }
+      ]
+    },
+    {
+      "id": "dbi",
+      "name": "DBI",
+      "vollname": "Datenbanken und Informationssysteme",
+      "icon": "🗄",
+      "beschreibung": "SQL, Datenbankdesign, ER-Modell und Informationssysteme",
+      "seite": "/dbi.html",
+      "themen": []
+    },
+    {
+      "id": "nsvs",
+      "name": "NSVS",
+      "vollname": "Netzwerke, Sicherheit und verteilte Systeme",
+      "icon": "🔒",
+      "beschreibung": "Netzwerkprotokolle, IT-Sicherheit und verteilte Architekturen",
+      "seite": "/nsvs.html",
+      "themen": []
+    },
+    {
+      "id": "tinf",
+      "name": "TINF",
+      "vollname": "Technische Informatik",
+      "icon": "🔧",
+      "beschreibung": "Hardwarenahe Programmierung, Betriebssysteme und Systemarchitektur",
+      "seite": "/tinf.html",
+      "themen": []
+    },
+    {
+      "id": "wir",
+      "name": "WIR",
+      "vollname": "Wirtschaft und Recht",
+      "icon": "⚖",
+      "beschreibung": "Betriebswirtschaft, Rechtskunde und wirtschaftliche Grundlagen",
+      "seite": "/wir.html",
+      "themen": []
+    },
+    {
+      "id": "medt",
+      "name": "MEDT",
+      "vollname": "Medientechnik",
+      "icon": "🎨",
+      "beschreibung": "Grafik, Audio, Video und multimediale Anwendungen",
+      "seite": "/medt.html",
+      "themen": []
+    },
+    {
+      "id": "syp",
+      "name": "SYP",
+      "vollname": "Systemplanung und Projektmanagement",
+      "icon": "📋",
+      "beschreibung": "Projektplanung, Systemanalyse und Softwareentwicklungsprozesse",
+      "seite": "/syp.html",
+      "themen": []
     }
   ]
 }

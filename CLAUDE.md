@@ -39,13 +39,22 @@ lernhub-demo/
 ├── index.html             Login-Seite
 ├── dashboard.html         Persönliches Dashboard: Begrüßung, Stats, CTA (geschützt)
 ├── faecher.html           Fächerübersicht: Karten aus manifest.json (geschützt)
-├── fach.html              Fach-Detail: Theorie+Quiz oder Tool-Mount (geschützt, ?fach=…)
+├── pos.html               POS-Themenübersicht (geschützt)
+├── dbi.html               DBI-Themenübersicht (geschützt)
+├── nsvs.html              NSVS-Themenübersicht (geschützt)
+├── tinf.html              TINF-Themenübersicht (geschützt)
+├── wir.html               WIR-Themenübersicht (geschützt)
+├── medt.html              MEDT-Themenübersicht (geschützt)
+├── syp.html               SYP-Themenübersicht (geschützt)
+├── fach.html              Themen-Inhalt: Theorie+Quiz oder Tool-Mount (geschützt, ?fach=…)
+├── DB_Integration_Guide.md  Anleitung zur späteren Datenbankanbindung
 ├── data/                  JSON-Lerninhalte und Manifest
-│   ├── manifest.json        Fächer-Index (id, name, icon, typ, tool*-Pfade)
-│   └── <id>_*.json          Fach-Inhalte nach Konvention (theorie/quiz/data)
+│   ├── manifest.json        Fächer-Index mit verschachtelten Themen
+│   └── <id>_*.json          Themen-Inhalte nach Konvention (theorie/quiz/data)
 ├── js/                    Logik-Module (IIFE-Pattern)
 │   ├── auth.js              Auth-Modul: Login/Logout via sessionStorage, Seitenschutz
-│   └── app.js               App-Modul: JSON laden, Dashboard & Fachseite rendern
+│   ├── stats.js             Stats-Modul: Platzhalter für DB-Anbindung (siehe DB_Integration_Guide.md)
+│   └── app.js               App-Modul: JSON laden, alle drei Navigationsebenen rendern
 ├── css/                   Styles
 │   ├── tokens.css           Design-Tokens (:root Custom Properties)
 │   └── style.css            Komponenten-/Layout-Styles
