@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "manifest.schema.json",
+  "title": "LernHub Fächer-Manifest",
+  "description": "Index aller verfügbaren Fächer. Wird von js/app.js geladen, um das Dashboard datengetrieben zu rendern.",
+  "type": "object",
+  "required": ["faecher"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Verweis auf dieses Schema (für Editor-Autovervollständigung)."
+    },
+    "faecher": {
+      "type": "array",
+      "description": "Liste aller Fächer, die im Dashboard erscheinen.",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "name"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$",
+            "description": "Eindeutige Kennung. Bestimmt die Dateinamen data/<id>_theorie.json und data/<id>_quiz.json. Nur Kleinbuchstaben, Ziffern und Bindestriche."
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Anzeigename des Fachs, z. B. \"Mathematik\"."
+          },
+          "icon": {
+            "type": "string",
+            "description": "Kurzes Symbol/Emoji für die Fachkarte, z. B. \"∑\"."
+          },
+          "beschreibung": {
+            "type": "string",
+            "description": "Ein Satz Beschreibung für die Fachkarte."
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "theorie.schema.json",
+  "title": "LernHub Theorie-Inhalte",
+  "description": "Theorie-Blöcke eines Fachs. Datei-Konvention: data/<fach-id>_theorie.json.",
+  "type": "object",
+  "required": ["fach", "themen"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Verweis auf dieses Schema (für Editor-Autovervollständigung)."
+    },
+    "fach": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Anzeigename des Fachs (wird als Seitentitel verwendet)."
+    },
+    "themen": {
+      "type": "array",
+      "description": "Liste der Theorie-Blöcke.",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["titel", "text"],
+        "additionalProperties": false,
+        "properties": {
+          "titel": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Überschrift des Theorie-Blocks."
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Fließtext des Theorie-Blocks."
+          }
+        }
+      }
+    }
+  }
+}

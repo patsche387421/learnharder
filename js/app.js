@@ -1,28 +1,36 @@
 // Lädt JSON-Daten und rendert Dashboard + Fachseite.
 const App = (() => {
-  // Verfügbare Fächer (für das Dashboard)
-  const SUBJECTS = [
-    { id: "mathe", name: "Mathematik", icon: "∑", desc: "Algebra, Geometrie & mehr" },
-  ];
-
+  // Lädt eine JSON-Datei und wirft bei HTTP-Fehlern eine sprechende Meldung.
   async function loadJSON(path) {
     const res = await fetch(path);
     if (!res.ok) throw new Error("Konnte " + path + " nicht laden (" + res.status + ")");
     return res.json();
   }
 
-  function renderDashboard(container) {
+  // Rendert das Dashboard datengetrieben aus dem Manifest (data/manifest.json).
+  // Neue Fächer werden allein über das Manifest + passende JSON-Dateien ergänzt –
+  // hier ist keine Code-Änderung mehr nötig.
+  async function renderDashboard(container) {
     container.innerHTML = "";
-    SUBJECTS.forEach((s) => {
-      const a = document.createElement("a");
-      a.className = "card";
-      a.href = "/fach.html?fach=" + encodeURIComponent(s.id);
-      a.innerHTML =
-        '<span class="card-icon">' + s.icon + "</span>" +
-        "<h2>" + s.name + "</h2>" +
-        "<p>" + s.desc + "</p>";
-      container.appendChild(a);
-    });
+    try {
+      const manifest = await loadJSON("/data/manifest.json");
+      const faecher = manifest.faecher || [];
+
+      faecher.forEach((fach) => {
+        const karte = document.createElement("a");
+        karte.className = "card";
+        karte.href = "/fach.html?fach=" + encodeURIComponent(fach.id);
+        karte.innerHTML =
+          '<span class="card-icon">' + (fach.icon || "📘") + "</span>" +
+          "<h2>" + fach.name + "</h2>" +
+          "<p>" + (fach.beschreibung || "") + "</p>";
+        container.appendChild(karte);
+      });
+    } catch (fehler) {
+      // Kaputtes/fehlendes Manifest soll eine sichtbare Meldung zeigen,
+      // statt das Dashboard leer zu lassen.
+      container.innerHTML = '<p class="error">' + fehler.message + "</p>";
+    }
   }
 
   async function renderFach(fach) {

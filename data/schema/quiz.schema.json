@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "quiz.schema.json",
+  "title": "LernHub Quiz-Inhalte",
+  "description": "Quizfragen eines Fachs. Datei-Konvention: data/<fach-id>_quiz.json.",
+  "type": "object",
+  "required": ["fach", "fragen"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Verweis auf dieses Schema (für Editor-Autovervollständigung)."
+    },
+    "fach": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Anzeigename des Fachs."
+    },
+    "fragen": {
+      "type": "array",
+      "description": "Liste der Quizfragen.",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["frage", "optionen", "loesung"],
+        "additionalProperties": false,
+        "properties": {
+          "frage": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Der Fragetext."
+          },
+          "optionen": {
+            "type": "array",
+            "description": "Antwortmöglichkeiten. Mindestens zwei.",
+            "minItems": 2,
+            "items": { "type": "string", "minLength": 1 }
+          },
+          "loesung": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Index der richtigen Antwort in 'optionen' (0-basiert). Hinweis: Dass der Index < Anzahl der Optionen ist, kann JSON Schema nicht prüfen – das übernimmt der optionale Validierungs-Check."
+          }
+        }
+      }
+    }
+  }
+}
