@@ -2,12 +2,6 @@
   "$schema": "./schema/manifest.schema.json",
   "faecher": [
     {
-      "id": "mathe",
-      "name": "Mathematik",
-      "icon": "∑",
-      "beschreibung": "Algebra, Geometrie & mehr"
-    },
-    {
       "id": "pos-datenstrukturen",
       "name": "POS – Datenstrukturen",
       "icon": "⚙",

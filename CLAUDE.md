@@ -37,11 +37,12 @@ lernhub-demo/
 ├── CLAUDE.md              Diese Projektregeln
 ├── DESIGN_GUIDELINES.md   Design-System: Tokens, Theme, Typografie, Reset
 ├── index.html             Login-Seite
-├── dashboard.html         Fächerübersicht (geschützt)
-├── fach.html              Fach-Detail: Theorie + Quiz (geschützt, ?fach=…)
-├── data/                  JSON-Lerninhalte pro Fach
-│   ├── mathe_theorie.json   Theorie-Blöcke für Mathematik
-│   └── mathe_quiz.json      Quizfragen für Mathematik
+├── dashboard.html         Persönliches Dashboard: Begrüßung, Stats, CTA (geschützt)
+├── faecher.html           Fächerübersicht: Karten aus manifest.json (geschützt)
+├── fach.html              Fach-Detail: Theorie+Quiz oder Tool-Mount (geschützt, ?fach=…)
+├── data/                  JSON-Lerninhalte und Manifest
+│   ├── manifest.json        Fächer-Index (id, name, icon, typ, tool*-Pfade)
+│   └── <id>_*.json          Fach-Inhalte nach Konvention (theorie/quiz/data)
 ├── js/                    Logik-Module (IIFE-Pattern)
 │   ├── auth.js              Auth-Modul: Login/Logout via sessionStorage, Seitenschutz
 │   └── app.js               App-Modul: JSON laden, Dashboard & Fachseite rendern

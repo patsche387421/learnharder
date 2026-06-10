@@ -7,10 +7,10 @@ const App = (() => {
     return res.json();
   }
 
-  // Rendert das Dashboard datengetrieben aus dem Manifest (data/manifest.json).
+  // Rendert die Fächerübersicht datengetrieben aus dem Manifest (data/manifest.json).
   // Neue Fächer werden allein über das Manifest + passende JSON-Dateien ergänzt –
   // hier ist keine Code-Änderung mehr nötig.
-  async function renderDashboard(container) {
+  async function renderFaecher(container) {
     container.innerHTML = "";
     try {
       const manifest = await loadJSON("/data/manifest.json");
@@ -28,7 +28,7 @@ const App = (() => {
       });
     } catch (fehler) {
       // Kaputtes/fehlendes Manifest soll eine sichtbare Meldung zeigen,
-      // statt das Dashboard leer zu lassen.
+      // statt die Übersicht leer zu lassen.
       container.innerHTML = '<p class="error">' + fehler.message + "</p>";
     }
   }
@@ -141,5 +141,5 @@ const App = (() => {
     };
   }
 
-  return { renderDashboard, renderFach };
+  return { renderFaecher, renderFach };
 })();

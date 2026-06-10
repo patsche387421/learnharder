@@ -4,29 +4,80 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>LernHub – Dashboard</title>
+  <link rel="stylesheet" href="/css/tokens.css" />
   <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body class="page-dashboard">
+
   <header class="topbar">
     <span class="brand">LernHub</span>
     <div class="topbar-right">
-      <span id="welcome"></span>
+      <span id="welcome-name"></span>
       <button id="logout" class="btn-ghost">Abmelden</button>
     </div>
   </header>
 
-  <main class="container">
-    <h1>Deine Fächer</h1>
-    <div id="subjects" class="card-grid"></div>
+  <main class="db-layout">
+
+    <!-- Hero-Begrüßung -->
+    <section class="db-hero">
+      <div class="db-hero-text">
+        <p class="db-eyebrow">Willkommen zurück</p>
+        <h1 class="db-headline" id="db-greeting">Hey!</h1>
+        <p class="db-sub">Bereit weiterzulernen?</p>
+      </div>
+      <a href="/faecher.html" class="btn-cta">
+        Zu den Fächern <span class="btn-arrow">→</span>
+      </a>
+    </section>
+
+    <!-- Stats-Reihe (Platzhalter – später per DB befüllt) -->
+    <section class="db-stats">
+      <div class="stat-card">
+        <span class="stat-icon">📚</span>
+        <span class="stat-value" id="stat-themen">–</span>
+        <span class="stat-label">Themen bearbeitet</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">🎯</span>
+        <span class="stat-value" id="stat-quiz">–</span>
+        <span class="stat-label">Quiz-Punkte</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">🔥</span>
+        <span class="stat-value" id="stat-streak">–</span>
+        <span class="stat-label">Lerntage in Folge</span>
+      </div>
+    </section>
+
+    <!-- Letzte Aktivität (Platzhalter) -->
+    <section class="db-recent">
+      <h2 class="db-section-title">Zuletzt gelernt</h2>
+      <div class="db-recent-empty">
+        <span class="db-recent-icon">🗂</span>
+        <p>Noch keine Aktivität – leg jetzt los!</p>
+        <a href="/faecher.html" class="btn-ghost-sm">Fächer ansehen</a>
+      </div>
+    </section>
+
   </main>
 
   <script src="/js/auth.js"></script>
-  <script src="/js/app.js"></script>
   <script>
     Auth.requireLogin();
-    document.getElementById("welcome").textContent = "Hallo, " + Auth.currentUser();
+
+    // Begrüßung mit Nutzernamen
+    const benutzer = Auth.currentUser();
+    document.getElementById("welcome-name").textContent = benutzer;
+    document.getElementById("db-greeting").textContent  = "Hey, " + benutzer + "!";
+
     document.getElementById("logout").addEventListener("click", Auth.logout);
-    App.renderDashboard(document.getElementById("subjects"));
+
+    // TODO: Stats aus DB laden, sobald Backend vorhanden
+    // document.getElementById("stat-themen").textContent = data.themen;
+    // document.getElementById("stat-quiz").textContent   = data.quizPunkte;
+    // document.getElementById("stat-streak").textContent = data.streak + " Tage";
   </script>
+
 </body>
 </html>
