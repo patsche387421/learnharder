@@ -1,0 +1,132 @@
+{
+  "$schema": "./schema/datenstrukturen.schema.json",
+  "fach": "POS",
+  "thema": "Datenstrukturen",
+  "structures": {
+    "String": {
+      "label": "string",
+      "kind": "Referenztyp (immutable)",
+      "namespace": "System",
+      "description": "Schreibgeschuetztes Array von chars (UTF-16). Unveraenderlich \u2013 jede Methode gibt einen NEUEN String zurueck.",
+      "visualType": "array",
+      "seed": { "value": "Hallo Welt" },
+      "methods": {
+        "Length":        { "label": "Length (Eigenschaft)", "params": [], "signature": "public int Length { get; }", "returnType": "int", "description": "Gibt die Anzahl der Zeichen zurueck." },
+        "IndexOf":       { "label": "IndexOf(string)", "params": [ { "name": "value", "label": "Suchwert", "type": "string", "placeholder": "Welt" } ], "signature": "public int IndexOf(string value)", "returnType": "int", "description": "Index des ersten Vorkommens, sonst -1." },
+        "Substring2":    { "label": "Substring(start, length)", "params": [ { "name": "startIndex", "label": "startIndex", "type": "int", "placeholder": "0" }, { "name": "length", "label": "length", "type": "int", "placeholder": "5" } ], "signature": "public string Substring(int startIndex, int length)", "returnType": "string", "description": "Teilzeichenfolge ab startIndex mit angegebener Laenge." },
+        "Replace":       { "label": "Replace(string, string)", "params": [ { "name": "oldValue", "label": "oldValue", "type": "string", "placeholder": "Welt" }, { "name": "newValue", "label": "newValue", "type": "string", "placeholder": "POS" } ], "signature": "public string Replace(string oldValue, string newValue)", "returnType": "string", "description": "Ersetzt alle Vorkommen von oldValue durch newValue." },
+        "ToUpper":       { "label": "ToUpper()", "params": [], "signature": "public string ToUpper()", "returnType": "string", "description": "Gibt den String in Grossbuchstaben zurueck." },
+        "Contains":      { "label": "Contains(string)", "params": [ { "name": "value", "label": "Suchwert", "type": "string", "placeholder": "Welt" } ], "signature": "public bool Contains(string value)", "returnType": "bool", "description": "true wenn der Teilstring enthalten ist." },
+        "Trim":          { "label": "Trim()", "params": [], "signature": "public string Trim()", "returnType": "string", "description": "Entfernt fuehrende und nachfolgende Leerzeichen." }
+      }
+    },
+
+    "List": {
+      "label": "List<string>",
+      "kind": "Generic Collection",
+      "namespace": "System.Collections.Generic",
+      "description": "Typisierte, dynamisch wachsende Liste. Zugriff per Index. Anzahl ueber .Count (nicht .Length).",
+      "visualType": "list",
+      "seed": { "items": ["Anna", "Max", "Julia"] },
+      "methods": {
+        "Add":     { "label": "Add(T)", "params": [ { "name": "item", "label": "Element", "type": "string", "placeholder": "Lena" } ], "signature": "public void Add(T item)", "returnType": "void", "description": "Fuegt ein Element am Ende hinzu." },
+        "Insert":  { "label": "Insert(index, T)", "params": [ { "name": "index", "label": "Index", "type": "int", "placeholder": "1" }, { "name": "item", "label": "Element", "type": "string", "placeholder": "Lena" } ], "signature": "public void Insert(int index, T item)", "returnType": "void", "description": "Fuegt am Index ein \u2013 alle nachfolgenden rutschen nach rechts." },
+        "Remove":  { "label": "Remove(T)", "params": [ { "name": "item", "label": "Element", "type": "string", "placeholder": "Max" } ], "signature": "public bool Remove(T item)", "returnType": "bool", "description": "Entfernt das erste Vorkommen. true bei Erfolg." },
+        "RemoveAt":{ "label": "RemoveAt(index)", "params": [ { "name": "index", "label": "Index", "type": "int", "placeholder": "0" } ], "signature": "public void RemoveAt(int index)", "returnType": "void", "description": "Entfernt das Element am Index." },
+        "Contains":{ "label": "Contains(T)", "params": [ { "name": "item", "label": "Element", "type": "string", "placeholder": "Anna" } ], "signature": "public bool Contains(T item)", "returnType": "bool", "description": "true wenn das Element enthalten ist." },
+        "IndexOf": { "label": "IndexOf(T)", "params": [ { "name": "item", "label": "Element", "type": "string", "placeholder": "Julia" } ], "signature": "public int IndexOf(T item)", "returnType": "int", "description": "Index des ersten Vorkommens, sonst -1." },
+        "Sort":    { "label": "Sort()", "params": [], "signature": "public void Sort()", "returnType": "void", "description": "Sortiert die Elemente (Standardcomparer)." },
+        "Clear":   { "label": "Clear()", "params": [], "signature": "public void Clear()", "returnType": "void", "description": "Entfernt alle Elemente." },
+        "Count":   { "label": "Count (Eigenschaft)", "params": [], "signature": "public int Count { get; }", "returnType": "int", "description": "Anzahl der Elemente." }
+      }
+    },
+
+    "Stack": {
+      "label": "Stack<string>",
+      "kind": "Generic Collection",
+      "namespace": "System.Collections.Generic",
+      "description": "LIFO \u2013 Last In, First Out. Push legt oben drauf, Pop nimmt oben weg. Wie ein Stapel Teller.",
+      "visualType": "stack",
+      "seed": { "items": ["Erdgeschoss", "1. Stock", "2. Stock"] },
+      "methods": {
+        "Push":    { "label": "Push(T)", "params": [ { "name": "item", "label": "Element", "type": "string", "placeholder": "3. Stock" } ], "signature": "public void Push(T item)", "returnType": "void", "description": "Legt ein Element oben auf den Stack." },
+        "Pop":     { "label": "Pop()", "params": [], "signature": "public T Pop()", "returnType": "T", "description": "Entfernt das oberste Element und gibt es zurueck. InvalidOperationException wenn leer." },
+        "Peek":    { "label": "Peek()", "params": [], "signature": "public T Peek()", "returnType": "T", "description": "Oberstes Element ansehen OHNE Entfernen. InvalidOperationException wenn leer." },
+        "Contains":{ "label": "Contains(T)", "params": [ { "name": "item", "label": "Element", "type": "string", "placeholder": "1. Stock" } ], "signature": "public bool Contains(T item)", "returnType": "bool", "description": "true wenn das Element im Stack ist." },
+        "Clear":   { "label": "Clear()", "params": [], "signature": "public void Clear()", "returnType": "void", "description": "Leert den Stack." },
+        "Count":   { "label": "Count (Eigenschaft)", "params": [], "signature": "public int Count { get; }", "returnType": "int", "description": "Anzahl der Elemente." }
+      }
+    },
+
+    "Queue": {
+      "label": "Queue<string>",
+      "kind": "Generic Collection",
+      "namespace": "System.Collections.Generic",
+      "description": "FIFO \u2013 First In, First Out. Enqueue stellt hinten an, Dequeue nimmt vorne weg. Wie eine Warteschlange.",
+      "visualType": "queue",
+      "seed": { "items": ["Anna", "Max", "Julia"] },
+      "methods": {
+        "Enqueue": { "label": "Enqueue(T)", "params": [ { "name": "item", "label": "Element", "type": "string", "placeholder": "Tom" } ], "signature": "public void Enqueue(T item)", "returnType": "void", "description": "Stellt ein Element hinten an." },
+        "Dequeue": { "label": "Dequeue()", "params": [], "signature": "public T Dequeue()", "returnType": "T", "description": "Entfernt das vorderste Element und gibt es zurueck. InvalidOperationException wenn leer." },
+        "Peek":    { "label": "Peek()", "params": [], "signature": "public T Peek()", "returnType": "T", "description": "Vorderstes Element ansehen OHNE Entfernen. InvalidOperationException wenn leer." },
+        "Contains":{ "label": "Contains(T)", "params": [ { "name": "item", "label": "Element", "type": "string", "placeholder": "Anna" } ], "signature": "public bool Contains(T item)", "returnType": "bool", "description": "true wenn das Element in der Queue ist." },
+        "Clear":   { "label": "Clear()", "params": [], "signature": "public void Clear()", "returnType": "void", "description": "Leert die Queue." },
+        "Count":   { "label": "Count (Eigenschaft)", "params": [], "signature": "public int Count { get; }", "returnType": "int", "description": "Anzahl der Elemente." }
+      }
+    },
+
+    "Dictionary": {
+      "label": "Dictionary<int, string>",
+      "kind": "Generic Collection",
+      "namespace": "System.Collections.Generic",
+      "description": "Eindeutige Schluessel-Wert-Paare. Zugriff per Key in O(1). Reihenfolge NICHT garantiert.",
+      "visualType": "dictionary",
+      "seed": { "entries": [ { "key": 1, "value": "Huber" }, { "key": 2, "value": "Mayer" }, { "key": 3, "value": "Wimmer" } ] },
+      "methods": {
+        "Add":         { "label": "Add(key, value)", "params": [ { "name": "key", "label": "Key (int)", "type": "int", "placeholder": "4" }, { "name": "value", "label": "Value (string)", "type": "string", "placeholder": "Schmidt" } ], "signature": "public void Add(TKey key, TValue value)", "returnType": "void", "description": "Fuegt ein Paar hinzu. ArgumentException wenn Key existiert." },
+        "Remove":      { "label": "Remove(key)", "params": [ { "name": "key", "label": "Key (int)", "type": "int", "placeholder": "2" } ], "signature": "public bool Remove(TKey key)", "returnType": "bool", "description": "Entfernt den Eintrag mit diesem Key." },
+        "ContainsKey": { "label": "ContainsKey(key)", "params": [ { "name": "key", "label": "Key (int)", "type": "int", "placeholder": "1" } ], "signature": "public bool ContainsKey(TKey key)", "returnType": "bool", "description": "true wenn der Key vorhanden ist." },
+        "TryGetValue": { "label": "TryGetValue(key, out value)", "params": [ { "name": "key", "label": "Key (int)", "type": "int", "placeholder": "1" } ], "signature": "public bool TryGetValue(TKey key, out TValue value)", "returnType": "bool", "description": "Sicherer Zugriff ohne Exception bei fehlendem Key." },
+        "Clear":       { "label": "Clear()", "params": [], "signature": "public void Clear()", "returnType": "void", "description": "Entfernt alle Eintraege." },
+        "Count":       { "label": "Count (Eigenschaft)", "params": [], "signature": "public int Count { get; }", "returnType": "int", "description": "Anzahl der Paare." }
+      }
+    },
+
+    "SortedList": {
+      "label": "SortedList<int, string>",
+      "kind": "Generic Collection",
+      "namespace": "System.Collections.Generic",
+      "description": "Schluessel-Wert-Paare, automatisch nach Key sortiert. Zugriff auch ueber Index moeglich.",
+      "visualType": "dictionary",
+      "sorted": true,
+      "seed": { "entries": [ { "key": 3, "value": "Zebra" }, { "key": 1, "value": "Apfel" }, { "key": 2, "value": "Mango" } ] },
+      "methods": {
+        "Add":         { "label": "Add(key, value)", "params": [ { "name": "key", "label": "Key (int)", "type": "int", "placeholder": "4" }, { "name": "value", "label": "Value (string)", "type": "string", "placeholder": "Birne" } ], "signature": "public void Add(TKey key, TValue value)", "returnType": "void", "description": "Fuegt ein Paar hinzu \u2013 bleibt automatisch sortiert." },
+        "Remove":      { "label": "Remove(key)", "params": [ { "name": "key", "label": "Key (int)", "type": "int", "placeholder": "2" } ], "signature": "public bool Remove(TKey key)", "returnType": "bool", "description": "Entfernt den Eintrag mit diesem Key." },
+        "IndexOfKey":  { "label": "IndexOfKey(key)", "params": [ { "name": "key", "label": "Key (int)", "type": "int", "placeholder": "2" } ], "signature": "public int IndexOfKey(TKey key)", "returnType": "int", "description": "Index des Keys, sonst -1." },
+        "ContainsKey": { "label": "ContainsKey(key)", "params": [ { "name": "key", "label": "Key (int)", "type": "int", "placeholder": "1" } ], "signature": "public bool ContainsKey(TKey key)", "returnType": "bool", "description": "true wenn der Key vorhanden ist." },
+        "Clear":       { "label": "Clear()", "params": [], "signature": "public void Clear()", "returnType": "void", "description": "Entfernt alle Eintraege." },
+        "Count":       { "label": "Count (Eigenschaft)", "params": [], "signature": "public int Count { get; }", "returnType": "int", "description": "Anzahl der Paare." }
+      }
+    },
+
+    "HashSet": {
+      "label": "HashSet<int>",
+      "kind": "Generic Collection",
+      "namespace": "System.Collections.Generic",
+      "description": "Speichert NUR eindeutige Werte. Ein doppeltes Add wird ignoriert (kein Fehler). Keine garantierte Reihenfolge.",
+      "visualType": "set",
+      "seed": { "items": [1, 2, 3, 4, 5] },
+      "methods": {
+        "Add":           { "label": "Add(T)", "params": [ { "name": "item", "label": "Wert (int)", "type": "int", "placeholder": "6" } ], "signature": "public bool Add(T item)", "returnType": "bool", "description": "Fuegt hinzu. Gibt false zurueck wenn schon vorhanden (Duplikat ignoriert)." },
+        "Remove":        { "label": "Remove(T)", "params": [ { "name": "item", "label": "Wert (int)", "type": "int", "placeholder": "3" } ], "signature": "public bool Remove(T item)", "returnType": "bool", "description": "Entfernt den Wert. true bei Erfolg." },
+        "Contains":      { "label": "Contains(T)", "params": [ { "name": "item", "label": "Wert (int)", "type": "int", "placeholder": "2" } ], "signature": "public bool Contains(T item)", "returnType": "bool", "description": "true wenn der Wert enthalten ist." },
+        "IntersectWith": { "label": "IntersectWith(menge)", "params": [ { "name": "other", "label": "andere Menge (z.B. 3,4,5,6,7)", "type": "intset", "placeholder": "3,4,5,6,7" } ], "signature": "public void IntersectWith(IEnumerable<T> other)", "returnType": "void", "description": "Schnittmenge: behaelt nur Werte, die in BEIDEN Mengen sind." },
+        "UnionWith":     { "label": "UnionWith(menge)", "params": [ { "name": "other", "label": "andere Menge (z.B. 6,7,8)", "type": "intset", "placeholder": "6,7,8" } ], "signature": "public void UnionWith(IEnumerable<T> other)", "returnType": "void", "description": "Vereinigung: nimmt alle Werte aus beiden Mengen auf." },
+        "ExceptWith":    { "label": "ExceptWith(menge)", "params": [ { "name": "other", "label": "andere Menge (z.B. 4,5)", "type": "intset", "placeholder": "4,5" } ], "signature": "public void ExceptWith(IEnumerable<T> other)", "returnType": "void", "description": "Differenz: entfernt alle Werte, die in der anderen Menge vorkommen." },
+        "Clear":         { "label": "Clear()", "params": [], "signature": "public void Clear()", "returnType": "void", "description": "Leert die Menge." },
+        "Count":         { "label": "Count (Eigenschaft)", "params": [], "signature": "public int Count { get; }", "returnType": "int", "description": "Anzahl der eindeutigen Werte." }
+      }
+    }
+  }
+}

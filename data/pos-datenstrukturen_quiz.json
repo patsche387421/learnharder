@@ -1,0 +1,36 @@
+{
+  "$schema": "./schema/quiz.schema.json",
+  "fach": "POS \u2013 Datenstrukturen",
+  "fragen": [
+    {
+      "frage": "Welche Collection arbeitet nach dem FIFO-Prinzip (First In, First Out)?",
+      "optionen": ["Stack<T>", "Queue<T>", "List<T>", "HashSet<T>"],
+      "loesung": 1
+    },
+    {
+      "frage": "Mit welcher Methode legt man ein Element oben auf einen Stack<T>?",
+      "optionen": ["Push()", "Enqueue()", "Add()", "Peek()"],
+      "loesung": 0
+    },
+    {
+      "frage": "Mit welcher Eigenschaft fragt man die Anzahl der Elemente einer List<T> ab?",
+      "optionen": [".Length", ".Size()", ".Count", ".Capacity"],
+      "loesung": 2
+    },
+    {
+      "frage": "Was passiert, wenn man einem HashSet<T> einen bereits vorhandenen Wert per Add hinzufuegt?",
+      "optionen": ["Es wird eine Exception geworfen", "Der Wert wird doppelt gespeichert", "Es passiert nichts \u2013 das Duplikat wird ignoriert", "Die ganze Menge wird geleert"],
+      "loesung": 2
+    },
+    {
+      "frage": "Wodurch unterscheidet sich SortedList<K, V> von einem normalen Dictionary<K, V>?",
+      "optionen": ["Sie speichert keine Werte", "Ihre Eintraege bleiben automatisch nach Key sortiert", "Sie erlaubt doppelte Keys", "Sie hat keine Count-Eigenschaft"],
+      "loesung": 1
+    },
+    {
+      "frage": "Welche Methode gibt das vorderste Element einer Queue<T> zurueck, OHNE es zu entfernen?",
+      "optionen": ["Dequeue()", "Pop()", "Peek()", "Remove()"],
+      "loesung": 2
+    }
+  ]
+}

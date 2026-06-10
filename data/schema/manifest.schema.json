@@ -37,6 +37,27 @@
           "beschreibung": {
             "type": "string",
             "description": "Ein Satz Beschreibung für die Fachkarte."
+          },
+          "typ": {
+            "type": "string",
+            "enum": ["fach", "tool"],
+            "description": "\"fach\" = Standard-Theorie/Quiz (Standard, kann weggelassen werden). \"tool\" = eigenständiges Tool-Modul, das via DSTool.mount eingebunden wird."
+          },
+          "toolScript": {
+            "type": "string",
+            "description": "Absoluter Pfad zum Tool-JS-Modul (nur bei typ=tool), z. B. \"/js/pos-datenstrukturen.js\"."
+          },
+          "toolStyle": {
+            "type": "string",
+            "description": "Absoluter Pfad zum Tool-Stylesheet (nur bei typ=tool)."
+          },
+          "toolData": {
+            "type": "string",
+            "description": "Absoluter Pfad zur Tool-Daten-JSON (nur bei typ=tool)."
+          },
+          "toolQuiz": {
+            "type": "string",
+            "description": "Absoluter Pfad zur Tool-Quiz-JSON (nur bei typ=tool)."
           }
         }
       }

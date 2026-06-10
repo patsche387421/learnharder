@@ -6,6 +6,17 @@
       "name": "Mathematik",
       "icon": "∑",
       "beschreibung": "Algebra, Geometrie & mehr"
+    },
+    {
+      "id": "pos-datenstrukturen",
+      "name": "POS – Datenstrukturen",
+      "icon": "⚙",
+      "beschreibung": "String, List, Stack, Queue, Dictionary & mehr interaktiv erkunden",
+      "typ": "tool",
+      "toolScript": "/js/pos-datenstrukturen.js",
+      "toolStyle": "/css/pos-datenstrukturen.css",
+      "toolData": "/data/pos-datenstrukturen_data.json",
+      "toolQuiz": "/data/pos-datenstrukturen_quiz.json"
     }
   ]
 }

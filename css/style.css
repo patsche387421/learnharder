@@ -177,6 +177,11 @@ button {
   padding: 2rem 1.5rem;
 }
 
+/* Tool-Modus: breiterer Container ohne künstliche Maximalbreite */
+.container-tool {
+  padding: 1.5rem;
+}
+
 /* ---------- Dashboard cards ---------- */
 .card-grid {
   display: grid;

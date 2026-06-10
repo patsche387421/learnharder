@@ -33,14 +33,48 @@ const App = (() => {
     }
   }
 
-  async function renderFach(fach) {
+  // Entscheidet anhand des Manifests, ob ein Fach (Theorie/Quiz) oder ein
+  // eigenständiges Tool-Modul (z. B. DSTool) geladen wird.
+  async function renderFach(fachId) {
     try {
-      const [theorie, quiz] = await Promise.all([
-        loadJSON("/data/" + fach + "_theorie.json"),
-        loadJSON("/data/" + fach + "_quiz.json"),
-      ]);
+      const manifest = await loadJSON("/data/manifest.json");
+      const eintrag = (manifest.faecher || []).find((f) => f.id === fachId);
 
-      document.getElementById("fach-title").textContent = theorie.fach || fach;
+      if (eintrag && eintrag.typ === "tool") {
+        // Tool-Modus: Standard-UI ausblenden, Tool-Container einblenden
+        document.getElementById("main-fach").hidden = true;
+        document.getElementById("main-tool").hidden = false;
+
+        // Tool-Stylesheet dynamisch laden
+        const link = document.createElement("link");
+        link.rel = "stylesheet";
+        link.href = eintrag.toolStyle;
+        document.head.appendChild(link);
+
+        // Tool-Script laden und dann mounten
+        const script = document.createElement("script");
+        script.src = eintrag.toolScript;
+        script.onload = () => {
+          DSTool.mount({
+            root:    "#tool-root",
+            dataUrl: eintrag.toolData,
+            quizUrl: eintrag.toolQuiz,
+          });
+        };
+        script.onerror = () => {
+          document.getElementById("tool-root").innerHTML =
+            '<p class="error">Tool-Script konnte nicht geladen werden: ' + eintrag.toolScript + "</p>";
+        };
+        document.head.appendChild(script);
+        return;
+      }
+
+      // Standard-Modus: Theorie + Quiz aus JSON laden
+      const [theorie, quiz] = await Promise.all([
+        loadJSON("/data/" + fachId + "_theorie.json"),
+        loadJSON("/data/" + fachId + "_quiz.json"),
+      ]);
+      document.getElementById("fach-title").textContent = theorie.fach || fachId;
       renderTheorie(theorie);
       renderQuiz(quiz);
     } catch (err) {
