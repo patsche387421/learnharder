@@ -1,0 +1,26 @@
+{
+  "$schema": "./schema/theorie.schema.json",
+  "fach": "DBI",
+  "themen": [
+    {
+      "titel": "Überblick: Mengenoperationen in SQL",
+      "text": "SQL kennt vier Mengenoperationen, die Ergebnisse zweier SELECT-Abfragen verknüpfen: UNION, UNION ALL, INTERSECT und EXCEPT. Voraussetzung: Beide Abfragen müssen dieselbe Anzahl an Spalten mit kompatiblen Datentypen liefern. Die Spaltennamen im Ergebnis kommen von der ersten Abfrage. Mengenoperationen entfernen standardmäßig doppelte Zeilen (außer UNION ALL)."
+    },
+    {
+      "titel": "UNION und UNION ALL",
+      "text": "UNION vereinigt die Ergebnisse zweier Abfragen und entfernt Duplikate. UNION ALL vereinigt und behält alle Zeilen, auch doppelte. Wann UNION ALL statt UNION: wenn du weißt, dass keine Duplikate entstehen können, oder wenn Duplikate gewünscht sind – UNION ALL ist schneller, weil kein Duplikat-Check stattfindet. Beispiel: SELECT Name FROM Mitarbeiter UNION SELECT Name FROM Kunden – alle Namen ohne Doppelungen."
+    },
+    {
+      "titel": "INTERSECT",
+      "text": "INTERSECT liefert nur Zeilen, die in beiden Ergebnismengen vorkommen – die Schnittmenge. Doppelte Zeilen werden entfernt. Beispiel: SELECT KundeNr FROM BestellungA INTERSECT SELECT KundeNr FROM BestellungB – Kunden, die in beiden Bestelllisten vorkommen. INTERSECT ist nicht in allen DBMS verfügbar (MySQL unterstützt es erst ab Version 8.0.31)."
+    },
+    {
+      "titel": "EXCEPT und die kritische Reihenfolge",
+      "text": "EXCEPT liefert Zeilen der ersten Abfrage, die nicht in der zweiten vorkommen – die Differenzmenge. Die Reihenfolge ist entscheidend: A EXCEPT B ≠ B EXCEPT A. Beispiel: SELECT KundeNr FROM AlleKunden EXCEPT SELECT KundeNr FROM Gesperrte – Kunden, die nicht gesperrt sind. Vertauscht man die Reihenfolge, bekommt man gesperrte Kunden, die nicht in AlleKunden stehen (meist leer). In manchen DBMS heißt EXCEPT auch MINUS (Oracle)."
+    },
+    {
+      "titel": "Cheatsheet",
+      "text": "UNION      – Vereinigung, OHNE Duplikate\nUNION ALL  – Vereinigung, MIT Duplikaten (schneller)\nINTERSECT  – Schnittmenge (beide Seiten enthalten die Zeile)\nEXCEPT     – Differenz (in A, aber NICHT in B)\n\nReihenfolge bei EXCEPT kritisch:\n  A EXCEPT B = Zeilen in A die nicht in B sind\n  B EXCEPT A = Zeilen in B die nicht in A sind\n\nVoraussetzung: gleiche Spaltenanzahl, kompatible Typen\nSpaltennamen: kommen von der ERSTEN Abfrage"
+    }
+  ]
+}

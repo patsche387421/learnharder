@@ -1,0 +1,56 @@
+{
+  "$schema": "./schema/quiz.schema.json",
+  "fach": "DBI",
+  "fragen": [
+    {
+      "frage": "Was unterscheidet UNION von UNION ALL?",
+      "optionen": [
+        "UNION entfernt Duplikate, UNION ALL behält alle Zeilen inklusive Duplikaten",
+        "UNION ALL entfernt Duplikate, UNION nicht",
+        "UNION ALL funktioniert nur mit kompatiblen Datentypen, UNION immer",
+        "Es gibt keinen funktionalen Unterschied, nur einen Geschwindigkeitsunterschied"
+      ],
+      "loesung": 0
+    },
+    {
+      "frage": "Was liefert INTERSECT?",
+      "optionen": [
+        "Nur Zeilen, die in beiden Ergebnismengen vorkommen – die Schnittmenge",
+        "Zeilen, die in der ersten, aber nicht in der zweiten Menge sind",
+        "Alle Zeilen beider Mengen ohne Duplikate",
+        "Zeilen, die in keiner der beiden Mengen vorkommen"
+      ],
+      "loesung": 0
+    },
+    {
+      "frage": "Was liefert: SELECT KundeNr FROM AlleKunden EXCEPT SELECT KundeNr FROM Gesperrte?",
+      "optionen": [
+        "Alle Kunden, die NICHT in der Gesperrten-Liste stehen",
+        "Alle Kunden, die in der Gesperrten-Liste stehen",
+        "Die Schnittmenge aus AlleKunden und Gesperrte",
+        "Alle KundeNr-Werte aus beiden Tabellen ohne Duplikate"
+      ],
+      "loesung": 0
+    },
+    {
+      "frage": "A EXCEPT B und B EXCEPT A – was gilt?",
+      "optionen": [
+        "Die Ergebnisse sind unterschiedlich – die Reihenfolge ist entscheidend",
+        "Die Ergebnisse sind identisch – EXCEPT ist kommutativ",
+        "Beide liefern die Schnittmenge von A und B",
+        "B EXCEPT A ist kein gültiges SQL"
+      ],
+      "loesung": 0
+    },
+    {
+      "frage": "Welche Voraussetzung müssen beide SELECT-Abfragen bei Mengenoperationen erfüllen?",
+      "optionen": [
+        "Gleiche Anzahl Spalten mit kompatiblen Datentypen",
+        "Identische Tabellennamen in beiden Abfragen",
+        "Dieselbe WHERE-Bedingung",
+        "Dieselbe Anzahl Zeilen im Ergebnis"
+      ],
+      "loesung": 0
+    }
+  ]
+}

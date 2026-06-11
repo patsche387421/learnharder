@@ -1,0 +1,56 @@
+{
+  "$schema": "./schema/quiz.schema.json",
+  "fach": "DBI",
+  "fragen": [
+    {
+      "frage": "Was ergibt der Ausdruck WHERE Spalte = NULL in SQL?",
+      "optionen": [
+        "Immer UNKNOWN – keine Zeile wird zurückgegeben; korrekt ist WHERE Spalte IS NULL",
+        "TRUE für alle Zeilen, bei denen Spalte leer ist",
+        "FALSE – NULL ist niemals gleich irgendetwas",
+        "Einen Syntaxfehler"
+      ],
+      "loesung": 0
+    },
+    {
+      "frage": "Warum liefert NOT IN eine leere Ergebnismenge, wenn die Unterabfrage NULL enthält?",
+      "optionen": [
+        "x != NULL ergibt UNKNOWN, und UNKNOWN wird in WHERE wie FALSE behandelt – kein Datensatz wird zurückgegeben",
+        "NULL wird automatisch als 0 behandelt, was alle Vergleiche verfälscht",
+        "SQL verbietet NOT IN mit NULL-Werten und wirft einen Laufzeitfehler",
+        "NULL zählt als übereinstimmender Wert und filtert alle Zeilen heraus"
+      ],
+      "loesung": 0
+    },
+    {
+      "frage": "Was ist der Unterschied zwischen count(*) und count(Spalte)?",
+      "optionen": [
+        "count(*) zählt alle Zeilen inkl. NULL, count(Spalte) überspringt NULL-Werte",
+        "count(Spalte) zählt alle Zeilen inkl. NULL, count(*) überspringt NULL",
+        "Beide liefern immer dasselbe Ergebnis",
+        "count(*) kann nur ohne GROUP BY verwendet werden"
+      ],
+      "loesung": 0
+    },
+    {
+      "frage": "Nach einem LEFT JOIN: Wie findest du Zeilen ohne Partner auf der rechten Seite?",
+      "optionen": [
+        "WHERE rechte_Spalte IS NULL",
+        "WHERE rechte_Spalte = NULL",
+        "WHERE rechte_Spalte != NULL",
+        "HAVING COUNT(rechte_Spalte) = 0"
+      ],
+      "loesung": 0
+    },
+    {
+      "frage": "Was ist die sichere Alternative zu NOT IN, wenn NULL-Werte möglich sind?",
+      "optionen": [
+        "NOT EXISTS mit korrelierter Unterabfrage",
+        "UNION ALL mit der ursprünglichen Menge",
+        "IN mit negierter WHERE-Bedingung",
+        "EXCEPT statt NOT IN"
+      ],
+      "loesung": 0
+    }
+  ]
+}
