@@ -1,0 +1,56 @@
+{
+  "$schema": "./schema/quiz.schema.json",
+  "fach": "DBI",
+  "fragen": [
+    {
+      "frage": "Was muss bei einer 1:1-Beziehung immer auf dem Fremdschlüssel gesetzt werden?",
+      "optionen": [
+        "UNIQUE – ohne Ausnahme, unabhängig vom min-Wert",
+        "NOT NULL – weil beide Seiten verbunden sein müssen",
+        "PRIMARY KEY – weil der FK die Zeile eindeutig identifiziert",
+        "Nichts Besonderes – ein einfacher REFERENCES reicht"
+      ],
+      "loesung": 0
+    },
+    {
+      "frage": "Folgende DDL soll eine 1:1-Beziehung implementieren:\nRestaurant(Nr INT PRIMARY KEY, MitarbeiterNr INT NOT NULL REFERENCES Mitarbeiter(Nr))\nWas ist der Fehler?",
+      "optionen": [
+        "UNIQUE fehlt auf MitarbeiterNr – ohne es ist die Beziehung technisch 1:n",
+        "NOT NULL muss entfernt werden – bei 1:1 ist der FK immer nullable",
+        "REFERENCES muss durch einen zusammengesetzten PK ersetzt werden",
+        "Es gibt keinen Fehler – die DDL ist korrekt"
+      ],
+      "loesung": 0
+    },
+    {
+      "frage": "Mitarbeiter –(0,1)– LEITET –(1,1)– Filiale. Wo liegt der FK bevorzugt, und warum?",
+      "optionen": [
+        "In Filiale, weil min = 1 dort NOT NULL erzwingt und die Semantik klarer ist",
+        "In Mitarbeiter, weil er die FK-Zeile anlegt",
+        "In einer Zwischentabelle, wegen der vollständigen Teilnahme",
+        "In beiden Tabellen gleichzeitig"
+      ],
+      "loesung": 0
+    },
+    {
+      "frage": "Was passiert technisch, wenn man bei einer 1:1-Beziehung UNIQUE vergisst?",
+      "optionen": [
+        "Mehrere Zeilen können denselben FK-Wert haben → das DBMS behandelt die Beziehung als 1:n",
+        "Der FK wird automatisch zu einem Primärschlüssel",
+        "Die Tabelle lässt sich nicht erstellen (Syntaxfehler)",
+        "NULL-Werte werden nicht mehr erlaubt"
+      ],
+      "loesung": 0
+    },
+    {
+      "frage": "Mitarbeiter –(0,1)– LEITET –(1,1)– Filiale. FK liegt in Filiale. Muss er NOT NULL sein?",
+      "optionen": [
+        "Ja – weil min der FK-Seite (Filiale) = 1",
+        "Nein – weil min auf der Mitarbeiter-Seite = 0",
+        "Nein – bei 1:1 ist der FK immer nullable",
+        "Ja – weil UNIQUE immer NOT NULL impliziert"
+      ],
+      "loesung": 0
+    }
+  ]
+}

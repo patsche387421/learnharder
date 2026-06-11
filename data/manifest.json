@@ -50,6 +50,27 @@
           "icon": "📌",
           "beschreibung": "Was (min,max) bedeutet und wie es sich direkt auf FK, NOT NULL und UNIQUE auswirkt.",
           "typ": "fach"
+        },
+        {
+          "id": "dbi-beziehungstypen",
+          "name": "Beziehungstypen 1:1, 1:n, m:n",
+          "icon": "🔗",
+          "beschreibung": "Beziehungstypen aus max-Werten ableiten und was sie für die Implementierung bedeuten.",
+          "typ": "fach"
+        },
+        {
+          "id": "dbi-erd-tabellen",
+          "name": "ERD in Tabellen umsetzen",
+          "icon": "🗂️",
+          "beschreibung": "Das Kernthema der Prüfung: Regeln für FK-Platzierung, Zwischentabellen und UNIQUE.",
+          "typ": "fach"
+        },
+        {
+          "id": "dbi-11-beziehungen",
+          "name": "1:1-Beziehungen implementieren",
+          "icon": "🔑",
+          "beschreibung": "Der häufigste Fehler in der Prüfung: UNIQUE vergessen. Mit DDL-Fehler-Analyse.",
+          "typ": "fach"
         }
       ]
     },

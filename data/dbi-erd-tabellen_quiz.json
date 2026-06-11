@@ -1,0 +1,66 @@
+{
+  "$schema": "./schema/quiz.schema.json",
+  "fach": "DBI",
+  "fragen": [
+    {
+      "frage": "In welche Tabelle kommt der Fremdschlüssel bei einer 1:n-Beziehung?",
+      "optionen": [
+        "In die Tabelle mit max = 1 (die 1-Seite)",
+        "In die Tabelle mit max = n (die n-Seite)",
+        "In beide Tabellen",
+        "In eine neue Zwischentabelle"
+      ],
+      "loesung": 0
+    },
+    {
+      "frage": "Was ist der Primärschlüssel einer Zwischentabelle bei m:n?",
+      "optionen": [
+        "Zusammengesetzter PK aus den beiden Fremdschlüsseln: PRIMARY KEY(FK1, FK2)",
+        "Ein eigener Surrogate Key (z. B. AUTO_INCREMENT ID)",
+        "Der Primärschlüssel der größeren der beiden Tabellen",
+        "Zwischentabellen brauchen keinen Primärschlüssel"
+      ],
+      "loesung": 0
+    },
+    {
+      "frage": "Was fehlt in dieser DDL für eine 1:1-Beziehung?\nRestaurant(Nr INT PRIMARY KEY, ManagerNr INT NOT NULL REFERENCES Mitarbeiter(Nr))",
+      "optionen": [
+        "Das UNIQUE-Constraint auf ManagerNr",
+        "Ein zweiter Fremdschlüssel in die Mitarbeiter-Tabelle",
+        "NOT NULL muss entfernt werden",
+        "Eine Zwischentabelle für die Beziehung"
+      ],
+      "loesung": 0
+    },
+    {
+      "frage": "Mitarbeiter –(0,n)–GEHÖRT–(1,1)– Abteilung. Welche Aussage ist korrekt?",
+      "optionen": [
+        "FK in Mitarbeiter, NOT NULL, weil min der Mitarbeiter-Seite = 1",
+        "FK in Mitarbeiter, nullable, weil min der Mitarbeiter-Seite = 0",
+        "FK in Abteilung, NOT NULL",
+        "Zwischentabelle, weil beide Seiten Pflicht-Teilnahme haben"
+      ],
+      "loesung": 0
+    },
+    {
+      "frage": "Student –(1,n)–BELEGT–(0,n)– Kurs. Wie lautet die korrekte Zwischentabelle?",
+      "optionen": [
+        "Belegung(StudentNr FK NOT NULL, KursNr FK NOT NULL, PRIMARY KEY(StudentNr, KursNr))",
+        "Belegung(ID INT PRIMARY KEY, StudentNr FK, KursNr FK)",
+        "Student bekommt FK KursNr NOT NULL",
+        "Kurs bekommt FK StudentNr nullable"
+      ],
+      "loesung": 0
+    },
+    {
+      "frage": "Wozu dient das UNIQUE-Constraint beim FK einer 1:1-Beziehung?",
+      "optionen": [
+        "Es verhindert, dass derselbe FK-Wert mehrfach vorkommt – ohne UNIQUE wäre es technisch 1:n",
+        "Es erzwingt NOT NULL auf dem Fremdschlüssel",
+        "Es ersetzt den Primärschlüssel der referenzierten Tabelle",
+        "Es ist optional und hat keinen Einfluss auf den Beziehungstyp"
+      ],
+      "loesung": 0
+    }
+  ]
+}

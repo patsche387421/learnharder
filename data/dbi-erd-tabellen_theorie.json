@@ -1,0 +1,30 @@
+{
+  "$schema": "./schema/theorie.schema.json",
+  "fach": "DBI",
+  "themen": [
+    {
+      "titel": "Grundregel: Entitytyp → Tabelle",
+      "text": "Jeder Entitytyp wird zu einer Tabelle, jedes Attribut wird zu einer Spalte. Das Primärschlüssel-Attribut (unterstrichen im ERD) wird zum PRIMARY KEY. Beziehungstypen verschwinden als eigene Strukturen; sie werden durch Fremdschlüssel oder Zwischentabellen ersetzt. Diese Grundregel gilt immer, unabhängig vom Beziehungstyp."
+    },
+    {
+      "titel": "1:n – Fremdschlüssel in die 1-Seite",
+      "text": "Bei einer 1:n-Beziehung wird ein Fremdschlüssel in die Tabelle mit max=1 eingefügt (die sogenannte 1-Seite). Der FK referenziert den Primärschlüssel der anderen Tabelle. Ist min der FK-Seite = 1, wird NOT NULL gesetzt; ist min = 0, bleibt der FK nullable. Beispiel: Mitarbeiter –(1,n)–GEHÖRT–(0,1)– Abteilung → Mitarbeiter bekommt FK AbteilungsNr (nullable, weil min=0 auf Mitarbeiter-Seite)."
+    },
+    {
+      "titel": "m:n – Zwischentabelle",
+      "text": "Bei einer m:n-Beziehung entsteht eine neue Zwischentabelle. Sie enthält mindestens zwei Spalten: je einen Fremdschlüssel auf die beiden beteiligten Tabellen. Der Primärschlüssel der Zwischentabelle ist zusammengesetzt aus beiden FKs (zusammengesetzter PK). Beide FKs sind automatisch NOT NULL, da sie Teil des PKs sind. Beispiel: Student –(1,n)–BELEGT–(0,n)– Kurs → Zwischentabelle Belegung(StudentNr FK, KursNr FK, PRIMARY KEY(StudentNr, KursNr))."
+    },
+    {
+      "titel": "1:1 – Fremdschlüssel + UNIQUE",
+      "text": "Bei einer 1:1-Beziehung wird ein FK in eine der beiden Tabellen eingefügt, ergänzt um ein UNIQUE-Constraint. Ohne UNIQUE wäre es technisch eine 1:n-Beziehung. Bevorzugte FK-Seite: die Tabelle mit min=1 (vollständige Teilnahme), da der FK dort sowieso NOT NULL ist und die Semantik klarer ist. Ist min=0, bleibt der FK nullable, UNIQUE bleibt aber trotzdem Pflicht."
+    },
+    {
+      "titel": "Primärschlüssel der Zwischentabelle",
+      "text": "Der zusammengesetzte Primärschlüssel einer Zwischentabelle besteht standardmäßig aus den FKs beider Seiten: PRIMARY KEY(FK1, FK2). Das verhindert doppelte Einträge für dieselbe Kombination. Enthält die Beziehung eigene Attribute (z. B. Datum der Belegung), werden diese als zusätzliche Spalten eingefügt – sie gehören nicht in den PK, außer sie unterscheiden mehrfache Verbindungen zwischen denselben Exemplaren."
+    },
+    {
+      "titel": "Typische Fehler",
+      "text": "FK auf die falsche Seite: Bei 1:n gehört der FK in die 1-Seite, nicht in die n-Seite. UNIQUE vergessen bei 1:1: Das ist der häufigste Prüfungsfehler. Kein zusammengesetzter PK in der Zwischentabelle: Ohne PK(FK1, FK2) entstehen Duplikate. NOT NULL falsch gesetzt: NOT NULL auf dem FK hängt vom min-Wert der FK-Seite ab, nicht vom gegenüberliegenden Entitytyp."
+    }
+  ]
+}
