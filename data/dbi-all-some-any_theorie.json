@@ -1,0 +1,26 @@
+{
+  "$schema": "./schema/theorie.schema.json",
+  "fach": "DBI",
+  "themen": [
+    {
+      "titel": "ALL, SOME und ANY – Überblick",
+      "text": "ALL, SOME und ANY werden zusammen mit Vergleichsoperatoren (>, <, >=, <=, =, !=) und einer Unterabfrage verwendet. Sie ermöglichen den Vergleich eines Werts mit einer ganzen Menge von Werten. SOME und ANY sind in SQL Synonyme – sie sind vollständig gleichbedeutend. Prüfungsrelevant ist Aufgabe 9: > ALL vs. > SOME war die häufigste Verwechslung."
+    },
+    {
+      "titel": "ALL – größer als ALLE Werte",
+      "text": "x > ALL (SELECT y ...) ist TRUE, wenn x größer ist als jeder einzelne Wert in der Ergebnismenge. Entspricht: x > MAX(y). Beispiel: Gehalt > ALL (SELECT Gehalt FROM Mitarbeiter WHERE Abt = 'IT') – findet Mitarbeiter, deren Gehalt höher ist als das höchste IT-Gehalt. Wichtig: Ist die Menge leer, gibt > ALL TRUE zurück (vacuous truth). Enthält die Menge NULL, kann das Ergebnis UNKNOWN werden."
+    },
+    {
+      "titel": "SOME / ANY – größer als MINDESTENS EINEN Wert",
+      "text": "x > SOME (SELECT y ...) ist TRUE, wenn x größer ist als mindestens einen Wert in der Ergebnismenge. Entspricht: x > MIN(y). Beispiel: Gehalt > SOME (SELECT Gehalt FROM Mitarbeiter WHERE Abt = 'IT') – findet Mitarbeiter, deren Gehalt höher ist als das niedrigste IT-Gehalt. Ist die Menge leer, gibt > SOME FALSE zurück."
+    },
+    {
+      "titel": "Die häufigste Verwechslung",
+      "text": "ALL und SOME werden in der Bedeutung oft vertauscht. Merkhilfe: ALL = strenge Bedingung (muss für ALLE gelten = Vergleich mit dem Extremwert auf der schärfsten Seite). SOME = lockere Bedingung (reicht wenn einer passt = Vergleich mit dem Extremwert auf der leichtesten Seite). Bei > gilt: > ALL entspricht > MAX, > SOME entspricht > MIN. Bei < gilt: < ALL entspricht < MIN, < SOME entspricht < MAX."
+    },
+    {
+      "titel": "Cheatsheet",
+      "text": "SOME und ANY sind identisch.\n\n> ALL  →  größer als ALLE  →  äquivalent zu > MAX(...)\n> SOME →  größer als EINER →  äquivalent zu > MIN(...)\n< ALL  →  kleiner als ALLE →  äquivalent zu < MIN(...)\n< SOME →  kleiner als EINER→  äquivalent zu < MAX(...)\n= SOME →  gleich einem Wert→  äquivalent zu IN (...)\n= ALL  →  gleich allen Werten (selten sinnvoll)\n\nLeere Menge:\n  > ALL  → TRUE  (nichts widerspricht)\n  > SOME → FALSE (kein Wert zum Übertreffen)"
+    }
+  ]
+}

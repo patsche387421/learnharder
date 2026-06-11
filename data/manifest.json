@@ -134,6 +134,27 @@
           "icon": "🔎",
           "beschreibung": "Skalare und Mehrwert-Unterabfragen, der Mehrfachwert-Fehler, IN vs. EXISTS.",
           "typ": "fach"
+        },
+        {
+          "id": "dbi-korrelierte-unterabfragen",
+          "name": "Korrelierte Unterabfragen",
+          "icon": "🪢",
+          "beschreibung": "Unterabfragen, die auf die äußere Abfrage verweisen – EXISTS mit Korrelation.",
+          "typ": "fach"
+        },
+        {
+          "id": "dbi-in-exists",
+          "name": "IN, EXISTS und NOT EXISTS",
+          "icon": "🎯",
+          "beschreibung": "NULL-Falle bei NOT IN, NULL-Sicherheit von NOT EXISTS, T1/T2-Denkfehler.",
+          "typ": "fach"
+        },
+        {
+          "id": "dbi-all-some-any",
+          "name": "ANY, SOME und ALL",
+          "icon": "⚖️",
+          "beschreibung": "> ALL = > MAX, > SOME = > MIN – und warum die Verwechslung so häufig ist.",
+          "typ": "fach"
         }
       ]
     },

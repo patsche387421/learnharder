@@ -1,0 +1,56 @@
+{
+  "$schema": "./schema/quiz.schema.json",
+  "fach": "DBI",
+  "fragen": [
+    {
+      "frage": "Was passiert bei NOT IN, wenn die Unterabfrage einen NULL-Wert enthält?",
+      "optionen": [
+        "Die gesamte NOT IN-Bedingung gibt niemals TRUE zurück – das Ergebnis der Abfrage ist leer",
+        "NULL wird als 0 behandelt und der Vergleich läuft normal",
+        "NULL-Werte werden in der Unterabfrage automatisch ignoriert",
+        "NOT IN funktioniert nur ohne NULL – es entsteht ein Syntaxfehler"
+      ],
+      "loesung": 0
+    },
+    {
+      "frage": "Warum ist NOT EXISTS sicherer als NOT IN?",
+      "optionen": [
+        "NOT EXISTS prüft nur die Existenz einer Zeile, nicht ihren Wert – NULL-Werte können es nicht beeinflussen",
+        "NOT EXISTS ist schneller als NOT IN",
+        "NOT EXISTS ignoriert automatisch doppelte Einträge",
+        "Es gibt keinen Unterschied – beide sind bei NULL-Werten gleich sicher"
+      ],
+      "loesung": 0
+    },
+    {
+      "frage": "Welche Abfrage findet alle Kunden, die KEINE Bestellung aufgegeben haben – NULL-sicher?",
+      "optionen": [
+        "SELECT k.Name FROM Kunde k WHERE NOT EXISTS (SELECT 1 FROM Bestellung b WHERE b.KundeNr = k.KundeNr)",
+        "SELECT k.Name FROM Kunde k WHERE k.KundeNr NOT IN (SELECT KundeNr FROM Bestellung)",
+        "SELECT k.Name FROM Kunde k WHERE k.KundeNr IN (SELECT KundeNr FROM Bestellung WHERE KundeNr IS NULL)",
+        "SELECT k.Name FROM Kunde k LEFT JOIN Bestellung b ON k.KundeNr = b.KundeNr WHERE b.KundeNr = NULL"
+      ],
+      "loesung": 0
+    },
+    {
+      "frage": "Wann sind IN und EXISTS funktional gleichwertig?",
+      "optionen": [
+        "Bei positiver Suche (ohne NOT) und wenn die Unterabfrage keine NULL-Werte enthält",
+        "Immer – IN und EXISTS sind immer vollständig austauschbar",
+        "Nur bei korrelierten Unterabfragen",
+        "Nur wenn die Unterabfrage genau eine Zeile zurückgibt"
+      ],
+      "loesung": 0
+    },
+    {
+      "frage": "Was ist der T1/T2-Denkfehler bei Unterabfragen?",
+      "optionen": [
+        "Die Korrelationsbedingung fehlt oder filtert falsch – die Unterabfrage liefert zu viele oder zu wenige Zeilen",
+        "Man verwendet IN statt EXISTS bei korrelierten Unterabfragen",
+        "Man vergisst SELECT 1 in der EXISTS-Unterabfrage",
+        "Man verschachtelt Unterabfragen mehr als zwei Ebenen tief"
+      ],
+      "loesung": 0
+    }
+  ]
+}
