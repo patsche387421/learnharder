@@ -1,0 +1,30 @@
+{
+  "$schema": "./schema/theorie.schema.json",
+  "fach": "DBI",
+  "themen": [
+    {
+      "titel": "Die 4 Phasen im Überblick",
+      "text": "Datenbankdesign läuft immer in vier Phasen ab: Phase 1 (Anforderungsanalyse) → Phase 2 (Konzeptioneller Entwurf) → Phase 3 (Logischer Entwurf) → Phase 4 (Physischer Entwurf). Für die Prüfung sind Phasen 2–4 direkt relevant. Phase 1 liefert den Input als Textbeschreibung – Phasen 2–4 sind deine eigentlichen Arbeitsschritte."
+    },
+    {
+      "titel": "Phase 1 – Anforderungsanalyse",
+      "text": "Aus einem Kundentext oder einer Aufgabenstellung werden die zu speichernden Informationen identifiziert. Ergebnis: Eine strukturierte Beschreibung – welche Objekte gibt es, welche Eigenschaften haben sie, welche Beziehungen bestehen zwischen ihnen. In der Prüfung ist Phase 1 meistens bereits erledigt; die Aufgabe startet direkt bei Phase 2."
+    },
+    {
+      "titel": "Phase 2 – Konzeptioneller Entwurf (ERD)",
+      "text": "Hier entsteht das Entity-Relationship-Diagramm (ERD). Entitytypen (Rechteck), Attribute (Ellipse) und Beziehungstypen (Raute) werden gezeichnet. Jede Beziehung erhält eine (min,max)-Notation. Das ERD ist implementierungsunabhängig – es beschreibt was gespeichert wird, nicht wie und nicht mit welchem DBMS."
+    },
+    {
+      "titel": "Phase 3 – Logischer Entwurf (Relationales Modell)",
+      "text": "Das ERD wird nach festen Regeln in Tabellen übersetzt: Jeder Entitytyp wird zur Tabelle, Attribute werden zu Spalten, Beziehungen werden je nach Typ (1:1, 1:n, m:n) durch Fremdschlüssel oder Zwischentabellen umgesetzt. Ergebnis ist das relationale Datenmodell – eine Tabellenstruktur noch ohne konkrete SQL-Syntax."
+    },
+    {
+      "titel": "Phase 4 – Physischer Entwurf (DDL)",
+      "text": "Das relationale Modell wird als SQL-DDL implementiert: CREATE TABLE mit PRIMARY KEY, FOREIGN KEY, NOT NULL, UNIQUE und DBMS-spezifischen Datentypen. In der Prüfung bedeutet das: CREATE TABLE-Statements schreiben oder eine vorhandene DDL auf Fehler prüfen (fehlende UNIQUE, falsche NOT NULL usw.)."
+    },
+    {
+      "titel": "Typische Fehler",
+      "text": "Phase 2 und 3 verwechseln: Das ERD zeigt das Konzept, Tabellen zeigen die Implementierung. In Phase 3 noch ERD-Symbole verwenden (z. B. Raute zeichnen statt Fremdschlüssel setzen). In Phase 2 bereits FK-Spalten einzeichnen – das ist Phase-3-Denken. Die Phasen rückwärts durchlaufen führt dazu, dass Designentscheidungen zu früh und auf der falschen Ebene getroffen werden."
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "$schema": "./schema/theorie.schema.json",
+  "fach": "DBI",
+  "themen": [
+    {
+      "titel": "Aufbau der (min,max)-Notation",
+      "text": "In der Chen-(min,max)-Notation steht neben jedem Entitytyp ein Paar (min,max). min ist immer 0 oder 1. max ist immer 1 oder n (manchmal auch * als Synonym für n). Das Paar beschreibt die Teilnahme eines einzelnen Exemplars dieses Entitytyps an der Beziehung. Entscheidend: Das Paar steht direkt neben dem Entitytyp, zu dem es gehört – nicht neben dem gegenüberliegenden."
+    },
+    {
+      "titel": "Was min bedeutet – der NULL-Schalter",
+      "text": "min = 0 bedeutet: Ein Datensatz dieses Entitytyps muss nicht an der Beziehung teilnehmen. In SQL: Der Fremdschlüssel auf dieser Seite darf NULL sein (nullable). min = 1 bedeutet: Jeder Datensatz muss an der Beziehung teilnehmen. In SQL: Der Fremdschlüssel ist NOT NULL. Merksatz: min = 1 → NOT NULL, min = 0 → nullable."
+    },
+    {
+      "titel": "Was max bedeutet – die FK-Seite",
+      "text": "max = 1 bedeutet: Ein Datensatz kann in dieser Beziehung maximal einmal vorkommen. Das ist die Seite, auf der der Fremdschlüssel gespeichert wird. max = n bedeutet: Ein Datensatz kann beliebig oft an der Beziehung teilnehmen. Hier liegt kein FK. Merksatz: Wo max = n steht, liegt kein Fremdschlüssel. Der FK liegt immer auf der Seite mit max = 1."
+    },
+    {
+      "titel": "Häufigste Verwechslung: Welches Paar gehört wohin?",
+      "text": "Das (min,max) steht NEBEN dem Entitytyp, den es beschreibt – nicht neben dem gegenüberliegenden. Beispiel: A –(1,n)–R–(0,1)– B. Das (1,n) beschreibt A: Jedes A muss mindestens einmal teilnehmen und kann mehrfach vorkommen. Das (0,1) beschreibt B: Jedes B kann, muss aber nicht teilnehmen; wenn es teilnimmt, dann maximal einmal. Fehler: Die Notation gespiegelt lesen und (1,n) auf B beziehen."
+    },
+    {
+      "titel": "Von der Notation zur Implementierung – Schritt für Schritt",
+      "text": "Schritt 1: Beziehungstyp aus max-Werten: beide max=1 → 1:1; eine max=n → 1:n; beide max=n → m:n. Schritt 2: FK-Seite bestimmen: Bei 1:n liegt der FK in der Tabelle mit max=1. Bei 1:1 bevorzugt auf die Seite mit min=1. Bei m:n: Zwischentabelle. Schritt 3: NOT NULL: min der FK-Seite = 1 → NOT NULL; min = 0 → nullable. Schritt 4: UNIQUE: Bei 1:1 immer UNIQUE auf dem FK – ohne Ausnahme."
+    },
+    {
+      "titel": "Cheatsheet",
+      "text": "(0,1) → optional, max. einmal  → FK nullable; bei 1:1: + UNIQUE\n(1,1) → Pflicht, genau einmal  → FK NOT NULL; bei 1:1: + UNIQUE\n(0,n) → optional, beliebig oft → kein FK hier\n(1,n) → Pflicht, beliebig oft  → kein FK hier\n\nFaustregel 1: Wo max = n, liegt kein FK.\nFaustregel 2: Wo max = 1, liegt der FK.\nFaustregel 3: min der FK-Seite = 1 → NOT NULL.\nFaustregel 4: 1:1-Beziehung → immer UNIQUE auf dem FK."
+    }
+  ]
+}

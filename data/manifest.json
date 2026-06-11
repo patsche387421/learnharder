@@ -26,10 +26,32 @@
       "id": "dbi",
       "name": "DBI",
       "vollname": "Datenbanken und Informationssysteme",
-      "icon": "🗄",
-      "beschreibung": "SQL, Datenbankdesign, ER-Modell und Informationssysteme",
+      "icon": "🗄️",
+      "beschreibung": "Datenbankmodellierung, ERD, SQL-Abfragen und Implementierung.",
       "seite": "/dbi.html",
-      "themen": []
+      "themen": [
+        {
+          "id": "dbi-konzeptionelles-datendesign",
+          "name": "Konzeptionelles Datendesign",
+          "icon": "🗺️",
+          "beschreibung": "Die 4 Phasen des Datenbankdesigns – von der Anforderungsanalyse bis zur DDL.",
+          "typ": "fach"
+        },
+        {
+          "id": "dbi-erd-lesen",
+          "name": "ERD lesen",
+          "icon": "🔍",
+          "beschreibung": "Entitytypen, Attribute, Beziehungen und (min,max)-Paare im ERD sicher lesen.",
+          "typ": "fach"
+        },
+        {
+          "id": "dbi-chen-notation",
+          "name": "Chen-(min,max)-Notation",
+          "icon": "📌",
+          "beschreibung": "Was (min,max) bedeutet und wie es sich direkt auf FK, NOT NULL und UNIQUE auswirkt.",
+          "typ": "fach"
+        }
+      ]
     },
     {
       "id": "nsvs",
