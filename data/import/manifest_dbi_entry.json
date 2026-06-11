@@ -1,0 +1,178 @@
+{
+  "id": "dbi",
+  "name": "DBI",
+  "vollname": "Datenbanken und Informationssysteme",
+  "icon": "🗄️",
+  "beschreibung": "Datenbankmodellierung, ERD, SQL-Abfragen und Implementierung. Prüfungsvorbereitung für HTL Mödling.",
+  "seite": "/dbi.html",
+  "themen": [
+    {
+      "id": "dbi-konzeptionelles-datendesign",
+      "name": "Konzeptionelles Datendesign",
+      "icon": "🗺️",
+      "beschreibung": "Grundlage für alle ERD-Aufgaben. Die Phasen 2–4 sind direkt prüfungsrelevant, we...",
+      "typ": "fach",
+      "kategorie": "erd"
+    },
+    {
+      "id": "dbi-erd-lesen",
+      "name": "ERD lesen",
+      "icon": "🔍",
+      "beschreibung": "Grundkompetenz für nahezu alle Prüfungsaufgaben. Wer Kardinalitäten falsch liest...",
+      "typ": "fach",
+      "kategorie": "erd"
+    },
+    {
+      "id": "dbi-chen-notation",
+      "name": "Chen-(min,max)-Notation",
+      "icon": "📌",
+      "beschreibung": "Grundlage jeder ERD-Aufgabe. Die Verwechslung, welches (min,max) zu welchem Enti...",
+      "typ": "fach",
+      "kategorie": "erd"
+    },
+    {
+      "id": "dbi-kraehenfuss",
+      "name": "Krähenfußnotation",
+      "icon": "🐾",
+      "beschreibung": "Aufgabe 8 der Testanalyse: Produkt/Kategorie in Krähenfuß zeichnen. Lesen und Um...",
+      "typ": "fach",
+      "kategorie": "erd"
+    },
+    {
+      "id": "dbi-umwandlung",
+      "name": "Chen ↔ Krähenfuß umwandeln",
+      "icon": "🔄",
+      "beschreibung": "Direktes Testaufgabenformat (Aufgabe 8). Umwandlung in beide Richtungen mit FK-A...",
+      "typ": "fach",
+      "kategorie": "erd"
+    },
+    {
+      "id": "dbi-beziehungstypen",
+      "name": "Beziehungstypen 1:1, 1:n, m:n",
+      "icon": "🔗",
+      "beschreibung": "Fundament aller Implementierungsaufgaben. Wer den Typ falsch bestimmt, platziert...",
+      "typ": "fach",
+      "kategorie": "erd"
+    },
+    {
+      "id": "dbi-erd-tabellen",
+      "name": "ERD in Tabellen umsetzen",
+      "icon": "🗂️",
+      "beschreibung": "Kernthema der Prüfung. Aufgaben 1–7 der Testanalyse betreffen alle die Umsetzung...",
+      "typ": "fach",
+      "kategorie": "erd"
+    },
+    {
+      "id": "dbi-11-beziehungen",
+      "name": "1:1-Beziehungen implementieren",
+      "icon": "🔑",
+      "beschreibung": "Häufigste Fehlerquelle der Testanalyse. Aufgaben 1, 2, 6, 7 drehten sich alle um...",
+      "typ": "fach",
+      "kategorie": "implementierung"
+    },
+    {
+      "id": "dbi-1n-beziehungen",
+      "name": "1:n-Beziehungen implementieren",
+      "icon": "📂",
+      "beschreibung": "Aufgabe 6 der Testanalyse: A(1,n)---(0,1)B. FK-Seite und NULL-Entscheidung waren...",
+      "typ": "fach",
+      "kategorie": "implementierung"
+    },
+    {
+      "id": "dbi-mn-beziehungen",
+      "name": "m:n-Beziehungen implementieren",
+      "icon": "🔀",
+      "beschreibung": "Schulungsfirma (geeignet) und Lieferant/Teil (lt). Zwischentabelle, zusammengese...",
+      "typ": "fach",
+      "kategorie": "implementierung"
+    },
+    {
+      "id": "dbi-abhaengige-entitytypen",
+      "name": "Abhängige Entitytypen",
+      "icon": "🏗️",
+      "beschreibung": "Aufgaben 4 und 5 der Testanalyse: Kino/Saal/Vorstellung. Die Falle (1,1) ≠ abhän...",
+      "typ": "fach",
+      "kategorie": "implementierung"
+    },
+    {
+      "id": "dbi-mehrwertige-beziehungen",
+      "name": "Mehrwertige Beziehungstypen",
+      "icon": "🔧",
+      "beschreibung": "unterrichtet(Klasse, Lehrer, Fach, Stunden). PK aus allen drei FKs. Unterschied ...",
+      "typ": "fach",
+      "kategorie": "implementierung"
+    },
+    {
+      "id": "dbi-erd-rekonstruieren",
+      "name": "ERD aus logischem Modell rekonstruieren",
+      "icon": "🔁",
+      "beschreibung": "Rückwärts-Lesen von Tabellen ins ERD. Die Grenzen der Rekonstruktion explizit ke...",
+      "typ": "fach",
+      "kategorie": "erd"
+    },
+    {
+      "id": "dbi-unterabfragen",
+      "name": "Unterabfragen",
+      "icon": "🔎",
+      "beschreibung": "Aufgaben 9, 11, 12 der Testanalyse. Mehrfachwert-Fehler, IN/EXISTS/ALL/SOME, T1-...",
+      "typ": "fach",
+      "kategorie": "sql"
+    },
+    {
+      "id": "dbi-korrelierte-unterabfragen",
+      "name": "Korrelierte Unterabfragen",
+      "icon": "🪢",
+      "beschreibung": "Aufgabe 11 der Testanalyse: Erkennung korrelierter Unterabfragen. l.lnr in der i...",
+      "typ": "fach",
+      "kategorie": "sql"
+    },
+    {
+      "id": "dbi-in-exists",
+      "name": "IN, EXISTS und NOT EXISTS",
+      "icon": "🎯",
+      "beschreibung": "Aufgaben 11 und 12 der Testanalyse. Der T1-und-T2-Denkfehler war der häufigste F...",
+      "typ": "fach",
+      "kategorie": "sql"
+    },
+    {
+      "id": "dbi-all-some-any",
+      "name": "ANY, SOME und ALL",
+      "icon": "⚖️",
+      "beschreibung": "Aufgabe 9 der Testanalyse. > ALL vs. > SOME war die häufigste Verwechslung.",
+      "typ": "fach",
+      "kategorie": "sql"
+    },
+    {
+      "id": "dbi-outer-join",
+      "name": "OUTER JOIN",
+      "icon": "↔️",
+      "beschreibung": "LEFT JOIN + IS NULL für fehlende Zuordnungen. count(*) vs. count(Spalte) ist ein...",
+      "typ": "fach",
+      "kategorie": "sql"
+    },
+    {
+      "id": "dbi-mengenoperationen",
+      "name": "SQL-Mengenoperationen",
+      "icon": "⚗️",
+      "beschreibung": "UNION, UNION ALL, INTERSECT, EXCEPT. Die EXCEPT-Reihenfolge ist kritisch.",
+      "typ": "fach",
+      "kategorie": "sql"
+    },
+    {
+      "id": "dbi-null-fallen",
+      "name": "NULL-Fallen in SQL",
+      "icon": "⚠️",
+      "beschreibung": "Querschnittsthema. NULL taucht bei NOT IN, LEFT JOIN, count() und optionalen FKs...",
+      "typ": "fach",
+      "kategorie": "sql"
+    },
+    {
+      "id": "dbi-pruefungsfehler",
+      "name": "Prüfungsfehler & Gegenstrategien",
+      "icon": "🎯",
+      "beschreibung": "Die 10 häufigsten Fehler aus der echten Testanalyse. Finale Wiederholung für den...",
+      "typ": "fach",
+      "kategorie": "wiederholung"
+    }
+  ]
+}
