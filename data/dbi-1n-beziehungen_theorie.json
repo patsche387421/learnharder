@@ -1,0 +1,26 @@
+{
+  "$schema": "./schema/theorie.schema.json",
+  "fach": "DBI",
+  "themen": [
+    {
+      "titel": "Die Grundregel: FK in die 1-Seite",
+      "text": "Bei einer 1:n-Beziehung wird ein Fremdschlüssel in die Tabelle mit max = 1 eingefügt – das ist die sogenannte 1-Seite. Die 1-Seite erkennt man daran, dass ihr (min,max)-Paar max = 1 hat. Der FK referenziert den Primärschlüssel der Tabelle auf der n-Seite. Kein UNIQUE nötig – genau das unterscheidet 1:n von 1:1."
+    },
+    {
+      "titel": "NOT NULL oder nullable?",
+      "text": "Ob der FK NOT NULL ist, hängt vom min-Wert der Tabelle ab, in der der FK liegt (die 1-Seite). min = 1 auf der FK-Seite → NOT NULL. min = 0 auf der FK-Seite → nullable. Beispiel: Mitarbeiter –(0,n)– GEHÖRT –(1,1)– Abteilung. FK liegt in Mitarbeiter (max = 1 auf Mitarbeiter-Seite? Nein – hier liegt ein häufiger Lesefehler: max = n auf Mitarbeiter-Seite, max = 1 auf Abteilung-Seite → FK liegt in Abteilung, NOT NULL weil min der Abteilung-Seite = 1)."
+    },
+    {
+      "titel": "Prüfungsaufgabe: A(1,n)–R–(0,1)B",
+      "text": "Dieses Muster kam in Aufgabe 6 der Testanalyse: A –(1,n)–R–(0,1)– B. max auf A-Seite = n, max auf B-Seite = 1 → FK liegt in B. min auf B-Seite = 0 → FK ist nullable. Korrekte Tabelle: B(BNr PK, ANr INT NULL REFERENCES A). Häufige Fehler: FK in A statt B; FK als NOT NULL statt nullable; UNIQUE hinzufügen (wäre 1:1)."
+    },
+    {
+      "titel": "Umkehrfall: (0,1)–R–(1,n)",
+      "text": "Auch gespiegelt kommt das vor: A –(0,1)–R–(1,n)– B. max auf A-Seite = 1 → FK liegt in A. min auf A-Seite = 0 → FK nullable. Korrekte Tabelle: A(ANr PK, BNr INT NULL REFERENCES B). Die Richtung des FKs hängt immer von den max-Werten ab, nicht von der Leserichtung des ERDs."
+    },
+    {
+      "titel": "Cheatsheet",
+      "text": "1:n erkennen: ein max = n, anderes max = 1\n\nFK-Seite: Tabelle mit max = 1\nKein UNIQUE (sonst wäre es 1:1)\n\nNOT NULL: min der FK-Seite = 1 → NOT NULL\nnullable:  min der FK-Seite = 0 → nullable\n\nBeispiel: A –(1,n)–R–(0,1)– B\n→ B(BNr PK, ANr INT NULL REFERENCES A)"
+    }
+  ]
+}

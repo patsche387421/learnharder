@@ -1,0 +1,26 @@
+{
+  "$schema": "./schema/theorie.schema.json",
+  "fach": "DBI",
+  "themen": [
+    {
+      "titel": "Was ist die Krähenfußnotation?",
+      "text": "Die Krähenfußnotation (auch Crow's Foot) ist eine alternative ERD-Darstellung. Statt Rautendiagrammen werden die Beziehungen direkt als Linien zwischen Rechtecken gezeichnet. Die Kardinalität wird durch grafische Symbole am Ende jeder Linie dargestellt, nicht durch (min,max)-Paare. In vielen Tools (z. B. MySQL Workbench, dbdiagram.io) ist Krähenfuß der Standard."
+    },
+    {
+      "titel": "Die Symbole am Linienende",
+      "text": "Am Ende jeder Beziehungslinie stehen zwei Symbole: das äußere Symbol für die Mindest-Kardinalität (min), das innere Symbol für die Maximal-Kardinalität (max). Mindest-Symbole: senkrechter Strich = 1 (Pflicht), Kreis = 0 (optional). Maximal-Symbole: senkrechter Strich = 1 (genau einmal), Krähenfuß (drei Striche) = n (beliebig viele). Die Symbole werden direkt am Entitytyp-Rechteck gelesen."
+    },
+    {
+      "titel": "Kardinalitäten lesen",
+      "text": "Das Paar aus äußerem und innerem Symbol entspricht dem (min,max) der Chen-Notation. Kreis + Strich = (0,1): optional, höchstens einmal. Strich + Strich = (1,1): Pflicht, genau einmal. Kreis + Krähenfuß = (0,n): optional, beliebig viele. Strich + Krähenfuß = (1,n): Pflicht, beliebig viele. Reihenfolge: erst äußeres Symbol (min), dann inneres Symbol (max) – von der Seite des Entitytyps aus gelesen."
+    },
+    {
+      "titel": "Vergleich Chen ↔ Krähenfuß",
+      "text": "Chen (0,1) = Krähenfuß Kreis+Strich. Chen (1,1) = Krähenfuß Strich+Strich. Chen (0,n) = Krähenfuß Kreis+Krähenfuß. Chen (1,n) = Krähenfuß Strich+Krähenfuß. Der Beziehungstyp (1:1, 1:n, m:n) ergibt sich auch im Krähenfuß aus den inneren Symbolen (max-Werten) auf beiden Seiten. Die Implementierungsregeln sind identisch zur Chen-Notation."
+    },
+    {
+      "titel": "Cheatsheet: Symbole auf einen Blick",
+      "text": "Äußeres Symbol (min):\n  Kreis     = 0  (optional)\n  Strich    = 1  (Pflicht)\n\nInneres Symbol (max):\n  Strich    = 1  (höchstens einmal)\n  Krähenfuß = n  (beliebig viele)\n\nKombinationen:\n  Kreis + Strich    = (0,1)\n  Strich + Strich   = (1,1)\n  Kreis + Krähenfuß = (0,n)\n  Strich + Krähenfuß= (1,n)\n\nBeziehungstyp aus inneren Symbolen:\n  Strich + Strich       → 1:1\n  Strich + Krähenfuß    → 1:n\n  Krähenfuß + Krähenfuß → m:n"
+    }
+  ]
+}

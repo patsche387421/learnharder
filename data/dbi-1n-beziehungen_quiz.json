@@ -1,0 +1,56 @@
+{
+  "$schema": "./schema/quiz.schema.json",
+  "fach": "DBI",
+  "fragen": [
+    {
+      "frage": "In welche Tabelle gehört der Fremdschlüssel bei einer 1:n-Beziehung?",
+      "optionen": [
+        "In die Tabelle mit max = 1 (die 1-Seite)",
+        "In die Tabelle mit max = n (die n-Seite)",
+        "In eine neue Zwischentabelle",
+        "In beide Tabellen gleichzeitig"
+      ],
+      "loesung": 0
+    },
+    {
+      "frage": "A –(1,n)–R–(0,1)– B. Wo liegt der FK, und ist er NOT NULL?",
+      "optionen": [
+        "FK in B, nullable (min der B-Seite = 0)",
+        "FK in A, NOT NULL (min der A-Seite = 1)",
+        "FK in B, NOT NULL (wegen max = 1 auf B)",
+        "FK in A, nullable (wegen max = n auf A)"
+      ],
+      "loesung": 0
+    },
+    {
+      "frage": "Was unterscheidet die DDL einer 1:n von einer 1:1-Beziehung?",
+      "optionen": [
+        "Bei 1:n gibt es kein UNIQUE auf dem FK; bei 1:1 ist UNIQUE zwingend",
+        "Bei 1:n braucht man eine Zwischentabelle; bei 1:1 nicht",
+        "Bei 1:n liegt der FK auf der n-Seite; bei 1:1 auf der 1-Seite",
+        "Es gibt keinen Unterschied in der DDL"
+      ],
+      "loesung": 0
+    },
+    {
+      "frage": "Folgende DDL soll A –(1,n)–R–(0,1)– B implementieren:\nB(BNr INT PRIMARY KEY, ANr INT NOT NULL REFERENCES A)\nWas ist falsch?",
+      "optionen": [
+        "NOT NULL ist falsch – der FK muss nullable sein, weil min der B-Seite = 0",
+        "UNIQUE fehlt auf ANr",
+        "Der FK gehört in Tabelle A, nicht B",
+        "Eine Zwischentabelle wäre nötig"
+      ],
+      "loesung": 0
+    },
+    {
+      "frage": "Abteilung –(1,1)–ENTHÄLT–(0,n)– Mitarbeiter. Wo liegt der FK?",
+      "optionen": [
+        "In Abteilung, NOT NULL (max = 1 auf Abteilung-Seite, min = 1)",
+        "In Mitarbeiter, nullable (max = n auf Mitarbeiter-Seite)",
+        "In Mitarbeiter, NOT NULL (min = 0 auf Mitarbeiter-Seite)",
+        "In einer Zwischentabelle wegen der Pflicht-Teilnahme auf Abteilung-Seite"
+      ],
+      "loesung": 0
+    }
+  ]
+}

@@ -71,6 +71,27 @@
           "icon": "🔑",
           "beschreibung": "Der häufigste Fehler in der Prüfung: UNIQUE vergessen. Mit DDL-Fehler-Analyse.",
           "typ": "fach"
+        },
+        {
+          "id": "dbi-1n-beziehungen",
+          "name": "1:n-Beziehungen implementieren",
+          "icon": "📂",
+          "beschreibung": "FK-Seite bestimmen, NOT NULL oder nullable – und warum kein UNIQUE nötig ist.",
+          "typ": "fach"
+        },
+        {
+          "id": "dbi-mn-beziehungen",
+          "name": "m:n-Beziehungen implementieren",
+          "icon": "🔀",
+          "beschreibung": "Zwischentabelle, zusammengesetzter PK und Beziehungsattribute.",
+          "typ": "fach"
+        },
+        {
+          "id": "dbi-kraehenfuss",
+          "name": "Krähenfußnotation",
+          "icon": "🐾",
+          "beschreibung": "Symbole lesen, Chen-Notation vergleichen und Beziehungstypen erkennen.",
+          "typ": "fach"
         }
       ]
     },
