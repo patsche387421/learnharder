@@ -92,6 +92,27 @@
           "icon": "🐾",
           "beschreibung": "Symbole lesen, Chen-Notation vergleichen und Beziehungstypen erkennen.",
           "typ": "fach"
+        },
+        {
+          "id": "dbi-umwandlung",
+          "name": "Chen ↔ Krähenfuß umwandeln",
+          "icon": "🔄",
+          "beschreibung": "Systematische Umwandlung in beide Richtungen – die DDL bleibt dabei identisch.",
+          "typ": "fach"
+        },
+        {
+          "id": "dbi-abhaengige-entitytypen",
+          "name": "Abhängige Entitytypen",
+          "icon": "🏗️",
+          "beschreibung": "Schwache Entitytypen erkennen, die Falle (1,1) ≠ abhängig, zusammengesetzter PK.",
+          "typ": "fach"
+        },
+        {
+          "id": "dbi-mehrwertige-beziehungen",
+          "name": "Mehrwertige Beziehungstypen",
+          "icon": "🔧",
+          "beschreibung": "Ternäre Beziehungen implementieren: PK aus allen FKs, Beziehungsattribute.",
+          "typ": "fach"
         }
       ]
     },

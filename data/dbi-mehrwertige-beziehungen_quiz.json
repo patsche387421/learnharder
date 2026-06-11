@@ -1,0 +1,56 @@
+{
+  "$schema": "./schema/quiz.schema.json",
+  "fach": "DBI",
+  "fragen": [
+    {
+      "frage": "Was charakterisiert einen mehrwertigen Beziehungstyp?",
+      "optionen": [
+        "Er verbindet drei oder mehr Entitytypen gleichzeitig",
+        "Er hat mehr als zwei Attribute",
+        "Er hat auf allen Seiten max = n",
+        "Er kann nicht in Tabellen abgebildet werden"
+      ],
+      "loesung": 0
+    },
+    {
+      "frage": "Wie wird unterrichtet(Klasse, Lehrer, Fach) implementiert?",
+      "optionen": [
+        "Als eigene Tabelle mit FKs auf alle drei Entitytypen und PRIMARY KEY(KlasseNr, LehrerNr, FachNr)",
+        "Als Spalte Unterrichtet in der Klasse-Tabelle",
+        "Als zwei separate m:n-Zwischentabellen",
+        "Als Tabelle mit einem eigenen Surrogate Key als PK"
+      ],
+      "loesung": 0
+    },
+    {
+      "frage": "unterrichtet hat ein Attribut Stunden. Wo landet Stunden?",
+      "optionen": [
+        "Als zusätzliche Spalte in der unterrichtet-Tabelle, nicht im PK",
+        "Als Teil des zusammengesetzten Primärschlüssels",
+        "Als Spalte in der Lehrer-Tabelle",
+        "Als Spalte in der Fach-Tabelle"
+      ],
+      "loesung": 0
+    },
+    {
+      "frage": "Was ist der Unterschied zwischen einer m:n-Zwischentabelle und einem ternären Beziehungstyp?",
+      "optionen": [
+        "Die Zwischentabelle hat 2 FKs im PK, der ternäre Beziehungstyp hat 3",
+        "Der ternäre Beziehungstyp braucht keinen Primärschlüssel",
+        "Eine Zwischentabelle hat immer einen AUTO_INCREMENT PK",
+        "Es gibt keinen Unterschied – beide werden identisch implementiert"
+      ],
+      "loesung": 0
+    },
+    {
+      "frage": "Welche der folgenden DDLs implementiert unterrichtet(Klasse, Lehrer, Fach, Stunden) korrekt?",
+      "optionen": [
+        "unterrichtet(KlasseNr FK NOT NULL, LehrerNr FK NOT NULL, FachNr FK NOT NULL, Stunden INT, PRIMARY KEY(KlasseNr, LehrerNr, FachNr))",
+        "unterrichtet(ID INT PRIMARY KEY, KlasseNr FK, LehrerNr FK, FachNr FK, Stunden INT)",
+        "unterrichtet(KlasseNr FK NOT NULL, LehrerNr FK NOT NULL, FachNr FK NOT NULL, Stunden INT, PRIMARY KEY(KlasseNr, LehrerNr, FachNr, Stunden))",
+        "Klasse bekommt FK LehrerNr und FachNr direkt als Spalten"
+      ],
+      "loesung": 0
+    }
+  ]
+}
