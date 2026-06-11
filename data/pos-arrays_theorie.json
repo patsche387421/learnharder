@@ -1,0 +1,26 @@
+{
+  "$schema": "./schema/theorie.schema.json",
+  "fach": "POS",
+  "themen": [
+    {
+      "titel": "Grundlagen: Feste Größe und 0-Indizierung",
+      "text": "Ein Array ist ein Behälter für mehrere Werte desselben Typs unter einem Namen. Arrays in C# haben eine feste Größe, die beim Erstellen festgelegt wird und danach nicht mehr änderbar ist. Der Index beginnt bei 0: Das erste Element ist array[0], das letzte array[array.Length - 1]. Zugriff außerhalb des gültigen Bereichs führt zu einer IndexOutOfRangeException. Für variable Anzahl von Elementen ist List<T> besser geeignet."
+    },
+    {
+      "titel": "Eindimensionale Arrays – Deklaration und Iteration",
+      "text": "Deklaration mit Größe: int[] zahlen = new int[5]; – alle Werte werden mit 0 initialisiert. Deklaration mit Werten: int[] noten = { 1, 2, 3, 4, 5 }; Iteration mit for wenn der Index gebraucht wird. Iteration mit foreach wenn nur die Werte gebraucht werden – aber in foreach darf die Sammlung nicht verändert werden. Startwert für Min/Max-Suche immer arr[0] wählen, nicht 0 – sonst ist das Ergebnis falsch wenn alle Werte negativ sind."
+    },
+    {
+      "titel": "Zweidimensionale Arrays – Tabellen",
+      "text": "Ein 2D-Array ist eine Tabelle mit festen Zeilen- und Spaltenzahlen: int[,] matrix = new int[3, 4]; Zugriff über zwei Indizes: matrix[zeile, spalte] – beide starten bei 0. GetLength(0) gibt die Anzahl der Zeilen zurück, GetLength(1) die Anzahl der Spalten. .Length gibt die Gesamtanzahl aller Elemente zurück (Zeilen × Spalten). Für die Iteration braucht man verschachtelte for-Schleifen mit GetLength(), nicht .Length."
+    },
+    {
+      "titel": "Jagged Arrays – Zeilen unterschiedlicher Länge",
+      "text": "Ein Jagged Array ist ein Array von Arrays: int[][] dreieck = new int[3][]; Jede Zeile wird einzeln initialisiert und kann eine eigene Länge haben. Zugriff mit zwei eckigen Klammern hintereinander: dreieck[zeile][spalte]. Vorteil: Spart Speicher wenn Zeilen unterschiedlich lang sind. Iteration: Äußere Schleife über dreieck.Length, innere über dreieck[i].Length. Typischer Einsatz: Wörter pro Satz, Tests pro Schüler, Menüpunkte pro Kategorie."
+    },
+    {
+      "titel": "Wann welchen Array-Typ?",
+      "text": "Eindimensionaler Array: für einfache Listen wenn die Größe bekannt ist. 2D-Array (int[,]): für echte Tabellen mit gleich langen Zeilen (Spielfeld, Matrix). Jagged Array (int[][]): wenn jede Zeile eine andere Länge haben kann. List<T>: wenn die Anzahl der Elemente unbekannt ist oder sich dynamisch ändert. Für Sortierung und Suche bietet System.Array Hilfsmethoden: Array.Sort(arr) und Array.IndexOf(arr, wert)."
+    }
+  ]
+}

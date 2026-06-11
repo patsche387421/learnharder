@@ -31,6 +31,55 @@
           "typ": "fach"
         },
         {
+          "id": "pos-strings",
+          "name": "Strings & String-Methoden",
+          "icon": "🔤",
+          "beschreibung": "Immutability, Contains/IndexOf, Substring, Trim/Replace, Split und Join.",
+          "typ": "fach"
+        },
+        {
+          "id": "pos-methoden",
+          "name": "Methoden",
+          "icon": "🧩",
+          "beschreibung": "Aufbau, Rückgabetypen, out-Parameter, Standardwerte und sicheres Einlesen.",
+          "typ": "fach"
+        },
+        {
+          "id": "pos-arrays",
+          "name": "Arrays",
+          "icon": "📋",
+          "beschreibung": "1D-Arrays, 2D-Arrays und Jagged Arrays – wann man welchen Typ wählt.",
+          "typ": "fach"
+        },
+        {
+          "id": "pos-collections",
+          "name": "Collections",
+          "icon": "🗃️",
+          "beschreibung": "List, Dictionary, SortedList, HashSet, Queue und Stack im Vergleich.",
+          "typ": "fach"
+        },
+        {
+          "id": "pos-oop-grundlagen",
+          "name": "OOP-Grundlagen",
+          "icon": "🏛️",
+          "beschreibung": "Klassen, Objekte, Konstruktoren, Encapsulation und Properties.",
+          "typ": "fach"
+        },
+        {
+          "id": "pos-vererbung",
+          "name": "Vererbung & Interfaces",
+          "icon": "🌳",
+          "beschreibung": "virtual/override, Polymorphismus, abstrakte Klassen und Interfaces.",
+          "typ": "fach"
+        },
+        {
+          "id": "pos-exceptions",
+          "name": "Exception Handling",
+          "icon": "🚨",
+          "beschreibung": "try-catch-finally, wichtige Exception-Typen, throw und eigene Exceptions.",
+          "typ": "fach"
+        },
+        {
           "id": "pos-datenstrukturen",
           "name": "Datenstrukturen",
           "icon": "⚙",
