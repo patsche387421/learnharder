@@ -1,0 +1,50 @@
+{
+  "fach": "POS",
+  "fragen": [
+    {
+      "frage": "Was ist der Unterschied zwischen einer Klasse und einem Objekt?",
+      "optionen": [
+        "Die Klasse ist der Bauplan; das Objekt ist eine konkrete Instanz dieses Bauplans",
+        "Ein Objekt enthält immer mehrere Klassen",
+        "Klassen können keine Methoden enthalten, Objekte schon",
+        "Es gibt keinen Unterschied – Klasse und Objekt bedeuten dasselbe"
+      ]
+    },
+    {
+      "frage": "Wofür ist der Konstruktor einer Klasse zuständig?",
+      "optionen": [
+        "Er initialisiert das Objekt beim new-Aufruf in einem gültigen Ausgangszustand",
+        "Er gibt Speicher frei wenn das Objekt nicht mehr gebraucht wird",
+        "Er definiert welche Methoden die Klasse nach außen freigibt",
+        "Er kopiert ein bestehendes Objekt in ein neues"
+      ]
+    },
+    {
+      "frage": "Was bedeutet Encapsulation (Kapselung)?",
+      "optionen": [
+        "Interne Details verbergen und nach außen nur kontrollierten Zugriff erlauben",
+        "Alle Felder und Methoden einer Klasse auf public setzen",
+        "Mehrere Klassen in einer Datei zusammenfassen",
+        "Methoden in Gruppen (Kapseln) aufteilen"
+      ]
+    },
+    {
+      "frage": "Was ist eine Auto-Property in C#?",
+      "optionen": [
+        "public string Name { get; set; } – Kurzschreibweise wenn keine Validierung im get/set nötig ist",
+        "Eine Property die nur im Konstruktor gesetzt werden kann",
+        "Eine Property die automatisch den Wert berechnet ohne Backing-Field",
+        "Eine Property die nur für Klassen im Automotive-Bereich verwendet wird"
+      ]
+    },
+    {
+      "frage": "Was passiert wenn man ein Objekt (Referenztyp) einer anderen Variable zuweist?",
+      "optionen": [
+        "Beide Variablen zeigen auf dasselbe Objekt – Änderungen über eine Variable sind auch über die andere sichtbar",
+        "Das Objekt wird kopiert – beide Variablen haben unabhängige Exemplare",
+        "Die erste Variable wird ungültig und zeigt auf null",
+        "Eine InvalidOperationException wird geworfen"
+      ]
+    }
+  ]
+}

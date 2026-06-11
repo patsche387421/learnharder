@@ -1,0 +1,26 @@
+{
+  "$schema": "../schema/theorie.schema.json",
+  "fach": "DBI",
+  "themen": [
+    {
+      "titel": "Grundbausteine eines ERD",
+      "text": "Ein ERD besteht aus drei Elementen. Entitytypen (Rechteck) stehen für Objekte der realen Welt, z. B. Mitarbeiter oder Produkt. Attribute (Ellipse) beschreiben Eigenschaften dieser Objekte, z. B. Name oder Preis. Der Primärschlüssel wird durch Unterstreichung des Attributs gekennzeichnet. Beziehungstypen (Raute) zeigen, wie Entitytypen miteinander verknüpft sind, z. B. arbeitet-in."
+    },
+    {
+      "titel": "Kardinalitäten lesen – das (min,max)-Paar",
+      "text": "Jede Seite einer Beziehung trägt ein (min,max)-Paar, das direkt neben dem zugehörigen Entitytyp steht. min gibt an, wie oft ein Entitytyp mindestens an der Beziehung teilnimmt: 0 = optional, 1 = Pflicht. max gibt an, wie oft maximal: 1 oder n. Beispiel: Mitarbeiter (0,n) – arbeitet-in – (1,1) Abteilung bedeutet: Ein Mitarbeiter kann in keiner oder in beliebig vielen Abteilungen arbeiten; eine Abteilung muss genau einen zugeordneten Mitarbeiter haben."
+    },
+    {
+      "titel": "Beziehungstyp bestimmen (1:1, 1:n, m:n)",
+      "text": "Der Beziehungstyp ergibt sich ausschließlich aus den max-Werten beider Seiten. Beide max = 1 → 1:1-Beziehung. Eine max = n, die andere = 1 → 1:n-Beziehung. Beide max = n → m:n-Beziehung. Faustregel: Nur die max-Werte bestimmen den Typ. Die min-Werte beeinflussen later die NOT-NULL-Entscheidung, aber nicht den Beziehungstyp."
+    },
+    {
+      "titel": "Welches (min,max) gehört zu welchem Entitytyp?",
+      "text": "Das (min,max)-Paar steht direkt neben dem Entitytyp, zu dem es gehört. Beispiel: Mitarbeiter –(0,n)– LEITET –(1,1)– Abteilung. Das (0,n) gehört zu Mitarbeiter: Ein Mitarbeiter leitet 0 bis n Abteilungen. Das (1,1) gehört zu Abteilung: Eine Abteilung wird von genau 1 Mitarbeiter geleitet. Die häufigste Verwechslung: Die Paare werden gespiegelt gelesen und dem falschen Entitytyp zugeordnet."
+    },
+    {
+      "titel": "Cheatsheet: ERD-Symbole auf einen Blick",
+      "text": "Rechteck → Entitytyp | Ellipse → Attribut | Unterstrichene Ellipse → Primärschlüssel-Attribut | Raute → Beziehungstyp\n\n(0,1) = optional, höchstens einmal\n(1,1) = genau einmal, Pflicht\n(0,n) = optional, beliebig oft\n(1,n) = mindestens einmal, beliebig oft\n\nBeziehungstyp aus max-Werten:\n1 × 1 = 1:1  |  1 × n = 1:n  |  n × n = m:n"
+    }
+  ]
+}

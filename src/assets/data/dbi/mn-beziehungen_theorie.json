@@ -1,0 +1,26 @@
+{
+  "$schema": "../schema/theorie.schema.json",
+  "fach": "DBI",
+  "themen": [
+    {
+      "titel": "Die Grundregel: Zwischentabelle",
+      "text": "Jede m:n-Beziehung (beide max-Werte = n) wird durch eine Zwischentabelle aufgelöst. Diese Zwischentabelle enthält je einen Fremdschlüssel auf die beiden beteiligten Tabellen. Es ist nicht möglich, eine m:n-Beziehung mit einem einfachen FK in einer der Haupttabellen abzubilden – das würde mehrdeutige, wiederholende Daten erzeugen."
+    },
+    {
+      "titel": "Struktur der Zwischentabelle",
+      "text": "Die Zwischentabelle enthält mindestens: FK1 referenziert Tabelle A, FK2 referenziert Tabelle B, PRIMARY KEY(FK1, FK2). Beide FKs sind NOT NULL, da sie Teil des Primärschlüssels sind. Der Name der Zwischentabelle ist üblicherweise der Name des Beziehungstyps (z. B. Belegung für BELEGT) oder eine Kombination beider Tabellennamen."
+    },
+    {
+      "titel": "Beziehungsattribute",
+      "text": "Hat der Beziehungstyp im ERD eigene Attribute (z. B. Note bei BELEGT zwischen Student und Kurs), werden sie als zusätzliche Spalten in die Zwischentabelle eingefügt. Sie gehören nicht in den Primärschlüssel, außer sie sind nötig um mehrfache Verbindungen zwischen denselben Exemplaren zu unterscheiden."
+    },
+    {
+      "titel": "Prüfungsbeispiel: Schulungsfirma",
+      "text": "Schulungsfirma –(0,n)–GEEIGNET–(1,n)– Mitarbeiter. Beides max = n → m:n. Zwischentabelle: Geeignet(FirmenNr FK NOT NULL REFERENCES Schulungsfirma, MitarbeiterNr FK NOT NULL REFERENCES Mitarbeiter, PRIMARY KEY(FirmenNr, MitarbeiterNr)). Lieferant –(1,n)–LIEFERT–(0,n)– Teil → analog: Lieferung(LieferantNr FK NOT NULL, TeilNr FK NOT NULL, PRIMARY KEY(LieferantNr, TeilNr))."
+    },
+    {
+      "titel": "Cheatsheet",
+      "text": "m:n erkennen: beide max-Werte = n\n\nImmer Zwischentabelle:\n  FK1 NOT NULL REFERENCES TabelleA\n  FK2 NOT NULL REFERENCES TabelleB\n  PRIMARY KEY(FK1, FK2)\n\nBeziehungsattribute → zusätzliche Spalten (nicht im PK)\n\nBeispiel:\nBelegung(\n  StudentNr  INT NOT NULL REFERENCES Student,\n  KursNr     INT NOT NULL REFERENCES Kurs,\n  Note       DECIMAL(3,1),\n  PRIMARY KEY(StudentNr, KursNr)\n)"
+    }
+  ]
+}

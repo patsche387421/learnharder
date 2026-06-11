@@ -1,0 +1,50 @@
+{
+  "fach": "DBI",
+  "fragen": [
+    {
+      "frage": "Chen (0,n) entspricht in Krähenfußnotation …",
+      "optionen": [
+        "Kreis + Krähenfuß",
+        "Strich + Krähenfuß",
+        "Kreis + Strich",
+        "Strich + Strich"
+      ]
+    },
+    {
+      "frage": "Krähenfuß Strich+Strich entspricht in Chen-Notation …",
+      "optionen": [
+        "(1,1)",
+        "(0,1)",
+        "(1,n)",
+        "(0,n)"
+      ]
+    },
+    {
+      "frage": "Ein Krähenfuß-ERD zeigt: Produkt [Kreis+Krähenfuß]–––[Strich+Strich] Kategorie.\nWie lautet die Chen-Notation auf der Produkt-Seite?",
+      "optionen": [
+        "(0,n)",
+        "(1,n)",
+        "(0,1)",
+        "(1,1)"
+      ]
+    },
+    {
+      "frage": "Du wandelst ein ERD von Chen nach Krähenfuß um. Was ändert sich an der DDL?",
+      "optionen": [
+        "Nichts – die DDL bleibt identisch, nur die grafische Darstellung ändert sich",
+        "FK-Seite und UNIQUE müssen neu bestimmt werden",
+        "NOT NULL-Entscheidungen kehren sich um",
+        "m:n-Beziehungen brauchen plötzlich keine Zwischentabelle mehr"
+      ]
+    },
+    {
+      "frage": "Chen: A –(1,n)–R–(0,1)– B. Wie lautet die Krähenfuß-Darstellung auf der B-Seite?",
+      "optionen": [
+        "Kreis + Strich (weil B hat (0,1))",
+        "Strich + Krähenfuß (weil B hat (1,n))",
+        "Strich + Strich (weil B hat (1,1))",
+        "Kreis + Krähenfuß (weil B hat (0,n))"
+      ]
+    }
+  ]
+}

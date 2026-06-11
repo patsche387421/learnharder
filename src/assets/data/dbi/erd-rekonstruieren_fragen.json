@@ -1,0 +1,50 @@
+{
+  "fach": "DBI",
+  "fragen": [
+    {
+      "frage": "Woran erkennst du eine Zwischentabelle (m:n) beim Rekonstruieren?",
+      "optionen": [
+        "Ihr Primärschlüssel besteht ausschließlich aus Fremdschlüsseln auf andere Tabellen",
+        "Sie hat mehr als zwei Spalten",
+        "Sie hat keinen Primärschlüssel",
+        "Ihr Name endet auf '_Beziehung' oder '_Verbindung'"
+      ]
+    },
+    {
+      "frage": "Eine DDL zeigt: B(BNr PK, ANr INT UNIQUE REFERENCES A). Welcher Beziehungstyp liegt vor?",
+      "optionen": [
+        "1:1, weil UNIQUE auf dem FK",
+        "1:n, weil kein zusammengesetzter PK",
+        "m:n, weil zwei Tabellen beteiligt sind",
+        "Abhängiger Entitytyp, weil BNr und ANr beide vorkommen"
+      ]
+    },
+    {
+      "frage": "FK ANr ist NOT NULL. Was kann man daraus für das ERD ableiten?",
+      "optionen": [
+        "min = 1 auf der FK-Seite (B muss immer an der Beziehung teilnehmen)",
+        "min = 1 auf der referenzierten Seite (A muss immer einen Partner haben)",
+        "max = 1 auf der FK-Seite",
+        "Es handelt sich um einen Primärschlüssel"
+      ]
+    },
+    {
+      "frage": "Was lässt sich aus einer DDL NICHT zuverlässig rekonstruieren?",
+      "optionen": [
+        "Der min-Wert auf der referenzierten Seite (z. B. ob Abteilung min. einen Mitarbeiter braucht)",
+        "Ob ein FK UNIQUE ist",
+        "Ob ein FK NOT NULL ist",
+        "Ob es sich um eine m:n-Beziehung handelt"
+      ]
+    },
+    {
+      "frage": "Belegung(StudentNr INT NOT NULL REFERENCES Student, KursNr INT NOT NULL REFERENCES Kurs, PRIMARY KEY(StudentNr, KursNr)). Was zeigt das ERD?",
+      "optionen": [
+        "m:n-Beziehung zwischen Student und Kurs (Belegung ist Zwischentabelle)",
+        "1:n-Beziehung: Student hat viele Kurse",
+        "1:1-Beziehung zwischen Student und Kurs",
+        "Abhängiger Entitytyp Belegung mit übergeordnetem Student"
+      ]
+    }
+  ]
+}

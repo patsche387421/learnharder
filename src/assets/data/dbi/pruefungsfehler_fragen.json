@@ -1,0 +1,50 @@
+{
+  "fach": "DBI",
+  "fragen": [
+    {
+      "frage": "Was ist laut Testanalyse der häufigste Einzelfehler bei 1:1-Beziehungen?",
+      "optionen": [
+        "UNIQUE vergessen auf dem Fremdschlüssel – ohne UNIQUE ist die Beziehung technisch 1:n",
+        "NOT NULL vergessen auf dem Fremdschlüssel",
+        "Den FK auf die falsche Seite legen",
+        "Eine Zwischentabelle anlegen statt eines FKs"
+      ]
+    },
+    {
+      "frage": "Eine Abfrage liefert ein leeres Ergebnis obwohl Daten vorhanden sind. Die WHERE-Klausel enthält NOT IN mit einer Unterabfrage. Was ist wahrscheinlich der Grund?",
+      "optionen": [
+        "Die Unterabfrage liefert mindestens einen NULL-Wert – NOT IN mit NULL ergibt immer UNKNOWN",
+        "NOT IN ist in SQL nicht standardisiert und wird vom DBMS ignoriert",
+        "Die Unterabfrage gibt zu viele Zeilen zurück",
+        "NOT IN funktioniert nur mit skalaren Unterabfragen"
+      ]
+    },
+    {
+      "frage": "Wo liegt der FK bei A –(1,n)–R–(0,1)– B?",
+      "optionen": [
+        "In Tabelle B, weil B max = 1 hat – nullable, weil min der B-Seite = 0",
+        "In Tabelle A, weil A min = 1 hat – NOT NULL",
+        "In einer Zwischentabelle, weil eine Seite min = 1 hat",
+        "In Tabelle A, weil A max = n hat – kein UNIQUE"
+      ]
+    },
+    {
+      "frage": "EXISTS (SELECT 1 FROM Auftrag a) ohne WHERE-Bedingung – was prüft das?",
+      "optionen": [
+        "Ob die Tabelle Auftrag überhaupt Zeilen enthält – nicht ob ein passender Auftrag für den aktuellen Datensatz existiert",
+        "Ob der aktuelle Datensatz mindestens einen passenden Auftrag hat",
+        "Ob die Spalte 1 in Auftrag existiert",
+        "Ob Auftrag eine leere Tabelle ist"
+      ]
+    },
+    {
+      "frage": "Was ergibt A EXCEPT B, wenn alle Werte in A auch in B vorkommen?",
+      "optionen": [
+        "Eine leere Ergebnismenge – alle Werte aus A wurden durch B herausgefiltert",
+        "Alle Werte aus A – EXCEPT ignoriert Übereinstimmungen",
+        "Alle Werte aus B, die nicht in A sind",
+        "Die Vereinigung von A und B ohne Duplikate"
+      ]
+    }
+  ]
+}

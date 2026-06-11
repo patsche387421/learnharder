@@ -1,0 +1,26 @@
+{
+  "$schema": "../schema/theorie.schema.json",
+  "fach": "DBI",
+  "themen": [
+    {
+      "titel": "IN und NOT IN",
+      "text": "WHERE x IN (SELECT y FROM ...) prüft, ob x in der Ergebnismenge vorkommt. Äquivalent zu mehreren OR-Bedingungen. NOT IN prüft, ob x in keinem der Ergebniswerte vorkommt. Wichtige Einschränkung: Enthält die Ergebnismenge von NOT IN auch nur einen NULL-Wert, gibt NOT IN niemals TRUE zurück – das Ergebnis der ganzen Bedingung wird UNKNOWN. Merksatz: NOT IN + NULL in der Unterabfrage = leeres Ergebnis."
+    },
+    {
+      "titel": "EXISTS und NOT EXISTS",
+      "text": "WHERE EXISTS (SELECT 1 FROM ... WHERE Korrelation) prüft, ob die Unterabfrage mindestens eine Zeile zurückgibt. NOT EXISTS prüft, ob keine Zeile zurückgegeben wird. EXISTS hat keinen NULL-Problem wie NOT IN, weil nur die Existenz einer Zeile geprüft wird, nicht ihr Wert. NOT EXISTS ist daher die sicherere Alternative zu NOT IN wenn NULL-Werte möglich sind."
+    },
+    {
+      "titel": "Der T1-und-T2-Denkfehler",
+      "text": "Der häufigste Fehler in der Prüfung (Aufgaben 11 und 12): Man schreibt eine Unterabfrage, die alle Zeilen einer Tabelle zurückgibt statt nur die passenden. Beispiel-Fehler: WHERE lnr IN (SELECT lnr FROM Auftrag) – korrekt wenn man alle Lieferanten mit irgendeinem Auftrag will. Aber: WHERE lnr IN (SELECT lnr FROM Auftrag WHERE lnr = anderes_lnr) – das T1/T2-Muster – ist ein Denkfehler wenn die Korrelation fehlt und die Unterabfrage zu weit oder zu eng filtert."
+    },
+    {
+      "titel": "IN vs. EXISTS: Wann welches?",
+      "text": "IN eignet sich gut wenn die Unterabfrage eine überschaubare Liste von Werten liefert und keine NULL-Werte enthält. EXISTS ist besser bei korrelierten Unterabfragen, bei großen Tabellenmengen und immer wenn NOT-Varianten verwendet werden (wegen der NULL-Sicherheit). Für die Prüfung: Beide können oft dieselbe Frage beantworten, aber NOT IN und NOT EXISTS sind nicht äquivalent wenn NULL-Werte möglich sind."
+    },
+    {
+      "titel": "Cheatsheet",
+      "text": "IN:      WHERE x IN (SELECT y ...)       – x kommt in der Liste vor\nNOT IN:  WHERE x NOT IN (SELECT y ...)    – x kommt NICHT vor\n         Vorsicht: NULL in der Liste → gesamtes Ergebnis leer!\n\nEXISTS:     WHERE EXISTS (SELECT 1 ...)    – mindestens eine Zeile\nNOT EXISTS: WHERE NOT EXISTS (SELECT 1 ...)– keine Zeile\n            NULL-sicher – bevorzuge NOT EXISTS statt NOT IN\n\nFaustregel:\n  Positive Suche  → IN oder EXISTS, oft austauschbar\n  Negative Suche  → NOT EXISTS bevorzugen (NULL-sicher)"
+    }
+  ]
+}

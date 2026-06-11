@@ -1,0 +1,26 @@
+{
+  "$schema": "./schema/theorie.schema.json",
+  "fach": "DBI",
+  "themen": [
+    {
+      "titel": "Grundwissen (Level 1)",
+      "text": "Eine 1:1-Beziehung erkennt man daran, dass beide max-Werte gleich 1 sind: (0,1)↔(0,1), (0,1)↔(1,1) oder (1,1)↔(1,1). Jede 1:1-Beziehung braucht einen FK mit UNIQUE-Constraint. Immer. Ohne Ausnahme. Ohne UNIQUE ist es keine technisch korrekte 1:1-Beziehung. Merksatz: 1:1-Beziehung = FK + UNIQUE. Ob der FK auch NOT NULL ist, hängt vom min-Wert der FK-Seite ab."
+    },
+    {
+      "titel": "Standard (Level 2)",
+      "text": "Bei (0,1)↔(1,1) sollte der FK auf die Seite mit (1,1) gelegt werden, weil ein Datensatz dieser Tabelle ohne Partner nicht erlaubt ist — der FK ist dort NOT NULL. Bei (0,1)↔(0,1) kann der FK auf beiden Seiten liegen und ist nullable. Man wählt die semantisch sinnvollere Seite. Bei (1,1)↔(1,1) ist der FK auf beiden Seiten NOT NULL. Man wählt die semantisch abhängigere Seite. Der Grund für die Bevorzugung der vollständig teilnehmenden Seite: Der FK ist dort sowieso NOT NULL und die Semantik ist klarer."
+    },
+    {
+      "titel": "Expertenwissen (Level 3)",
+      "text": "Für eine 1 musst du Fehler in einer vorgegebenen DDL erkennen. Kritische Punkte: Ist UNIQUE vorhanden? Stimmt NOT NULL mit dem min-Wert? Liegt der FK auf der richtigen Seite? SQL-Server-Spezialfall (happysushi4): Wenn der FK nullable ist (min=0), kann ein normales UNIQUE problematisch sein, weil manche DBMS NULL=NULL nicht als Duplikat behandeln. SQL Server löst das mit CREATE UNIQUE NONCLUSTERED INDEX WHERE column IS NOT NULL. Für die meisten Prüfungsaufgaben genügt das einfache UNIQUE. Dieser Spezialfall ist NICHT prüfungskritisch für den 28.05., aber relevant, falls nach dem Unterschied SQLite vs. SQL Server beim NULL-Verhalten gefragt wird."
+    },
+    {
+      "titel": "Typische Fehler",
+      "text": "UNIQUE vergessen → technisch 1:n (häufigster Fehler, Aufgaben 1, 7, 10). • NOT NULL bei (0,1) setzen → widerspricht teilweiser Teilnahme. • FK auf die optionale statt vollständige Seite legen. • Annahme, UNIQUE sei nur bei vollständiger Teilnahme nötig — UNIQUE ist IMMER nötig bei 1:1."
+    },
+    {
+      "titel": "Cheatsheet",
+      "text": "1:1 erkennen: beide max-Werte = 1\n\n1:1 implementieren:\nFK + UNIQUE → immer, keine Ausnahme\nNOT NULL → wenn min der FK-Seite = 1\nnullable → wenn min der FK-Seite = 0\n\nFK-Seite wählen: bevorzugt min=1 (vollständig)\n\nRestaurant(Nr PK, MitarbeiterNr FK NOT NULL UNIQUE)"
+    }
+  ]
+}

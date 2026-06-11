@@ -1,0 +1,59 @@
+{
+  "fach": "DBI",
+  "fragen": [
+    {
+      "frage": "Was bedeutet min = 0 in einer (min,max)-Notation?",
+      "optionen": [
+        "Die Teilnahme an der Beziehung ist optional – der FK darf NULL sein",
+        "Der Entitytyp hat keine Attribute",
+        "Die Beziehung hat keine Teilnehmer",
+        "Der FK muss NOT NULL gesetzt werden"
+      ]
+    },
+    {
+      "frage": "Gegeben: A –(1,n)–R–(0,1)– B. Welcher Beziehungstyp liegt vor?",
+      "optionen": [
+        "1:n (von A aus gesehen: ein A hat viele B, ein B hat höchstens ein A)",
+        "m:n",
+        "1:1",
+        "0:n (wegen des min=0 auf der B-Seite)"
+      ]
+    },
+    {
+      "frage": "A –(1,n)–R–(0,1)– B: In welcher Tabelle wird der Fremdschlüssel gespeichert?",
+      "optionen": [
+        "In Tabelle B, weil B max = 1 hat",
+        "In Tabelle A, weil A max = n hat",
+        "In einer Zwischentabelle",
+        "Fremdschlüssel werden erst in Phase 4 (DDL) entschieden"
+      ]
+    },
+    {
+      "frage": "A –(1,n)–R–(0,1)– B: Muss der FK in B nullable oder NOT NULL sein?",
+      "optionen": [
+        "Nullable, weil min von B = 0",
+        "NOT NULL, weil min von A = 1",
+        "NOT NULL, weil max von B = 1",
+        "Das hängt vom Datenbanktyp ab, nicht von der Notation"
+      ]
+    },
+    {
+      "frage": "Wann braucht ein Fremdschlüssel zwingend ein UNIQUE-Constraint?",
+      "optionen": [
+        "Immer bei einer 1:1-Beziehung – ohne jede Ausnahme",
+        "Nur wenn min = 1 auf der FK-Seite",
+        "Bei jeder 1:n-Beziehung",
+        "Nur wenn beide Entitytypen denselben Primärschlüsseltyp haben"
+      ]
+    },
+    {
+      "frage": "Wo liegt der Fremdschlüssel bei einer m:n-Beziehung?",
+      "optionen": [
+        "In einer eigenen Zwischentabelle mit je einem FK pro Seite",
+        "In der Tabelle mit max = n",
+        "In der Tabelle mit min = 1",
+        "m:n-Beziehungen benötigen keinen Fremdschlüssel"
+      ]
+    }
+  ]
+}

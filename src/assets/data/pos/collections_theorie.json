@@ -1,0 +1,26 @@
+{
+  "$schema": "../schema/theorie.schema.json",
+  "fach": "POS",
+  "themen": [
+    {
+      "titel": "Warum Collections? Der Nachteil von Arrays",
+      "text": "Arrays haben eine unveränderliche Größe – nach dem Anlegen kann man weder Elemente hinzufügen noch entfernen. Collections aus System.Collections.Generic lösen dieses Problem: Sie sind dynamisch und für verschiedene Zugriffsmuster optimiert. Die entscheidende Frage bei der Wahl: Wie wird auf die Daten zugegriffen? Per Index → List<T>, per Schlüssel → Dictionary<K,V>, nur eindeutige Werte → HashSet<T>, FIFO → Queue<T>, LIFO → Stack<T>."
+    },
+    {
+      "titel": "List<T> – die flexible Liste",
+      "text": "List<T> verhält sich wie ein Array, kann aber dynamisch wachsen. Add() hängt ein Element hinten an, Insert(index, element) fügt es an einer bestimmten Stelle ein. Remove() entfernt den ersten Treffer, RemoveAt(index) entfernt an einer Position. Wichtig: Bei List<T> heißt die Größe .Count, nicht .Length wie bei Arrays. Contains() prüft ob ein Wert vorhanden ist. ToArray() konvertiert bei Bedarf zurück in ein Array."
+    },
+    {
+      "titel": "Dictionary<K,V> – Schlüssel-Wert-Paare",
+      "text": "Ein Dictionary speichert Paare aus eindeutigem Schlüssel und Wert. Direkter Zugriff über den Key: dict[\"schlüssel\"] – aber das wirft eine KeyNotFoundException wenn der Key nicht existiert. Sicherer Zugriff: TryGetValue(key, out var wert) gibt true/false zurück ohne Exception. ContainsKey() prüft ob ein Key vorhanden ist. Die Iteration liefert KeyValuePair-Objekte mit .Key und .Value. Zugriff per Key ist sehr schnell (O(1)) unabhängig von der Größe."
+    },
+    {
+      "titel": "SortedList und SortedDictionary – automatisch sortiert",
+      "text": "Beide speichern Schlüssel-Wert-Paare automatisch nach Key sortiert. SortedList<K,V>: Weniger Speicher, Zugriff über Index möglich (Keys[0], Values[0]), aber langsamer beim Einfügen. SortedDictionary<K,V>: Schnelleres Einfügen und Löschen, kein Index-Zugriff. Faustregel: SortedList wenn viele Lesezugriffe und wenige Änderungen; SortedDictionary wenn oft eingefügt oder gelöscht wird."
+    },
+    {
+      "titel": "HashSet, Queue und Stack",
+      "text": "HashSet<T> speichert nur eindeutige Werte – Duplikate werden stillschweigend ignoriert. Unterstützt Mengenoperationen: IntersectWith() (Schnittmenge), UnionWith() (Vereinigung), ExceptWith() (Differenz). Queue<T> ist eine Warteschlange (FIFO): Enqueue() hinten anstellen, Dequeue() vorne entnehmen, Peek() vorne anschauen ohne entnehmen. Stack<T> ist ein Stapel (LIFO): Push() obenauf legen, Pop() oben entnehmen, Peek() oben anschauen."
+    }
+  ]
+}

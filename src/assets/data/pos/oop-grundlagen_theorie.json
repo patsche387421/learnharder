@@ -1,0 +1,26 @@
+{
+  "$schema": "../schema/theorie.schema.json",
+  "fach": "POS",
+  "themen": [
+    {
+      "titel": "Klasse vs. Objekt – der Bauplan und die Instanz",
+      "text": "Eine Klasse ist ein Bauplan. Ein Objekt (Instanz) ist ein konkretes Exemplar dieses Bauplans. Aus einer Klasse Auto können beliebig viele Objekte erstellt werden (meinAuto, deinAuto). Objekte haben Eigenschaften (Felder, Properties) – Was sie sind – und Verhalten (Methoden) – Was sie können. Der Grundgedanke von OOP: Zusammengehörende Daten und Methoden bleiben zusammen und bilden eine sinnvolle Einheit."
+    },
+    {
+      "titel": "Felder und Konstruktoren",
+      "text": "Felder sind Variablen, die zu einem Objekt gehören. Der Konstruktor ist eine spezielle Methode mit demselben Namen wie die Klasse – er wird beim new-Aufruf ausgeführt und initialisiert das Objekt in einem gültigen Zustand. Ohne Konstruktor müssen alle Felder manuell gesetzt werden, was fehleranfällig ist. Konstruktoren haben keinen Rückgabetyp (auch kein void). Mit base(...) ruft ein Konstruktor den Konstruktor der Elternklasse auf."
+    },
+    {
+      "titel": "Zugriffsmodifikatoren und Encapsulation",
+      "text": "Encapsulation (Kapselung) bedeutet: Interne Details verbergen, nach außen nur das freigeben was gebraucht wird. public: überall zugänglich. private: nur innerhalb der Klasse. protected: innerhalb der Klasse und in abgeleiteten Klassen. internal: nur im selben Projekt. Typisches Muster: Felder sind private, Zugriff erfolgt über kontrollierte Methoden oder Properties. Ziel: Von außen kann kein inkonsistenter Zustand entstehen."
+    },
+    {
+      "titel": "Properties – der elegante Getter/Setter",
+      "text": "Properties kombinieren Zugriffsschutz mit komfortabler Syntax. Ein Property hat einen get-Block (lesen) und einen set-Block (schreiben), der Validierung enthalten kann. Auto-Property ohne Validierung: public string Name { get; set; } Schreibgeschützt von außen: public DateTime ErstelltAm { get; private set; } Read-only berechnet: public bool IstErwachsen { get { return _alter >= 18; } } Im Konstruktor Eigenschaften über Properties setzen – dann greift die Validierung bereits bei der Initialisierung."
+    },
+    {
+      "titel": "Werte- vs. Referenztypen bei Objekten",
+      "text": "Klassen sind Referenztypen: Wenn du ein Objekt einer anderen Variable zuweist, zeigen beide auf dasselbe Objekt im Speicher. Ändert sich eine, ändert sich die andere. Wertetypen (int, bool, struct) werden kopiert. Beim Übergeben von Objekten an Methoden wird nur die Referenz kopiert – die Methode arbeitet auf demselben Objekt. Um ein unabhängiges Objekt zu bekommen, muss man es explizit kopieren (Kopierkonstruktor oder Clone-Methode)."
+    }
+  ]
+}

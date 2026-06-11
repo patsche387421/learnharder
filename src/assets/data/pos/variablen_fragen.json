@@ -1,0 +1,50 @@
+{
+  "fach": "POS",
+  "fragen": [
+    {
+      "frage": "Welcher Datentyp ist in C# am besten für einen ganzzahligen Altersangabe geeignet?",
+      "optionen": [
+        "int",
+        "double",
+        "string",
+        "bool"
+      ]
+    },
+    {
+      "frage": "Was bewirkt das Schlüsselwort var in C#?",
+      "optionen": [
+        "Der Compiler leitet den Typ automatisch aus dem zugewiesenen Wert ab",
+        "Die Variable kann jeden beliebigen Typ speichern und ist unsicher",
+        "Die Variable wird als global deklariert",
+        "Der Wert der Variable kann nicht mehr geändert werden"
+      ]
+    },
+    {
+      "frage": "Warum ist string in C# kein primitiver Typ?",
+      "optionen": [
+        "string ist eine Klasse und wird als Objekt im Speicher abgelegt",
+        "string kann keine Sonderzeichen speichern",
+        "string muss immer mit new erzeugt werden",
+        "string ist veränderlich, primitive Typen nicht"
+      ]
+    },
+    {
+      "frage": "Was ist eine Konstante in C# und wie wird sie deklariert?",
+      "optionen": [
+        "Ein unveränderlicher Wert, deklariert mit const – z. B. const int MaxVersuche = 3;",
+        "Eine Variable, die nur einmal gelesen werden darf",
+        "Ein Wert, der nur innerhalb einer Methode gültig ist",
+        "Eine Variable mit dem Schlüsselwort readonly, die nach Zuweisung nicht mehr änderbar ist"
+      ]
+    },
+    {
+      "frage": "Welche Aussage zur Typsicherheit in C# ist korrekt?",
+      "optionen": [
+        "Jede Variable hat einen festen Typ; falsche Zuweisungen werden beim Kompilieren erkannt",
+        "In C# kann jede Variable jeden Wert annehmen, der Typ wird zur Laufzeit geprüft",
+        "Typsicherheit gilt nur für primitive Typen, nicht für Klassen",
+        "Mit var wird die Typsicherheit aufgehoben"
+      ]
+    }
+  ]
+}

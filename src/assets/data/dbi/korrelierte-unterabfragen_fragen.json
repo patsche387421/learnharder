@@ -1,0 +1,50 @@
+{
+  "fach": "DBI",
+  "fragen": [
+    {
+      "frage": "Woran erkennst du eine korrelierte Unterabfrage?",
+      "optionen": [
+        "Die innere WHERE-Bedingung verweist auf eine Spalte der äußeren Abfrage",
+        "Die innere Abfrage gibt mehr als eine Spalte zurück",
+        "Die innere Abfrage verwendet eine Aggregatfunktion",
+        "Die Unterabfrage steht in der FROM-Klausel statt in der WHERE-Klausel"
+      ]
+    },
+    {
+      "frage": "Wie oft wird die innere Abfrage bei einer korrelierten Unterabfrage ausgeführt?",
+      "optionen": [
+        "Einmal pro Zeile der äußeren Abfrage",
+        "Genau einmal – wie bei nicht-korrelierten Unterabfragen",
+        "Gar nicht – das DBMS optimiert korrelierte Unterabfragen weg",
+        "Einmal pro Spalte der äußeren Abfrage"
+      ]
+    },
+    {
+      "frage": "Was prüft EXISTS (SELECT 1 FROM T2 WHERE T2.fk = T1.pk)?",
+      "optionen": [
+        "Ob mindestens eine Zeile in T2 existiert, die zum aktuellen T1-Datensatz passt",
+        "Ob T2 überhaupt Zeilen enthält",
+        "Ob der Wert 1 in T2 vorhanden ist",
+        "Ob T2.fk und T1.pk denselben Datentyp haben"
+      ]
+    },
+    {
+      "frage": "Was ist der typische Fehler beim Schreiben von EXISTS-Unterabfragen?",
+      "optionen": [
+        "Die Korrelationsbedingung (z. B. t2.lnr = t1.lnr) weglassen – dann prüft EXISTS nur ob die Tabelle leer ist",
+        "SELECT 1 statt SELECT * verwenden",
+        "NOT EXISTS statt EXISTS verwenden",
+        "EXISTS in der SELECT-Liste statt in der WHERE-Klausel platzieren"
+      ]
+    },
+    {
+      "frage": "Welche Abfrage findet alle Lieferanten, die KEINEN Auftrag haben?",
+      "optionen": [
+        "SELECT l.Name FROM Lieferant l WHERE NOT EXISTS (SELECT 1 FROM Auftrag a WHERE a.lnr = l.lnr)",
+        "SELECT l.Name FROM Lieferant l WHERE EXISTS (SELECT 1 FROM Auftrag a WHERE a.lnr = l.lnr)",
+        "SELECT l.Name FROM Lieferant l WHERE l.lnr NOT IN (SELECT lnr FROM Auftrag)",
+        "SELECT l.Name FROM Lieferant l LEFT JOIN Auftrag a ON l.lnr = a.lnr WHERE a.lnr = NULL"
+      ]
+    }
+  ]
+}

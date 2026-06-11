@@ -1,0 +1,26 @@
+{
+  "$schema": "../schema/theorie.schema.json",
+  "fach": "DBI",
+  "themen": [
+    {
+      "titel": "INNER JOIN vs. OUTER JOIN",
+      "text": "Ein INNER JOIN liefert nur Zeilen, bei denen auf beiden Seiten ein passender Partner existiert. Ein OUTER JOIN liefert zusätzlich Zeilen einer Seite, auch wenn kein Partner vorhanden ist – die fehlenden Spalten der anderen Seite werden mit NULL aufgefüllt. Einsatz: Wenn du auch Datensätze sehen willst, die (noch) keine Zuordnung haben, z. B. Mitarbeiter ohne Abteilung oder Produkte ohne Bestellung."
+    },
+    {
+      "titel": "LEFT JOIN",
+      "text": "LEFT JOIN liefert alle Zeilen der linken Tabelle (vor dem JOIN) plus die passenden Zeilen der rechten Tabelle. Hat eine Zeile der linken Seite keinen Partner rechts, werden die rechten Spalten mit NULL befüllt. Beispiel: SELECT m.Name, a.Bezeichnung FROM Mitarbeiter m LEFT JOIN Abteilung a ON m.AbtNr = a.AbtNr – liefert alle Mitarbeiter, auch jene ohne Abteilung (AbtNr IS NULL)."
+    },
+    {
+      "titel": "RIGHT JOIN und FULL JOIN",
+      "text": "RIGHT JOIN ist das Spiegelbild: alle Zeilen der rechten Tabelle, fehlende linke Seite wird NULL. In der Praxis wird RIGHT JOIN meist durch Umstellen der Tabellen als LEFT JOIN geschrieben – das ist lesbarer. FULL OUTER JOIN liefert alle Zeilen beider Seiten mit NULLs wo kein Partner existiert. Nicht alle DBMS unterstützen FULL JOIN (z. B. MySQL nicht nativ)."
+    },
+    {
+      "titel": "LEFT JOIN + IS NULL: fehlende Zuordnungen finden",
+      "text": "Das wichtigste Einsatzmuster: alle Zeilen der linken Seite finden, die KEINEN Partner auf der rechten Seite haben. Dazu filtert man nach IS NULL auf einer rechten Spalte. Beispiel: alle Mitarbeiter ohne Abteilung: SELECT m.Name FROM Mitarbeiter m LEFT JOIN Abteilung a ON m.AbtNr = a.AbtNr WHERE a.AbtNr IS NULL. Häufiger Fehler: WHERE a.AbtNr != x statt IS NULL – funktioniert bei NULL nicht."
+    },
+    {
+      "titel": "count(*) vs. count(Spalte)",
+      "text": "count(*) zählt alle Zeilen inklusive jener mit NULL-Werten. count(Spalte) zählt nur Zeilen, bei denen die Spalte NOT NULL ist. Beim LEFT JOIN mit fehlenden Partnern macht das einen Unterschied: count(*) zählt auch die Zeilen ohne Partner, count(a.Spalte) nicht. Beispiel: Mitarbeiter ohne Abteilung werden von count(*) gezählt, von count(a.AbtNr) nicht – weil a.AbtNr dort NULL ist."
+    }
+  ]
+}

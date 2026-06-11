@@ -1,0 +1,26 @@
+{
+  "$schema": "../schema/theorie.schema.json",
+  "fach": "DBI",
+  "themen": [
+    {
+      "titel": "ERD-Fehler: Notation und Lesrichtung",
+      "text": "Fehler 1: (min,max)-Paare gespiegelt lesen – das Paar steht beim Entitytyp, den es beschreibt, nicht beim gegenüberliegenden. Fehler 2: Beziehungstyp aus min statt max ableiten – nur die max-Werte bestimmen 1:1, 1:n, m:n. Fehler 3: Chen und Krähenfuß verwechseln – bei Krähenfuß ist das äußere Symbol min, das innere max. Fehler 4: (1,1) als Zeichen für einen abhängigen Entitytyp interpretieren – Abhängigkeit ist eine semantische Eigenschaft, kein Kardinalitätsmerkmal."
+    },
+    {
+      "titel": "Implementierungsfehler: FK und Constraints",
+      "text": "Fehler 5: UNIQUE vergessen bei 1:1 – häufigster Einzelfehler in der Testanalyse (Aufgaben 1, 7, 10). Ohne UNIQUE ist die Beziehung technisch 1:n. Fehler 6: FK auf die falsche Seite – bei 1:n gehört der FK in die Tabelle mit max=1, nicht in die n-Seite. Fehler 7: NOT NULL und min-Wert falsch verknüpft – min=0 bedeutet nullable, min=1 bedeutet NOT NULL. Das gilt für die FK-Seite, nicht für die referenzierte Seite."
+    },
+    {
+      "titel": "Implementierungsfehler: Zwischentabellen und abhängige Typen",
+      "text": "Fehler 8: Zwischentabelle ohne zusammengesetzten PK – PRIMARY KEY(FK1, FK2) vergessen erlaubt Duplikate. Fehler 9: Beziehungsattribut in den PK der Zwischentabelle aufnehmen – Stunden oder Datum gehören als normale Spalten in die Zwischentabelle, nicht in den PK. Fehler 10: Zusammengesetzter FK bei abhängigem Entitytyp vergessen – Vorstellung referenziert Saal über FOREIGN KEY(KinoNr, SaalNr), nicht nur über SaalNr allein."
+    },
+    {
+      "titel": "SQL-Fehler: Unterabfragen und NULL",
+      "text": "Fehler 11: Mehrfachwert-Fehler – WHERE x = (SELECT ...) wenn die Unterabfrage mehrere Zeilen liefert. Lösung: IN statt =. Fehler 12: NOT IN mit NULL in der Unterabfrage – liefert leeres Ergebnis. Lösung: NOT EXISTS. Fehler 13: Korrelationsbedingung weglassen – EXISTS ohne WHERE t2.fk = t1.pk prüft nur ob die Tabelle leer ist, nicht ob ein passender Partner existiert. Fehler 14: > ALL und > SOME verwechseln – > ALL = > MAX (streng), > SOME = > MIN (locker)."
+    },
+    {
+      "titel": "SQL-Fehler: JOIN und Mengenoperationen",
+      "text": "Fehler 15: WHERE rechte_Spalte = NULL nach LEFT JOIN statt IS NULL – ergibt immer UNKNOWN, nie Ergebnisse. Fehler 16: EXCEPT-Reihenfolge vertauschen – A EXCEPT B ≠ B EXCEPT A; die erste Abfrage ist die Ausgangsmenge. Fehler 17: UNION statt UNION ALL wenn Duplikate gewollt sind. Fehler 18: count(*) statt count(Spalte) wenn NULL-Zeilen nicht zählen sollen – oder umgekehrt: count(Spalte) wenn auch NULL-Zeilen gezählt werden sollen."
+    }
+  ]
+}

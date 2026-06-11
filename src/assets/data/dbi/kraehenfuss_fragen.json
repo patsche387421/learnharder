@@ -1,0 +1,50 @@
+{
+  "fach": "DBI",
+  "fragen": [
+    {
+      "frage": "Welches Symbol steht in der Krähenfußnotation für eine optionale Teilnahme (min = 0)?",
+      "optionen": [
+        "Kreis (am äußeren Ende der Linie)",
+        "Krähenfuß (drei Striche)",
+        "Einfacher senkrechter Strich",
+        "Doppelter senkrechter Strich"
+      ]
+    },
+    {
+      "frage": "Was entspricht dem Krähenfuß-Symbol Strich+Krähenfuß in Chen-Notation?",
+      "optionen": [
+        "(1,n) – Pflicht, beliebig viele",
+        "(0,n) – optional, beliebig viele",
+        "(1,1) – Pflicht, genau einmal",
+        "(0,1) – optional, höchstens einmal"
+      ]
+    },
+    {
+      "frage": "Wie lautet die Chen-Entsprechung für Krähenfuß Kreis+Strich?",
+      "optionen": [
+        "(0,1)",
+        "(1,1)",
+        "(0,n)",
+        "(1,n)"
+      ]
+    },
+    {
+      "frage": "Woraus ergibt sich der Beziehungstyp (1:1, 1:n, m:n) in der Krähenfußnotation?",
+      "optionen": [
+        "Aus den inneren Symbolen (max-Symbole) auf beiden Seiten",
+        "Aus den äußeren Symbolen (min-Symbole) auf beiden Seiten",
+        "Aus der Summe aller Symbole beider Seiten",
+        "Der Beziehungstyp wird als Text neben die Linie geschrieben"
+      ]
+    },
+    {
+      "frage": "Ein ERD zeigt: Produkt [Strich+Krähenfuß]–––[Strich+Strich] Kategorie. Welcher Beziehungstyp liegt vor?",
+      "optionen": [
+        "1:n – viele Produkte gehören zu genau einer Kategorie",
+        "m:n – Produkte und Kategorien sind beliebig verbunden",
+        "1:1 – jedes Produkt hat genau eine Kategorie und umgekehrt",
+        "0:n – Produkte können optional einer Kategorie zugeordnet sein"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "$schema": "../schema/theorie.schema.json",
+  "fach": "POS",
+  "themen": [
+    {
+      "titel": "Was sind Exceptions?",
+      "text": "Eine Exception (Ausnahme) ist ein Signal, das C# sendet wenn etwas Unerwartetes passiert. Ohne Fehlerbehandlung stürzt das Programm ab. Mit try-catch kann auf Exceptions reagiert werden. Wichtig: Exception Handling ist kein Ersatz für Validierung. Wenn bekannt ist dass eine Eingabe falsch sein kann, vorher prüfen (z.B. mit TryParse). Exceptions sind für unerwartete Situationen – nicht für den Normalfall. Exception Handling als Flusskontrolle zu verwenden ist ein Anti-Pattern."
+    },
+    {
+      "titel": "try-catch-finally",
+      "text": "Der try-Block enthält den Code der eine Exception werfen könnte. catch-Blöcke fangen bestimmte Exception-Typen ab. finally wird immer ausgeführt – egal ob eine Exception aufgetreten ist oder nicht. Typischer Einsatz von finally: Ressourcen freigeben (Dateien schließen, Verbindungen trennen). Mehrere catch-Blöcke sind möglich – spezifischste zuerst, catch(Exception ex) immer als letztes. Nach dem ersten passenden catch wird die Ausführung nach dem gesamten try-catch-Block fortgesetzt."
+    },
+    {
+      "titel": "Wichtige Exception-Typen",
+      "text": "NullReferenceException: Zugriff auf ein null-Objekt – häufigster Laufzeitfehler. IndexOutOfRangeException: Array-Index außerhalb der Grenzen. FormatException: Falsche Konvertierung (z.B. \"abc\" als int parsen). DivideByZeroException: Division durch 0 bei Ganzzahlen. ArgumentException: Ungültiges Argument an eine Methode. KeyNotFoundException: Zugriff auf nicht vorhandenen Dictionary-Key. InvalidOperationException: Methode im falschen Zustand aufgerufen (z.B. Collection während foreach verändern)."
+    },
+    {
+      "titel": "throw – Exceptions selbst werfen",
+      "text": "Mit throw kann man Exceptions selbst auslösen wenn man bemerkt dass etwas nicht stimmt. throw new ArgumentOutOfRangeException(nameof(alter), \"Alter darf nicht negativ sein.\"); nameof(alter) gibt den Variablennamen als String zurück – besser als einen hardcodierten String, weil es beim Umbenennen automatisch mitändert. Eigene Exception-Klassen erstellt man durch Ableiten von Exception. Konvention: Eigene Exceptions enden auf Exception (WertAusserhalbBereichException)."
+    },
+    {
+      "titel": "Catch-Reihenfolge und Best Practices",
+      "text": "Catch-Reihenfolge ist entscheidend: Spezifischste Exception zuerst, catch(Exception ex) immer als letztes – sonst fängt der allgemeine Block alles ab und die spezifischen werden nie erreicht. Best Practices: Leere catch-Blöcke vermeiden (Exception verschlucken ist gefährlich). Exception-Nachricht dem Benutzer zeigen, nicht nur ignorieren. Ressourcen im finally-Block freigeben oder using-Statement verwenden. Keine Exception werfen nur um Werte zurückzugeben – dafür gibt es out-Parameter oder bool-Rückgaben."
+    }
+  ]
+}

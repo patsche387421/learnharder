@@ -1,0 +1,26 @@
+{
+  "$schema": "../schema/theorie.schema.json",
+  "fach": "DBI",
+  "themen": [
+    {
+      "titel": "Was ist eine korrelierte Unterabfrage?",
+      "text": "Eine korrelierte Unterabfrage verweist in ihrer WHERE-Klausel auf eine Spalte der äußeren Abfrage. Sie kann daher nicht unabhängig ausgeführt werden – das DBMS führt sie für jede Zeile der äußeren Abfrage neu aus. Erkennungsmerkmal: In der inneren Abfrage taucht ein Alias oder Tabellenname aus der äußeren Abfrage auf. Beispiel: WHERE l.lnr = a.lnr – hier verweist l auf die äußere Tabelle Lieferant."
+    },
+    {
+      "titel": "Ausführungsreihenfolge",
+      "text": "Bei einer nicht-korrelierten Unterabfrage: Die innere Abfrage wird einmal ausgeführt, ihr Ergebnis wird von der äußeren Abfrage verwendet. Bei einer korrelierten Unterabfrage: Die äußere Abfrage liefert eine Zeile, die innere Abfrage wird mit dieser Zeile als Kontext ausgeführt, das Ergebnis fließt in die Bedingung ein – dann weiter zur nächsten Zeile. Das bedeutet: n Ausführungen der inneren Abfrage für n Zeilen der äußeren."
+    },
+    {
+      "titel": "EXISTS mit korrelierter Unterabfrage",
+      "text": "Der häufigste Einsatz korrelierter Unterabfragen ist EXISTS: WHERE EXISTS (SELECT 1 FROM Tabelle2 t2 WHERE t2.Spalte = t1.Spalte). Für jede Zeile t1 wird geprüft, ob es mindestens eine passende Zeile t2 gibt. SELECT 1 ist dabei idiomatisch – was zurückgegeben wird, ist irrelevant, nur ob mindestens eine Zeile existiert. NOT EXISTS findet entsprechend alle Zeilen, zu denen kein Partner existiert."
+    },
+    {
+      "titel": "Prüfungsbeispiel: Aufgabe 11",
+      "text": "Aufgabe 11 zeigte eine Abfrage der Art: SELECT l.Name FROM Lieferant l WHERE EXISTS (SELECT 1 FROM Auftrag a WHERE a.lnr = l.lnr). Das a.lnr = l.lnr ist die Korrelation – l.lnr kommt aus der äußeren Abfrage. Typischer Fehler: l.lnr aus der inneren Abfrage weglassen (dann prüft EXISTS nur ob die Tabelle Auftrag überhaupt Zeilen hat, nicht ob dieser Lieferant Aufträge hat)."
+    },
+    {
+      "titel": "Cheatsheet",
+      "text": "Korreliert erkennen: Taucht in der inneren WHERE-Bedingung\nein Alias/Spalte der äußeren Tabelle auf?\n  Ja → korrelierte Unterabfrage\n  Nein → nicht-korreliert (wird einmal ausgeführt)\n\nMuster EXISTS:\nSELECT t1.* FROM T1 t1\nWHERE EXISTS (\n  SELECT 1 FROM T2 t2\n  WHERE t2.fk = t1.pk   ← Korrelation\n);\n\nMuster NOT EXISTS:\nSELECT t1.* FROM T1 t1\nWHERE NOT EXISTS (\n  SELECT 1 FROM T2 t2\n  WHERE t2.fk = t1.pk\n);"
+    }
+  ]
+}

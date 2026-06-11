@@ -1,0 +1,26 @@
+{
+  "$schema": "../schema/theorie.schema.json",
+  "fach": "POS",
+  "themen": [
+    {
+      "titel": "Warum Methoden?",
+      "text": "Eine Methode ist ein benannter, wiederverwendbarer Codeblock mit einem klar definierten Auftrag. Ohne Methoden müsste derselbe Code an mehreren Stellen kopiert werden – was Fehler schwer zu finden macht. Das Prinzip: Eine Methode tut genau eine Sache. Wenn du eine Methode nicht in einem Satz beschreiben kannst, ist sie wahrscheinlich zu groß. Das EVA-Prinzip hilft: Eingabe (Parameter), Verarbeitung (Methodenkörper), Ausgabe (Rückgabewert)."
+    },
+    {
+      "titel": "Aufbau: Zugriffsmodifikatoren, Rückgabetyp, Parameter",
+      "text": "Aufbau: [Modifier] [static?] [Rückgabetyp] [Name]([Parameter]) { ... }. Rückgabetyp void bedeutet: Die Methode tut etwas, gibt aber keinen Wert zurück. Jeder andere Rückgabetyp (int, string, bool, ...) erfordert ein return-Statement. static bedeutet: Die Methode gehört zur Klasse, nicht zu einem Objekt. In einer statischen Main-Methode darf man nur statische Methoden direkt aufrufen."
+    },
+    {
+      "titel": "Standardwerte und Methodenüberladung",
+      "text": "Parameter können Standardwerte haben: static double BerechnePreis(double preis, double rabatt = 0.0). Wenn rabatt beim Aufruf weggelassen wird, greift der Standardwert. Überladung erlaubt mehrere Methoden mit demselben Namen aber unterschiedlichen Parametern. C# wählt anhand der Parameterliste die passende Variante. Standardwerte-Parameter müssen immer am Ende der Parameterliste stehen."
+    },
+    {
+      "titel": "out-Parameter – mehrere Werte zurückgeben",
+      "text": "Manchmal muss eine Methode mehr als einen Wert zurückgeben. Dafür gibt es out-Parameter. Die Methode muss out-Variablen vor dem return zuweisen. Beim Aufruf wird das Schlüsselwort out vor die Variable geschrieben: TeileAuf(17, 5, out int ergebnis, out int rest). Das bekannteste Beispiel ist int.TryParse(): Die Methode gibt bool zurück (Erfolg?) und schreibt den konvertierten Wert in eine out-Variable."
+    },
+    {
+      "titel": "Parse vs. TryParse – sicheres Einlesen",
+      "text": "Console.ReadLine() gibt immer einen string zurück. Für Zahlen muss konvertiert werden. int.Parse(text) funktioniert bei gültigen Zahlen, wirft aber eine FormatException wenn der Text ungültig ist. int.TryParse(text, out int zahl) gibt true zurück bei Erfolg und false ohne Absturz bei ungültigem Eingabe. Im produktiven Code fast immer TryParse bevorzugen. Parse nur verwenden wenn sicher ist dass die Eingabe gültig ist."
+    }
+  ]
+}

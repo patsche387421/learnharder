@@ -1,0 +1,50 @@
+{
+  "fach": "DBI",
+  "fragen": [
+    {
+      "frage": "In welcher Phase des Datenbankdesigns wird das Entity-Relationship-Diagramm erstellt?",
+      "optionen": [
+        "Phase 2 – Konzeptioneller Entwurf",
+        "Phase 1 – Anforderungsanalyse",
+        "Phase 3 – Logischer Entwurf",
+        "Phase 4 – Physischer Entwurf"
+      ]
+    },
+    {
+      "frage": "Was ist das Ergebnis des logischen Entwurfs (Phase 3)?",
+      "optionen": [
+        "Ein relationales Datenmodell mit Tabellenstruktur (noch ohne SQL-Syntax)",
+        "Ein ERD mit Entitytypen, Attributen und Beziehungen",
+        "SQL CREATE TABLE Statements mit PRIMARY KEY und FOREIGN KEY",
+        "Eine Liste der Anforderungen aus dem Kundentext"
+      ]
+    },
+    {
+      "frage": "Welche Phasen sind für die Prüfung direkt relevant?",
+      "optionen": [
+        "Phasen 2–4",
+        "Nur Phase 4 (DDL schreiben)",
+        "Phasen 1–3",
+        "Alle vier Phasen sind gleich wichtig"
+      ]
+    },
+    {
+      "frage": "Wie wird eine m:n-Beziehung in Phase 3 umgesetzt?",
+      "optionen": [
+        "Durch eine eigene Zwischentabelle mit zwei Fremdschlüsseln",
+        "Durch einen Fremdschlüssel auf der n-Seite",
+        "Durch einen Fremdschlüssel auf der m-Seite",
+        "m:n-Beziehungen können nicht in Tabellen abgebildet werden"
+      ]
+    },
+    {
+      "frage": "Was gehört ins ERD (Phase 2) – und was NICHT?",
+      "optionen": [
+        "Entitytypen und Beziehungen mit (min,max) – aber keine FK-Spalten",
+        "CREATE TABLE mit PRIMARY KEY und FOREIGN KEY",
+        "Zwischentabellen für m:n-Beziehungen",
+        "NOT NULL- und UNIQUE-Constraints"
+      ]
+    }
+  ]
+}

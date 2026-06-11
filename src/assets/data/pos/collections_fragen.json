@@ -1,0 +1,50 @@
+{
+  "fach": "POS",
+  "fragen": [
+    {
+      "frage": "Wie heißt die Eigenschaft für die Anzahl der Elemente bei einer List<T>?",
+      "optionen": [
+        ".Count – nicht .Length wie bei Arrays",
+        ".Length – identisch zu Arrays",
+        ".Size",
+        ".Elements"
+      ]
+    },
+    {
+      "frage": "Was passiert bei dict[\"nichtVorhandenerKey\"] bei einem Dictionary?",
+      "optionen": [
+        "Eine KeyNotFoundException wird geworfen; sicherer ist TryGetValue()",
+        "null wird zurückgegeben",
+        "Der Default-Wert des Value-Typs wird zurückgegeben",
+        "Ein leerer String wird zurückgegeben"
+      ]
+    },
+    {
+      "frage": "Ein HashSet enthält bereits \"Wien\". Was passiert wenn man nochmals \"Wien\" hinzufügt?",
+      "optionen": [
+        "Das Duplikat wird ignoriert – Count bleibt unverändert",
+        "Eine DuplicateKeyException wird geworfen",
+        "Wien erscheint jetzt zweimal im HashSet",
+        "Das alte Objekt wird durch das neue ersetzt"
+      ]
+    },
+    {
+      "frage": "Wann nimmt man SortedList statt SortedDictionary?",
+      "optionen": [
+        "Wenn man viele Lesezugriffe und Indexzugriff (Keys[i]) braucht und selten einfügt oder löscht",
+        "Wenn man häufig Elemente einfügt oder löscht",
+        "Wenn die Schlüssel keine natürliche Sortierung haben",
+        "SortedList und SortedDictionary sind funktional identisch – kein Unterschied"
+      ]
+    },
+    {
+      "frage": "Was ist der Unterschied zwischen Queue<T> und Stack<T>?",
+      "optionen": [
+        "Queue ist FIFO (erstes rein = erstes raus); Stack ist LIFO (letztes rein = erstes raus)",
+        "Stack ist FIFO; Queue ist LIFO",
+        "Beide sind FIFO – der Unterschied liegt nur in der Methodenbenennung",
+        "Queue erlaubt nur string-Elemente; Stack beliebige Typen"
+      ]
+    }
+  ]
+}

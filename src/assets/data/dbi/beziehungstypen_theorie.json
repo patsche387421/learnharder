@@ -1,0 +1,26 @@
+{
+  "$schema": "../schema/theorie.schema.json",
+  "fach": "DBI",
+  "themen": [
+    {
+      "titel": "Was ist ein Beziehungstyp?",
+      "text": "Der Beziehungstyp beschreibt, wie viele Exemplare zweier Entitytypen miteinander in Beziehung stehen können. Er ergibt sich immer aus den max-Werten beider Seiten einer Beziehung im ERD. Es gibt drei Typen: 1:1, 1:n und m:n. Der Typ bestimmt direkt, wie die Beziehung später in Tabellen umgesetzt wird – er ist daher die wichtigste Einzelentscheidung im Datenbankdesign."
+    },
+    {
+      "titel": "1:1-Beziehung",
+      "text": "Beide max-Werte sind 1: z. B. (0,1)↔(1,1) oder (1,1)↔(1,1). Jedes Exemplar auf beiden Seiten kann höchstens mit einem Exemplar der anderen Seite verbunden sein. Beispiel: Ein Mitarbeiter leitet höchstens eine Filiale, eine Filiale wird von höchstens einem Mitarbeiter geleitet. Implementierung: FK in eine der Tabellen + UNIQUE-Constraint (zwingend!)."
+    },
+    {
+      "titel": "1:n-Beziehung",
+      "text": "Ein max-Wert ist n, der andere ist 1: z. B. (1,n)↔(0,1) oder (0,n)↔(1,1). Ein Exemplar der n-Seite kann mit beliebig vielen Exemplaren der 1-Seite verbunden sein, aber nicht umgekehrt. Beispiel: Eine Abteilung hat mehrere Mitarbeiter, ein Mitarbeiter gehört zu genau einer Abteilung. Implementierung: FK in die Tabelle mit max=1 (die 1-Seite). Kein UNIQUE nötig."
+    },
+    {
+      "titel": "m:n-Beziehung",
+      "text": "Beide max-Werte sind n: z. B. (0,n)↔(1,n) oder (1,n)↔(0,n). Exemplare auf beiden Seiten können mit beliebig vielen auf der anderen Seite verbunden sein. Beispiel: Ein Student belegt mehrere Kurse, ein Kurs hat mehrere Studenten. Implementierung: Zwischentabelle mit je einem FK auf beide Seiten. Der zusammengesetzte PK der Zwischentabelle besteht aus beiden FKs."
+    },
+    {
+      "titel": "Cheatsheet: Beziehungstyp aus max-Werten",
+      "text": "Regel: Nur die max-Werte zählen für den Typ.\n\nmax(links) × max(rechts) → Typ\n   1 × 1  →  1:1   FK + UNIQUE\n   1 × n  →  1:n   FK auf der 1-Seite\n   n × 1  →  1:n   FK auf der 1-Seite (gespiegelt)\n   n × n  →  m:n   Zwischentabelle\n\nmin-Werte beeinflussen NOT NULL, nicht den Typ."
+    }
+  ]
+}

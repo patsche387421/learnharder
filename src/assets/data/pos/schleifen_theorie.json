@@ -1,0 +1,26 @@
+{
+  "$schema": "../schema/theorie.schema.json",
+  "fach": "POS",
+  "themen": [
+    {
+      "titel": "Die for-Schleife",
+      "text": "Die for-Schleife ist die klassische Zählschleife für Situationen, in denen die Anzahl der Durchläufe bekannt ist. Aufbau: for (Initialisierung; Bedingung; Schritt) { … } – z. B. for (int i = 0; i < 10; i++). Die drei Teile im Schleifenkopf: Initialisierung (wird einmal ausgeführt), Bedingung (wird vor jedem Durchlauf geprüft), Schritt (wird nach jedem Durchlauf ausgeführt). Klassische Falle: Arrays sind 0-indiziert, also läuft i von 0 bis array.Length - 1, nicht bis array.Length."
+    },
+    {
+      "titel": "Die while-Schleife",
+      "text": "Die while-Schleife läuft, solange eine Bedingung true ist. Die Bedingung wird vor dem ersten Durchlauf geprüft – ist sie von Anfang an false, wird der Schleifenkörper kein einziges Mal ausgeführt. Einsatz: wenn die Anzahl der Durchläufe nicht im Voraus bekannt ist, z. B. Eingabevalidierung (solange Eingabe ungültig, weiter fragen). Häufiger Fehler: Schleifenvariable nicht verändern → Endlosschleife."
+    },
+    {
+      "titel": "Die do-while-Schleife",
+      "text": "Die do-while-Schleife ist wie while, aber die Bedingung wird erst nach dem ersten Durchlauf geprüft. Das bedeutet: Der Schleifenkörper wird mindestens einmal ausgeführt, egal ob die Bedingung true oder false ist. Einsatz: Menü-Dialoge (Menü zeigen, dann prüfen ob weiter), Erstversuch dann prüfen. Syntax: do { … } while (bedingung); – das Semikolon nach der Bedingung ist Pflicht."
+    },
+    {
+      "titel": "foreach – Iteration über Sammlungen",
+      "text": "foreach iteriert über alle Elemente einer Sammlung, ohne Indexverwaltung. Syntax: foreach (var element in sammlung) { … } – z. B. foreach (var name in namen). Vorteil: kein Off-by-one-Fehler möglich, klarer lesbar als for bei Sammlungen. Einschränkung: In der foreach-Schleife darf die Sammlung nicht verändert werden (Elemente hinzufügen/entfernen) – das führt zu einer InvalidOperationException. Für solche Fälle eine for-Schleife oder eine Kopie der Sammlung verwenden."
+    },
+    {
+      "titel": "break, continue und Schleifenwahl",
+      "text": "break beendet die Schleife sofort und springt hinter den Schleifenblock. continue überspringt den Rest des aktuellen Durchlaufs und startet direkt den nächsten. Schleifenwahl: for wenn Anzahl bekannt, while wenn Bedingung unbekannte Anzahl steuert, do-while wenn mindestens ein Durchlauf nötig, foreach wenn über eine Sammlung iteriert wird. Endlosschleifen absichtlich: while (true) { … break; } – nur sinnvoll wenn das Abbruchkriterium innerhalb des Körpers berechnet wird."
+    }
+  ]
+}

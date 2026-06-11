@@ -1,0 +1,50 @@
+{
+  "fach": "DBI",
+  "fragen": [
+    {
+      "frage": "Woraus ergibt sich der Beziehungstyp (1:1, 1:n, m:n)?",
+      "optionen": [
+        "Aus den max-Werten beider Seiten der Beziehung",
+        "Aus den min-Werten beider Seiten der Beziehung",
+        "Aus der Anzahl der Attribute der beteiligten Entitytypen",
+        "Aus dem Namen des Beziehungstyps in der Raute"
+      ]
+    },
+    {
+      "frage": "Welche (min,max)-Kombination zeigt eine 1:n-Beziehung?",
+      "optionen": [
+        "(1,n) auf der einen, (0,1) auf der anderen Seite",
+        "(1,1) auf beiden Seiten",
+        "(0,n) auf beiden Seiten",
+        "(0,1) auf der einen, (1,1) auf der anderen Seite"
+      ]
+    },
+    {
+      "frage": "Wie wird eine m:n-Beziehung in Tabellen umgesetzt?",
+      "optionen": [
+        "Durch eine Zwischentabelle mit je einem FK auf beide Seiten",
+        "Durch einen FK in einer der beiden Tabellen",
+        "Durch einen FK + UNIQUE in einer der beiden Tabellen",
+        "m:n-Beziehungen können nicht in relationalen Tabellen abgebildet werden"
+      ]
+    },
+    {
+      "frage": "Was unterscheidet eine 1:1-Beziehung von einer 1:n-Beziehung bei der Implementierung?",
+      "optionen": [
+        "Bei 1:1 braucht der FK ein UNIQUE-Constraint, bei 1:n nicht",
+        "Bei 1:n braucht der FK ein UNIQUE-Constraint, bei 1:1 nicht",
+        "1:1 braucht eine Zwischentabelle, 1:n nicht",
+        "Es gibt keinen Unterschied – beide werden mit einem FK implementiert"
+      ]
+    },
+    {
+      "frage": "Student –(1,n)–BELEGT–(0,n)– Kurs. Was ist der korrekte Beziehungstyp?",
+      "optionen": [
+        "m:n, weil beide max-Werte n sind",
+        "1:n, weil ein Student viele Kurse belegt",
+        "1:1, weil jeder Student mindestens einen Kurs belegt",
+        "n:0, wegen des min=0 auf der Kurs-Seite"
+      ]
+    }
+  ]
+}

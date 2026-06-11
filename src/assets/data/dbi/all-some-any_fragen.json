@@ -1,0 +1,50 @@
+{
+  "fach": "DBI",
+  "fragen": [
+    {
+      "frage": "Was bedeutet x > ALL (SELECT y FROM ...)?",
+      "optionen": [
+        "x ist größer als jeder einzelne Wert in der Menge – äquivalent zu x > MAX(y)",
+        "x ist größer als mindestens ein Wert in der Menge",
+        "x ist größer als der Durchschnitt der Menge",
+        "x kommt in der Menge nicht vor"
+      ]
+    },
+    {
+      "frage": "Was bedeutet x > SOME (SELECT y FROM ...)?",
+      "optionen": [
+        "x ist größer als mindestens einen Wert in der Menge – äquivalent zu x > MIN(y)",
+        "x ist größer als alle Werte in der Menge",
+        "x ist größer als der erste Wert in der Menge",
+        "x ist größer als die Hälfte der Werte in der Menge"
+      ]
+    },
+    {
+      "frage": "Was ist der Unterschied zwischen SOME und ANY in SQL?",
+      "optionen": [
+        "Keiner – SOME und ANY sind vollständige Synonyme",
+        "SOME vergleicht mit dem Minimum, ANY mit dem Maximum",
+        "ANY funktioniert nur mit =, SOME mit allen Vergleichsoperatoren",
+        "SOME ist Standard-SQL, ANY ist ein MySQL-Dialekt"
+      ]
+    },
+    {
+      "frage": "Welche Abfrage findet Mitarbeiter, deren Gehalt höher ist als das höchste Gehalt in Abteilung 3?",
+      "optionen": [
+        "WHERE Gehalt > ALL (SELECT Gehalt FROM Mitarbeiter WHERE AbtNr = 3)",
+        "WHERE Gehalt > SOME (SELECT Gehalt FROM Mitarbeiter WHERE AbtNr = 3)",
+        "WHERE Gehalt > ANY (SELECT MAX(Gehalt) FROM Mitarbeiter WHERE AbtNr = 3)",
+        "WHERE Gehalt > (SELECT SOME Gehalt FROM Mitarbeiter WHERE AbtNr = 3)"
+      ]
+    },
+    {
+      "frage": "Was gibt x > ALL zurück, wenn die Unterabfrage eine leere Menge liefert?",
+      "optionen": [
+        "TRUE – gegen eine leere Menge wird jede ALL-Bedingung erfüllt",
+        "FALSE – ohne Vergleichswerte kann die Bedingung nicht erfüllt werden",
+        "NULL – das Ergebnis ist undefiniert",
+        "Es entsteht ein Laufzeitfehler"
+      ]
+    }
+  ]
+}

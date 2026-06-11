@@ -1,0 +1,26 @@
+{
+  "$schema": "../schema/theorie.schema.json",
+  "fach": "DBI",
+  "themen": [
+    {
+      "titel": "Grundwissen",
+      "text": "Eine 1:1-Beziehung erkennt man daran, dass beide max-Werte gleich 1 sind: (0,1)↔(0,1), (0,1)↔(1,1) oder (1,1)↔(1,1). Jede 1:1-Beziehung braucht einen FK mit UNIQUE-Constraint. Immer. Ohne Ausnahme. Ohne UNIQUE ist es keine technisch korrekte 1:1-Beziehung. Merksatz: 1:1-Beziehung = FK + UNIQUE. Ob der FK auch NOT NULL ist, hängt vom min-Wert der FK-Seite ab."
+    },
+    {
+      "titel": "FK-Seite wählen",
+      "text": "Bei (0,1)↔(1,1) sollte der FK auf die Seite mit (1,1) gelegt werden, weil ein Datensatz dieser Tabelle ohne Partner nicht erlaubt ist — der FK ist dort NOT NULL. Bei (0,1)↔(0,1) kann der FK auf beiden Seiten liegen und ist nullable; man wählt die semantisch sinnvollere Seite. Bei (1,1)↔(1,1) ist der FK auf beiden Seiten NOT NULL; man wählt die semantisch abhängigere Seite."
+    },
+    {
+      "titel": "Prüfungs-Level: DDL-Fehler erkennen",
+      "text": "In der Prüfung kommt oft eine fertige DDL, die auf Fehler geprüft werden soll. Kritische Punkte: Ist UNIQUE vorhanden? Stimmt NOT NULL mit dem min-Wert überein? Liegt der FK auf der richtigen Seite? Beispiel einer fehlerhaften DDL: Restaurant(Nr PK, MitarbeiterNr INT NOT NULL REFERENCES Mitarbeiter) – Fehler: UNIQUE fehlt, dadurch technisch 1:n."
+    },
+    {
+      "titel": "Typische Fehler",
+      "text": "UNIQUE vergessen → der FK erlaubt Duplikate, das DBMS erzwingt technisch 1:n statt 1:1 (häufigster Prüfungsfehler). NOT NULL bei (0,1) setzen → widerspricht der teilweisen Teilnahme. FK auf die optionale statt vollständige Seite legen → schlechtere Semantik. Annahme, UNIQUE sei nur bei vollständiger Teilnahme nötig → falsch: UNIQUE ist immer nötig bei 1:1."
+    },
+    {
+      "titel": "Cheatsheet",
+      "text": "1:1 erkennen: beide max-Werte = 1\n\n1:1 implementieren:\n  FK + UNIQUE → immer, keine Ausnahme\n  NOT NULL    → wenn min der FK-Seite = 1\n  nullable    → wenn min der FK-Seite = 0\n\nFK-Seite wählen: bevorzugt min = 1 (vollständige Teilnahme)\n\nBeispiel korrekt:\nRestaurant(Nr PK, MitarbeiterNr INT NOT NULL UNIQUE REFERENCES Mitarbeiter)"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "$schema": "../schema/theorie.schema.json",
+  "fach": "DBI",
+  "themen": [
+    {
+      "titel": "NULL in SQL – das Grundprinzip",
+      "text": "NULL bedeutet in SQL: unbekannt, nicht vorhanden. NULL ist kein Wert, sondern das Fehlen eines Werts. Das hat eine entscheidende Konsequenz: Jeder Vergleich mit NULL ergibt UNKNOWN, nicht TRUE oder FALSE. UNKNOWN verhält sich in WHERE-Bedingungen wie FALSE – die Zeile wird nicht zurückgegeben. NULL taucht überall auf: bei optionalen FKs, bei LEFT JOIN, bei Aggregatfunktionen, bei NOT IN."
+    },
+    {
+      "titel": "NULL vergleichen: IS NULL statt = NULL",
+      "text": "WHERE Spalte = NULL funktioniert nicht – der Ausdruck ergibt immer UNKNOWN, nie TRUE. Korrekt ist WHERE Spalte IS NULL. Entsprechend: WHERE Spalte IS NOT NULL statt WHERE Spalte != NULL. Klassischer Fehler im LEFT JOIN: WHERE a.Spalte = NULL statt WHERE a.Spalte IS NULL – damit bekommt man keine Zeilen zurück, obwohl Zeilen ohne Partner existieren."
+    },
+    {
+      "titel": "NULL bei NOT IN",
+      "text": "Enthält die Ergebnismenge einer NOT IN-Unterabfrage auch nur einen NULL-Wert, gibt die gesamte NOT IN-Bedingung UNKNOWN zurück – für jede Zeile. Das Ergebnis der Abfrage ist dann leer. Grund: x NOT IN (..., NULL) bedeutet x != NULL AND x != andere Werte. x != NULL ist UNKNOWN, und UNKNOWN AND irgendetwas ist nie TRUE. Lösung: NOT EXISTS statt NOT IN, oder WHERE Unterabfrage IS NOT NULL."
+    },
+    {
+      "titel": "NULL bei count()",
+      "text": "count(*) zählt alle Zeilen, inklusive solcher mit NULL-Werten. count(Spalte) zählt nur Zeilen, bei denen die Spalte NOT NULL ist – NULL-Zeilen werden übersprungen. Bei LEFT JOIN mit fehlenden Partnern macht das einen Unterschied: count(*) zählt auch Zeilen ohne Partner, count(rechte_Spalte) nicht. Andere Aggregatfunktionen (SUM, AVG, MAX, MIN) ignorieren NULL-Werte ebenfalls automatisch."
+    },
+    {
+      "titel": "Cheatsheet: NULL-Regeln",
+      "text": "Vergleich:    = NULL  → immer UNKNOWN → IS NULL verwenden!\nNegation:     != NULL → immer UNKNOWN → IS NOT NULL verwenden!\n\nNOT IN + NULL in Unterabfrage → Ergebnis immer leer!\nLösung: NOT EXISTS oder WHERE ... IS NOT NULL filtern\n\ncount(*):      zählt alle Zeilen inkl. NULL\ncount(Spalte): überspringt NULL-Werte\nSUM/AVG/MAX:   ignorieren NULL automatisch\n\nLEFT JOIN ohne Partner:\n  rechte Spalten = NULL\n  Zugriff: WHERE rechte_Spalte IS NULL\n  NICHT: WHERE rechte_Spalte = NULL"
+    }
+  ]
+}
