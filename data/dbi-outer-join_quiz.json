@@ -1,0 +1,56 @@
+{
+  "$schema": "./schema/quiz.schema.json",
+  "fach": "DBI",
+  "fragen": [
+    {
+      "frage": "Was unterscheidet einen LEFT JOIN vom INNER JOIN?",
+      "optionen": [
+        "LEFT JOIN liefert auch Zeilen der linken Tabelle ohne passenden Partner (rechte Seite wird NULL)",
+        "LEFT JOIN liefert nur Zeilen der linken Tabelle",
+        "LEFT JOIN ist schneller als INNER JOIN",
+        "LEFT JOIN kann keine NULL-Werte erzeugen"
+      ],
+      "loesung": 0
+    },
+    {
+      "frage": "Wie findest du alle Mitarbeiter, denen KEINE Abteilung zugeordnet ist?",
+      "optionen": [
+        "LEFT JOIN Abteilung ON ... WHERE a.AbtNr IS NULL",
+        "INNER JOIN Abteilung ON ... WHERE a.AbtNr IS NULL",
+        "LEFT JOIN Abteilung ON ... WHERE a.AbtNr != NULL",
+        "RIGHT JOIN Abteilung ON ... WHERE m.AbtNr IS NULL"
+      ],
+      "loesung": 0
+    },
+    {
+      "frage": "Was zählt count(*) beim LEFT JOIN anders als count(a.Spalte)?",
+      "optionen": [
+        "count(*) zählt auch Zeilen mit NULL (kein Partner), count(a.Spalte) nicht",
+        "count(*) ignoriert NULL, count(a.Spalte) zählt NULL als 1",
+        "Es gibt keinen Unterschied bei LEFT JOINs",
+        "count(a.Spalte) zählt alle Zeilen inklusive NULL"
+      ],
+      "loesung": 0
+    },
+    {
+      "frage": "SELECT p.Name, b.Datum FROM Produkt p LEFT JOIN Bestellung b ON p.ProdNr = b.ProdNr. Was liefert die Abfrage für ein Produkt ohne Bestellung?",
+      "optionen": [
+        "Eine Zeile mit p.Name und b.Datum = NULL",
+        "Keine Zeile – das Produkt wird ausgeblendet",
+        "Eine Zeile mit p.Name = NULL und b.Datum ausgefüllt",
+        "Einen Fehler, weil kein Partner vorhanden ist"
+      ],
+      "loesung": 0
+    },
+    {
+      "frage": "Wann ist WHERE a.Spalte != 5 bei einem LEFT JOIN gefährlich?",
+      "optionen": [
+        "NULL != 5 ist in SQL UNKNOWN, nicht TRUE – Zeilen mit NULL werden herausgefiltert",
+        "Der Vergleich funktioniert korrekt, NULL wird als 0 behandelt",
+        "Nur bei RIGHT JOIN ist das ein Problem, nicht bei LEFT JOIN",
+        "Es gibt kein Problem – != behandelt NULL wie jeden anderen Wert"
+      ],
+      "loesung": 0
+    }
+  ]
+}

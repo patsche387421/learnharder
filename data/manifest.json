@@ -113,6 +113,27 @@
           "icon": "🔧",
           "beschreibung": "Ternäre Beziehungen implementieren: PK aus allen FKs, Beziehungsattribute.",
           "typ": "fach"
+        },
+        {
+          "id": "dbi-erd-rekonstruieren",
+          "name": "ERD aus Tabellen rekonstruieren",
+          "icon": "🔁",
+          "beschreibung": "Von DDL zurück ins ERD: FK-Analyse, was rekonstruierbar ist und was nicht.",
+          "typ": "fach"
+        },
+        {
+          "id": "dbi-outer-join",
+          "name": "OUTER JOIN",
+          "icon": "↔️",
+          "beschreibung": "LEFT JOIN, fehlende Zuordnungen mit IS NULL finden, count(*) vs. count(Spalte).",
+          "typ": "fach"
+        },
+        {
+          "id": "dbi-unterabfragen",
+          "name": "Unterabfragen",
+          "icon": "🔎",
+          "beschreibung": "Skalare und Mehrwert-Unterabfragen, der Mehrfachwert-Fehler, IN vs. EXISTS.",
+          "typ": "fach"
         }
       ]
     },

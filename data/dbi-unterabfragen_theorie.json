@@ -1,0 +1,26 @@
+{
+  "$schema": "./schema/theorie.schema.json",
+  "fach": "DBI",
+  "themen": [
+    {
+      "titel": "Was ist eine Unterabfrage?",
+      "text": "Eine Unterabfrage (Subquery) ist ein SELECT-Statement innerhalb eines anderen SELECT-Statements. Sie steht in Klammern und liefert entweder einen einzelnen Wert (skalare Unterabfrage) oder eine Menge von Werten (Mehrwert-Unterabfrage). Einsatzorte: in der WHERE-Klausel (häufigster Fall), in der FROM-Klausel (Derived Table), in der SELECT-Liste (skalare Unterabfrage). In der Prüfung betreffen Aufgaben 9, 11 und 12 genau diesen Bereich."
+    },
+    {
+      "titel": "Skalare Unterabfrage",
+      "text": "Eine skalare Unterabfrage gibt genau eine Zeile mit einer Spalte zurück. Sie kann überall eingesetzt werden, wo ein einzelner Wert erwartet wird. Beispiel: SELECT Name FROM Mitarbeiter WHERE Gehalt > (SELECT AVG(Gehalt) FROM Mitarbeiter). Die innere Abfrage liefert einen einzigen Zahlenwert, mit dem verglichen wird. Gibt die innere Abfrage mehr als eine Zeile zurück, erzeugt das einen Laufzeitfehler."
+    },
+    {
+      "titel": "Mehrwert-Unterabfrage und der Mehrfachwert-Fehler",
+      "text": "Wenn eine Unterabfrage mehrere Zeilen zurückgibt, kann man nicht mit = oder > vergleichen – das ergibt einen Fehler. Stattdessen braucht man IN, EXISTS, ALL oder ANY. Der häufigste Prüfungsfehler: WHERE Spalte = (SELECT ...) wenn die innere Abfrage mehrere Werte liefert. Lösung: WHERE Spalte IN (SELECT ...). Merksatz: Mehrere Werte → IN statt =."
+    },
+    {
+      "titel": "IN vs. EXISTS",
+      "text": "IN prüft, ob ein Wert in einer Ergebnismenge vorkommt: WHERE x IN (SELECT y FROM ...). EXISTS prüft, ob die Unterabfrage mindestens eine Zeile zurückgibt: WHERE EXISTS (SELECT 1 FROM ... WHERE Bedingung). Für einfache Fälle sind beide austauschbar. EXISTS ist effizienter wenn die innere Abfrage korreliert ist (auf die äußere Tabelle verweist) und nur die Existenz geprüft wird."
+    },
+    {
+      "titel": "Unterabfrage oder JOIN?",
+      "text": "Unterabfragen und JOINs können oft dieselbe Frage beantworten. Faustregel: JOIN wenn du Spalten beider Tabellen im Ergebnis brauchst. Unterabfrage wenn du nur filtere, ob etwas existiert oder welchen Wert etwas hat. NOT EXISTS ist oft klarer als LEFT JOIN + IS NULL, liefert aber dasselbe Ergebnis. Bei korrelierten Unterabfragen (nächstes Thema) hat EXISTS meist einen Vorteil gegenüber IN."
+    }
+  ]
+}

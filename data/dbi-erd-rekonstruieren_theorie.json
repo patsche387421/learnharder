@@ -1,0 +1,26 @@
+{
+  "$schema": "./schema/theorie.schema.json",
+  "fach": "DBI",
+  "themen": [
+    {
+      "titel": "Was bedeutet Rekonstruieren?",
+      "text": "Beim Rekonstruieren liest man von Tabellen (logisches Modell) zurück ins ERD (konzeptionelles Modell). Das ist die umgekehrte Richtung zur normalen Aufgabe. Typischer Prüfungsauftrag: Gegeben sind CREATE TABLE-Statements – zeichne das zugehörige ERD. Wichtig: Aus einer DDL kann man nicht alles rekonstruieren. Einige Informationen gehen beim Übergang von Phase 2 zu Phase 3 verloren."
+    },
+    {
+      "titel": "Schritt 1 – Tabellen → Entitytypen",
+      "text": "Jede Tabelle wird zu einem Entitytyp (Rechteck). Jede Spalte wird zu einem Attribut (Ellipse). Der PRIMARY KEY wird als Primärschlüssel-Attribut gekennzeichnet (unterstrichen). Ausnahme: Zwischentabellen bei m:n haben keinen eigenen Entitytyp – sie werden zur Beziehungsraute. Erkennungsmerkmal einer Zwischentabelle: ihr PK besteht nur aus FKs auf andere Tabellen."
+    },
+    {
+      "titel": "Schritt 2 – FKs → Beziehungstypen",
+      "text": "Jeder Fremdschlüssel wird zu einer Beziehung. Liegt der FK in Tabelle B und referenziert Tabelle A: Beziehung zwischen A und B. Den Beziehungstyp bestimmst du aus dem FK-Constraint: Ist UNIQUE auf dem FK → 1:1. Kein UNIQUE auf dem FK → 1:n (FK-Seite ist die 1-Seite, referenzierte Seite die n-Seite). Ist der FK NOT NULL → min=1 auf der FK-Seite; nullable → min=0."
+    },
+    {
+      "titel": "Was man NICHT rekonstruieren kann",
+      "text": "Beziehungsnamen gehen verloren: In der DDL steht nur REFERENCES, kein semantischer Name wie LEITET oder GEHÖRT. min-Wert auf der referenzierten Seite ist nicht ableitbar: Ob eine Abteilung mindestens einen Mitarbeiter haben muss (min=1) oder nicht (min=0), ist aus der Tabellen-DDL nicht erkennbar – das war eine semantische Entscheidung in Phase 1. Abhängige Entitytypen: Die Schwäche ist nur aus dem Geschäftskontext ersichtlich."
+    },
+    {
+      "titel": "Cheatsheet",
+      "text": "Tabelle → Entitytyp\nSpalte → Attribut\nPK-Spalte → Primärschlüssel (unterstrichen)\nPK nur aus FKs → Zwischentabelle = m:n-Beziehung\n\nFK + UNIQUE → 1:1 (beide max = 1)\nFK ohne UNIQUE → 1:n (FK-Seite hat max = 1)\n\nFK NOT NULL → min = 1 auf FK-Seite\nFK nullable  → min = 0 auf FK-Seite\n\nNICHT rekonstruierbar:\n  - Beziehungsname\n  - min-Wert der referenzierten Seite\n  - Semantik abhängiger Entitytypen"
+    }
+  ]
+}
