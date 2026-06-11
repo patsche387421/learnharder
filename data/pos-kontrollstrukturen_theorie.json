@@ -1,0 +1,26 @@
+{
+  "$schema": "./schema/theorie.schema.json",
+  "fach": "POS",
+  "themen": [
+    {
+      "titel": "Entscheidungen mit if und else",
+      "text": "Die if-Anweisung führt einen Codeblock nur dann aus, wenn eine Bedingung true ergibt. Mit else if können weitere Bedingungen geprüft werden; der optionale else-Block greift, wenn keine Bedingung zutrifft. Wichtig: Nur der erste zutreffende Zweig wird ausgeführt – nachfolgende else-if-Bedingungen werden gar nicht mehr geprüft. Bedingungen sind boolesche Ausdrücke: Vergleiche (==, !=, <, >, <=, >=) oder logische Verknüpfungen (&&, ||, !)."
+    },
+    {
+      "titel": "Mehrfachauswahl mit switch",
+      "text": "switch eignet sich für Mehrfachauswahl auf Basis eines einzelnen Werts. Jeder case-Zweig endet mit break, sonst fällt die Ausführung in den nächsten Zweig durch (fall-through). Der default-Zweig ist optional und wird ausgeführt, wenn kein case passt. switch ist lesbarer als viele else-if-Ketten, wenn ein Wert mit mehreren festen Konstanten verglichen wird. Seit C# 8 gibt es switch expressions: var ergebnis = tag switch { 1 => \"Mo\", 2 => \"Di\", _ => \"unbekannt\" };"
+    },
+    {
+      "titel": "Logische Operatoren: &&, || und !",
+      "text": "Mehrere Bedingungen lassen sich mit logischen Operatoren verknüpfen. && (UND): beide Bedingungen müssen true sein. || (ODER): mindestens eine muss true sein. ! (NICHT): kehrt den Wahrheitswert um. Kurzschlussauswertung: Bei && wird die zweite Bedingung nicht mehr geprüft, wenn die erste schon false ist. Bei || wird die zweite nicht geprüft, wenn die erste schon true ist. Das kann Performance sparen und Fehler vermeiden (z. B. Nullprüfung vor Zugriff)."
+    },
+    {
+      "titel": "Vergleichsoperatoren und Häufige Fehler",
+      "text": "Vergleichsoperatoren: == (gleich), != (ungleich), < / > / <= / >= (Größenvergleiche). Häufiger Fehler: = statt == in einer if-Bedingung – in C# ist das ein Compilerfehler, da Zuweisungen in Bedingungen nicht erlaubt sind. Bei string-Vergleichen nie == für inhaltliche Gleichheit verwenden, wenn Groß-/Kleinschreibung ignoriert werden soll – besser string.Equals(a, b, StringComparison.OrdinalIgnoreCase). Referenzvergleich vs. Wertvergleich: Bei Objekten prüft == standardmäßig ob dieselbe Speicheradresse gemeint ist, nicht ob der Inhalt gleich ist."
+    },
+    {
+      "titel": "Ternärer Operator",
+      "text": "Der ternäre Operator ist eine kompakte Kurzform für einfache if-else-Zuweisung: var ergebnis = bedingung ? wertWennTrue : wertWennFalse; – z. B. var volle = alter >= 18 ? \"volljährig\" : \"minderjährig\"; Lesregel: Wenn bedingung wahr, dann wertWennTrue, sonst wertWennFalse. Nur für einfache Fälle sinnvoll – bei komplexerer Logik lieber if-else, um die Lesbarkeit zu erhalten."
+    }
+  ]
+}

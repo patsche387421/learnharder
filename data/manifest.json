@@ -10,6 +10,27 @@
       "seite": "/pos.html",
       "themen": [
         {
+          "id": "pos-variablen",
+          "name": "Variablen & Datentypen",
+          "icon": "📦",
+          "beschreibung": "int, string, bool & Co. – Typsicherheit, var, const und Namenskonventionen.",
+          "typ": "fach"
+        },
+        {
+          "id": "pos-kontrollstrukturen",
+          "name": "Kontrollstrukturen",
+          "icon": "🔀",
+          "beschreibung": "if, else if, switch und der ternäre Operator – Entscheidungen im Code treffen.",
+          "typ": "fach"
+        },
+        {
+          "id": "pos-schleifen",
+          "name": "Schleifen",
+          "icon": "🔁",
+          "beschreibung": "for, while, do-while und foreach – wann man welche Schleife wählt.",
+          "typ": "fach"
+        },
+        {
           "id": "pos-datenstrukturen",
           "name": "Datenstrukturen",
           "icon": "⚙",

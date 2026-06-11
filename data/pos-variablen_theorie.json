@@ -1,0 +1,26 @@
+{
+  "$schema": "./schema/theorie.schema.json",
+  "fach": "POS",
+  "themen": [
+    {
+      "titel": "Was ist eine Variable?",
+      "text": "Eine Variable ist ein benannter Speicherplatz, der einen Wert aufnimmt. Der Name (Bezeichner) bleibt konstant, der gespeicherte Wert kann sich ändern. Ohne Variablen müsste jeder Wert jedes Mal neu eingegeben werden – Variablen machen Programme flexibel und wiederverwendbar. In C# wird eine Variable mit Datentyp und Name deklariert, z. B. int alter = 17;"
+    },
+    {
+      "titel": "Primitive Datentypen",
+      "text": "Primitive Datentypen sind die Grundbausteine: int (ganze Zahlen, 32-Bit), long (ganze Zahlen, 64-Bit), double (Gleitkommazahlen, 64-Bit), float (Gleitkommazahlen, 32-Bit), bool (true/false), char (einzelnes Zeichen). Der Unterschied zwischen int und long: int kann Werte bis ca. 2,1 Milliarden speichern, long bis ca. 9,2 Trillionen. Für Geldbeträge eignet sich decimal am besten, da es Rundungsfehler bei Gleitkommazahlen vermeidet."
+    },
+    {
+      "titel": "Referenztypen: string und object",
+      "text": "string ist kein primitiver Typ, sondern eine Klasse – er wird intern als Objekt gespeichert. Zwei string-Variablen mit demselben Inhalt zeigen auf unterschiedliche Speicherstellen. string ist immutable: Jede Änderung erzeugt ein neues Objekt. object ist der Basistyp aller C#-Typen – jede Variable lässt sich als object speichern (Boxing), aber damit verliert man die Typsicherheit."
+    },
+    {
+      "titel": "Typsicherheit und implizite Typen",
+      "text": "C# ist statisch typisiert: Jede Variable hat einen festen Typ, der zur Compile-Zeit bekannt ist. Falsche Zuweisungen (z. B. int in string) werden sofort als Fehler markiert. Mit dem Schlüsselwort var kann der Compiler den Typ selbst ableiten: var name = \"Anna\"; – der Compiler erkennt, dass name ein string ist. var macht den Code lesbarer, nicht weniger sicher."
+    },
+    {
+      "titel": "Konstanten und Namenskonventionen",
+      "text": "Konstanten werden mit const deklariert: const double Pi = 3.14159; – ihr Wert kann nach der Deklaration nicht mehr geändert werden. Namenskonventionen in C#: Variablen und Methoden mit camelCase (alterDesNutzers), Klassen und Konstanten mit PascalCase (MaxAnzahl). Gute Namen beschreiben den Zweck: anzahlVersuche statt n, benutzername statt b."
+    }
+  ]
+}
