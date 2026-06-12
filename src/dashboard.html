@@ -12,6 +12,9 @@
   <header class="topbar">
     <span class="brand">LernHub</span>
     <div class="topbar-right">
+      <span id="topbar-energy">🥤 5</span>
+      <span id="topbar-level">⭐ 1</span>
+      <a href="/tauschen.html" id="topbar-trophies">🏆 <span id="topbar-trophies-count">0</span></a>
       <span id="welcome-name"></span>
       <button id="logout" class="btn-ghost">Abmelden</button>
     </div>
@@ -31,7 +34,16 @@
       </a>
     </section>
 
-    <!-- Stats-Reihe (Platzhalter – später per DB befüllt) -->
+    <!-- Tages-Quiz Karte -->
+    <div class="tagesquiz-card">
+      <div>
+        <h2>Tages-Quiz 🎯</h2>
+        <p>Zufällige Fragen aus allen Fächern</p>
+      </div>
+      <a href="/tagesquiz.html" class="btn-primary">Quiz starten 🥤</a>
+    </div>
+
+    <!-- Stats-Reihe -->
     <section class="db-stats">
       <div class="stat-card">
         <span class="stat-icon">📚</span>
@@ -47,6 +59,20 @@
         <span class="stat-icon">🔥</span>
         <span class="stat-value" id="stat-streak">–</span>
         <span class="stat-label">Lerntage in Folge</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">⭐</span>
+        <span class="stat-value" id="stat-level">1</span>
+        <span class="stat-label">Globales Level</span>
+        <div class="stat-progress-bar">
+          <div class="stat-progress-fill" id="stat-level-fill" style="width: 0%"></div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">🥤</span>
+        <span class="stat-value" id="stat-energie">5</span>
+        <span class="stat-label">Energie heute</span>
+        <small class="stat-hint">+5 morgen</small>
       </div>
     </section>
 
@@ -67,6 +93,7 @@
   <script src="/js/supabase.js"></script>
   <script src="/js/auth.js"></script>
   <script src="/js/stats.js"></script>
+  <script src="/js/level.js"></script>
   <script>
     (async () => {
       await Auth.requireLogin();
@@ -74,24 +101,44 @@
       const name = Auth.displayName();
       document.getElementById("welcome-name").textContent = name;
       document.getElementById("db-greeting").textContent  = "Hey, " + name + "!";
-
       document.getElementById("logout").addEventListener("click", () => Auth.logout());
 
-      // Echte Gesamt-Stats aus DB laden und anzeigen
-      const dbStats = await Stats.ladeDashboardStats();
+      // Topbar und Dashboard-Level-Karten parallel befüllen
+      const [dbStats, levelStats] = await Promise.all([
+        Stats.ladeDashboardStats(),
+        Level.getUserStats()
+      ]);
+
+      // Topbar
+      document.getElementById("topbar-energy").textContent = "🥤 " + levelStats.energy;
+      document.getElementById("topbar-level").textContent  = "⭐ " + levelStats.level;
+      document.getElementById("topbar-trophies-count").textContent = levelStats.trophies;
+
+      // Bestehende Stats-Karten
       document.getElementById("stat-themen").textContent =
         dbStats.themenBearbeitet > 0 ? dbStats.themenBearbeitet : "–";
       document.getElementById("stat-quiz").textContent =
         dbStats.quizPunkte > 0 ? dbStats.quizPunkte : "–";
+
+      // Level-Karte
+      document.getElementById("stat-level").textContent = levelStats.level;
+      const naechste = Level.LEVEL_THRESHOLDS[levelStats.level] ?? null;
+      const prozent  = naechste ? Math.min(levelStats.totalXp / naechste * 100, 100) : 100;
+      document.getElementById("stat-level-fill").style.width = prozent + "%";
+
+      // Energie-Karte
+      document.getElementById("stat-energie").textContent = levelStats.energy;
     })();
   </script>
 
   <footer class="site-footer">
-    <span>LernHub</span>
-    <span class="footer-sep">·</span>
-    <span>HTL Demo</span>
-    <span class="footer-sep">·</span>
-    <a href="/faecher.html" class="footer-link">Fächer</a>
+    <div class="footer-inner">
+      <span>© LernHub 2026</span>
+      <nav>
+        <a href="/impressum.html">Impressum</a>
+        <a href="/datenschutz.html">Datenschutz</a>
+      </nav>
+    </div>
   </footer>
 
 </body>

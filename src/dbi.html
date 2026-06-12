@@ -12,6 +12,9 @@
   <header class="topbar">
     <a href="/faecher.html" class="brand">← Fächer</a>
     <div class="topbar-right">
+      <span id="topbar-energy">🥤 5</span>
+      <span id="topbar-level">⭐ 1</span>
+      <a href="/tauschen.html" id="topbar-trophies">🏆 <span id="topbar-trophies-count">0</span></a>
       <span id="welcome-name"></span>
       <button id="logout" class="btn-ghost">Abmelden</button>
     </div>
@@ -20,6 +23,16 @@
   <main class="container">
     <div id="fach-header" class="fach-seite-header"></div>
     <div id="fach-stats" class="fach-stats-bar"></div>
+    <div class="fach-level-leiste">
+      <div class="fach-level-info">
+        <span>Fach-Level <strong id="fach-level">1</strong></span>
+        <span id="fach-xp-text">0 / 100 EP</span>
+      </div>
+      <div class="fach-level-bar">
+        <div id="fach-level-fill" style="width: 0%"></div>
+      </div>
+      <small id="fach-correct">0 richtige Antworten gesamt</small>
+    </div>
     <h2 class="themen-titel">Themen</h2>
     <div id="themen-grid" class="card-grid"></div>
   </main>
@@ -29,26 +42,43 @@
   <script src="/js/supabase.js"></script>
   <script src="/js/auth.js"></script>
   <script src="/js/stats.js"></script>
+  <script src="/js/level.js"></script>
   <script src="/js/app.js"></script>
   <script>
     (async () => {
       await Auth.requireLogin();
       document.getElementById("welcome-name").textContent = Auth.displayName();
       document.getElementById("logout").addEventListener("click", () => Auth.logout());
+
+      const topbarStats = await Level.getUserStats();
+      document.getElementById("topbar-energy").textContent = "🥤 " + topbarStats.energy;
+      document.getElementById("topbar-level").textContent  = "⭐ " + topbarStats.level;
+      document.getElementById("topbar-trophies-count").textContent = topbarStats.trophies;
+
       await App.renderFachSeite("dbi", {
         header: document.getElementById("fach-header"),
         stats:  document.getElementById("fach-stats"),
         grid:   document.getElementById("themen-grid")
       });
+
+      const fachStats = await Stats.ladeFachStatsKomplett("dbi");
+      document.getElementById("fach-level").textContent = fachStats.fachLevel;
+      const naechste = Level.LEVEL_THRESHOLDS[fachStats.fachLevel] ?? "–";
+      document.getElementById("fach-xp-text").textContent = fachStats.fachXp + " / " + naechste + " EP";
+      const prozent = naechste !== "–" ? (fachStats.fachXp / naechste * 100) : 100;
+      document.getElementById("fach-level-fill").style.width = Math.min(prozent, 100) + "%";
+      document.getElementById("fach-correct").textContent = fachStats.correctAnswers + " richtige Antworten gesamt";
     })();
   </script>
 
   <footer class="site-footer">
-    <span>LernHub</span>
-    <span class="footer-sep">·</span>
-    <span>HTL Demo</span>
-    <span class="footer-sep">·</span>
-    <a href="/faecher.html" class="footer-link">Fächer</a>
+    <div class="footer-inner">
+      <span>© LernHub 2026</span>
+      <nav>
+        <a href="/impressum.html">Impressum</a>
+        <a href="/datenschutz.html">Datenschutz</a>
+      </nav>
+    </div>
   </footer>
 
 </body>
