@@ -14,18 +14,18 @@
 
     <form id="login-form" autocomplete="off">
       <label>
-        Benutzername
-        <input type="text" id="username" name="username" required />
+        E-Mail
+        <input type="email" id="email" name="email" required />
       </label>
       <label>
         Passwort
         <input type="password" id="password" name="password" required />
       </label>
       <button type="submit">Anmelden</button>
-      <p id="login-error" class="error" hidden>Benutzername oder Passwort falsch.</p>
+      <p id="login-error" class="error" hidden>E-Mail oder Passwort falsch.</p>
     </form>
 
-    <p class="hint">Testuser: <code>test</code> / <code>test123</code></p>
+    <p class="hint">Testuser: <code>test@lernhub.htl</code> / <code>test123</code></p>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -33,25 +33,26 @@
   <script src="/js/supabase.js"></script>
   <script src="/js/auth.js"></script>
   <script>
-    // Wenn bereits eingeloggt, direkt zum Dashboard
-    if (Auth.isLoggedIn()) {
-      location.href = "/dashboard.html";
-    }
+    (async () => {
+      // Bereits eingeloggt → direkt zum Dashboard
+      const { data: { session } } = await SupabaseClient.client.auth.getSession();
+      if (session) { location.href = "/dashboard.html"; return; }
 
-    const form = document.getElementById("login-form");
-    const errorEl = document.getElementById("login-error");
+      const form    = document.getElementById("login-form");
+      const errorEl = document.getElementById("login-error");
 
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const user = document.getElementById("username").value.trim();
-      const pass = document.getElementById("password").value;
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const email = document.getElementById("email").value.trim();
+        const pass  = document.getElementById("password").value;
 
-      if (Auth.login(user, pass)) {
-        location.href = "/dashboard.html";
-      } else {
-        errorEl.hidden = false;
-      }
-    });
+        if (await Auth.login(email, pass)) {
+          location.href = "/dashboard.html";
+        } else {
+          errorEl.hidden = false;
+        }
+      });
+    })();
   </script>
 
   <footer class="site-footer">

@@ -23,13 +23,18 @@
     <div id="faecher-grid" class="card-grid"></div>
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/config.js"></script>
+  <script src="/js/supabase.js"></script>
   <script src="/js/auth.js"></script>
   <script src="/js/app.js"></script>
   <script>
-    Auth.requireLogin();
-    document.getElementById("welcome-name").textContent = Auth.currentUser();
-    document.getElementById("logout").addEventListener("click", Auth.logout);
-    App.renderFaecher(document.getElementById("faecher-grid"));
+    (async () => {
+      await Auth.requireLogin();
+      document.getElementById("welcome-name").textContent = Auth.displayName();
+      document.getElementById("logout").addEventListener("click", Auth.logout);
+      App.renderFaecher(document.getElementById("faecher-grid"));
+    })();
   </script>
 
   <footer class="site-footer">
