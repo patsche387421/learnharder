@@ -1,39 +1,89 @@
-// Stats-Modul: Platzhalter für die spätere Datenbankanbindung.
-// Alle Funktionen liefern aktuell neutrale Leerwerte zurück.
-// Zum Anschließen einer echten DB: fetch()-Aufrufe gemäß DB_Integration_Guide.md einsetzen.
+// Stats-Modul: Lernstatistiken via Supabase (fach_stats, thema_progress, quiz_results).
+// RLS stellt sicher, dass jeder User nur seine eigenen Daten liest/schreibt.
 const Stats = (() => {
+  const sb = SupabaseClient.client;
 
-  // Lädt Statistiken für ein gesamtes Fach (z.B. "pos").
-  // TODO DB: const res = await fetch(`/api/v1/stats/fach/${fachId}`, { headers: Auth.headers() });
   async function ladeFachStats(fachId) {
+    const user = Auth.currentUser();
+    if (!user) return leerFachStats();
+
+    const { data } = await sb
+      .from('fach_stats')
+      .select('themen_bearbeitet, quiz_punkte_gesamt, letzte_aktivitaet')
+      .eq('user_id', user.id)
+      .eq('fach_id', fachId)
+      .maybeSingle();
+
+    if (!data) return leerFachStats();
     return {
-      fortschritt:      0,   // Prozentwert Gesamtfortschritt (0–100)
-      themenBearbeitet: 0,   // Anzahl vollständig abgeschlossener Themen
-      quizPunkte:       0,   // Gesamtpunkte im Fach (Summe aller Themen)
-      letzteAktivitaet: null // ISO-8601-Datum des letzten Lernvorgangs oder null
+      fortschritt:      0,  // wird in renderFachSeite aus themenBearbeitet / total berechnet
+      themenBearbeitet: data.themen_bearbeitet  ?? 0,
+      quizPunkte:       data.quiz_punkte_gesamt ?? 0,
+      letzteAktivitaet: data.letzte_aktivitaet  ?? null
     };
   }
 
-  // Lädt Statistiken für ein einzelnes Thema (z.B. "pos-datenstrukturen").
-  // TODO DB: const res = await fetch(`/api/v1/stats/thema/${themaId}`, { headers: Auth.headers() });
   async function ladeThemaStats(themaId) {
+    const user = Auth.currentUser();
+    if (!user) return { abgeschlossen: false, quizPunkte: 0, letzterScore: null };
+
+    const { data } = await sb
+      .from('thema_progress')
+      .select('abgeschlossen, quiz_punkte, letzter_score')
+      .eq('user_id', user.id)
+      .eq('thema_id', themaId)
+      .maybeSingle();
+
+    if (!data) return { abgeschlossen: false, quizPunkte: 0, letzterScore: null };
     return {
-      abgeschlossen: false, // Thema vollständig bearbeitet?
-      quizPunkte:    0,     // Erreichte Punkte in diesem Thema
-      letzterScore:  null   // Prozentwert des letzten Quiz-Versuchs (0–100) oder null
+      abgeschlossen: data.abgeschlossen ?? false,
+      quizPunkte:    data.quiz_punkte   ?? 0,
+      letzterScore:  data.letzter_score ?? null
     };
   }
 
-  // Speichert ein Quiz-Ergebnis nach dem Auswerten (wird vom Quiz-Modul aufgerufen).
-  // TODO DB: await fetch('/api/v1/stats/quiz', { method: 'POST', headers: Auth.headers(),
-  //            body: JSON.stringify({ themaId, richtig, gesamt, zeitstempel: new Date() }) });
   async function speichereQuizErgebnis(themaId, richtig, gesamt) {
-    console.info("[Stats] Quiz-Ergebnis (noch nicht gespeichert):", {
-      themaId,
-      richtig,
-      gesamt,
-      score: Math.round((richtig / gesamt) * 100) + "%"
+    const user = Auth.currentUser();
+    if (!user) return;
+
+    const score  = Math.round((richtig / gesamt) * 100);
+    const fachId = themaId.split('-')[0];
+
+    // 1. Quiz-Verlauf speichern
+    await sb.from('quiz_results').insert({
+      user_id: user.id, thema_id: themaId, richtig, gesamt, score
     });
+
+    // 2. Thema-Fortschritt upsert
+    await sb.from('thema_progress').upsert({
+      user_id:       user.id,
+      thema_id:      themaId,
+      abgeschlossen: score >= 60,
+      letzter_score: score,
+      quiz_punkte:   richtig,
+      updated_at:    new Date().toISOString()
+    }, { onConflict: 'user_id,thema_id' });
+
+    // 3. Fach-Gesamtstatistik aktualisieren
+    const { data: alle } = await sb
+      .from('thema_progress')
+      .select('quiz_punkte, abgeschlossen')
+      .eq('user_id', user.id)
+      .like('thema_id', fachId + '-%');
+
+    if (alle) {
+      await sb.from('fach_stats').upsert({
+        user_id:            user.id,
+        fach_id:            fachId,
+        themen_bearbeitet:  alle.filter(p => p.abgeschlossen).length,
+        quiz_punkte_gesamt: alle.reduce((s, p) => s + (p.quiz_punkte || 0), 0),
+        letzte_aktivitaet:  new Date().toISOString()
+      }, { onConflict: 'user_id,fach_id' });
+    }
+  }
+
+  function leerFachStats() {
+    return { fortschritt: 0, themenBearbeitet: 0, quizPunkte: 0, letzteAktivitaet: null };
   }
 
   return { ladeFachStats, ladeThemaStats, speichereQuizErgebnis };
