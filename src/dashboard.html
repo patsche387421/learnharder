@@ -76,6 +76,13 @@
       document.getElementById("db-greeting").textContent  = "Hey, " + name + "!";
 
       document.getElementById("logout").addEventListener("click", Auth.logout);
+
+      // Echte Gesamt-Stats aus DB laden und anzeigen
+      const dbStats = await Stats.ladeDashboardStats();
+      document.getElementById("stat-themen").textContent =
+        dbStats.themenBearbeitet > 0 ? dbStats.themenBearbeitet : "–";
+      document.getElementById("stat-quiz").textContent =
+        dbStats.quizPunkte > 0 ? dbStats.quizPunkte : "–";
     })();
   </script>
 

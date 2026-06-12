@@ -82,9 +82,41 @@ const Stats = (() => {
     }
   }
 
+  // Lädt Abschluss-Status aller Themen eines Fachs als Map: { "pos-variablen": { abgeschlossen, letzter_score } }
+  async function ladeFachThemenProgress(fachId) {
+    const user = Auth.currentUser();
+    if (!user) return {};
+
+    const { data } = await sb
+      .from("thema_progress")
+      .select("thema_id, abgeschlossen, letzter_score")
+      .eq("user_id", user.id)
+      .like("thema_id", fachId + "-%");
+
+    if (!data) return {};
+    return Object.fromEntries(data.map(p => [p.thema_id, p]));
+  }
+
+  // Aggregierte Stats über alle Fächer für das Dashboard.
+  async function ladeDashboardStats() {
+    const user = Auth.currentUser();
+    if (!user) return { themenBearbeitet: 0, quizPunkte: 0 };
+
+    const { data } = await sb
+      .from("fach_stats")
+      .select("themen_bearbeitet, quiz_punkte_gesamt")
+      .eq("user_id", user.id);
+
+    if (!data || !data.length) return { themenBearbeitet: 0, quizPunkte: 0 };
+    return {
+      themenBearbeitet: data.reduce((s, f) => s + (f.themen_bearbeitet  || 0), 0),
+      quizPunkte:       data.reduce((s, f) => s + (f.quiz_punkte_gesamt || 0), 0)
+    };
+  }
+
   function leerFachStats() {
     return { fortschritt: 0, themenBearbeitet: 0, quizPunkte: 0, letzteAktivitaet: null };
   }
 
-  return { ladeFachStats, ladeThemaStats, speichereQuizErgebnis };
+  return { ladeFachStats, ladeThemaStats, speichereQuizErgebnis, ladeFachThemenProgress, ladeDashboardStats };
 })();

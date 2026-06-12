@@ -92,6 +92,7 @@ label {
 }
 
 input[type="text"],
+input[type="email"],
 input[type="password"] {
   padding: 0.6rem 0.75rem;
   border: 1px solid var(--surface-2);
@@ -442,12 +443,45 @@ button {
   border: 1px solid var(--surface-2);
   border-radius: var(--radius);
   padding: 1.5rem;
+  position: relative;
   transition: transform 0.15s, border-color 0.15s;
 }
 
 .card:hover {
   transform: translateY(-3px);
   border-color: var(--primary);
+}
+
+/* Abgeschlossenes Thema: grüner Rahmen */
+.card--done {
+  border-color: var(--success);
+}
+
+.card--done:hover {
+  border-color: var(--success);
+  filter: brightness(1.08);
+}
+
+/* Haken oben rechts für abgeschlossene Themen */
+.card-check {
+  position: absolute;
+  top: 0.9rem;
+  right: 1rem;
+  color: var(--success);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+/* Score-Badge: zeigt den letzten Quiz-Prozentwert */
+.card-score {
+  display: inline-block;
+  margin-top: 0.65rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--success);
+  background: rgba(34, 197, 94, 0.12);
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
 }
 
 .card-icon {

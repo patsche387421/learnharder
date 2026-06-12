@@ -45,8 +45,7 @@ const App = (() => {
   }
 
   // ── Ebene 2: Fach-Seite (Themen-Übersicht) ───────────────────────────────
-  // Rendert Fach-Header, Stats-Leiste und Themen-Karten für eine Fach-Seite.
-  // Stats kommen aus stats.js (Platzhalter, später DB – siehe docs/DB_Integration_Guide.md).
+  // Rendert Fach-Header, Stats-Leiste (aus DB) und Themen-Karten mit Fortschritt-Badges.
   async function renderFachSeite(fachId, { header, stats, grid }) {
     try {
       const manifest = await loadJSON("/assets/data/manifest.json");
@@ -59,15 +58,25 @@ const App = (() => {
         '<h1 class="fach-vollname">' + (fach.vollname || fach.name) + "</h1>" +
         '<p class="fach-beschreibung">' + (fach.beschreibung || "") + "</p>";
 
-      // Stats-Leiste (Platzhalter-Werte aus stats.js, data-stat-Attribute für spätere DB)
-      const statDaten = await Stats.ladeFachStats(fachId);
+      const themen = fach.themen || [];
+
+      // Stats und Themen-Fortschritt parallel aus DB laden
+      const [statDaten, themaProgress] = await Promise.all([
+        Stats.ladeFachStats(fachId),
+        Stats.ladeFachThemenProgress(fachId)
+      ]);
+
+      // Fortschritt aus abgeschlossenen Themen berechnen
+      const fortschritt = themen.length > 0
+        ? Math.round((statDaten.themenBearbeitet / themen.length) * 100)
+        : 0;
+
       stats.innerHTML =
-        renderStatPill("Fortschritt",       "fortschritt",      statDaten.fortschritt      > 0 ? statDaten.fortschritt      + "%" : "–") +
-        renderStatPill("Themen bearbeitet", "themenBearbeitet", statDaten.themenBearbeitet > 0 ? statDaten.themenBearbeitet       : "–") +
-        renderStatPill("Quiz-Punkte",       "quizPunkte",       statDaten.quizPunkte       > 0 ? statDaten.quizPunkte            : "–");
+        renderStatPill("Fortschritt",       "fortschritt",      fortschritt                > 0 ? fortschritt + "%"           : "–") +
+        renderStatPill("Themen bearbeitet", "themenBearbeitet", statDaten.themenBearbeitet > 0 ? statDaten.themenBearbeitet   : "–") +
+        renderStatPill("Quiz-Punkte",       "quizPunkte",       statDaten.quizPunkte       > 0 ? statDaten.quizPunkte         : "–");
 
       // Themen-Karten oder Leer-Zustand
-      const themen = fach.themen || [];
       grid.innerHTML = "";
       if (!themen.length) {
         grid.innerHTML =
@@ -78,13 +87,19 @@ const App = (() => {
         return;
       }
       themen.forEach((thema) => {
+        const progress = themaProgress[thema.id];
+        const done     = progress?.abgeschlossen === true;
+        const score    = progress?.letzter_score ?? null;
+
         const karte = document.createElement("a");
-        karte.className = "card";
+        karte.className = "card" + (done ? " card--done" : "");
         karte.href = "/fach.html?fach=" + encodeURIComponent(thema.id);
         karte.innerHTML =
           '<span class="card-icon">' + (thema.icon || "📘") + "</span>" +
+          (done ? '<span class="card-check">✓</span>' : "") +
           "<h2>" + thema.name + "</h2>" +
-          "<p>" + (thema.beschreibung || "") + "</p>";
+          "<p>" + (thema.beschreibung || "") + "</p>" +
+          (score !== null ? '<span class="card-score">' + score + " %</span>" : "");
         grid.appendChild(karte);
       });
     } catch (fehler) {
