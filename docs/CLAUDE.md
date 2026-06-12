@@ -27,7 +27,8 @@ Themen-Inhaltsseiten (Theorie + Quiz oder interaktives Tool).
 - **Vanilla HTML, CSS und JavaScript** – sonst nichts.
 - **Keine externen Libraries** (kein jQuery, kein CDN-Skript, keine Web-Fonts von
   Drittanbietern) – außer solchen, die **hier ausdrücklich erlaubt** werden.
-- Aktuell erlaubte externe Abhängigkeiten: **keine.**
+- Aktuell erlaubte externe Abhängigkeiten:
+  - **Supabase JS Client v2** (`@supabase/supabase-js@2`, CDN: `cdn.jsdelivr.net`) – Backend-Client für spätere Auth- und Datenbankanbindung.
 
 Wird eine neue Abhängigkeit benötigt, zuerst hier eintragen lassen, dann nutzen.
 
