@@ -8,7 +8,7 @@ Lokale Lernwebsite für HTL-Schüler:innen. Fächerübersicht, Themen-Detailseit
 npx serve src
 ```
 
-Dann `http://localhost:3000` öffnen. Login: `test` / `test123`
+Dann `http://localhost:3000` öffnen. Login: `test@lernhub.htl` / `lernhub123`
 
 > `fetch()` auf JSON-Dateien erfordert einen HTTP-Server – nicht per `file://` öffnen.
 

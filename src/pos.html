@@ -34,8 +34,8 @@
     (async () => {
       await Auth.requireLogin();
       document.getElementById("welcome-name").textContent = Auth.displayName();
-      document.getElementById("logout").addEventListener("click", Auth.logout);
-      App.renderFachSeite("pos", {
+      document.getElementById("logout").addEventListener("click", () => Auth.logout());
+      await App.renderFachSeite("pos", {
         header: document.getElementById("fach-header"),
         stats:  document.getElementById("fach-stats"),
         grid:   document.getElementById("themen-grid")

@@ -246,9 +246,11 @@ Orientiere dich dabei an `js/pos-datenstrukturen.js` und `css/pos-datenstrukture
 
 ## Prompt D — DB-Anbindung planen
 
-> Verwende diesen Prompt, wenn du die Statistik-Funktionen eines Fachs an eine
-> echte Datenbank anbinden willst. Er erzeugt einen konkreten Migrationsplan
-> speziell für dein Fach, auf Basis des vorhandenen `DB_Integration_Guide.md`.
+> **Hinweis (überholt):** Die DB-Anbindung ist bereits über **Supabase**
+> umgesetzt (siehe Abschnitt „Backend (Supabase)" in `CLAUDE.md`). Die
+> Statistik-Funktionen in `js/stats.js` sind keine Platzhalter mehr. Dieser
+> Prompt beschreibt einen alternativen, **nicht** verwendeten Express/.NET-Ansatz
+> und ist nur noch als historische Referenz erhalten.
 
 ```text
 Ich baue eine HTL-Lernwebsite (Vanilla JS, kein Framework) und möchte die

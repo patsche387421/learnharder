@@ -51,7 +51,7 @@
     (async () => {
       await Auth.requireLogin();
       document.getElementById("welcome").textContent = "Hallo, " + Auth.displayName();
-      document.getElementById("logout").addEventListener("click", Auth.logout);
+      document.getElementById("logout").addEventListener("click", () => Auth.logout());
 
       // Tab-Umschaltung (nur im Standard-Fach-Modus aktiv)
       document.querySelectorAll(".tab").forEach((btn) => {

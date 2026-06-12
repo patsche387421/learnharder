@@ -75,7 +75,7 @@
       document.getElementById("welcome-name").textContent = name;
       document.getElementById("db-greeting").textContent  = "Hey, " + name + "!";
 
-      document.getElementById("logout").addEventListener("click", Auth.logout);
+      document.getElementById("logout").addEventListener("click", () => Auth.logout());
 
       // Echte Gesamt-Stats aus DB laden und anzeigen
       const dbStats = await Stats.ladeDashboardStats();

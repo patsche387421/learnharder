@@ -14,10 +14,11 @@ Themen-Inhaltsseiten (Theorie + Quiz oder interaktives Tool).
 - Start direkt über einen statischen Server:
 
   ```bash
-  npx serve
+  npx serve src
   ```
 
-  Danach `http://localhost:3000` öffnen. Login mit Testuser `test` / `test123`.
+  Danach `http://localhost:3000` öffnen. Login mit Testuser
+  `test@lernhub.htl` / `lernhub123`.
 
 > Wichtig: Wegen `fetch()` auf die JSON-Dateien muss über einen Server geöffnet
 > werden – **nicht** per `file://` (sonst CORS-Fehler).
@@ -28,7 +29,7 @@ Themen-Inhaltsseiten (Theorie + Quiz oder interaktives Tool).
 - **Keine externen Libraries** (kein jQuery, kein CDN-Skript, keine Web-Fonts von
   Drittanbietern) – außer solchen, die **hier ausdrücklich erlaubt** werden.
 - Aktuell erlaubte externe Abhängigkeiten:
-  - **Supabase JS Client v2** (`@supabase/supabase-js@2`, CDN: `cdn.jsdelivr.net`) – Backend-Client für spätere Auth- und Datenbankanbindung.
+  - **Supabase JS Client v2** (`@supabase/supabase-js@2`, CDN: `cdn.jsdelivr.net`) – Backend-Client für Auth und Datenbank (siehe Abschnitt „Backend (Supabase)").
 
 Wird eine neue Abhängigkeit benötigt, zuerst hier eintragen lassen, dann nutzen.
 
@@ -44,43 +45,44 @@ index.html
 
 ## Ordnerstruktur
 
+Das gesamte Frontend liegt unter `src/` (Netlify-Publish-Root). Alle absoluten
+Pfade (`/css/…`, `/js/…`, `/assets/data/…`) sind relativ zu `src/` zu lesen.
+
 ```
 lernhub-demo/
-├── CLAUDE.md               Diese Projektregeln
-├── DESIGN_GUIDELINES.md    Design-System: Tokens, Theme, Typografie, Reset
-├── DB_Integration_Guide.md Anleitung zur späteren Datenbankanbindung
-├── index.html              Login-Seite
-├── dashboard.html          Persönliches Dashboard (geschützt)
-├── faecher.html            Fächerübersicht (geschützt)
-├── pos.html                POS-Themenübersicht (geschützt)
-├── dbi.html                DBI-Themenübersicht (geschützt)
-├── nsvs.html               NSVS-Themenübersicht (geschützt)
-├── tinf.html               TINF-Themenübersicht (geschützt)
-├── wir.html                WIR-Themenübersicht (geschützt)
-├── medt.html               MEDT-Themenübersicht (geschützt)
-├── syp.html                SYP-Themenübersicht (geschützt)
-├── fach.html               Themen-Inhalt: Theorie+Quiz oder Tool-Mount (geschützt, ?fach=…)
-├── .htaccess               Cache-Header für JSON-Dateien (Hosting)
-├── data/                   JSON-Lerninhalte und Manifest
-│   ├── manifest.json         Fächer-Index mit verschachtelten Themen (Single Source of Truth)
-│   ├── KI_VORLAGE.md         Prompts zum Erzeugen und Migrieren von Lerninhalten
-│   ├── <thema-id>_theorie.json   Theorieblöcke für Standard-Themen
-│   ├── <thema-id>_quiz.json      Quiz-Fragen für Standard-Themen
-│   ├── <thema-id>_data.json      Datensatz für Tool-Themen
-│   └── schema/               JSON-Schemas für VS-Code-Validierung
-│       ├── manifest.schema.json
-│       ├── theorie.schema.json
-│       └── quiz.schema.json
-├── js/                     Logik-Module (IIFE-Pattern)
-│   ├── auth.js               Auth-Modul: Login/Logout via sessionStorage, Seitenschutz
-│   ├── stats.js              Stats-Modul: Platzhalter für DB-Anbindung
-│   ├── app.js                App-Modul: JSON laden, alle Navigationsebenen rendern
-│   └── <thema-id>.js         Tool-Module (z. B. pos-datenstrukturen.js)
-├── css/                    Styles
-│   ├── tokens.css            Design-Tokens (:root Custom Properties)
-│   ├── style.css             Komponenten-/Layout-Styles
-│   └── <thema-id>.css        Tool-spezifische Styles (z. B. pos-datenstrukturen.css)
-└── assets/                 Bilder/Medien (bei Bedarf anlegen)
+├── docs/                   Projektdokumentation
+│   ├── CLAUDE.md             Diese Projektregeln
+│   ├── DESIGN_GUIDELINES.md  Design-System: Tokens, Theme, Typografie, Reset
+│   └── KI_VORLAGE.md         Prompts zum Erzeugen und Migrieren von Lerninhalten
+├── scripts/
+│   └── gen-config.js       Netlify-Build: generiert js/config.js aus Env-Vars
+├── sql/migrations/         Supabase-Schema + Seed-Testuser
+├── data/import/            Rohdaten-Archiv (noch nicht in manifest.json eingetragen)
+└── src/                    ← Publish-Root (alles Web-Auslieferbare)
+    ├── .htaccess             Cache-Header für JSON-Dateien (Hosting)
+    ├── index.html            Login-Seite
+    ├── dashboard.html        Persönliches Dashboard (geschützt)
+    ├── faecher.html          Fächerübersicht (geschützt)
+    ├── pos.html … syp.html   Fach-Themenübersichten (geschützt)
+    ├── fach.html             Themen-Inhalt: Theorie+Quiz oder Tool-Mount (?fach=…)
+    ├── js/                   Logik-Module (IIFE-Pattern)
+    │   ├── config.js           Supabase URL + Anon Key (GITIGNORED, Build-generiert)
+    │   ├── config.example.js   Vorlage für config.js (ohne echte Keys)
+    │   ├── supabase.js         Initialisiert SupabaseClient aus config.js
+    │   ├── auth.js             Auth-Modul: Login/Logout via Supabase Auth
+    │   │                       (signInWithPassword, signOut, getSession, requireLogin)
+    │   ├── stats.js            Stats-Modul: echte DB-Queries
+    │   │                       (fach_stats, thema_progress, quiz_results)
+    │   ├── app.js              App-Modul: JSON laden, alle Navigationsebenen rendern
+    │   └── <fach>/<thema>.js   Tool-Module (z. B. pos/datenstrukturen.js)
+    ├── css/                  Styles
+    │   ├── tokens.css          Design-Tokens (:root Custom Properties)
+    │   ├── style.css           Komponenten-/Layout-Styles
+    │   └── <fach>/<thema>.css  Tool-spezifische Styles (z. B. pos/datenstrukturen.css)
+    └── assets/data/          JSON-Lerninhalte und Manifest
+        ├── manifest.json       Fächer-Index mit verschachtelten Themen (Single Source of Truth)
+        ├── <fach>/<thema>_{theorie,fragen,antworten}.json
+        └── schema/             JSON-Schemas für VS-Code-Validierung
 ```
 
 **Reihenfolge der Stylesheets:** `tokens.css` wird **IMMER als erstes `<link>`
@@ -142,6 +144,32 @@ Kein Fach und kein Thema existiert ohne Manifest-Eintrag.
 
 Tool-Module exportieren `window.<ModulName>` und implementieren `.mount({root, dataUrl, quizUrl})`.
 CSS von Tool-Modulen wird unter einem eigenen Scope-Selektor (z. B. `.dst`) geschrieben.
+
+## Backend (Supabase)
+
+Auth und Lernstatistiken laufen über **Supabase** (Postgres + Auth). Es gibt
+keinen eigenen API-Server – das Frontend spricht direkt mit Supabase über den
+JS-Client.
+
+- **Client-Init:** `src/js/supabase.js` erzeugt `SupabaseClient.client` aus den
+  Werten in `src/js/config.js` (URL + Anon Key). `config.js` ist gitignored und
+  wird im Netlify-Build von `scripts/gen-config.js` aus den Env-Vars
+  `SUPABASE_URL` / `SUPABASE_ANON_KEY` generiert.
+- **Auth** (`src/js/auth.js`): Login via `signInWithPassword`, Logout via
+  `signOut({ scope: 'local' })`, Session-Caching über `getSession` +
+  `onAuthStateChange`, Seitenschutz über `requireLogin()` (async Guard).
+- **Datenzugriff** (`src/js/stats.js`): direkte Tabellen-Queries gegen drei Tabellen.
+  **Row Level Security** stellt sicher, dass jeder User nur seine eigenen Zeilen
+  liest/schreibt (Filter `user_id = auth.uid()`).
+
+| Tabelle          | Zweck                                                         |
+|------------------|---------------------------------------------------------------|
+| `fach_stats`     | Aggregierte Fach-Statistik (Themen bearbeitet, Quiz-Punkte)   |
+| `thema_progress` | Pro-Thema-Fortschritt (abgeschlossen, letzter Score)          |
+| `quiz_results`   | Verlauf einzelner Quiz-Versuche (richtig/gesamt/score)        |
+
+Schema und Testuser liegen als Migrations in `sql/migrations/`. Testuser-Passwort:
+`lernhub123` (z. B. `test@lernhub.htl`).
 
 ## Coding-Konventionen
 
