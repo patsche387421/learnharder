@@ -3,7 +3,10 @@
    ---------------------------------------------------------------------
    Enthält AUSSCHLIESSLICH CSS Custom Properties.
    Kein Reset, kein @view-transition, keine Komponenten-Styles.
-   Die Token-Namen sind 1:1 identisch mit DESIGN_GUIDELINES.md.
+
+   Token-Namen entsprechen den tatsächlich in style.css verwendeten
+   Custom Properties: --bg, --surface, --surface-2, --primary,
+   --primary-hover, --text, --text-muted, --success, --error, --radius.
 
    Einbinden IMMER als erstes <link> – vor style.css:
      <link rel="stylesheet" href="/css/tokens.css" />
@@ -16,66 +19,29 @@
 /* ---- Standard-Theme: Dark (auch ohne data-theme-Attribut aktiv) ---- */
 :root,
 [data-theme="dark"] {
-  /* Akzentfarbe (Hellorange) ---------------------------------------- */
-  --color-accent: #ff8c42;          /* Basis-Akzent: Buttons, Links, Highlights */
-  --color-accent-hover: #ff7a26;    /* Etwas kräftiger – für Hover/aktiv-Zustand */
-  --color-accent-muted: rgba(255, 140, 66, 0.15); /* Transparente Fläche/Glow */
-
-  /* Hintergrund- und Flächen-Ebenen --------------------------------- */
-  --color-bg: #121212;              /* Seitenhintergrund (tiefste Ebene) */
-  --color-surface: #1e1e1e;         /* Card-Ebene 1 (Karten, Panels) */
-  --color-surface-2: #2a2a2a;       /* Card-Ebene 2 (hervorgehoben, Inputs) */
-  --color-border: #2a2a2a;          /* Rahmen/Trennlinien */
-
-  /* Textfarben ------------------------------------------------------- */
-  --color-text: #e8e8e8;            /* Haupttext */
-  --color-text-muted: #a0a0a0;      /* Sekundärtext, Hinweise, Labels */
+  --bg:            #0f172a;   /* Seitenhintergrund (tiefste Ebene) */
+  --surface:       #1e293b;   /* Card-Ebene 1 (Karten, Panels) */
+  --surface-2:     #334155;   /* Card-Ebene 2 (Inputs, hervorgehoben) */
+  --primary:       #6366f1;   /* Akzentfarbe: Buttons, Links, Highlights */
+  --primary-hover: #4f46e5;   /* Hover/aktiv – etwas kräftiger */
+  --text:          #e2e8f0;   /* Haupttext */
+  --text-muted:    #94a3b8;   /* Sekundärtext, Hinweise, Labels */
+  --success:       #22c55e;   /* Positiv-Feedback, Abschluss-Badges */
+  --error:         #ef4444;   /* Fehler-Meldungen */
+  --radius:        12px;      /* Standard-Eckenradius */
 }
 
-/* ---- Light Mode: nur Farb-Tokens werden überschrieben -------------- */
-[data-theme="light"] {
-  --color-accent: #ff8c42;
-  --color-accent-hover: #f2741f;
-  --color-accent-muted: rgba(255, 140, 66, 0.18);
-
-  --color-bg: #f5f5f5;
-  --color-surface: #ffffff;
-  --color-surface-2: #ececec;
-  --color-border: #dddddd;
-
-  --color-text: #1a1a1a;
-  --color-text-muted: #5a5a5a;
-}
-
-/* ---- Theme-unabhängige Tokens (gelten für alle Themes) ------------- */
-:root {
-  /* Abstände – 4px-Basis-Skala -------------------------------------- */
-  --spacing-xs: 4px;
-  --spacing-sm: 8px;
-  --spacing-md: 16px;
-  --spacing-lg: 24px;
-  --spacing-xl: 48px;
-
-  /* Eckenradien ------------------------------------------------------ */
-  --radius-sm: 6px;
-  --radius-md: 12px;
-  --radius-lg: 20px;
-
-  /* Schriftfamilien -------------------------------------------------- */
-  --font-family-base: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-family-mono: ui-monospace, "Cascadia Code", "Courier New", monospace;
-
-  /* Schriftgrößen-Skala --------------------------------------------- */
-  --font-size-xs: 0.75rem;   /* 12px – Hinweise, Fußnoten */
-  --font-size-sm: 0.875rem;  /* 14px – Sekundärtext, Labels */
-  --font-size-md: 1rem;      /* 16px – Fließtext (Basis) */
-  --font-size-lg: 1.25rem;   /* 20px – Unterüberschriften */
-  --font-size-xl: 1.75rem;   /* 28px – Seitenüberschriften */
-
-  /* Schriftgewichte -------------------------------------------------- */
-  --font-weight-normal: 400;
-  --font-weight-bold: 700;
-
-  /* Animationsgeschwindigkeit (für spätere Hover-/Transition-Effekte) */
-  --transition-speed: 0.15s;
+/* ---- Light Mode (:root[data-theme="light"] hat Spezifität 0,2,0 – */
+/*      überschreibt :root aus style.css, das nach tokens.css lädt)  -- */
+:root[data-theme="light"] {
+  --bg:            #f1f5f9;
+  --surface:       #ffffff;
+  --surface-2:     #e2e8f0;
+  --primary:       #6366f1;
+  --primary-hover: #4f46e5;
+  --text:          #0f172a;
+  --text-muted:    #475569;
+  --success:       #16a34a;
+  --error:         #dc2626;
+  /* --radius ist theme-unabhängig – bleibt wie im Dark-Block */
 }
