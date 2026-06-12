@@ -22,8 +22,13 @@ Das vollständige Gamification-System kommt in Phase 2.
 
 ## 2. Lebensbalken ❤️
 - Existiert nur während eines laufenden Quiz (nicht persistent)
-- 10 Fragen pro Quiz → -20% Leben pro falscher Antwort
-- = maximal 4 Fehler erlaubt
+- **Dynamisch:** Schaden pro falscher Antwort = `100 / Anzahl_Fragen` %
+  (skaliert mit der tatsächlichen Fragenanzahl des Quiz)
+  - Beispiel: 6 Fragen → ~16,7 % pro Fehler
+  - Beispiel: 8 Fragen → 12,5 % pro Fehler
+  - Beispiel: 10 Fragen → 10 % pro Fehler
+- Eine komplett falsch beantwortete Runde führt damit auf 0 % Leben
+  (kein fixes -20% mehr)
 - Bei 0% Leben: Quiz kann zu Ende gespielt werden,
   aber es gibt weder EP noch Bonus
 - Nach Quiz-Ende wird der Lebensbalken verworfen
@@ -101,8 +106,13 @@ CREATE TABLE subject_xp (
 
 ## 7. Fragen-Pool & Versuche
 
-- Zentraler Fragen-Pool in der Datenbank
-- Pro Thema: zufällige Auswahl von 10 Fragen
+- **Fragen-Auswahl per JS:** Pro Quiz werden zufällig **6–10 Fragen**
+  geladen. Die Anzahl ist konfigurierbar (**Standard: 8**).
+- **Datenquelle (Phase 1):** Die Fragen kommen vorerst weiterhin aus den
+  vorhandenen JSON-Dateien (`<thema>_fragen.json` / `<thema>_antworten.json`);
+  die Zufallsauswahl passiert clientseitig in JS.
+- **Datenquelle (Phase 2):** Später zentraler Fragen-Pool in der Datenbank
+  (zufällige Auswahl per DB-Query) — siehe [DATENMIGRATION.md](DATENMIGRATION.md).
 - Normal: 3 Versuche pro Thema/Tag
 - Lernphase (vor Test): 10 Versuche pro Thema/Tag
 - Übungsmodus: keine EP, keine Trophäen
