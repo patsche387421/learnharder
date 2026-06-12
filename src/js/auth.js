@@ -18,8 +18,9 @@ const Auth = (() => {
   }
 
   async function logout() {
-    await sb.auth.signOut();
-    location.href = "/index.html";
+    // scope:'local' löscht die Session aus localStorage auch ohne Serverantwort
+    await sb.auth.signOut({ scope: 'local' });
+    window.location.replace("/index.html");
   }
 
   // Sync-Guard: nutzt gecachte Session (ausreichend nach requireLogin())
