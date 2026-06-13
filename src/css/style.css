@@ -212,6 +212,18 @@ button {
   color: var(--text-muted);
 }
 
+/* Vereinfachte Topbar-Mitte */
+.topbar-mitte {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.topbar-mitte:hover {
+  color: var(--text);
+}
+
 /* Tooltips: data-tooltip Attribut auf .topbar-icon Elementen */
 .topbar-icon {
   position: relative;
