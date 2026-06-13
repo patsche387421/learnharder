@@ -327,11 +327,23 @@ button {
   transform: translateX(3px);
 }
 
-/* Stats-Reihe */
+/* Stats-Reihe (4 Karten: Themen · Quiz-Punkte · Lerntage · Energie) */
 .db-stats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  .db-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .db-stats {
+    grid-template-columns: 1fr;
+  }
 }
 
 .stat-card {
