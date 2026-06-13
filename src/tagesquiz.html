@@ -133,10 +133,11 @@
         const gemischt    = [...standardThemen].sort(() => Math.random() - 0.5);
         const ausgewaehlt = gemischt.slice(0, 2);
 
+        console.log('[Tagesquiz] Lade Themen:', ausgewaehlt.map(t => t.id));
         for (const thema of ausgewaehlt) {
+          const { fach: fachPfad, slug } = themaZuPfad(thema.id);
+          const basis = "/assets/data/" + fachPfad + "/" + slug;
           try {
-            const { fach: fachPfad, slug } = themaZuPfad(thema.id);
-            const basis = "/assets/data/" + fachPfad + "/" + slug;
             const [fragenDaten, antwortenDaten] = await Promise.all([
               loadJSON(basis + "_fragen.json"),
               loadJSON(basis + "_antworten.json")
@@ -154,8 +155,8 @@
                 });
               }
             });
-          } catch (_) {
-            // Datei fehlt noch — überspringen
+          } catch (err) {
+            console.error('[Tagesquiz] Fetch fehlgeschlagen:', basis, '-', err.message);
           }
         }
       }
@@ -278,52 +279,67 @@
     }
 
     (async () => {
-      await Auth.requireLogin();
-      const stats = await Level.getUserStats();
-      await Level.renderTopbar(stats);
+      try {
+        await Auth.requireLogin();
+        const stats = await Level.getUserStats();
+        await Level.renderTopbar(stats);
 
-      if (stats.energy <= 0) {
-        zeigeScreen("screen-gesperrt");
-        return;
-      }
-
-      const bereitsGespielt = await Level.hatHeuteTagesQuizGespielt();
-      if (bereitsGespielt) {
-        zeigeScreen("screen-gespielt");
-        return;
-      }
-
-      document.getElementById("start-energie").textContent = stats.energy;
-      zeigeScreen("screen-start");
-
-      document.getElementById("btn-start").addEventListener("click", async () => {
-        // Erst Fragen laden — Energie wird nur verbraucht wenn Laden erfolgreich war
-        const fragen = await ladeFragen();
-        if (!fragen.length) {
-          const hinweis = document.getElementById("start-lade-fehler");
-          if (hinweis) hinweis.hidden = false;
+        if (stats.energy <= 0) {
+          zeigeScreen("screen-gesperrt");
           return;
         }
 
-        const verbraucht = await Level.verbrauchEnergie();
-        if (!verbraucht) { zeigeScreen("screen-gesperrt"); return; }
+        const bereitsGespielt = await Level.hatHeuteTagesQuizGespielt();
+        if (bereitsGespielt) {
+          zeigeScreen("screen-gespielt");
+          return;
+        }
 
-        document.getElementById("topbar-energy").textContent = "🥤 " + (stats.energy - 1);
+        document.getElementById("start-energie").textContent = stats.energy;
+        zeigeScreen("screen-start");
 
-        quizZustand = {
-          fragen,
-          aktuell:          0,
-          richtig:          0,
-          leben:            100,
-          schadensProFehler: 100 / fragen.length
-        };
+        document.getElementById("btn-start").addEventListener("click", async () => {
+          // Erst Fragen laden — Energie wird nur verbraucht wenn Laden erfolgreich war
+          let fragen;
+          try {
+            fragen = await ladeFragen();
+          } catch (err) {
+            console.error('[Tagesquiz] ladeFragen Fehler:', err.message);
+            const hinweis = document.getElementById("start-lade-fehler");
+            if (hinweis) hinweis.hidden = false;
+            return;
+          }
+          if (!fragen.length) {
+            const hinweis = document.getElementById("start-lade-fehler");
+            if (hinweis) hinweis.hidden = false;
+            return;
+          }
 
-        zeigeScreen("screen-quiz");
-        aktualisiereLebenBar();
-        zeigeFrage();
-      });
+          const verbraucht = await Level.verbrauchEnergie();
+          if (!verbraucht) { zeigeScreen("screen-gesperrt"); return; }
 
-      document.getElementById("btn-weiter").addEventListener("click", naechsteFrage);
+          document.getElementById("topbar-energy").textContent = "🥤 " + (stats.energy - 1);
+
+          quizZustand = {
+            fragen,
+            aktuell:          0,
+            richtig:          0,
+            leben:            100,
+            schadensProFehler: 100 / fragen.length
+          };
+
+          zeigeScreen("screen-quiz");
+          aktualisiereLebenBar();
+          zeigeFrage();
+        });
+
+        document.getElementById("btn-weiter").addEventListener("click", naechsteFrage);
+      } catch (err) {
+        console.error('[Tagesquiz] Initialisierungsfehler:', err.message);
+        zeigeScreen("screen-start");
+        const hinweis = document.getElementById("start-lade-fehler");
+        if (hinweis) hinweis.hidden = false;
+      }
     })();
   </script>
 
