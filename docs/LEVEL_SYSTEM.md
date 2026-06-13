@@ -15,10 +15,10 @@ Das vollständige Gamification-System kommt in Phase 2.
 
 ## 1. Energie 🥤
 - 5 Energydrinks pro User täglich
-- Reset: täglich um Mitternacht
+- Reset: täglich (Mitternacht vs. rollierend 24 h — siehe §11 Offene Entscheidungen ⚠️)
 - 1 Energydrink wird beim Quiz-Start verbraucht
-- Kein Energydrink verfügbar → Quiz nicht startbar
-- 50 Trophäen können gegen 1 Energydrink eingetauscht werden
+- Kein Energydrink verfügbar → Verhalten beim Quiz-Start siehe §11 ⚠️
+- 50 Trophäen können gegen 1 Energydrink eingetauscht werden (Tausch-Seite, siehe §9)
 
 ## 2. Lebensbalken ❤️
 - Existiert nur während eines laufenden Quiz (nicht persistent)
@@ -118,4 +118,123 @@ CREATE TABLE subject_xp (
 - Übungsmodus: keine EP, keine Trophäen
 
 ---
-*Erstellt: Juni 2026 | Status: Geplant, noch nicht implementiert*
+
+## 8. Anzeige von Level & Fortschritt
+
+**Level werden pro Fach geführt — nicht pro Thema.** Die Level-/EP-Leiste lebt auf
+der **Fach-Seite**; Themen-Karten zeigen weiterhin nur den thema-bezogenen
+Fortschritt.
+
+### Fach-Seite (z. B. `pos.html`, `dbi.html`)
+Zusätzlich zur bereits vorhandenen Stats-Leiste
+(Fortschritt % · Themen bearbeitet · Quiz-Punkte) erscheint eine
+**Fach-Level-Leiste**:
+- „Fach-Level X" (klein angezeigt)
+- Fortschrittsbalken: EP bis zum nächsten Level
+- Richtige Antworten gesamt in diesem Fach
+
+### Themen-Karten (unverändert)
+- Fortschritts-Badge (% richtige Antworten)
+- Abgehakt-Icon (✓), wenn das Thema abgeschlossen ist
+- **Keine** Level-Anzeige auf Themen-Karten
+
+### Globales Level
+Das globale User-Level (aus Gesamt-EP über alle Fächer) wird in der **Topbar** und
+auf dem **Dashboard** angezeigt — auf der Fach-Seite gilt dagegen das **Fach-Level**.
+
+---
+
+## 9. Seitenstruktur & Navigation
+
+### Topbar (alle Seiten)
+Die Topbar erhält neben „Abmelden" drei neue Anzeigen:
+- 🥤 Energydrinks (verbleibende Anzahl heute)
+- ⭐ Globales Level (Zahl)
+- 🏆 Trophäen (Zahl) — **verlinkt auf `/tauschen.html`**
+
+### Neue Seite: `src/tauschen.html`
+Einfache, klare Tausch-Seite:
+- Zeigt die aktuelle Trophäen-Anzahl (X 🏆)
+- Zeigt die aktuelle Energydrink-Anzahl (X 🥤)
+- Tauschen-Button: **50 Trophäen = 1 Energydrink**
+  (deaktiviert, solange weniger als 50 Trophäen vorhanden sind)
+
+### Footer (alle Seiten)
+- **Fix unten** (sticky footer), **größer** als bisher
+- „© LernHub 2026"
+- Links zu `/impressum.html` und `/datenschutz.html` (DSGVO)
+
+### Neue Seiten: `impressum.html` + `datenschutz.html`
+Vorerst mit **Platzhalter-Inhalt** (echter rechtlicher Text folgt später — siehe
+§11 Offene Entscheidungen).
+
+> Hinweis: `tauschen.html`, `impressum.html` und `datenschutz.html` sind hier nur
+> **spezifiziert**. Die eigentliche Umsetzung (HTML/JS/CSS) erfolgt in der
+> Implementierungsphase — diese Datei bleibt reine Dokumentation.
+
+---
+
+## 10. Vollständige UI-Übersicht
+
+Wo wird was angezeigt?
+
+```text
+TOPBAR (alle Seiten)
+├── 🥤 Energydrinks (Zahl)
+├── ⭐ Globales Level (Zahl)
+├── 🏆 Trophäen (Zahl) → Link zu tauschen.html
+└── Logout
+
+DASHBOARD
+├── Gesamt-EP
+├── Globales Level + Fortschrittsbalken
+├── Energydrinks heute
+└── Trophäen gesamt
+
+FACH-SEITE (pos.html, dbi.html etc.)
+├── Stats-Leiste (bereits vorhanden):
+│   Fortschritt % · Themen bearbeitet · Quiz-Punkte
+├── NEU: Fach-Level-Leiste
+│   ├── "Fach-Level X"
+│   ├── Fortschrittsbalken (EP bis nächstes Level)
+│   └── Richtige Antworten gesamt in diesem Fach
+└── Themen-Karten (unverändert):
+    ├── Fortschritts-Badge (%)
+    └── Abgehakt wenn abgeschlossen
+
+QUIZ (fach.html)
+├── Lebensbalken oben (dynamisch)
+├── Frage-für-Frage Flow
+└── Ergebnis-Screen am Ende:
+    ├── Score %
+    ├── EP verdient
+    ├── Trophäen verdient
+    └── Bonus angezeigt
+
+TAUSCHEN-SEITE (neu)
+├── Trophäen: X 🏆
+├── Energydrinks: X 🥤
+└── Tauschen-Button (50 🏆 = 1 🥤)
+
+FOOTER (alle Seiten, fix unten)
+├── © LernHub 2026
+├── Impressum
+└── Datenschutz (DSGVO)
+```
+
+---
+
+## 11. Offene Entscheidungen ⚠️
+
+Diese Punkte müssen **vor der Implementierung** geklärt werden:
+
+1. **⚠️ Offen — Energie = 0:** Wird der Quiz-Start komplett **gesperrt** (mit
+   Hinweis „Keine Energie mehr"), oder nur eine **Warnung** gezeigt und das Quiz
+   bleibt spielbar (dann ggf. ohne EP/Belohnung)?
+2. **⚠️ Offen — Täglicher Energie-Reset:** Fix **um Mitternacht** (Serverzeit),
+   oder **rollierend 24 h** nach dem letzten Reset?
+3. **⚠️ Offen — Impressum/Datenschutz-Inhalt:** vorerst **Platzhalter**, echter
+   rechtlicher Inhalt (DSGVO) später?
+
+---
+*Erstellt: Juni 2026 | Status: Spezifikation finalisiert, noch nicht implementiert*

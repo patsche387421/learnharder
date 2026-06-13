@@ -114,9 +114,28 @@ const Stats = (() => {
     };
   }
 
+  // Lädt Fach-Level, Fach-XP und Gesamt-Richtige für die Fach-Level-Leiste.
+  async function ladeFachStatsKomplett(fachId) {
+    const user = Auth.currentUser();
+    if (!user) return { fachLevel: 1, fachXp: 0, correctAnswers: 0 };
+
+    const { data } = await sb
+      .from('subject_xp')
+      .select('xp, level, correct_answers')
+      .eq('user_id', user.id)
+      .eq('subject_id', fachId)
+      .maybeSingle();
+
+    return {
+      fachLevel:     data?.level           ?? 1,
+      fachXp:        data?.xp              ?? 0,
+      correctAnswers: data?.correct_answers ?? 0
+    };
+  }
+
   function leerFachStats() {
     return { fortschritt: 0, themenBearbeitet: 0, quizPunkte: 0, letzteAktivitaet: null };
   }
 
-  return { ladeFachStats, ladeThemaStats, speichereQuizErgebnis, ladeFachThemenProgress, ladeDashboardStats };
+  return { ladeFachStats, ladeThemaStats, speichereQuizErgebnis, ladeFachThemenProgress, ladeDashboardStats, ladeFachStatsKomplett };
 })();

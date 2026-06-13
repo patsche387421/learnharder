@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LernHub – Impressum</title>
+  <link rel="stylesheet" href="/css/tokens.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+  <header class="topbar">
+    <a href="/dashboard.html" class="brand">← Dashboard</a>
+    <div class="topbar-right">
+      <button id="logout" class="btn-ghost">Abmelden</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>Impressum</h1>
+    <p class="page-sub">Angaben gemäß § 5 TMG</p>
+
+    <div class="static-content">
+      <h2>Betreiber</h2>
+      <p>LernHub — HTL Demo-Projekt<br>
+      Erstellt im Rahmen eines Schulprojekts.</p>
+
+      <h2>Kontakt</h2>
+      <p>E-Mail: info@lernhub.htl (Platzhalter)</p>
+
+      <h2>Haftungsausschluss</h2>
+      <p>Diese Website dient ausschließlich Demo-Zwecken. Die Inhalte wurden
+      sorgfältig erstellt, eine Haftung für die Richtigkeit wird jedoch nicht
+      übernommen.</p>
+
+      <p class="static-hinweis">⚠️ Platzhalter — rechtlich geprüfter Inhalt folgt.</p>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/config.js"></script>
+  <script src="/js/supabase.js"></script>
+  <script src="/js/auth.js"></script>
+  <script>
+    document.getElementById("logout").addEventListener("click", () => Auth.logout());
+  </script>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>© LernHub 2026</span>
+      <nav>
+        <a href="/impressum.html">Impressum</a>
+        <a href="/datenschutz.html">Datenschutz</a>
+      </nav>
+    </div>
+  </footer>
+
+</body>
+</html>

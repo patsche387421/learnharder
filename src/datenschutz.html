@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LernHub – Datenschutz</title>
+  <link rel="stylesheet" href="/css/tokens.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+  <header class="topbar">
+    <a href="/dashboard.html" class="brand">← Dashboard</a>
+    <div class="topbar-right">
+      <button id="logout" class="btn-ghost">Abmelden</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>Datenschutzerklärung</h1>
+    <p class="page-sub">Informationen gemäß DSGVO Art. 13</p>
+
+    <div class="static-content">
+      <h2>Verantwortliche Stelle</h2>
+      <p>LernHub — HTL Demo-Projekt (Platzhalter)</p>
+
+      <h2>Welche Daten werden gespeichert?</h2>
+      <p>Es werden ausschließlich die für den Betrieb notwendigen Daten
+      gespeichert: E-Mail-Adresse für den Login sowie Lernstatistiken
+      (absolvierte Themen, Quiz-Ergebnisse, EP und Trophäen).</p>
+
+      <h2>Drittanbieter</h2>
+      <p>Authentifizierung und Datenspeicherung erfolgen über
+      <strong>Supabase</strong> (Supabase Inc., USA). Weitere Drittanbieter
+      werden nicht eingesetzt.</p>
+
+      <h2>Deine Rechte</h2>
+      <p>Du hast das Recht auf Auskunft, Berichtigung und Löschung deiner
+      gespeicherten Daten. Anfragen richte bitte an: info@lernhub.htl</p>
+
+      <p class="static-hinweis">⚠️ Platzhalter — rechtlich geprüfter Inhalt folgt.</p>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/config.js"></script>
+  <script src="/js/supabase.js"></script>
+  <script src="/js/auth.js"></script>
+  <script>
+    document.getElementById("logout").addEventListener("click", () => Auth.logout());
+  </script>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>© LernHub 2026</span>
+      <nav>
+        <a href="/impressum.html">Impressum</a>
+        <a href="/datenschutz.html">Datenschutz</a>
+      </nav>
+    </div>
+  </footer>
+
+</body>
+</html>

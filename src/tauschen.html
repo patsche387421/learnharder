@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LernHub – Trophäen tauschen</title>
+  <link rel="stylesheet" href="/css/tokens.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body class="page-tauschen">
+
+  <header class="topbar">
+    <a href="/dashboard.html" class="brand">← Dashboard</a>
+    <div class="topbar-right">
+      <span id="topbar-energy">🥤 5</span>
+      <span id="topbar-level">⭐ 1</span>
+      <a href="/tauschen.html" id="topbar-trophies">🏆 <span id="topbar-trophies-count">0</span></a>
+      <span id="welcome-name"></span>
+      <button id="logout" class="btn-ghost">Abmelden</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>Trophäen tauschen</h1>
+    <p class="page-sub">Tausche gesammelte Trophäen gegen Energydrinks.</p>
+
+    <div class="tausch-card">
+      <div class="tausch-werte">
+        <div class="tausch-wert">
+          <span class="tausch-icon">🏆</span>
+          <span class="tausch-zahl" id="tausch-trophies">–</span>
+          <span class="tausch-label">Trophäen</span>
+        </div>
+        <div class="tausch-pfeil">→</div>
+        <div class="tausch-wert">
+          <span class="tausch-icon">🥤</span>
+          <span class="tausch-zahl" id="tausch-energie">–</span>
+          <span class="tausch-label">Energydrinks</span>
+        </div>
+      </div>
+
+      <div class="tausch-kurs">
+        <strong>50 🏆 = 1 🥤</strong>
+      </div>
+
+      <button id="btn-tauschen" class="btn-primary" disabled>
+        50 🏆 gegen 1 🥤 tauschen
+      </button>
+
+      <p id="tausch-meldung" class="tausch-meldung" hidden></p>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/config.js"></script>
+  <script src="/js/supabase.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/stats.js"></script>
+  <script src="/js/level.js"></script>
+  <script>
+    async function aktualisiereAnzeige() {
+      const stats = await Level.getUserStats();
+
+      document.getElementById("topbar-energy").textContent = "🥤 " + stats.energy;
+      document.getElementById("topbar-level").textContent  = "⭐ " + stats.level;
+      document.getElementById("topbar-trophies-count").textContent = stats.trophies;
+
+      document.getElementById("tausch-trophies").textContent = stats.trophies;
+      document.getElementById("tausch-energie").textContent  = stats.energy;
+
+      const btn = document.getElementById("btn-tauschen");
+      btn.disabled = stats.trophies < 50;
+    }
+
+    (async () => {
+      await Auth.requireLogin();
+      document.getElementById("welcome-name").textContent = Auth.displayName();
+      document.getElementById("logout").addEventListener("click", () => Auth.logout());
+
+      await aktualisiereAnzeige();
+
+      document.getElementById("btn-tauschen").addEventListener("click", async () => {
+        const meldung = document.getElementById("tausch-meldung");
+        meldung.hidden = true;
+
+        const ergebnis = await Level.tauscheTrophäen(1);
+
+        meldung.hidden = false;
+        if (ergebnis.erfolg) {
+          meldung.textContent = "✅ Tausch erfolgreich! +1 🥤 Energydrink erhalten.";
+          meldung.className   = "tausch-meldung tausch-erfolg";
+        } else {
+          meldung.textContent = "❌ " + ergebnis.fehler;
+          meldung.className   = "tausch-meldung tausch-fehler";
+        }
+
+        await aktualisiereAnzeige();
+      });
+    })();
+  </script>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>© LernHub 2026</span>
+      <nav>
+        <a href="/impressum.html">Impressum</a>
+        <a href="/datenschutz.html">Datenschutz</a>
+      </nav>
+    </div>
+  </footer>
+
+</body>
+</html>
