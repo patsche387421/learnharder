@@ -10,11 +10,19 @@
 <body class="page-tagesquiz">
 
   <header class="topbar">
-    <a href="/dashboard.html" class="brand">← Dashboard</a>
+    <a href="/dashboard.html" class="brand">LernHub</a>
+
+    <a href="/profil.html" class="topbar-level-mitte topbar-icon" data-tooltip="Profil ansehen">
+      <span class="topbar-level-label">⭐ Level <span id="topbar-level-zahl">1</span></span>
+      <div class="topbar-level-bar-wrap">
+        <div id="topbar-level-fill" style="width: 0%"></div>
+      </div>
+      <span id="topbar-level-ep" class="topbar-level-ep">0 / 100 EP</span>
+    </a>
+
     <div class="topbar-right">
-      <span id="topbar-energy">🥤 5</span>
-      <span id="topbar-level">⭐ 1</span>
-      <a href="/tauschen.html" id="topbar-trophies">🏆 <span id="topbar-trophies-count">0</span></a>
+      <span id="topbar-energy" class="topbar-icon" data-tooltip="Energydrinks">🥤 5</span>
+      <a href="/tauschen.html" id="topbar-trophies" class="topbar-icon" data-tooltip="Trophäen">🏆 <span id="topbar-trophies-count">0</span></a>
       <span id="welcome-name"></span>
       <button id="logout" class="btn-ghost">Abmelden</button>
     </div>
@@ -55,6 +63,7 @@
           Kostet <strong>1 🥤 Energydrink</strong> — du hast noch <strong id="start-energie">5</strong>
         </p>
         <button id="btn-start" class="btn-primary btn-lg">Quiz starten 🥤</button>
+        <p id="start-lade-fehler" class="error" hidden>Fragen konnten nicht geladen werden — bitte Seite neu laden.</p>
       </div>
     </section>
 
@@ -270,13 +279,8 @@
 
     (async () => {
       await Auth.requireLogin();
-      document.getElementById("welcome-name").textContent = Auth.displayName();
-      document.getElementById("logout").addEventListener("click", () => Auth.logout());
-
       const stats = await Level.getUserStats();
-      document.getElementById("topbar-energy").textContent = "🥤 " + stats.energy;
-      document.getElementById("topbar-level").textContent  = "⭐ " + stats.level;
-      document.getElementById("topbar-trophies-count").textContent = stats.trophies;
+      await Level.renderTopbar(stats);
 
       if (stats.energy <= 0) {
         zeigeScreen("screen-gesperrt");
@@ -293,16 +297,18 @@
       zeigeScreen("screen-start");
 
       document.getElementById("btn-start").addEventListener("click", async () => {
+        // Erst Fragen laden — Energie wird nur verbraucht wenn Laden erfolgreich war
+        const fragen = await ladeFragen();
+        if (!fragen.length) {
+          const hinweis = document.getElementById("start-lade-fehler");
+          if (hinweis) hinweis.hidden = false;
+          return;
+        }
+
         const verbraucht = await Level.verbrauchEnergie();
         if (!verbraucht) { zeigeScreen("screen-gesperrt"); return; }
 
         document.getElementById("topbar-energy").textContent = "🥤 " + (stats.energy - 1);
-
-        const fragen = await ladeFragen();
-        if (!fragen.length) {
-          alert("Keine Fragen verfügbar. Bitte versuche es später erneut.");
-          return;
-        }
 
         quizZustand = {
           fragen,
