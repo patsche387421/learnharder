@@ -161,6 +161,10 @@ const Level = (() => {
     const { data: sessionData } = await sb.auth.getSession();
     const user = sessionData.session?.user ?? null;
 
+    // Seitennamen aus data-page-title Attribut des body-Tags setzen
+    const seitenameEl = document.getElementById('topbar-seitenname');
+    if (seitenameEl) seitenameEl.textContent = document.body.dataset.pageTitle || '';
+
     // onclick statt addEventListener → kein Doppel-Listener bei Mehrfachaufruf
     const logoutBtn = document.getElementById('logout');
     if (logoutBtn) logoutBtn.onclick = () => Auth.logout();
