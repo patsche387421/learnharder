@@ -261,9 +261,15 @@ const App = (() => {
       resultEl.hidden = false;
       resultEl.textContent = "Du hast " + richtig + " von " + fragen.length + " Fragen richtig.";
 
-      // Stats-Hook: Ergebnis für spätere DB-Anbindung melden
       const themaId = new URLSearchParams(location.search).get("fach") || "";
       Stats.speichereQuizErgebnis(themaId, richtig, fragen.length);
+      Level.buecheQuizErgebnis({
+        richtig,
+        gesamt:       fragen.length,
+        fachId:       themaZuPfad(themaId).fach,
+        istTagesQuiz: false,
+        lebenProzent: 100
+      });
     };
   }
 
