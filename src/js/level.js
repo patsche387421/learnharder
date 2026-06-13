@@ -75,6 +75,7 @@ const Level = (() => {
   // Bucht das Quiz-Ergebnis: EP, Trophäen, Level-Update.
   // lebenProzent: verbleibende Leben nach Quiz (0 = keine EP/Bonus, aber Trophäen)
   async function buecheQuizErgebnis({ richtig, gesamt, fachId, istTagesQuiz = false, lebenProzent }) {
+    console.log('[Level] buecheQuizErgebnis:', { richtig, gesamt, fachId, istTagesQuiz, lebenProzent });
     const user = Auth.currentUser();
     if (!user) return { ep: 0, trophien: 0, bonus: 0, levelUp: false };
 
@@ -106,13 +107,14 @@ const Level = (() => {
     const neuesLevel  = berechneLevel(neueXp);
     const levelUp     = neuesLevel > (aktStats?.level ?? 1);
 
-    await sb.from('user_stats').upsert({
+    const { error: statsErr } = await sb.from('user_stats').upsert({
       user_id:    user.id,
       total_xp:   neueXp,
       level:      neuesLevel,
       trophies:   neueTrophies,
       updated_at: new Date().toISOString()
     }, { onConflict: 'user_id' });
+    if (statsErr) console.error('[Level] user_stats upsert Fehler:', statsErr);
 
     // subject_xp für das Fach aktualisieren (nur wenn Fach bekannt und EP verdient)
     if (fachId && ep > 0) {
@@ -123,28 +125,30 @@ const Level = (() => {
         .eq('subject_id', fachId)
         .maybeSingle();
 
-      const neueFachXp       = (fachXp?.xp              ?? 0) + ep;
-      const neuesFachLevel   = berechneLevel(neueFachXp);
-      const neueCorrectAns   = (fachXp?.correct_answers  ?? 0) + richtig;
+      const neueFachXp     = (fachXp?.xp              ?? 0) + ep;
+      const neuesFachLevel = berechneLevel(neueFachXp);
+      const neueCorrectAns = (fachXp?.correct_answers  ?? 0) + richtig;
 
-      await sb.from('subject_xp').upsert({
+      const { error: fachErr } = await sb.from('subject_xp').upsert({
         user_id:         user.id,
         subject_id:      fachId,
         xp:              neueFachXp,
         level:           neuesFachLevel,
         correct_answers: neueCorrectAns
       }, { onConflict: 'user_id,subject_id' });
+      if (fachErr) console.error('[Level] subject_xp upsert Fehler:', fachErr);
     }
 
     // Tages-Quiz-Ergebnis in daily_quiz_log festhalten
     if (istTagesQuiz) {
-      await sb.from('daily_quiz_log').insert({
-        user_id:        user.id,
+      const { error: logErr } = await sb.from('daily_quiz_log').insert({
+        user_id:         user.id,
         score,
-        xp_earned:      ep,
+        xp_earned:       ep,
         trophies_earned: trophien,
-        success:        hatLeben
+        success:         hatLeben
       });
+      if (logErr) console.error('[Level] daily_quiz_log insert Fehler:', logErr);
     }
 
     return { ep, trophien, bonus, levelUp };
