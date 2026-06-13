@@ -26,6 +26,7 @@ body {
   background: var(--bg);
   color: var(--text);
   line-height: 1.5;
+  padding-bottom: 56px;
 }
 
 a {
@@ -137,6 +138,20 @@ button {
 }
 
 /* ---------- Topbar ---------- */
+/* Gamification-Anzeigen in der Topbar */
+#topbar-energy,
+#topbar-level,
+#topbar-trophies {
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+#topbar-trophies {
+  text-decoration: none;
+}
+
+
 .topbar {
   display: flex;
   justify-content: space-between;
@@ -577,30 +592,432 @@ button {
   font-size: 1.1rem;
 }
 
-/* ---------- Footer ---------- */
+/* ---------- Footer (fix unten) ---------- */
 .site-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
   background: var(--surface);
   border-top: 1px solid var(--surface-2);
-  padding: 1rem 1.5rem;
+  padding: 12px 24px;
   display: flex;
-  align-items: center;
   justify-content: center;
-  gap: 0.6rem;
+  z-index: 100;
+}
+
+.footer-inner {
+  display: flex;
+  gap: 24px;
+  align-items: center;
   color: var(--text-muted);
-  font-size: 0.8rem;
+  font-size: 0.85rem;
+}
+
+.footer-inner nav {
+  display: flex;
+  gap: 16px;
+}
+
+.footer-inner a {
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color var(--transition-speed, 0.15s);
+}
+
+.footer-inner a:hover {
+  color: var(--primary);
+}
+
+/* ---------- Fach-Level-Leiste ---------- */
+.fach-level-leiste {
+  background: var(--surface);
+  border: 1px solid var(--surface-2);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.fach-level-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.fach-level-info strong {
+  color: var(--text);
+}
+
+.fach-level-bar {
+  background: var(--surface-2);
+  border-radius: 99px;
+  height: 8px;
+  overflow: hidden;
+}
+
+#fach-level-fill {
+  height: 100%;
+  background: var(--primary);
+  border-radius: 99px;
+  transition: width 0.4s ease;
+}
+
+.fach-level-leiste small {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+/* ---------- Dashboard: Fortschrittsbalken & Hinweis in Stat-Karte ---------- */
+.stat-progress-bar {
+  background: var(--surface-2);
+  border-radius: 99px;
+  height: 6px;
+  overflow: hidden;
+  margin-top: 0.5rem;
+  width: 100%;
+}
+
+.stat-progress-fill {
+  height: 100%;
+  background: var(--primary);
+  border-radius: 99px;
+  transition: width 0.4s ease;
+}
+
+.stat-hint {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+/* ---------- Tages-Quiz Karte (Dashboard) ---------- */
+.tagesquiz-card {
+  background: var(--surface);
+  border: 1px solid var(--primary);
+  border-radius: var(--radius);
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
   flex-wrap: wrap;
 }
 
-.footer-sep {
-  opacity: 0.4;
+.tagesquiz-card h2 {
+  margin: 0 0 0.25rem;
+  font-size: 1.3rem;
 }
 
-.footer-link {
+.tagesquiz-card p {
+  margin: 0;
   color: var(--text-muted);
-  text-decoration: none;
-  transition: color 0.15s;
+  font-size: 0.9rem;
 }
 
-.footer-link:hover {
+/* ---------- Tages-Quiz Seite ---------- */
+.quiz-screen {
+  display: flex;
+  justify-content: center;
+  padding: 3rem 1rem;
+}
+
+.quiz-screen-inner {
+  text-align: center;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.quiz-screen-icon {
+  font-size: 4rem;
+  display: block;
+}
+
+.quiz-screen-inner h2 {
+  margin: 0;
+  font-size: 1.75rem;
+}
+
+.quiz-screen-inner p {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.quiz-screen-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.quiz-energie-hinweis {
+  background: var(--surface);
+  border: 1px solid var(--surface-2);
+  border-radius: var(--radius);
+  padding: 0.75rem 1.25rem;
+  font-size: 0.9rem;
+}
+
+.btn-lg {
+  padding: 0.85rem 2rem;
+  font-size: 1.05rem;
+}
+
+/* Lebensbalken */
+.leben-container {
+  margin-bottom: 1.5rem;
+}
+
+.leben-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 0.4rem;
+}
+
+.leben-bar {
+  background: var(--surface-2);
+  border-radius: 99px;
+  height: 12px;
+  overflow: hidden;
+}
+
+#leben-fill {
+  height: 100%;
+  background: var(--success);
+  border-radius: 99px;
+  transition: width 0.3s ease, background 0.3s ease;
+}
+
+#leben-fill.leben-niedrig {
+  background: var(--error);
+}
+
+/* Frage-Flow */
+.frage-zaehler {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: 0 0 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+}
+
+.frage-container {
+  background: var(--surface);
+  border: 1px solid var(--surface-2);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.frage-text {
+  margin: 0;
+  font-size: 1.15rem;
+  line-height: 1.5;
+}
+
+.antwort-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.antwort-btn {
+  background: var(--surface-2);
   color: var(--text);
+  border: 1px solid var(--surface-2);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  line-height: 1.4;
+}
+
+.antwort-btn:hover:not(:disabled) {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+.antwort-btn:disabled {
+  cursor: default;
+}
+
+.antwort-btn.antwort-richtig {
+  background: rgba(34, 197, 94, 0.2);
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.antwort-btn.antwort-falsch {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: var(--error);
+  color: var(--error);
+}
+
+.feedback-box {
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.feedback-richtig {
+  background: rgba(34, 197, 94, 0.15);
+  color: var(--success);
+}
+
+.feedback-falsch {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--error);
+}
+
+/* Ergebnis-Screen */
+.ergebnis-score {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.ergebnis-belohnungen {
+  background: var(--surface);
+  border: 1px solid var(--surface-2);
+  border-radius: var(--radius);
+  padding: 1rem 1.5rem;
+  width: 100%;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.ergebnis-zeile {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+.ergebnis-highlight {
+  color: var(--text);
+  font-weight: 700;
+}
+
+/* ---------- Tausch-Seite ---------- */
+.tausch-card {
+  background: var(--surface);
+  border: 1px solid var(--surface-2);
+  border-radius: var(--radius);
+  padding: 2rem;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.tausch-werte {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  justify-content: center;
+}
+
+.tausch-wert {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.tausch-icon {
+  font-size: 2.5rem;
+}
+
+.tausch-zahl {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.tausch-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.tausch-pfeil {
+  font-size: 1.5rem;
+  color: var(--text-muted);
+}
+
+.tausch-kurs {
+  text-align: center;
+  background: var(--surface-2);
+  border-radius: var(--radius);
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  color: var(--text-muted);
+}
+
+.tausch-meldung {
+  text-align: center;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.tausch-erfolg {
+  background: rgba(34, 197, 94, 0.15);
+  color: var(--success);
+}
+
+.tausch-fehler {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--error);
+}
+
+/* ---------- Statische Seiten (Impressum, Datenschutz) ---------- */
+.static-content {
+  background: var(--surface);
+  border: 1px solid var(--surface-2);
+  border-radius: var(--radius);
+  padding: 2rem;
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.static-content h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--primary);
+}
+
+.static-content p {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.static-hinweis {
+  background: var(--surface-2);
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
 }
