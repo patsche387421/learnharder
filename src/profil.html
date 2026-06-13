@@ -11,72 +11,97 @@
 
   <header class="topbar">
     <a href="/dashboard.html" class="brand">LernHub</a>
-
-    <a href="/profil.html" class="topbar-level-mitte topbar-icon" data-tooltip="Profil ansehen">
-      <span class="topbar-level-label">⭐ Level <span id="topbar-level-zahl">1</span></span>
-      <div class="topbar-level-bar-wrap">
-        <div id="topbar-level-fill" style="width: 0%"></div>
-      </div>
-      <span id="topbar-level-ep" class="topbar-level-ep">0 / 100 EP</span>
-    </a>
-
+    <a href="/profil.html" class="topbar-mitte">Mein Profil</a>
     <div class="topbar-right">
-      <span id="topbar-energy" class="topbar-icon" data-tooltip="Energydrinks">🥤 5</span>
-      <a href="/tauschen.html" id="topbar-trophies" class="topbar-icon" data-tooltip="Trophäen">🏆 <span id="topbar-trophies-count">0</span></a>
       <span id="welcome-name"></span>
-      <button id="logout" class="btn-ghost">Abmelden</button>
+      <a href="#" class="topbar-hilfe" title="Kommt bald">Hilfe</a>
     </div>
   </header>
 
   <main class="container">
     <h1>Mein Profil</h1>
-    <p class="page-sub" id="profil-username"></p>
 
-    <!-- Section 1: Globaler Stand -->
+    <!-- 1. Anmeldedaten -->
     <section class="profil-section">
-      <h2 class="profil-section-title">⭐ Globaler Stand</h2>
+      <h2 class="profil-section-title">🔐 Anmeldedaten</h2>
+      <div class="profil-card">
+        <div class="profil-konto-zeile">
+          <span class="profil-konto-label">E-Mail</span>
+          <span class="profil-konto-wert" id="profil-email">…</span>
+        </div>
+        <button id="abmelden-btn" class="btn-ghost profil-abmelden-btn">Abmelden</button>
+      </div>
+    </section>
+
+    <!-- 2. Meine Stats -->
+    <section class="profil-section">
+      <h2 class="profil-section-title">⭐ Meine Stats</h2>
       <div class="profil-global-card">
         <div class="profil-level-row">
-          <span class="profil-level-badge">Level <span id="profil-level">1</span></span>
-          <span class="profil-ep-text" id="profil-ep-text">0 / 100 EP</span>
+          <span class="profil-level-badge">Level <span id="profil-level">–</span></span>
+          <span class="profil-ep-text" id="profil-ep-text">– EP</span>
         </div>
         <div class="profil-bar-wrap">
           <div class="profil-bar-fill" id="profil-bar-fill" style="width: 0%"></div>
         </div>
         <div class="profil-global-stats">
           <div class="profil-stat">
-            <span class="profil-stat-icon">💎</span>
-            <span class="profil-stat-wert" id="profil-total-xp">0</span>
+            <span class="profil-stat-icon">⭐</span>
+            <span class="profil-stat-wert" id="profil-total-xp">–</span>
             <span class="profil-stat-label">Gesamt-EP</span>
           </div>
           <div class="profil-stat">
             <span class="profil-stat-icon">🏆</span>
-            <span class="profil-stat-wert" id="profil-trophies">0</span>
+            <span class="profil-stat-wert" id="profil-trophies">–</span>
             <span class="profil-stat-label">Trophäen</span>
           </div>
           <div class="profil-stat">
             <span class="profil-stat-icon">🥤</span>
-            <span class="profil-stat-wert" id="profil-energy">5</span>
+            <span class="profil-stat-wert" id="profil-energy">–</span>
             <span class="profil-stat-label">Energie</span>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Section 2: Fächer-Übersicht -->
+    <!-- 3. Level pro Fach -->
     <section class="profil-section">
-      <h2 class="profil-section-title">📚 Fächer-Übersicht</h2>
+      <h2 class="profil-section-title">📚 Level pro Fach</h2>
       <div class="profil-faecher" id="profil-faecher">
         <p class="profil-lade-text">Lade Fächer …</p>
       </div>
     </section>
 
-    <!-- Section 3: Level-Verlauf -->
+    <!-- 4. Level-Verlauf -->
     <section class="profil-section">
       <h2 class="profil-section-title">📈 Level-Verlauf</h2>
-      <div class="profil-grafik-wrap">
-        <svg id="level-grafik" viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg" aria-label="Level-Verlauf Diagramm"></svg>
-        <p class="profil-grafik-hinweis">Die Grafik füllt sich mit der Zeit, je mehr Tages-Quizzes du spielst.</p>
+      <div class="profil-placeholder">
+        <span class="profil-placeholder-icon">🚧</span>
+        <p>Verlauf kommt bald – level_log Tabelle fehlt noch</p>
+      </div>
+    </section>
+
+    <!-- 5. Errungenschaften -->
+    <section class="profil-section">
+      <h2 class="profil-section-title">🏅 Errungenschaften</h2>
+      <div class="profil-placeholder">
+        <span class="profil-placeholder-icon">🔒</span>
+        <p>Kommt bald</p>
+      </div>
+    </section>
+
+    <!-- 6. Einstellungen -->
+    <section class="profil-section">
+      <h2 class="profil-section-title">⚙️ Einstellungen</h2>
+      <div class="profil-card">
+        <div class="profil-setting-row">
+          <div class="profil-setting-info">
+            <span class="profil-setting-label">Erscheinungsbild</span>
+            <span class="profil-setting-sub">Dark oder Light Mode</span>
+          </div>
+          <button id="theme-toggle" class="btn-ghost">☀️ Light Mode</button>
+        </div>
+        <p class="profil-setting-hinweis">Weitere Einstellungen folgen.</p>
       </div>
     </section>
   </main>
@@ -98,51 +123,16 @@
   <script src="/js/stats.js"></script>
   <script src="/js/level.js"></script>
   <script>
-    // TODO: level_log Tabelle einführen,
-    // um historischen Verlauf zu speichern
+    // Theme früh anwenden um Flash zu vermeiden
+    (function () {
+      const gespeichert = localStorage.getItem('theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', gespeichert);
+    })();
 
-    function renderLevelGrafik(datenpunkte) {
-      const svg = document.getElementById('level-grafik');
-      const PAD_L = 45, PAD_R = 20, PAD_T = 15, PAD_B = 35;
-      const W = 600, H = 200;
-      const plotW = W - PAD_L - PAD_R;
-      const plotH = H - PAD_T - PAD_B;
-      const MIN_LVL = 1, MAX_LVL = 10;
-
-      const xOf = (i, n) => PAD_L + (n <= 1 ? plotW / 2 : (i / (n - 1)) * plotW);
-      const yOf = (l) => PAD_T + plotH - ((l - MIN_LVL) / (MAX_LVL - MIN_LVL)) * plotH;
-
-      let h = '';
-
-      // Horizontale Grid-Linien + Y-Achsen-Beschriftung
-      for (let l = 1; l <= 10; l += 3) {
-        const y = yOf(l);
-        h += `<line x1="${PAD_L}" y1="${y}" x2="${W - PAD_R}" y2="${y}" stroke="var(--surface-2)" stroke-width="1"/>`;
-        h += `<text x="${PAD_L - 6}" y="${y + 4}" text-anchor="end" font-size="11" fill="var(--text-muted)">${l}</text>`;
-      }
-
-      // Achsen
-      h += `<line x1="${PAD_L}" y1="${PAD_T}" x2="${PAD_L}" y2="${H - PAD_B}" stroke="var(--text-muted)" stroke-width="1"/>`;
-      h += `<line x1="${PAD_L}" y1="${H - PAD_B}" x2="${W - PAD_R}" y2="${H - PAD_B}" stroke="var(--text-muted)" stroke-width="1"/>`;
-
-      // Linie bei mehreren Punkten
-      if (datenpunkte.length > 1) {
-        const pts = datenpunkte.map((d, i) => `${xOf(i, datenpunkte.length)},${yOf(d.level)}`).join(' ');
-        h += `<polyline points="${pts}" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linejoin="round"/>`;
-      }
-
-      // Datenpunkte + X-Beschriftung
-      datenpunkte.forEach((d, i) => {
-        const x = xOf(i, datenpunkte.length);
-        const y = yOf(d.level);
-        const label = d.tag
-          ? d.tag.toLocaleDateString('de-AT', { day: '2-digit', month: '2-digit' })
-          : 'Heute';
-        h += `<circle cx="${x}" cy="${y}" r="6" fill="var(--primary)"/>`;
-        h += `<text x="${x}" y="${H - PAD_B + 18}" text-anchor="middle" font-size="11" fill="var(--text-muted)">${label}</text>`;
-      });
-
-      svg.innerHTML = h;
+    function aktualisiereThemeButton(theme) {
+      const btn = document.getElementById('theme-toggle');
+      if (!btn) return;
+      btn.textContent = theme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
     }
 
     function renderFachZeile(fach, fachStats) {
@@ -165,41 +155,72 @@
     (async () => {
       await Auth.requireLogin();
 
-      const [userStats, manifest] = await Promise.all([
-        Level.getUserStats(),
-        fetch('/assets/data/manifest.json').then(r => r.json())
-      ]);
-
-      await Level.renderTopbar(userStats);
-
-      // Benutzername
-      const { data: sessionData } = await sb.auth.getSession();
-      const email = sessionData.session?.user?.email ?? '';
-      document.getElementById('profil-username').textContent = email;
-
-      // Section 1 befüllen
-      const naechste = Level.LEVEL_THRESHOLDS[userStats.level] ?? null;
-      const prozent  = naechste ? Math.min(userStats.totalXp / naechste * 100, 100) : 100;
-
-      document.getElementById('profil-level').textContent    = userStats.level;
-      document.getElementById('profil-ep-text').textContent  = userStats.totalXp + ' / ' + (naechste ?? '–') + ' EP';
-      document.getElementById('profil-bar-fill').style.width = prozent + '%';
-      document.getElementById('profil-total-xp').textContent = userStats.totalXp;
-      document.getElementById('profil-trophies').textContent = userStats.trophies;
-      document.getElementById('profil-energy').textContent   = userStats.energy;
-
-      // Section 2: Fächer parallel laden
-      const faecher = manifest.faecher;
-      const fachStatsList = await Promise.all(faecher.map(f => Stats.ladeFachStatsKomplett(f.id)));
-
-      const container = document.getElementById('profil-faecher');
-      container.innerHTML = '';
-      faecher.forEach((fach, i) => {
-        container.appendChild(renderFachZeile(fach, fachStatsList[i]));
+      // Theme-Toggle verdrahten
+      const aktuellTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+      aktualisiereThemeButton(aktuellTheme);
+      document.getElementById('theme-toggle').addEventListener('click', () => {
+        const aktuell = document.documentElement.getAttribute('data-theme') || 'dark';
+        const neu = aktuell === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', neu);
+        localStorage.setItem('theme', neu);
+        aktualisiereThemeButton(neu);
       });
 
-      // Section 3: Grafik mit aktuellem Level als einzigem Punkt
-      renderLevelGrafik([{ tag: null, level: userStats.level }]);
+      // Abmelden-Button
+      document.getElementById('abmelden-btn').addEventListener('click', () => Auth.logout());
+
+      // Sektion 1: E-Mail anzeigen
+      const user = Auth.currentUser();
+      document.getElementById('profil-email').textContent = user?.email ?? '–';
+
+      // Sektion 2: Meine Stats
+      try {
+        const userStats = await Level.getUserStats();
+        await Level.renderTopbar(userStats);
+
+        const naechste = Level.LEVEL_THRESHOLDS[userStats.level] ?? null;
+        const prozent  = naechste ? Math.min(userStats.totalXp / naechste * 100, 100) : 100;
+
+        document.getElementById('profil-level').textContent    = userStats.level;
+        document.getElementById('profil-ep-text').textContent  = userStats.totalXp + ' / ' + (naechste ?? '–') + ' EP';
+        document.getElementById('profil-bar-fill').style.width = prozent + '%';
+        document.getElementById('profil-total-xp').textContent = userStats.totalXp;
+        document.getElementById('profil-trophies').textContent = userStats.trophies;
+        document.getElementById('profil-energy').textContent   = userStats.energy;
+      } catch (err) {
+        console.error('Stats-Ladefehler:', err);
+        document.getElementById('profil-level').textContent    = '–';
+        document.getElementById('profil-ep-text').textContent  = 'Ladefehler';
+        document.getElementById('profil-total-xp').textContent = '–';
+        document.getElementById('profil-trophies').textContent = '–';
+        document.getElementById('profil-energy').textContent   = '–';
+      }
+
+      // Sektion 3: Level pro Fach
+      try {
+        const manifest = await fetch('/assets/data/manifest.json').then(r => r.json());
+        const faecher = manifest.faecher;
+        const fachStatsList = await Promise.all(
+          faecher.map(f => Stats.ladeFachStatsKomplett(f.id))
+        );
+
+        const container = document.getElementById('profil-faecher');
+        const hatXp = faecher.some((_, i) => fachStatsList[i].fachXp > 0);
+
+        if (!hatXp) {
+          container.innerHTML = '<p class="profil-lade-text">Noch keine Fach-EP verdient – spiel ein Quiz!</p>';
+        } else {
+          container.innerHTML = '';
+          faecher.forEach((fach, i) => {
+            if (fachStatsList[i].fachXp === 0) return;
+            container.appendChild(renderFachZeile(fach, fachStatsList[i]));
+          });
+        }
+      } catch (err) {
+        console.error('Fach-Stats Ladefehler:', err);
+        document.getElementById('profil-faecher').innerHTML =
+          '<p class="profil-lade-text">Fach-Daten konnten nicht geladen werden.</p>';
+      }
     })();
   </script>
 
