@@ -150,6 +150,56 @@ const Level = (() => {
     return { ep, trophien, bonus, levelUp };
   }
 
+  // Befüllt alle Topbar-Elemente: Energie, Level-Mitte (Balken + EP), Trophäen, Name, Logout.
+  // Prüft die Session intern — funktioniert auch auf öffentlichen Seiten ohne requireLogin().
+  // stats: optional; wenn übergeben wird kein zweiter getUserStats()-Aufruf gemacht.
+  async function renderTopbar(stats) {
+    const { data: sessionData } = await sb.auth.getSession();
+    const user = sessionData.session?.user ?? null;
+
+    // onclick statt addEventListener → kein Doppel-Listener bei Mehrfachaufruf
+    const logoutBtn = document.getElementById('logout');
+    if (logoutBtn) logoutBtn.onclick = () => Auth.logout();
+
+    if (!user) {
+      // Nicht eingeloggt (öffentliche Seiten): Stats ausblenden, Anmelden-Link zeigen
+      const mitte = document.querySelector('.topbar-level-mitte');
+      if (mitte) mitte.hidden = true;
+      const energyEl = document.getElementById('topbar-energy');
+      if (energyEl) energyEl.hidden = true;
+      const trophiesEl = document.getElementById('topbar-trophies');
+      if (trophiesEl) trophiesEl.hidden = true;
+      const welcomeEl = document.getElementById('welcome-name');
+      if (welcomeEl) welcomeEl.innerHTML = '<a href="/index.html" class="btn-ghost-sm">Anmelden</a>';
+      return;
+    }
+
+    // Name setzen
+    const welcomeEl = document.getElementById('welcome-name');
+    if (welcomeEl) welcomeEl.textContent = user.email.split('@')[0];
+
+    // Stats laden wenn nicht übergeben
+    if (!stats) stats = await getUserStats();
+
+    const energyEl = document.getElementById('topbar-energy');
+    if (energyEl) energyEl.textContent = '🥤 ' + stats.energy;
+
+    const trophiesCountEl = document.getElementById('topbar-trophies-count');
+    if (trophiesCountEl) trophiesCountEl.textContent = stats.trophies;
+
+    const levelZahl = document.getElementById('topbar-level-zahl');
+    if (levelZahl) levelZahl.textContent = stats.level;
+
+    const naechste = LEVEL_THRESHOLDS[stats.level] ?? null;
+    const prozent  = naechste ? Math.min(stats.totalXp / naechste * 100, 100) : 100;
+
+    const levelFill = document.getElementById('topbar-level-fill');
+    if (levelFill) levelFill.style.width = prozent + '%';
+
+    const levelEp = document.getElementById('topbar-level-ep');
+    if (levelEp) levelEp.textContent = stats.totalXp + ' / ' + (naechste ?? '–') + ' EP';
+  }
+
   // Tauscht Trophäen gegen Energie (50 Trophäen = 1 Energydrink).
   async function tauscheTrophäen(anzahlEnergie) {
     const user = Auth.currentUser();
@@ -178,6 +228,7 @@ const Level = (() => {
     verbrauchEnergie,
     hatHeuteTagesQuizGespielt,
     buecheQuizErgebnis,
-    tauscheTrophäen
+    tauscheTrophäen,
+    renderTopbar
   };
 })();
