@@ -55,6 +55,7 @@
           Kostet <strong>1 🥤 Energydrink</strong> — du hast noch <strong id="start-energie">5</strong>
         </p>
         <button id="btn-start" class="btn-primary btn-lg">Quiz starten 🥤</button>
+        <p id="start-lade-fehler" class="error" hidden>Fragen konnten nicht geladen werden — bitte Seite neu laden.</p>
       </div>
     </section>
 
@@ -293,16 +294,18 @@
       zeigeScreen("screen-start");
 
       document.getElementById("btn-start").addEventListener("click", async () => {
+        // Erst Fragen laden — Energie wird nur verbraucht wenn Laden erfolgreich war
+        const fragen = await ladeFragen();
+        if (!fragen.length) {
+          const hinweis = document.getElementById("start-lade-fehler");
+          if (hinweis) hinweis.hidden = false;
+          return;
+        }
+
         const verbraucht = await Level.verbrauchEnergie();
         if (!verbraucht) { zeigeScreen("screen-gesperrt"); return; }
 
         document.getElementById("topbar-energy").textContent = "🥤 " + (stats.energy - 1);
-
-        const fragen = await ladeFragen();
-        if (!fragen.length) {
-          alert("Keine Fragen verfügbar. Bitte versuche es später erneut.");
-          return;
-        }
 
         quizZustand = {
           fragen,
