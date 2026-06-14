@@ -345,4 +345,36 @@ in einem separaten Konzept-Commit.
 
 ---
 
+## Session 2026-06-14 (fünfte Runde) — BUGS.md Code-Analyse & Aktualisierung
+
+**Geänderte Dateien:** `docs/BUGS.md`, `agent/SESSION_REPORT.md`
+
+### Analyse-Grundlage
+- Commits `9ed1548`, `7fbb73f`, `e347c6f`, `b2749c2` seit letzter BUGS.md-Aktualisierung
+- SESSION_REPORT-Einträge (dritte + vierte Runde)
+- Code-Lektüre: `src/js/app.js`, `src/js/stats.js`, `src/tagesquiz.html`
+
+### BUG-001 → ✅ Erledigt (Workaround)
+Workaround via Test-JSON in `e347c6f` + SyntaxError-Fix in `7fbb73f`.
+Endgültige Lösung folgt nach Daten-Migration V2.
+
+### BUG-003 → Status aktualisiert
+Teilweise behoben: `await` + EP-Anzeige in `9ed1548`. Manuelle Supabase-
+Verifikation (`user_stats`, `subject_xp`) noch ausstehend.
+
+### Neu hinzugefügt
+- **BUG-009** (🟢): LEVEL_SYSTEM.md §4 veraltet — 5 EP dokumentiert,
+  Code gibt 1 EP für Themen-Quiz seit `9ed1548`.
+- **BUG-010** (🟡): `Stats.speichereQuizErgebnis()` ohne `await` in
+  `app.js:262` — Supabase-Schreibfehler werden lautlos verschluckt.
+- **⚠️ Bekannte Diskrepanzen** — neuer Abschnitt mit drei Einträgen:
+  LEVEL_SYSTEM.md vs. Code, Test-JSON Fragenanzahl, BUG-001-Workaround.
+
+### Neue ✅-Einträge
+- Themen-Quiz Auswerten-Übersicht (A2, `9ed1548`)
+- Lebensanzeige-Breite kein Sprung (A3, `9ed1548`)
+- EP quiztyp-abhängig (A1, `9ed1548`) — bestehenden Eintrag präzisiert
+
+---
+
 *Bericht auto-generiert am Ende der Session. Alle Pfade relativ zum Projekt-Root.*
