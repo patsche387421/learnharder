@@ -36,7 +36,8 @@
 
     <nav class="tabs">
       <button class="tab active" data-tab="theorie">Theorie</button>
-      <button class="tab" data-tab="quiz">Quiz</button>
+      <button class="tab" data-tab="quiz">Aufgaben</button>
+      <button class="tab" data-tab="modi">Modi</button>
     </nav>
 
     <section id="tab-theorie" class="tab-panel">
@@ -47,6 +48,12 @@
       <form id="quiz"></form>
       <button id="quiz-submit" class="btn-primary">Auswerten</button>
       <p id="quiz-result" class="quiz-result" hidden></p>
+    </section>
+
+    <section id="tab-modi" class="tab-panel" hidden>
+      <div class="modi-placeholder">
+        <p>Kommt bald: Karteikarten, Wahr/Falsch, Speedmodus</p>
+      </div>
     </section>
   </main>
 
@@ -71,15 +78,38 @@
       await Auth.requireLogin();
       await Level.renderTopbar();
 
-      // Tab-Umschaltung (nur im Standard-Fach-Modus aktiv)
+      // Tab-Umschaltung (nur im Standard-Fach-Modus aktiv).
+      // Mapping zwischen URL-Hash (#aufgaben) und internem data-tab-Wert (quiz):
+      // data-tab bleibt aus Kompatibilitätsgründen "quiz", der Hash spiegelt das
+      // sichtbare Label "Aufgaben" wider.
+      const hashZuTab = { theorie: "theorie", aufgaben: "quiz", modi: "modi" };
+      const tabZuHash = { theorie: "theorie", quiz: "aufgaben", modi: "modi" };
+
+      function aktiviereTab(tabName) {
+        document.querySelectorAll(".tab").forEach((b) => {
+          b.classList.toggle("active", b.dataset.tab === tabName);
+        });
+        document.getElementById("tab-theorie").hidden = tabName !== "theorie";
+        document.getElementById("tab-quiz").hidden    = tabName !== "quiz";
+        document.getElementById("tab-modi").hidden    = tabName !== "modi";
+      }
+
+      // Aktiven Tab aus URL-Hash beim Seitenload bestimmen (Default: theorie)
+      const startTab = hashZuTab[location.hash.slice(1)] || "theorie";
+      aktiviereTab(startTab);
+
       document.querySelectorAll(".tab").forEach((btn) => {
         btn.addEventListener("click", () => {
-          document.querySelectorAll(".tab").forEach((b) => b.classList.remove("active"));
-          btn.classList.add("active");
           const tab = btn.dataset.tab;
-          document.getElementById("tab-theorie").hidden = tab !== "theorie";
-          document.getElementById("tab-quiz").hidden = tab !== "quiz";
+          aktiviereTab(tab);
+          history.replaceState(null, "", "#" + tabZuHash[tab]);
         });
+      });
+
+      // Browser-Zurück/Vor: Tab anhand Hash synchronisieren
+      window.addEventListener("hashchange", () => {
+        const tab = hashZuTab[location.hash.slice(1)] || "theorie";
+        aktiviereTab(tab);
       });
 
       App.renderFach(fachId);
