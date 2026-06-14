@@ -3,65 +3,89 @@
 ## Übersicht
 Das Gamification-System besteht aus vier Komponenten:
 Energie, Lebensbalken, Trophäen und Erfahrungspunkte (EP).
-Es ist noch NICHT implementiert — diese Datei beschreibt
-den geplanten Stand für die nächste Entwicklungsphase.
+
+> Aktualisiert Juni 2026 — war vorher: „Es ist noch NICHT implementiert".
+> Das System ist teilweise aktiv (EP, Trophäen, Energie, Lebensbalken im
+> Tagesquiz). Offene Punkte sind mit ⚠️ gekennzeichnet.
 
 ## Aktueller Stand
-Aktuell wird pro Thema nur ein Fortschritt gespeichert
-(Quiz abgeschlossen ja/nein + Score in Prozent).
-Das vollständige Gamification-System kommt in Phase 2.
+Das Gamification-System ist für das **Tagesquiz** vollständig aktiv.
+Das **Themen-Quiz (Aufgaben-Tab)** vergibt EP und Trophäen, hat aber
+keinen Lebensbalken und verbraucht keine Energie.
 
 ---
 
 ## 1. Energie 🥤
-- 5 Energydrinks pro User täglich
-- Reset: täglich (Mitternacht vs. rollierend 24 h — siehe §11 Offene Entscheidungen ⚠️)
-- 1 Energydrink wird beim Quiz-Start verbraucht
-- Kein Energydrink verfügbar → Verhalten beim Quiz-Start siehe §11 ⚠️
-- 50 Trophäen können gegen 1 Energydrink eingetauscht werden (Tausch-Seite, siehe §9)
+
+> Aktualisiert Juni 2026 — war vorher: „1 Energydrink wird beim Quiz-Start
+> verbraucht" (galt pauschal für alle Quiz-Typen).
+
+- **Tagesquiz:** kostet 1 Energydrink beim Start
+- **Themen-Quiz (Aufgaben):** kostet KEINE Energie — unbegrenzt spielbar
+- Energie = 0 beim Tagesquiz → Seite zeigt `#screen-gesperrt` (Quiz gesperrt,
+  kein Warndialog — Offene Entscheidung §11.1 damit beantwortet)
+- 50 Trophäen können gegen 1 Energydrink eingetauscht werden (Tausch-Seite)
+
+### Energie-Regeneration ⚠️ Geplant, noch nicht implementiert
+- 1 Energydrink pro Tag automatisch, Deckel bei 5
+- Reset-Modus (Mitternacht vs. rollierend 24 h) noch nicht entschieden — §11.2
 
 ## 2. Lebensbalken ❤️
-- Existiert nur während eines laufenden Quiz (nicht persistent)
+
+> Aktualisiert Juni 2026 — war vorher: „Existiert nur während eines laufenden
+> Quiz" ohne Unterscheidung nach Quiz-Typ.
+
+- **Nur im Tagesquiz** — `tagesquiz.html` zeigt `#leben-fill` dynamisch
+- **Kein Lebensbalken im Themen-Quiz (Aufgaben)** — `app.js` übergibt immer
+  `lebenProzent: 100`; `fach.html` hat keine Lebensbalken-UI
 - **Dynamisch:** Schaden pro falscher Antwort = `100 / Anzahl_Fragen` %
-  (skaliert mit der tatsächlichen Fragenanzahl des Quiz)
-  - Beispiel: 6 Fragen → ~16,7 % pro Fehler
-  - Beispiel: 8 Fragen → 12,5 % pro Fehler
-  - Beispiel: 10 Fragen → 10 % pro Fehler
-- Eine komplett falsch beantwortete Runde führt damit auf 0 % Leben
-  (kein fixes -20% mehr)
-- Bei 0% Leben: Quiz kann zu Ende gespielt werden,
-  aber es gibt weder EP noch Bonus
+  - Beispiel (Tagesquiz, 5 Fragen): 20 % pro Fehler
+  - Beispiel (Tagesquiz, 8 Fragen): 12,5 % pro Fehler
+- Bei 0 % Leben: Quiz läuft weiter, aber keine EP und kein Bonus; Trophäen
+  werden trotzdem vergeben
 - Nach Quiz-Ende wird der Lebensbalken verworfen
 
 ## 3. Trophäen 🏆
 - +1 Trophäe pro richtiger Antwort
-- Werden IMMER vergeben — auch bei gescheitertem Quiz
-- Persistent im User-Account gespeichert
+- Werden IMMER vergeben — auch bei gescheitertem Quiz (Leben = 0)
+- Gilt für **beide** Quiz-Typen (Tagesquiz und Themen-Quiz)
+- Persistent im User-Account (`user_stats.trophies`)
 - Einlösbar: 50 Trophäen = 1 Energydrink
 
 ## 4. Erfahrungspunkte (EP) & Level ⭐
 
-### Basis
-- 5 EP pro richtiger Antwort
+> Aktualisiert Juni 2026 — war vorher: „5 EP pro richtige Antwort" (pauschal
+> für alle Quiz-Typen). Jetzt typ-abhängig.
 
-### Bonus bei erfolgreichem Abschluss (Leben > 0%)
+### Themen-Quiz (Aufgaben-Tab in fach.html)
+- **1 EP** pro richtige Antwort
+- **Kein Completion-Bonus**
+- Kein Lebensbalken → `lebenProzent` wird immer als 100 übergeben
+- Mehrfach spielbar (zum Trophäen-Grinden)
+
+### Tagesquiz (tagesquiz.html)
+- **5 EP** pro richtige Antwort
+- **Completion-Bonus bei erfolgreichem Abschluss (Leben > 0 %):**
+
 | Score    | Bonus EP |
 |----------|----------|
-| > 50%    | +10 EP   |
-| > 70%    | +20 EP   |
-| > 90%    | +35 EP   |
-| = 100%   | +50 EP   |
+| > 50 %   | +10 EP   |
+| > 70 %   | +20 EP   |
+| > 90 %   | +35 EP   |
+| = 100 %  | +50 EP   |
 
-### Wichtige Regeln
+- Bei Leben = 0 %: keine EP, kein Bonus (Trophäen zählen trotzdem)
+- 1 Versuch pro Tag (kontrolliert über `daily_quiz_log`)
+
+### Wichtige Regeln (beide Quiz-Typen)
 - EP werden erst AM ENDE des Quiz gebucht (nicht live)
-- Bei gescheitertem Quiz (Leben = 0%): keine EP, keine Buchung
+- Bei gescheitertem Quiz (Leben = 0 %): keine EP, keine Buchung
 - Trophäen werden trotzdem vergeben
 
 ### Verteilung
-- Gesamt-EP → globales User-Level
-- EP pro Fach → eigenes Fach-Level
-- Jede Frage gehört einem Fach → EP werden
-  bei Quiz-Ende auf das richtige Fach gebucht
+- Gesamt-EP → globales User-Level (`user_stats.total_xp`)
+- EP pro Fach → eigenes Fach-Level (`subject_xp.xp`)
+- `subject_xp` wird nur aktualisiert wenn `ep > 0` und `fachId` bekannt
 
 ## 5. Level-Schwellen (steigend)
 
@@ -78,44 +102,52 @@ Das vollständige Gamification-System kommt in Phase 2.
 | 9     | 3.500       |
 | 10    | 4.500       |
 
-## 6. Datenbank-Erweiterungen (geplant)
+## 6. Datenbank-Erweiterungen (aktiv)
 
-Zusätzlich zu den bestehenden Tabellen werden benötigt:
+> Aktualisiert Juni 2026 — war vorher: „geplant". Tabellen existieren und
+> werden aktiv genutzt (Migration 003).
 
-### users (Erweiterung)
+### user_stats (aktiv)
+Spalten: `user_id`, `total_xp`, `level`, `energy`, `trophies`, `updated_at`
 
-```sql
-ALTER TABLE users ADD COLUMN energy int DEFAULT 5;
-ALTER TABLE users ADD COLUMN energy_last_reset timestamptz;
-ALTER TABLE users ADD COLUMN trophies int DEFAULT 0;
-ALTER TABLE users ADD COLUMN total_xp int DEFAULT 0;
-ALTER TABLE users ADD COLUMN level int DEFAULT 1;
-```
-
-### subject_xp (neu)
-
+### subject_xp (aktiv)
 ```sql
 CREATE TABLE subject_xp (
   user_id uuid REFERENCES auth.users,
   subject_id text,
   xp int DEFAULT 0,
   level int DEFAULT 1,
+  correct_answers int DEFAULT 0,
   PRIMARY KEY (user_id, subject_id)
 );
 ```
 
+### daily_quiz_log (aktiv)
+Speichert pro Tagesquiz-Versuch: `score`, `xp_earned`, `trophies_earned`,
+`success` (ob Leben > 0). Verhindert Mehrfach-Spielen pro UTC-Tag.
+
 ## 7. Fragen-Pool & Versuche
 
-- **Fragen-Auswahl per JS:** Pro Quiz werden zufällig **6–10 Fragen**
-  geladen. Die Anzahl ist konfigurierbar (**Standard: 8**).
-- **Datenquelle (Phase 1):** Die Fragen kommen vorerst weiterhin aus den
-  vorhandenen JSON-Dateien (`<thema>_fragen.json` / `<thema>_antworten.json`);
-  die Zufallsauswahl passiert clientseitig in JS.
-- **Datenquelle (Phase 2):** Später zentraler Fragen-Pool in der Datenbank
-  (zufällige Auswahl per DB-Query) — siehe [DATENMIGRATION.md](DATENMIGRATION.md).
-- Normal: 3 Versuche pro Thema/Tag
-- Lernphase (vor Test): 10 Versuche pro Thema/Tag
-- Übungsmodus: keine EP, keine Trophäen
+> Aktualisiert Juni 2026 — war vorher: Beschreibt einen geplanten Zustand.
+> Tatsächlicher Stand von Themen-Quiz und Tagesquiz abweichend.
+
+### Tatsächlicher Stand (Juni 2026)
+
+**Themen-Quiz (Aufgaben):**
+- Lädt ALLE Fragen aus `<thema>_fragen.json` (keine Zufallsauswahl)
+- Lösungen werden erst beim Klick „Auswerten" aus `_antworten.json` geladen
+- Anzahl Versuche pro Tag: nicht limitiert (kein Counter implementiert)
+
+**Tagesquiz:**
+- Lädt aktuell `src/assets/data/tagesquiz_test.json` (5 statische Testfragen)
+- Fragen werden vor Anzeige zufällig gemischt (`.sort(() => Math.random() - 0.5)`)
+- 1 Versuch pro Tag (via `daily_quiz_log`)
+- Endgültige Quelle: Supabase `content_items`-Tabelle (DATA_MIGRATION_V2.md)
+
+### Geplant (noch nicht implementiert)
+- Zufällige Auswahl von 6–10 Fragen aus einem größeren Pool (Standard: 8)
+- Versuchs-Limits pro Thema/Tag (3 normal, 10 Lernphase)
+- Übungsmodus (keine EP, keine Trophäen)
 
 ---
 
@@ -147,7 +179,7 @@ auf dem **Dashboard** angezeigt — auf der Fach-Seite gilt dagegen das **Fach-L
 ## 9. Seitenstruktur & Navigation
 
 ### Topbar (alle Seiten)
-Die Topbar erhält neben „Abmelden" drei neue Anzeigen:
+Die Topbar enthält:
 - 🥤 Energydrinks (verbleibende Anzahl heute)
 - ⭐ Globales Level (Zahl)
 - 🏆 Trophäen (Zahl) — **verlinkt auf `/tauschen.html`**
@@ -160,17 +192,9 @@ Einfache, klare Tausch-Seite:
   (deaktiviert, solange weniger als 50 Trophäen vorhanden sind)
 
 ### Footer (alle Seiten)
-- **Fix unten** (sticky footer), **größer** als bisher
+- **Fix unten** (sticky footer)
 - „© LernHub 2026"
 - Links zu `/impressum.html` und `/datenschutz.html` (DSGVO)
-
-### Neue Seiten: `impressum.html` + `datenschutz.html`
-Vorerst mit **Platzhalter-Inhalt** (echter rechtlicher Text folgt später — siehe
-§11 Offene Entscheidungen).
-
-> Hinweis: `tauschen.html`, `impressum.html` und `datenschutz.html` sind hier nur
-> **spezifiziert**. Die eigentliche Umsetzung (HTML/JS/CSS) erfolgt in der
-> Implementierungsphase — diese Datei bleibt reine Dokumentation.
 
 ---
 
@@ -202,16 +226,22 @@ FACH-SEITE (pos.html, dbi.html etc.)
     ├── Fortschritts-Badge (%)
     └── Abgehakt wenn abgeschlossen
 
-QUIZ (fach.html)
-├── Lebensbalken oben (dynamisch)
+THEMEN-SEITE / AUFGABEN (fach.html)
+├── Kein Lebensbalken
+├── Alle Fragen auf einmal (Formular)
+├── „Auswerten"-Button lädt Lösungen nach
+└── Ergebnis: X von N richtig — +<ep> EP, +<trophien> 🏆
+
+TAGESQUIZ (tagesquiz.html)
+├── Lebensbalken oben (dynamisch, nur hier)
 ├── Frage-für-Frage Flow
 └── Ergebnis-Screen am Ende:
     ├── Score %
-    ├── EP verdient
+    ├── EP verdient (inkl. Bonus)
     ├── Trophäen verdient
     └── Bonus angezeigt
 
-TAUSCHEN-SEITE (neu)
+TAUSCHEN-SEITE (tauschen.html)
 ├── Trophäen: X 🏆
 ├── Energydrinks: X 🥤
 └── Tauschen-Button (50 🏆 = 1 🥤)
@@ -226,15 +256,16 @@ FOOTER (alle Seiten, fix unten)
 
 ## 11. Offene Entscheidungen ⚠️
 
-Diese Punkte müssen **vor der Implementierung** geklärt werden:
+1. ✅ **Gelöst — Energie = 0:** Tagesquiz-Start ist bei Energie = 0 komplett
+   gesperrt (`#screen-gesperrt` in `tagesquiz.html`). Kein Warndialog.
 
-1. **⚠️ Offen — Energie = 0:** Wird der Quiz-Start komplett **gesperrt** (mit
-   Hinweis „Keine Energie mehr"), oder nur eine **Warnung** gezeigt und das Quiz
-   bleibt spielbar (dann ggf. ohne EP/Belohnung)?
-2. **⚠️ Offen — Täglicher Energie-Reset:** Fix **um Mitternacht** (Serverzeit),
-   oder **rollierend 24 h** nach dem letzten Reset?
-3. **⚠️ Offen — Impressum/Datenschutz-Inhalt:** vorerst **Platzhalter**, echter
-   rechtlicher Inhalt (DSGVO) später?
+2. **⚠️ Offen — Energie-Regeneration:** Derzeit kein automatisches Aufladen
+   implementiert. Geplant: +1 Energydrink pro Tag, Deckel bei 5. Modus
+   (Mitternacht UTC vs. rollierend 24 h) noch nicht entschieden. Wird als
+   Supabase-Funktion oder scheduled Edge-Function umgesetzt.
+
+3. **⚠️ Offen — Impressum/Datenschutz-Inhalt:** vorerst Platzhalter, echter
+   rechtlicher Inhalt (DSGVO) folgt später.
 
 ---
-*Erstellt: Juni 2026 | Status: Spezifikation finalisiert, noch nicht implementiert*
+*Erstellt: Juni 2026 | Aktualisiert: Juni 2026 | Status: Teilweise implementiert*

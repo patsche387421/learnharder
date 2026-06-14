@@ -58,12 +58,10 @@ Legende: 🔴 Kritisch · 🟡 Wichtig · 🟢 Nice-to-have · ✅ Erledigt
 - **Status:** Offen
 
 ### BUG-009: LEVEL_SYSTEM.md §4 veraltet (EP-Unterschied fehlt)
-- **Symptom:** `LEVEL_SYSTEM.md §4` dokumentiert „5 EP pro richtige Antwort"
-  überall. Seit `9ed1548` gilt aber: Themen-Quiz = 1 EP, Tagesquiz = 5 EP
-  + Completion-Bonus. Die Spec spiegelt das nicht wider.
-- **Aktion:** `LEVEL_SYSTEM.md §4` um die Unterscheidung Themen-Quiz vs.
-  Tagesquiz ergänzen.
-- **Status:** Offen — Doku-Update kommt in separatem Konzept-Commit.
+- **Status:** ✅ Erledigt — LEVEL_SYSTEM.md vollständig aktualisiert
+  (dieser Commit: docs: LEVEL_SYSTEM aktualisiert, Reiter-Konzept angelegt).
+  §1 Energie, §2 Lebensbalken, §4 EP, §7 Fragen-Pool, §11 Offene
+  Entscheidungen — alle auf tatsächlichen Code-Stand gebracht.
 
 ---
 
@@ -84,6 +82,15 @@ Legende: 🔴 Kritisch · 🟡 Wichtig · 🟢 Nice-to-have · ✅ Erledigt
 - **Kein Code-Bug** — bewusste Test-Daten-Limitation.
 - **Lösung:** Nach Daten-Migration V2 liefert Supabase einen echten Fragen-Pool;
   Test-JSON ist dann obsolet.
+
+### Energie-Auto-Regen: geplant, nicht implementiert
+- **LEVEL_SYSTEM.md §1** plant: +1 Energydrink pro Tag, Deckel bei 5.
+- **Code:** `verbrauchEnergie()` (`level.js`) dekrementiert nur. Kein
+  automatisches Aufladen in JS implementiert. Kein Supabase-Trigger/Edge-Function
+  erkennbar.
+- **Auswirkung:** Energie kann aktuell nur durch Trophäen-Tausch steigen.
+  Ohne Implementierung haben User nach einigen Tagesquiz-Versuchen dauerhaft 0.
+- **Lösung ausstehend:** Supabase Edge-Function oder DB-Trigger (LEVEL_SYSTEM.md §11.2).
 
 ### BUG-001-Workaround: Tagesquiz läuft nur mit Test-JSON
 - Tagesquiz funktioniert aktuell über `tagesquiz_test.json` (5 statische Fragen).

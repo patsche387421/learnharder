@@ -377,4 +377,39 @@ Verifikation (`user_stats`, `subject_xp`) noch ausstehend.
 
 ---
 
+## Session 2026-06-14 (sechste Runde) — LEVEL_SYSTEM aktualisiert, Reiter-Konzept angelegt
+
+**Geänderte Dateien:** `docs/LEVEL_SYSTEM.md`, `docs/BUGS.md`, `agent/SESSION_REPORT.md`
+**Neue Dateien:** `docs/KONZEPT_REITER.md`
+
+### LEVEL_SYSTEM.md — Abschnitte überarbeitet
+Alle Änderungen mit `> Aktualisiert Juni 2026 — war vorher: ...` markiert.
+
+- **§1 Energie:** Klargestellt dass Energie NUR beim Tagesquiz verbraucht wird;
+  Energie-Auto-Regen als noch-nicht-implementiert gekennzeichnet; Offene
+  Entscheidung §11.1 (Energie=0 → gesperrt) als gelöst markiert.
+- **§2 Lebensbalken:** Explizit auf Tagesquiz eingeschränkt; Themen-Quiz
+  (Aufgaben) hat keinen Lebensbalken und übergibt immer lebenProzent=100.
+- **§4 EP:** Zweistufiges System dokumentiert: Themen-Quiz = 1 EP/Antwort
+  ohne Bonus; Tagesquiz = 5 EP/Antwort + Completion-Bonus.
+- **§6 DB:** Von „geplant" auf „aktiv" geändert (Migration 003 existiert).
+- **§7 Fragen-Pool:** Tatsächlichen Stand dokumentiert (Themen-Quiz: alle
+  Fragen, kein Limit; Tagesquiz: tagesquiz_test.json mit 5 Fragen).
+- **§10 UI-Übersicht:** Aufgaben-Tab (fach.html) ergänzt mit korrektem Verhalten.
+- **§11:** Offene Entscheidung 1 (Energie=0) als ✅ gelöst markiert.
+
+### KONZEPT_REITER.md — neu angelegt
+Planungsdokument für die Reiter-Struktur (Theorie / Aufgaben / Modi) in
+`fach.html`. 4 Phasen, Abhängigkeit auf DATA_MIGRATION_V2.md, Mobile-Verhalten.
+
+### BUGS.md
+- **BUG-009** → ✅ erledigt (LEVEL_SYSTEM.md aktualisiert)
+- **Neue Diskrepanz** in ⚠️: Energie-Auto-Regen geplant aber nicht implementiert
+
+### Neue Code-Diskrepanz gefunden beim Lesen
+LEVEL_SYSTEM.md §1 plant „+1 Energydrink pro Tag, Deckel bei 5" — nicht im
+JS implementiert. Nur manuell über Trophäen-Tausch oder Direkt-DB-Eingriff.
+
+---
+
 *Bericht auto-generiert am Ende der Session. Alle Pfade relativ zum Projekt-Root.*
