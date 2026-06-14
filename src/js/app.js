@@ -188,10 +188,49 @@ const App = (() => {
       document.getElementById("fach-title").textContent = theorie.fach || themaId;
       renderTheorie(theorie);
       renderQuiz(fragen, dataBasis + "_antworten.json");
+      initReiterNav();
     } catch (err) {
       document.getElementById("theorie").innerHTML =
         '<p class="error">' + err.message + "</p>";
     }
+  }
+
+  // Verdrahtet die Tab-Navigation auf fach.html (Theorie / Aufgaben / Modi).
+  // URL-Hash spiegelt den aktiven Tab wider, damit Tabs verlinkbar sind
+  // und Browser-Zurück/Vor den Tab synchron mitführt.
+  function initReiterNav() {
+    // Mapping zwischen URL-Hash und internem data-tab-Wert.
+    // data-tab bleibt aus Kompatibilitätsgründen "quiz", der Hash spiegelt
+    // das sichtbare Label "Aufgaben" wider.
+    const hashZuTab = { theorie: "theorie", aufgaben: "quiz", modi: "modi" };
+    const tabZuHash = { theorie: "theorie", quiz: "aufgaben", modi: "modi" };
+
+    function aktiviereTab(tabName) {
+      document.querySelectorAll(".tab").forEach((b) => {
+        b.classList.toggle("active", b.dataset.tab === tabName);
+      });
+      document.getElementById("tab-theorie").hidden = tabName !== "theorie";
+      document.getElementById("tab-quiz").hidden    = tabName !== "quiz";
+      document.getElementById("tab-modi").hidden    = tabName !== "modi";
+    }
+
+    // Aktiven Tab aus URL-Hash beim Seitenload bestimmen (Default: theorie)
+    const startTab = hashZuTab[location.hash.slice(1)] || "theorie";
+    aktiviereTab(startTab);
+
+    document.querySelectorAll(".tab").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const tab = btn.dataset.tab;
+        aktiviereTab(tab);
+        history.replaceState(null, "", "#" + tabZuHash[tab]);
+      });
+    });
+
+    // Browser-Zurück/Vor: Tab anhand Hash synchronisieren
+    window.addEventListener("hashchange", () => {
+      const tab = hashZuTab[location.hash.slice(1)] || "theorie";
+      aktiviereTab(tab);
+    });
   }
 
   function renderTheorie(theorie) {
