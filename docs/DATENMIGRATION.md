@@ -1,3 +1,6 @@
+> ⚠️ Überholt seit Juni 2026 – siehe DATA_MIGRATION_V2.md
+> Dieses Dokument bleibt als Historie erhalten.
+
 # DATENMIGRATION.md — Fragen von JSON nach Supabase
 
 Strategie, wie die Quiz-Fragen von statischen JSON-Dateien in eine zentrale

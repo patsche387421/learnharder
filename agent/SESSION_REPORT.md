@@ -212,4 +212,34 @@ NSVS, TINF, WIR, MEDT, SYP zeigen „Noch keine Themen verfügbar". Mit `docs/KI
 
 ---
 
+## Session 2026-06-14 — Projektstruktur für Daten-Migration vorbereiten
+
+Reine Struktur-/Dokumentations-Vorbereitung. **Kein Feature-Code, keine
+Frontend-Änderungen.** Branch: `dev`.
+
+### Neu erstellte Dateien
+- `docs/design/README.md` — Design-System-Übersicht + Workflow + Regel für Claude Code
+- `docs/design/INBOX/README.md` — Inbox-Beschreibung + Sortier-Regeln
+- `docs/design/components/.gitkeep` — hält leeren Ordner in Git
+- `docs/design/pages/.gitkeep` — hält leeren Ordner in Git
+- `docs/DATA_MIGRATION_V2.md` — neuer Migrations-Plan V2 (subjects/topics/content_items
+  mit jsonb) inkl. Abschnitte Sicherheit (RLS), Datenbank-Hygiene, Architektur-Entscheidung
+- `src/assets/data/tagesquiz_test.json` — Test-JSON mit 5 Tagesquiz-Fragen (tq-001…tq-005)
+
+### Geänderte Dateien
+- `docs/CLAUDE.md` — drei Abschnitte angehängt (Design-System, Design-Inbox-Workflow,
+  Bug-Tracking); bestehender Inhalt unverändert
+- `docs/DATENMIGRATION.md` — Hinweis-Block am Anfang („Überholt seit Juni 2026 –
+  siehe DATA_MIGRATION_V2.md"); restlicher Inhalt unverändert
+- `agent/SESSION_REPORT.md` — dieser Eintrag
+
+### Bereits vorhanden, NICHT verändert
+- `docs/BUGS.md` — von Patsche manuell angelegt/committed (2 KB), bewusst unangetastet
+
+### Offener Folge-Schritt
+- TODO (separater, isolierter Prompt): `tagesquiz.html` anpassen, um
+  `src/assets/data/tagesquiz_test.json` zu laden.
+
+---
+
 *Bericht auto-generiert am Ende der Session. Alle Pfade relativ zum Projekt-Root.*

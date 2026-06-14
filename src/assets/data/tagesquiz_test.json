@@ -1,0 +1,60 @@
+{
+  "title": "Tagesquiz – Testfragen",
+  "questions": [
+    {
+      "id": "tq-001",
+      "fach": "POS",
+      "thema": "Grundlagen",
+      "frage": "Was ist eine Variable?",
+      "antworten": [
+        "Ein fester, unveränderlicher Wert",
+        "Ein benannter Speicherplatz für Werte",
+        "Eine Schleifenkonstruktion",
+        "Eine Funktion"
+      ],
+      "richtig": 1
+    },
+    {
+      "id": "tq-002",
+      "fach": "DBI",
+      "thema": "SQL Basics",
+      "frage": "Welcher Befehl liest Daten aus einer Tabelle?",
+      "antworten": ["INSERT", "UPDATE", "SELECT", "DELETE"],
+      "richtig": 2
+    },
+    {
+      "id": "tq-003",
+      "fach": "POS",
+      "thema": "Datentypen",
+      "frage": "Welcher Datentyp speichert Ganzzahlen?",
+      "antworten": ["string", "int", "float", "bool"],
+      "richtig": 1
+    },
+    {
+      "id": "tq-004",
+      "fach": "DBI",
+      "thema": "Normalisierung",
+      "frage": "Wofür steht 1NF?",
+      "antworten": [
+        "Erste Normalform",
+        "Erste Nicht-Form",
+        "Einfache Normalform",
+        "Erste Null-Form"
+      ],
+      "richtig": 0
+    },
+    {
+      "id": "tq-005",
+      "fach": "POS",
+      "thema": "Schleifen",
+      "frage": "Welche Schleife läuft mindestens einmal?",
+      "antworten": [
+        "for-Schleife",
+        "while-Schleife",
+        "do-while-Schleife",
+        "foreach-Schleife"
+      ],
+      "richtig": 2
+    }
+  ]
+}
