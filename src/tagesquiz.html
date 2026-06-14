@@ -190,7 +190,7 @@
       } else {
         quizZustand.leben -= quizZustand.schadensProFehler;
         aktualisiereLebenBar();
-        feedback.textContent = "❌ Falsch — richtig wäre: „" + frage.optionen[frage.richtigeAntwort] + """;
+        feedback.textContent = "❌ Falsch — richtig wäre: \"" + frage.optionen[frage.richtigeAntwort] + "\"";
         feedback.className   = "feedback-box feedback-falsch";
       }
       feedback.hidden = false;
