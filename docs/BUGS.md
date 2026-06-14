@@ -45,7 +45,9 @@ Legende: 🔴 Kritisch · 🟡 Wichtig · 🟢 Nice-to-have · ✅ Erledigt
 ### BUG-007: DESIGN_GUIDELINES.md veraltet
 - **Symptom:** Beschreibt altes --color-* CSS-System
 - **Aktion:** Auf aktuelles tokens.css System aktualisieren
-- **Status:** Offen
+- **Status:** Offen — Design-Dateien in docs/design/ 
+  verwenden bereits korrekte Token-Namen aus tokens.css.
+  Nur DESIGN_GUIDELINES.md selbst ist noch veraltet.
 
 ### BUG-008: Formatierung der Lerninhalte suboptimal
 - **Symptom:** Keine einheitlichen Render-Regeln für Code, Listen,
