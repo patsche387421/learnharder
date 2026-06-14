@@ -667,6 +667,10 @@ button {
   border-bottom-color: var(--primary);
 }
 
+.tab:hover {
+  color: var(--text);
+}
+
 /* ---------- Theorie ---------- */
 .theorie-block {
   background: var(--surface);
