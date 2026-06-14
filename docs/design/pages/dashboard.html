@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="true" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    body { margin:0; background:#0D0D1A; font-family:'Space Grotesk',sans-serif; color:#F1F5F9; }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
+    @keyframes xp-bar { from{width:0} to{width:68%} }
+    @keyframes pulse-ring { 0%{box-shadow:0 0 0 0 #7C3AED55} 70%{box-shadow:0 0 0 10px transparent} 100%{box-shadow:0 0 0 0 transparent} }
+    @keyframes shimmer { 0%{background-position:-400px 0} 100%{background-position:400px 0} }
+    @keyframes streak-fire { 0%,100%{filter:drop-shadow(0 0 4px #F9731688)} 50%{filter:drop-shadow(0 0 10px #DC262688)} }
+  </style>
+</helmet>
+
+<div style="min-height:100vh; background:#0D0D1A; padding:48px 40px; display:flex; flex-direction:column; gap:80px; max-width:1200px; margin:0 auto;">
+
+  <!-- Page title -->
+  <div style="display:flex; flex-direction:column; gap:8px; border-bottom:1px solid #1E1E3F; padding-bottom:32px;">
+    <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:3px; color:#4B5563; text-transform:uppercase;">learnharder.app</div>
+    <h1 style="margin:0; font-size:32px; font-weight:800; color:#F1F5F9; letter-spacing:-1px;">Dashboard</h1>
+    <p style="margin:0; font-size:15px; color:#64748B;">3 Varianten — Sidebar · Compact · Hero-Focus</p>
+  </div>
+
+
+  <!-- ================================================================ -->
+  <!-- VARIANTE A — Sidebar Layout (Desktop)                             -->
+  <!-- ================================================================ -->
+  <section style="display:flex; flex-direction:column; gap:20px;">
+    <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:3px; color:#7C3AED; text-transform:uppercase;">Variante A — Desktop Sidebar Layout</div>
+
+    <div style="display:flex; gap:0; border-radius:20px; overflow:hidden; border:1px solid #1E1E3F; min-height:720px;">
+
+      <!-- Sidebar -->
+      <div style="width:220px; background:#131320; flex-shrink:0; display:flex; flex-direction:column; padding:20px 0; border-right:1px solid #1E1E3F;">
+        <div style="padding:0 16px 20px; display:flex; align-items:center; gap:10px;">
+          <svg width="28" height="28" viewBox="0 0 72 72"><defs><linearGradient id="da-logo" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#7C3AED"/><stop offset="100%" stop-color="#4F46E5"/></linearGradient><linearGradient id="da-bolt" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FDE68A"/><stop offset="100%" stop-color="#F59E0B"/></linearGradient></defs><circle cx="36" cy="36" r="34" fill="url(#da-logo)"/><polygon points="38,18 30,37 37,37 34,54 44,33 37,33" fill="url(#da-bolt)"/></svg>
+          <span style="font-size:15px; font-weight:800; color:#F1F5F9;">learn<span style="background:linear-gradient(135deg,#A855F7,#818CF8); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">harder</span></span>
+        </div>
+
+        <!-- User -->
+        <div style="margin:0 12px 20px; background:#1A1A2E; border-radius:12px; padding:12px; border:1px solid #1E1E3F;">
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+            <div style="width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,#A855F7,#4F46E5); display:flex; align-items:center; justify-content:center; flex-shrink:0; border:2px solid #7C3AED55;">
+              <span style="font-size:13px; font-weight:700; color:white;">MK</span>
+            </div>
+            <div>
+              <div style="font-size:13px; font-weight:700; color:#F1F5F9;">Max Koller</div>
+              <div style="font-size:11px; color:#64748B;">Level 4 · HTL 3. Jahr</div>
+            </div>
+          </div>
+          <!-- XP bar -->
+          <div style="margin-bottom:4px; display:flex; justify-content:space-between;">
+            <span style="font-size:10px; color:#64748B; font-family:'Space Mono',monospace;">XP</span>
+            <span style="font-size:10px; color:#A855F7; font-family:'Space Mono',monospace;">1240/1800</span>
+          </div>
+          <div style="height:6px; background:#1E1E3F; border-radius:3px; overflow:hidden;">
+            <div style="height:100%; width:68%; background:linear-gradient(90deg,#7C3AED,#A855F7); border-radius:3px;"></div>
+          </div>
+        </div>
+
+        <!-- Nav -->
+        <div style="display:flex; flex-direction:column; gap:2px; padding:0 8px; flex:1;">
+          <div style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; background:#7C3AED22; cursor:pointer;">
+            <svg width="16" height="16" viewBox="0 0 28 28"><rect x="3" y="3" width="10" height="10" rx="2.5" fill="#A855F7"/><rect x="15" y="3" width="10" height="10" rx="2.5" fill="#A855F7" opacity="0.5"/><rect x="3" y="15" width="10" height="10" rx="2.5" fill="#A855F7" opacity="0.5"/><rect x="15" y="15" width="10" height="10" rx="2.5" fill="#A855F7" opacity="0.3"/></svg>
+            <span style="font-size:13px; font-weight:600; color:#A855F7;">Dashboard</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; cursor:pointer;">
+            <svg width="16" height="16" viewBox="0 0 28 28"><rect x="3" y="4" width="22" height="16" rx="3" fill="none" stroke="#4B5563" stroke-width="2"/><line x1="14" y1="20" x2="14" y2="25" stroke="#4B5563" stroke-width="2"/><line x1="8" y1="25" x2="20" y2="25" stroke="#4B5563" stroke-width="2"/></svg>
+            <span style="font-size:13px; font-weight:500; color:#4B5563;">Fächer</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; cursor:pointer;">
+            <svg width="16" height="16" viewBox="0 0 28 28"><polygon points="14,3 6,14 11,14 8.5,24 20,11.5 14.5,11.5" fill="#4B5563"/></svg>
+            <span style="font-size:13px; font-weight:500; color:#4B5563;">Quiz</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; cursor:pointer;">
+            <svg width="16" height="16" viewBox="0 0 28 28"><circle cx="9" cy="9" r="4" fill="none" stroke="#4B5563" stroke-width="2"/><path d="M2 23 Q2 16 9 16 Q16 16 16 23" fill="none" stroke="#4B5563" stroke-width="2"/><circle cx="20" cy="8" r="3.5" fill="none" stroke="#4B5563" stroke-width="1.5"/><path d="M14 22 Q14 15 20 15 Q26 15 26 22" fill="none" stroke="#4B5563" stroke-width="1.5"/></svg>
+            <span style="font-size:13px; font-weight:500; color:#4B5563;">Team</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; cursor:pointer;">
+            <svg width="16" height="16" viewBox="0 0 28 28"><rect x="3" y="17" width="5" height="8" rx="2" fill="#4B5563"/><rect x="11" y="11" width="5" height="14" rx="2" fill="#4B5563" opacity="0.7"/><rect x="19" y="5" width="5" height="20" rx="2" fill="#4B5563" opacity="0.5"/></svg>
+            <span style="font-size:13px; font-weight:500; color:#4B5563;">Rangliste</span>
+          </div>
+
+          <div style="height:1px; background:#1E1E3F; margin:8px 4px;"></div>
+
+          <div style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; cursor:pointer;">
+            <svg width="16" height="16" viewBox="0 0 28 28"><circle cx="14" cy="10" r="5" fill="none" stroke="#4B5563" stroke-width="2"/><path d="M4 24 Q4 16 14 16 Q24 16 24 24" fill="none" stroke="#4B5563" stroke-width="2"/></svg>
+            <span style="font-size:13px; font-weight:500; color:#4B5563;">Profil</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; cursor:pointer;">
+            <svg width="16" height="16" viewBox="0 0 28 28"><circle cx="14" cy="14" r="4" fill="none" stroke="#4B5563" stroke-width="2"/><path d="M14 2 L14 6 M14 22 L14 26 M2 14 L6 14 M22 14 L26 14 M5.5 5.5 L8.5 8.5 M19.5 19.5 L22.5 22.5 M22.5 5.5 L19.5 8.5 M8.5 19.5 L5.5 22.5" stroke="#4B5563" stroke-width="2" stroke-linecap="round"/></svg>
+            <span style="font-size:13px; font-weight:500; color:#4B5563;">Einstellungen</span>
+          </div>
+        </div>
+
+        <!-- Bottom stats -->
+        <div style="margin:0 12px; border-top:1px solid #1E1E3F; padding-top:12px; display:flex; justify-content:space-around;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:2px;">
+            <svg width="18" height="18" viewBox="0 0 28 28" style="animation: streak-fire 2s ease-in-out infinite;"><defs><linearGradient id="fire-da" x1="0.5" y1="0" x2="0.5" y2="1"><stop offset="0%" stop-color="#FDE68A"/><stop offset="100%" stop-color="#DC2626"/></linearGradient></defs><path d="M14 3 Q16 8 20 10 Q22 5 20 2 Q26 7 25 14 Q24 20 14 24 Q4 20 3 14 Q2 7 8 2 Q6 5 8 10 Q12 8 14 3Z" fill="url(#fire-da)"/></svg>
+            <span style="font-size:12px; font-weight:700; color:#FDE68A;">7</span>
+            <span style="font-size:9px; color:#4B5563; font-family:'Space Mono',monospace;">STREAK</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:2px;">
+            <svg width="16" height="18" viewBox="0 0 96 96"><defs><linearGradient id="en-da" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#0891B2"/><stop offset="100%" stop-color="#06B6D4"/></linearGradient></defs><rect x="30" y="22" width="36" height="62" rx="6" fill="url(#en-da)"/><polygon points="52,36 44,48 49,48 46,60 56,46 51,46" fill="#FDE68A"/></svg>
+            <span style="font-size:12px; font-weight:700; color:#06B6D4;">5</span>
+            <span style="font-size:9px; color:#4B5563; font-family:'Space Mono',monospace;">ENERGY</span>
+          </div>
+        </div>
+        <div style="height:12px;"></div>
+      </div>
+
+      <!-- Main content -->
+      <div style="flex:1; background:#0D0D1A; padding:28px; display:flex; flex-direction:column; gap:24px; overflow:hidden;">
+
+        <!-- Greeting + CTA -->
+        <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+          <div>
+            <div style="font-size:24px; font-weight:800; color:#F1F5F9; letter-spacing:-0.5px;">Guten Morgen, Max 👋</div>
+            <div style="font-size:14px; color:#64748B; margin-top:4px;">Du hast heute noch nicht gelernt. Starte jetzt!</div>
+          </div>
+          <button style="font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:700; padding:12px 24px; background:linear-gradient(135deg,#7C3AED,#4F46E5); color:white; border:none; border-radius:12px; cursor:pointer; box-shadow:0 0 24px #7C3AED55; white-space:nowrap; animation: pulse-ring 3s infinite;">Quiz starten ⚡</button>
+        </div>
+
+        <!-- Stats row -->
+        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px;">
+          <div style="background:#131320; border:1px solid #1E1E3F; border-radius:14px; padding:16px; display:flex; flex-direction:column; gap:6px;">
+            <div style="font-family:'Space Mono',monospace; font-size:9px; color:#4B5563; letter-spacing:1px; text-transform:uppercase;">Gesamt-XP</div>
+            <div style="font-size:26px; font-weight:800; color:#F59E0B; letter-spacing:-1px;">1,240</div>
+            <div style="font-size:11px; color:#10B981;">↑ +150 heute</div>
+          </div>
+          <div style="background:#131320; border:1px solid #1E1E3F; border-radius:14px; padding:16px; display:flex; flex-direction:column; gap:6px;">
+            <div style="font-family:'Space Mono',monospace; font-size:9px; color:#4B5563; letter-spacing:1px; text-transform:uppercase;">Level</div>
+            <div style="font-size:26px; font-weight:800; color:#A855F7; letter-spacing:-1px;">4</div>
+            <div style="font-size:11px; color:#64748B;">560 XP bis Lv5</div>
+          </div>
+          <div style="background:#131320; border:1px solid #1E1E3F; border-radius:14px; padding:16px; display:flex; flex-direction:column; gap:6px;">
+            <div style="font-family:'Space Mono',monospace; font-size:9px; color:#4B5563; letter-spacing:1px; text-transform:uppercase;">Streak</div>
+            <div style="font-size:26px; font-weight:800; color:#F97316; letter-spacing:-1px;">7 🔥</div>
+            <div style="font-size:11px; color:#64748B;">Persönlicher Rekord</div>
+          </div>
+          <div style="background:#131320; border:1px solid #1E1E3F; border-radius:14px; padding:16px; display:flex; flex-direction:column; gap:6px;">
+            <div style="font-family:'Space Mono',monospace; font-size:9px; color:#4B5563; letter-spacing:1px; text-transform:uppercase;">Quizze</div>
+            <div style="font-size:26px; font-weight:800; color:#06B6D4; letter-spacing:-1px;">42</div>
+            <div style="font-size:11px; color:#64748B;">gesamt absolviert</div>
+          </div>
+        </div>
+
+        <!-- Middle row: Fächer + Aktivität -->
+        <div style="display:grid; grid-template-columns:1fr 280px; gap:16px; flex:1;">
+
+          <!-- Fächer grid -->
+          <div style="background:#131320; border:1px solid #1E1E3F; border-radius:16px; padding:20px; display:flex; flex-direction:column; gap:16px;">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <div style="font-size:16px; font-weight:700; color:#F1F5F9;">Meine Fächer</div>
+              <span style="font-family:'Space Mono',monospace; font-size:10px; color:#7C3AED; cursor:pointer;">alle →</span>
+            </div>
+            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px;">
+
+              <!-- POS -->
+              <div style="background:#0D0D1A; border:1px solid #7C3AED33; border-radius:12px; padding:14px; display:flex; flex-direction:column; gap:8px; cursor:pointer;">
+                <div style="display:flex; align-items:center; justify-content:space-between;">
+                  <div style="width:32px; height:32px; border-radius:8px; background:#7C3AED22; display:flex; align-items:center; justify-content:center;">
+                    <svg width="16" height="16" viewBox="0 0 28 28"><rect x="2" y="4" width="24" height="16" rx="3" fill="#1A0533"/><rect x="2" y="4" width="24" height="5" rx="3" fill="#2D1B69"/><circle cx="6" cy="6.5" r="1.5" fill="#EF4444"/><circle cx="10" cy="6.5" r="1.5" fill="#F59E0B"/><circle cx="14" cy="6.5" r="1.5" fill="#10B981"/><text x="5" y="17" font-family="'Space Mono'" font-size="5" fill="#A855F7">&gt;_</text></svg>
+                  </div>
+                  <span style="font-family:'Space Mono',monospace; font-size:9px; font-weight:700; color:#7C3AED; background:#7C3AED22; padding:2px 7px; border-radius:999px;">POS</span>
+                </div>
+                <div style="font-size:12px; font-weight:600; color:#F1F5F9;">Programmierung</div>
+                <div style="height:4px; background:#1E1E3F; border-radius:2px;"><div style="height:100%; width:72%; background:#7C3AED; border-radius:2px;"></div></div>
+                <div style="font-size:10px; color:#64748B;">72% · 24 Quizze</div>
+              </div>
+
+              <!-- DBI -->
+              <div style="background:#0D0D1A; border:1px solid #0EA5E933; border-radius:12px; padding:14px; display:flex; flex-direction:column; gap:8px; cursor:pointer;">
+                <div style="display:flex; align-items:center; justify-content:space-between;">
+                  <div style="width:32px; height:32px; border-radius:8px; background:#0EA5E922; display:flex; align-items:center; justify-content:center;">
+                    <svg width="16" height="16" viewBox="0 0 28 28"><ellipse cx="14" cy="7" rx="9" ry="3" fill="#BAE6FD"/><rect x="5" y="7" width="18" height="6" fill="#0EA5E9"/><ellipse cx="14" cy="13" rx="9" ry="3" fill="#7DD3FC"/><rect x="5" y="13" width="18" height="6" fill="#0284C7"/><ellipse cx="14" cy="19" rx="9" ry="3" fill="#38BDF8"/></svg>
+                  </div>
+                  <span style="font-family:'Space Mono',monospace; font-size:9px; font-weight:700; color:#0EA5E9; background:#0EA5E922; padding:2px 7px; border-radius:999px;">DBI</span>
+                </div>
+                <div style="font-size:12px; font-weight:600; color:#F1F5F9;">Datenbanken</div>
+                <div style="height:4px; background:#1E1E3F; border-radius:2px;"><div style="height:100%; width:55%; background:#0EA5E9; border-radius:2px;"></div></div>
+                <div style="font-size:10px; color:#64748B;">55% · 18 Quizze</div>
+              </div>
+
+              <!-- NSVS -->
+              <div style="background:#0D0D1A; border:1px solid #10B98133; border-radius:12px; padding:14px; display:flex; flex-direction:column; gap:8px; cursor:pointer;">
+                <div style="display:flex; align-items:center; justify-content:space-between;">
+                  <div style="width:32px; height:32px; border-radius:8px; background:#10B98122; display:flex; align-items:center; justify-content:center;">
+                    <svg width="16" height="16" viewBox="0 0 28 28"><circle cx="14" cy="10" r="4" fill="#34D399"/><circle cx="5" cy="21" r="3" fill="#10B981"/><circle cx="23" cy="21" r="3" fill="#10B981"/><line x1="14" y1="10" x2="5" y2="21" stroke="#34D399" stroke-width="1.5"/><line x1="14" y1="10" x2="23" y2="21" stroke="#34D399" stroke-width="1.5"/></svg>
+                  </div>
+                  <span style="font-family:'Space Mono',monospace; font-size:9px; font-weight:700; color:#10B981; background:#10B98122; padding:2px 7px; border-radius:999px;">NSVS</span>
+                </div>
+                <div style="font-size:12px; font-weight:600; color:#F1F5F9;">Netzwerke</div>
+                <div style="height:4px; background:#1E1E3F; border-radius:2px;"><div style="height:100%; width:38%; background:#10B981; border-radius:2px;"></div></div>
+                <div style="font-size:10px; color:#64748B;">38% · 8 Quizze</div>
+              </div>
+
+              <!-- MEDT -->
+              <div style="background:#0D0D1A; border:1px solid #F9731633; border-radius:12px; padding:14px; display:flex; flex-direction:column; gap:8px; cursor:pointer;">
+                <div style="display:flex; align-items:center; justify-content:space-between;">
+                  <div style="width:32px; height:32px; border-radius:8px; background:#F9731622; display:flex; align-items:center; justify-content:center;">
+                    <svg width="16" height="16" viewBox="0 0 28 28"><rect x="3" y="8" width="18" height="14" rx="3" fill="#1C0D04"/><polygon points="11,12 11,18 18,15" fill="#FDBA74"/><circle cx="23" cy="15" r="4" fill="#1C0D04" stroke="#F97316" stroke-width="1.5"/></svg>
+                  </div>
+                  <span style="font-family:'Space Mono',monospace; font-size:9px; font-weight:700; color:#F97316; background:#F9731622; padding:2px 7px; border-radius:999px;">MEDT</span>
+                </div>
+                <div style="font-size:12px; font-weight:600; color:#F1F5F9;">Medientechnik</div>
+                <div style="height:4px; background:#1E1E3F; border-radius:2px;"><div style="height:100%; width:61%; background:#F97316; border-radius:2px;"></div></div>
+                <div style="font-size:10px; color:#64748B;">61% · 15 Quizze</div>
+              </div>
+
+              <!-- SYP -->
+              <div style="background:#0D0D1A; border:1px solid #EF444433; border-radius:12px; padding:14px; display:flex; flex-direction:column; gap:8px; cursor:pointer;">
+                <div style="display:flex; align-items:center; justify-content:space-between;">
+                  <div style="width:32px; height:32px; border-radius:8px; background:#EF444422; display:flex; align-items:center; justify-content:center;">
+                    <svg width="16" height="16" viewBox="0 0 28 28"><circle cx="14" cy="14" r="5" fill="#DC2626" stroke="#FCA5A5" stroke-width="1.5"/><circle cx="14" cy="14" r="2" fill="#1C0505"/><rect x="12.5" y="2" width="3" height="5" rx="1.5" fill="#F87171"/><rect x="12.5" y="21" width="3" height="5" rx="1.5" fill="#F87171"/><rect x="2" y="12.5" width="5" height="3" rx="1.5" fill="#F87171"/><rect x="21" y="12.5" width="5" height="3" rx="1.5" fill="#F87171"/></svg>
+                  </div>
+                  <span style="font-family:'Space Mono',monospace; font-size:9px; font-weight:700; color:#EF4444; background:#EF444422; padding:2px 7px; border-radius:999px;">SYP</span>
+                </div>
+                <div style="font-size:12px; font-weight:600; color:#F1F5F9;">Systemplanung</div>
+                <div style="height:4px; background:#1E1E3F; border-radius:2px;"><div style="height:100%; width:29%; background:#EF4444; border-radius:2px;"></div></div>
+                <div style="font-size:10px; color:#64748B;">29% · 5 Quizze</div>
+              </div>
+
+              <!-- WIR -->
+              <div style="background:#0D0D1A; border:1px solid #F59E0B33; border-radius:12px; padding:14px; display:flex; flex-direction:column; gap:8px; cursor:pointer;">
+                <div style="display:flex; align-items:center; justify-content:space-between;">
+                  <div style="width:32px; height:32px; border-radius:8px; background:#F59E0B22; display:flex; align-items:center; justify-content:center;">
+                    <svg width="16" height="16" viewBox="0 0 28 28"><rect x="3" y="18" width="4" height="8" rx="2" fill="#FDE68A"/><rect x="10" y="12" width="4" height="14" rx="2" fill="#FBBF24"/><rect x="17" y="6" width="4" height="20" rx="2" fill="#F59E0B"/><polyline points="5,16 12,10 19,4" fill="none" stroke="#FEF3C7" stroke-width="1.5" stroke-linecap="round"/></svg>
+                  </div>
+                  <span style="font-family:'Space Mono',monospace; font-size:9px; font-weight:700; color:#F59E0B; background:#F59E0B22; padding:2px 7px; border-radius:999px;">WIR</span>
+                </div>
+                <div style="font-size:12px; font-weight:600; color:#F1F5F9;">Wirtschaft</div>
+                <div style="height:4px; background:#1E1E3F; border-radius:2px;"><div style="height:100%; width:84%; background:#F59E0B; border-radius:2px;"></div></div>
+                <div style="font-size:10px; color:#64748B;">84% · 31 Quizze</div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Right column: Recent + Streak -->
+          <div style="display:flex; flex-direction:column; gap:14px;">
+
+            <!-- Streak card -->
+            <div style="background:#131320; border:1px solid #F9731633; border-radius:16px; padding:20px; display:flex; flex-direction:column; gap:12px;">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <svg width="28" height="28" viewBox="0 0 28 28" style="animation:streak-fire 2s ease-in-out infinite;"><defs><linearGradient id="fire-card" x1="0.5" y1="0" x2="0.5" y2="1"><stop offset="0%" stop-color="#FDE68A"/><stop offset="100%" stop-color="#DC2626"/></linearGradient></defs><path d="M14 3 Q16 8 20 10 Q22 5 20 2 Q26 7 25 14 Q24 20 14 24 Q4 20 3 14 Q2 7 8 2 Q6 5 8 10 Q12 8 14 3Z" fill="url(#fire-card)"/><circle cx="14" cy="17" r="3" fill="#FDE68A" opacity="0.5"/></svg>
+                <div>
+                  <div style="font-size:22px; font-weight:800; color:#FDE68A;">7 Tage</div>
+                  <div style="font-size:11px; color:#64748B;">Streak aktiv</div>
+                </div>
+              </div>
+              <!-- Week dots -->
+              <div style="display:flex; gap:6px; justify-content:space-between;">
+                <div style="display:flex; flex-direction:column; align-items:center; gap:4px;"><div style="width:28px; height:28px; border-radius:50%; background:#F9731622; border:2px solid #F97316; display:flex; align-items:center; justify-content:center;"><svg width="12" height="12" viewBox="0 0 28 28"><path d="M14 3 Q16 8 20 10 Q22 5 20 2 Q26 7 25 14 Q24 20 14 24 Q4 20 3 14 Q2 7 8 2 Q6 5 8 10 Q12 8 14 3Z" fill="#F97316"/></svg></div><span style="font-size:8px; color:#64748B; font-family:'Space Mono',monospace;">Mo</span></div>
+                <div style="display:flex; flex-direction:column; align-items:center; gap:4px;"><div style="width:28px; height:28px; border-radius:50%; background:#F9731622; border:2px solid #F97316; display:flex; align-items:center; justify-content:center;"><svg width="12" height="12" viewBox="0 0 28 28"><path d="M14 3 Q16 8 20 10 Q22 5 20 2 Q26 7 25 14 Q24 20 14 24 Q4 20 3 14 Q2 7 8 2 Q6 5 8 10 Q12 8 14 3Z" fill="#F97316"/></svg></div><span style="font-size:8px; color:#64748B; font-family:'Space Mono',monospace;">Di</span></div>
+                <div style="display:flex; flex-direction:column; align-items:center; gap:4px;"><div style="width:28px; height:28px; border-radius:50%; background:#F9731622; border:2px solid #F97316; display:flex; align-items:center; justify-content:center;"><svg width="12" height="12" viewBox="0 0 28 28"><path d="M14 3 Q16 8 20 10 Q22 5 20 2 Q26 7 25 14 Q24 20 14 24 Q4 20 3 14 Q2 7 8 2 Q6 5 8 10 Q12 8 14 3Z" fill="#F97316"/></svg></div><span style="font-size:8px; color:#64748B; font-family:'Space Mono',monospace;">Mi</span></div>
+                <div style="display:flex; flex-direction:column; align-items:center; gap:4px;"><div style="width:28px; height:28px; border-radius:50%; background:#F9731622; border:2px solid #F97316; display:flex; align-items:center; justify-content:center;"><svg width="12" height="12" viewBox="0 0 28 28"><path d="M14 3 Q16 8 20 10 Q22 5 20 2 Q26 7 25 14 Q24 20 14 24 Q4 20 3 14 Q2 7 8 2 Q6 5 8 10 Q12 8 14 3Z" fill="#F97316"/></svg></div><span style="font-size:8px; color:#64748B; font-family:'Space Mono',monospace;">Do</span></div>
+                <div style="display:flex; flex-direction:column; align-items:center; gap:4px;"><div style="width:28px; height:28px; border-radius:50%; background:#F9731622; border:2px solid #F97316; display:flex; align-items:center; justify-content:center;"><svg width="12" height="12" viewBox="0 0 28 28"><path d="M14 3 Q16 8 20 10 Q22 5 20 2 Q26 7 25 14 Q24 20 14 24 Q4 20 3 14 Q2 7 8 2 Q6 5 8 10 Q12 8 14 3Z" fill="#F97316"/></svg></div><span style="font-size:8px; color:#64748B; font-family:'Space Mono',monospace;">Fr</span></div>
+                <div style="display:flex; flex-direction:column; align-items:center; gap:4px;"><div style="width:28px; height:28px; border-radius:50%; background:#F9731622; border:2px solid #F97316; display:flex; align-items:center; justify-content:center;"><svg width="12" height="12" viewBox="0 0 28 28"><path d="M14 3 Q16 8 20 10 Q22 5 20 2 Q26 7 25 14 Q24 20 14 24 Q4 20 3 14 Q2 7 8 2 Q6 5 8 10 Q12 8 14 3Z" fill="#F97316"/></svg></div><span style="font-size:8px; color:#64748B; font-family:'Space Mono',monospace;">Sa</span></div>
+                <div style="display:flex; flex-direction:column; align-items:center; gap:4px;"><div style="width:28px; height:28px; border-radius:50%; background:#F9731622; border:2px solid #F97316; display:flex; align-items:center; justify-content:center;"><svg width="12" height="12" viewBox="0 0 28 28"><path d="M14 3 Q16 8 20 10 Q22 5 20 2 Q26 7 25 14 Q24 20 14 24 Q4 20 3 14 Q2 7 8 2 Q6 5 8 10 Q12 8 14 3Z" fill="#F97316"/></svg></div><span style="font-size:8px; color:#64748B; font-family:'Space Mono',monospace;">So</span></div>
+              </div>
+            </div>
+
+            <!-- Recent activity -->
+            <div style="background:#131320; border:1px solid #1E1E3F; border-radius:16px; padding:20px; display:flex; flex-direction:column; gap:12px; flex:1;">
+              <div style="font-size:14px; font-weight:700; color:#F1F5F9;">Letzte Aktivität</div>
+              <div style="display:flex; flex-direction:column; gap:10px;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                  <div style="width:8px; height:8px; border-radius:50%; background:#10B981; flex-shrink:0;"></div>
+                  <div style="flex:1;"><div style="font-size:12px; font-weight:600; color:#F1F5F9;">POS Quiz</div><div style="font-size:10px; color:#64748B;">vor 2 Stunden · +80 XP</div></div>
+                  <span style="font-size:10px; color:#10B981; font-weight:600;">92%</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:10px;">
+                  <div style="width:8px; height:8px; border-radius:50%; background:#F59E0B; flex-shrink:0;"></div>
+                  <div style="flex:1;"><div style="font-size:12px; font-weight:600; color:#F1F5F9;">WIR Karteikarten</div><div style="font-size:10px; color:#64748B;">gestern · +50 XP</div></div>
+                  <span style="font-size:10px; color:#F59E0B; font-weight:600;">20 Ktn.</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:10px;">
+                  <div style="width:8px; height:8px; border-radius:50%; background:#EF4444; flex-shrink:0;"></div>
+                  <div style="flex:1;"><div style="font-size:12px; font-weight:600; color:#F1F5F9;">NSVS Quiz</div><div style="font-size:10px; color:#64748B;">vor 2 Tagen · +30 XP</div></div>
+                  <span style="font-size:10px; color:#EF4444; font-weight:600;">58%</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ================================================================ -->
+  <!-- VARIANTE B — Mobile Dashboard                                     -->
+  <!-- ================================================================ -->
+  <section style="display:flex; flex-direction:column; gap:20px;">
+    <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:3px; color:#7C3AED; text-transform:uppercase;">Variante B — Mobile Dashboard</div>
+
+    <div style="display:flex; gap:32px; flex-wrap:wrap; align-items:flex-start;">
+
+      <!-- Phone frame -->
+      <div style="width:375px; background:#0D0D1A; border:2px solid #1E1E3F; border-radius:36px; overflow:hidden; display:flex; flex-direction:column;">
+
+        <!-- Status bar -->
+        <div style="background:#0D0D1A; padding:14px 24px 8px; display:flex; align-items:center; justify-content:space-between;">
+          <span style="font-family:'Space Mono',monospace; font-size:11px; font-weight:700; color:#F1F5F9;">09:41</span>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <svg width="16" height="12" viewBox="0 0 16 12"><rect x="0" y="4" width="3" height="8" rx="1" fill="#F1F5F9"/><rect x="4.5" y="2.5" width="3" height="9.5" rx="1" fill="#F1F5F9"/><rect x="9" y="0.5" width="3" height="11.5" rx="1" fill="#F1F5F9"/><rect x="13.5" y="0" width="2" height="12" rx="1" fill="#F1F5F9" opacity="0.3"/></svg>
+            <svg width="14" height="12" viewBox="0 0 14 12"><rect x="1" y="2" width="10" height="8" rx="2" fill="none" stroke="#F1F5F9" stroke-width="1.2"/><rect x="2" y="3.5" width="7" height="5" rx="1" fill="#10B981"/><rect x="11.5" y="4" width="1.5" height="4" rx="0.75" fill="#F1F5F9" opacity="0.5"/></svg>
+          </div>
+        </div>
+
+        <!-- App content -->
+        <div style="flex:1; display:flex; flex-direction:column; gap:0; padding:0 20px 20px; overflow:hidden;">
+
+          <!-- Header -->
+          <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 0 16px;">
+            <div>
+              <div style="font-size:11px; color:#64748B; font-family:'Space Mono',monospace; letter-spacing:1px;">SAMSTAG, 14. JUNI</div>
+              <div style="font-size:20px; font-weight:800; color:#F1F5F9; letter-spacing:-0.5px; margin-top:2px;">Hey Max 👋</div>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <!-- Streak -->
+              <div style="display:flex; align-items:center; gap:4px; background:#1C0D04; border:1px solid #F9731633; border-radius:999px; padding:5px 10px;">
+                <svg width="12" height="12" viewBox="0 0 28 28"><defs><linearGradient id="fm" x1="0.5" y1="0" x2="0.5" y2="1"><stop offset="0%" stop-color="#FDE68A"/><stop offset="100%" stop-color="#DC2626"/></linearGradient></defs><path d="M14 3 Q16 8 20 10 Q22 5 20 2 Q26 7 25 14 Q24 20 14 24 Q4 20 3 14 Q2 7 8 2 Q6 5 8 10 Q12 8 14 3Z" fill="url(#fm)"/></svg>
+                <span style="font-size:12px; font-weight:700; color:#FDE68A;">7</span>
+              </div>
+              <div style="width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,#A855F7,#4F46E5); display:flex; align-items:center; justify-content:center; border:2px solid #7C3AED55;">
+                <span style="font-size:13px; font-weight:700; color:white;">MK</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- XP Progress card -->
+          <div style="background:linear-gradient(135deg,#1A0533,#131320); border:1px solid #7C3AED44; border-radius:16px; padding:16px; margin-bottom:16px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+              <div>
+                <div style="font-size:13px; color:#94A3B8;">Gesamt-XP</div>
+                <div style="font-size:28px; font-weight:800; color:#F59E0B; letter-spacing:-1px;">1,240</div>
+              </div>
+              <svg width="48" height="48" viewBox="0 0 96 96" style="animation:float 3s ease-in-out infinite;"><defs><linearGradient id="lv-m" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#7C3AED"/><stop offset="100%" stop-color="#4F46E5"/></linearGradient></defs><path d="M48 6 L82 26 L82 66 L48 86 L14 66 L14 26 Z" fill="url(#lv-m)"/><path d="M48 6 L82 26 L82 66 L48 86 L14 66 L14 26 Z" fill="none" stroke="#A855F7" stroke-width="2"/><text x="48" y="40" font-family="'Space Mono'" font-weight="700" font-size="10" fill="#C4B5FD" text-anchor="middle" letter-spacing="2">LVL</text><text x="48" y="64" font-family="'Space Grotesk'" font-weight="800" font-size="28" fill="white" text-anchor="middle">4</text></svg>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+              <span style="font-size:11px; color:#64748B;">Level 4</span>
+              <span style="font-size:11px; color:#A855F7; font-family:'Space Mono',monospace;">1240 / 1800 XP</span>
+            </div>
+            <div style="height:8px; background:#1E1E3F; border-radius:4px; overflow:hidden;">
+              <div style="height:100%; width:68%; background:linear-gradient(90deg,#7C3AED,#A855F7); border-radius:4px;"></div>
+            </div>
+            <div style="font-size:11px; color:#64748B; margin-top:6px;">560 XP bis Level 5</div>
+          </div>
+
+          <!-- Quick action -->
+          <button style="font-family:'Space Grotesk',sans-serif; font-size:16px; font-weight:700; padding:16px; background:linear-gradient(135deg,#7C3AED,#4F46E5); color:white; border:none; border-radius:14px; cursor:pointer; box-shadow:0 0 24px #7C3AED44; display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:16px; width:100%; box-sizing:border-box;">
+            <svg width="20" height="20" viewBox="0 0 28 28"><polygon points="14,3 6,14 11,14 8.5,24 20,11.5 14.5,11.5" fill="#FDE68A"/></svg>
+            Quiz starten
+          </button>
+
+          <!-- Subject row -->
+          <div style="font-size:14px; font-weight:700; color:#F1F5F9; margin-bottom:10px;">Fächer</div>
+          <div style="display:flex; gap:10px; overflow-x:auto; padding-bottom:4px;">
+            <div style="flex-shrink:0; width:100px; background:#131320; border:1px solid #7C3AED33; border-radius:12px; padding:12px; display:flex; flex-direction:column; gap:6px;">
+              <span style="font-family:'Space Mono',monospace; font-size:10px; font-weight:700; color:#7C3AED;">POS</span>
+              <div style="font-size:11px; color:#94A3B8;">Programmierung</div>
+              <div style="height:3px; background:#1E1E3F; border-radius:2px;"><div style="height:100%; width:72%; background:#7C3AED; border-radius:2px;"></div></div>
+              <div style="font-size:10px; color:#64748B;">72%</div>
+            </div>
+            <div style="flex-shrink:0; width:100px; background:#131320; border:1px solid #0EA5E933; border-radius:12px; padding:12px; display:flex; flex-direction:column; gap:6px;">
+              <span style="font-family:'Space Mono',monospace; font-size:10px; font-weight:700; color:#0EA5E9;">DBI</span>
+              <div style="font-size:11px; color:#94A3B8;">Datenbanken</div>
+              <div style="height:3px; background:#1E1E3F; border-radius:2px;"><div style="height:100%; width:55%; background:#0EA5E9; border-radius:2px;"></div></div>
+              <div style="font-size:10px; color:#64748B;">55%</div>
+            </div>
+            <div style="flex-shrink:0; width:100px; background:#131320; border:1px solid #10B98133; border-radius:12px; padding:12px; display:flex; flex-direction:column; gap:6px;">
+              <span style="font-family:'Space Mono',monospace; font-size:10px; font-weight:700; color:#10B981;">NSVS</span>
+              <div style="font-size:11px; color:#94A3B8;">Netzwerke</div>
+              <div style="height:3px; background:#1E1E3F; border-radius:2px;"><div style="height:100%; width:38%; background:#10B981; border-radius:2px;"></div></div>
+              <div style="font-size:10px; color:#64748B;">38%</div>
+            </div>
+            <div style="flex-shrink:0; width:100px; background:#131320; border:1px solid #F9731633; border-radius:12px; padding:12px; display:flex; flex-direction:column; gap:6px;">
+              <span style="font-family:'Space Mono',monospace; font-size:10px; font-weight:700; color:#F97316;">MEDT</span>
+              <div style="font-size:11px; color:#94A3B8;">Medientechnik</div>
+              <div style="height:3px; background:#1E1E3F; border-radius:2px;"><div style="height:100%; width:61%; background:#F97316; border-radius:2px;"></div></div>
+              <div style="font-size:10px; color:#64748B;">61%</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom nav -->
+        <div style="background:#131320; border-top:1px solid #1E1E3F; display:flex; justify-content:space-around; padding:10px 0 24px;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:3px;"><div style="width:40px; height:40px; border-radius:12px; background:#7C3AED22; display:flex; align-items:center; justify-content:center;"><svg width="18" height="18" viewBox="0 0 28 28"><rect x="3" y="3" width="10" height="10" rx="2.5" fill="#A855F7"/><rect x="15" y="3" width="10" height="10" rx="2.5" fill="#A855F7" opacity="0.5"/><rect x="3" y="15" width="10" height="10" rx="2.5" fill="#A855F7" opacity="0.5"/><rect x="15" y="15" width="10" height="10" rx="2.5" fill="#A855F7" opacity="0.3"/></svg></div><span style="font-size:9px; font-weight:700; color:#A855F7;">Home</span></div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:3px;"><div style="width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center;"><svg width="18" height="18" viewBox="0 0 28 28"><rect x="3" y="4" width="22" height="16" rx="3" fill="none" stroke="#4B5563" stroke-width="2"/></svg></div><span style="font-size:9px; font-weight:500; color:#4B5563;">Fächer</span></div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:3px; margin-top:-10px;"><div style="width:52px; height:52px; border-radius:16px; background:linear-gradient(135deg,#7C3AED,#4F46E5); display:flex; align-items:center; justify-content:center; box-shadow:0 0 20px #7C3AED55;"><svg width="22" height="22" viewBox="0 0 28 28"><polygon points="14,3 6,14 11,14 8.5,24 20,11.5 14.5,11.5" fill="#FDE68A"/></svg></div><span style="font-size:9px; font-weight:700; color:#A855F7;">Quiz</span></div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:3px;"><div style="width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center;"><svg width="18" height="18" viewBox="0 0 28 28"><circle cx="9" cy="9" r="4" fill="none" stroke="#4B5563" stroke-width="2"/><path d="M2 23 Q2 16 9 16 Q16 16 16 23" fill="none" stroke="#4B5563" stroke-width="2"/></svg></div><span style="font-size:9px; font-weight:500; color:#4B5563;">Team</span></div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:3px;"><div style="width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg,#2D1B69,#131320); border:2px solid #1E1E3F; display:flex; align-items:center; justify-content:center;"><span style="font-size:12px; font-weight:700; color:#64748B;">MK</span></div><span style="font-size:9px; font-weight:500; color:#4B5563;">Profil</span></div>
+        </div>
+      </div>
+
+
+      <!-- VARIANTE C annotation -->
+      <div style="display:flex; flex-direction:column; gap:20px; flex:1; min-width:300px;">
+        <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:3px; color:#7C3AED; text-transform:uppercase; margin-bottom:-4px;">Variante C — Hero Focus (Desktop)</div>
+
+        <!-- Hero dashboard card -->
+        <div style="background:#131320; border:1px solid #1E1E3F; border-radius:20px; overflow:hidden;">
+
+          <!-- Hero banner -->
+          <div style="background:linear-gradient(135deg,#1A0533 0%,#0D0D2E 60%,#0D1A1A 100%); padding:32px 28px; position:relative; overflow:hidden; min-height:180px;">
+            <!-- Dot grid -->
+            <div style="position:absolute; inset:0; background-image:radial-gradient(circle,#7C3AED18 1px, transparent 1px); background-size:24px 24px;"></div>
+            <!-- Glow orb -->
+            <div style="position:absolute; right:-40px; top:-40px; width:200px; height:200px; border-radius:50%; background:radial-gradient(circle,#7C3AED33,transparent 70%);"></div>
+
+            <div style="position:relative; display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:16px;">
+              <div>
+                <div style="font-family:'Space Mono',monospace; font-size:10px; color:#7C3AED; letter-spacing:2px; margin-bottom:6px; text-transform:uppercase;">Willkommen zurück</div>
+                <div style="font-size:28px; font-weight:800; color:#F1F5F9; letter-spacing:-1px; line-height:1.1;">Max Koller</div>
+                <div style="font-size:14px; color:#94A3B8; margin-top:4px;">Level 4 · HTL Rennweg</div>
+                <div style="display:flex; gap:8px; margin-top:16px; flex-wrap:wrap;">
+                  <div style="display:flex; align-items:center; gap:5px; background:#FFFFFF10; border:1px solid #FFFFFF20; border-radius:8px; padding:6px 12px;">
+                    <svg width="14" height="14" viewBox="0 0 28 28"><defs><linearGradient id="fhero" x1="0.5" y1="0" x2="0.5" y2="1"><stop offset="0%" stop-color="#FDE68A"/><stop offset="100%" stop-color="#DC2626"/></linearGradient></defs><path d="M14 3 Q16 8 20 10 Q22 5 20 2 Q26 7 25 14 Q24 20 14 24 Q4 20 3 14 Q2 7 8 2 Q6 5 8 10 Q12 8 14 3Z" fill="url(#fhero)"/></svg>
+                    <span style="font-size:13px; font-weight:700; color:#FDE68A;">7 Tage</span>
+                  </div>
+                  <div style="display:flex; align-items:center; gap:5px; background:#FFFFFF10; border:1px solid #FFFFFF20; border-radius:8px; padding:6px 12px;">
+                    <svg width="12" height="14" viewBox="0 0 96 96"><defs><linearGradient id="ehero" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#0891B2"/><stop offset="100%" stop-color="#06B6D4"/></linearGradient></defs><rect x="30" y="22" width="36" height="62" rx="6" fill="url(#ehero)"/><polygon points="52,36 44,48 49,48 46,60 56,46 51,46" fill="#FDE68A"/></svg>
+                    <span style="font-size:13px; font-weight:700; color:#06B6D4;">5 Energy</span>
+                  </div>
+                  <div style="display:flex; align-items:center; gap:5px; background:#FFFFFF10; border:1px solid #FFFFFF20; border-radius:8px; padding:6px 12px;">
+                    <svg width="14" height="14" viewBox="0 0 28 28"><defs><linearGradient id="xhero" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#FDE68A"/><stop offset="100%" stop-color="#F59E0B"/></linearGradient></defs><polygon points="14,2 17,10 26,10 19,16 22,24 14,19 6,24 9,16 2,10 11,10" fill="url(#xhero)"/></svg>
+                    <span style="font-size:13px; font-weight:700; color:#F59E0B;">1,240 XP</span>
+                  </div>
+                </div>
+              </div>
+              <button style="font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:700; padding:14px 28px; background:white; color:#7C3AED; border:none; border-radius:12px; cursor:pointer; white-space:nowrap; box-shadow:0 4px 24px #00000044;">⚡ Quiz starten</button>
+            </div>
+          </div>
+
+          <!-- Stats strip -->
+          <div style="display:grid; grid-template-columns:repeat(4,1fr); border-bottom:1px solid #1E1E3F;">
+            <div style="padding:16px 20px; border-right:1px solid #1E1E3F; display:flex; flex-direction:column; gap:4px;">
+              <div style="font-family:'Space Mono',monospace; font-size:9px; color:#4B5563; letter-spacing:1px; text-transform:uppercase;">Gesamt-XP</div>
+              <div style="font-size:22px; font-weight:800; color:#F59E0B;">1,240</div>
+              <div style="font-size:10px; color:#10B981;">↑ +150 heute</div>
+            </div>
+            <div style="padding:16px 20px; border-right:1px solid #1E1E3F; display:flex; flex-direction:column; gap:4px;">
+              <div style="font-family:'Space Mono',monospace; font-size:9px; color:#4B5563; letter-spacing:1px; text-transform:uppercase;">Level</div>
+              <div style="font-size:22px; font-weight:800; color:#A855F7;">4</div>
+              <div style="font-size:10px; color:#64748B;">560 XP bis Lv5</div>
+            </div>
+            <div style="padding:16px 20px; border-right:1px solid #1E1E3F; display:flex; flex-direction:column; gap:4px;">
+              <div style="font-family:'Space Mono',monospace; font-size:9px; color:#4B5563; letter-spacing:1px; text-transform:uppercase;">Streak</div>
+              <div style="font-size:22px; font-weight:800; color:#F97316;">7 🔥</div>
+              <div style="font-size:10px; color:#64748B;">Rekord!</div>
+            </div>
+            <div style="padding:16px 20px; display:flex; flex-direction:column; gap:4px;">
+              <div style="font-family:'Space Mono',monospace; font-size:9px; color:#4B5563; letter-spacing:1px; text-transform:uppercase;">Quizze</div>
+              <div style="font-size:22px; font-weight:800; color:#06B6D4;">42</div>
+              <div style="font-size:10px; color:#64748B;">gesamt</div>
+            </div>
+          </div>
+
+          <!-- Subject grid -->
+          <div style="padding:20px; display:flex; flex-direction:column; gap:14px;">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <div style="font-size:15px; font-weight:700; color:#F1F5F9;">Fächer-Übersicht</div>
+              <span style="font-family:'Space Mono',monospace; font-size:10px; color:#7C3AED; cursor:pointer;">alle →</span>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+
+              <div style="display:flex; align-items:center; gap:12px;">
+                <span style="font-family:'Space Mono',monospace; font-size:11px; font-weight:700; color:#7C3AED; width:40px;">POS</span>
+                <div style="flex:1; height:8px; background:#1E1E3F; border-radius:4px; overflow:hidden;"><div style="height:100%; width:72%; background:linear-gradient(90deg,#7C3AED,#A855F7); border-radius:4px;"></div></div>
+                <span style="font-size:12px; color:#64748B; width:32px; text-align:right;">72%</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:12px;">
+                <span style="font-family:'Space Mono',monospace; font-size:11px; font-weight:700; color:#0EA5E9; width:40px;">DBI</span>
+                <div style="flex:1; height:8px; background:#1E1E3F; border-radius:4px; overflow:hidden;"><div style="height:100%; width:55%; background:linear-gradient(90deg,#0284C7,#38BDF8); border-radius:4px;"></div></div>
+                <span style="font-size:12px; color:#64748B; width:32px; text-align:right;">55%</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:12px;">
+                <span style="font-family:'Space Mono',monospace; font-size:11px; font-weight:700; color:#10B981; width:40px;">NSVS</span>
+                <div style="flex:1; height:8px; background:#1E1E3F; border-radius:4px; overflow:hidden;"><div style="height:100%; width:38%; background:linear-gradient(90deg,#059669,#34D399); border-radius:4px;"></div></div>
+                <span style="font-size:12px; color:#64748B; width:32px; text-align:right;">38%</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:12px;">
+                <span style="font-family:'Space Mono',monospace; font-size:11px; font-weight:700; color:#F97316; width:40px;">MEDT</span>
+                <div style="flex:1; height:8px; background:#1E1E3F; border-radius:4px; overflow:hidden;"><div style="height:100%; width:61%; background:linear-gradient(90deg,#EA580C,#FB923C); border-radius:4px;"></div></div>
+                <span style="font-size:12px; color:#64748B; width:32px; text-align:right;">61%</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:12px;">
+                <span style="font-family:'Space Mono',monospace; font-size:11px; font-weight:700; color:#EF4444; width:40px;">SYP</span>
+                <div style="flex:1; height:8px; background:#1E1E3F; border-radius:4px; overflow:hidden;"><div style="height:100%; width:29%; background:linear-gradient(90deg,#DC2626,#F87171); border-radius:4px;"></div></div>
+                <span style="font-size:12px; color:#64748B; width:32px; text-align:right;">29%</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:12px;">
+                <span style="font-family:'Space Mono',monospace; font-size:11px; font-weight:700; color:#F59E0B; width:40px;">WIR</span>
+                <div style="flex:1; height:8px; background:#1E1E3F; border-radius:4px; overflow:hidden;"><div style="height:100%; width:84%; background:linear-gradient(90deg,#D97706,#FDE68A); border-radius:4px;"></div></div>
+                <span style="font-size:12px; color:#64748B; width:32px; text-align:right;">84%</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:12px;">
+                <span style="font-family:'Space Mono',monospace; font-size:11px; font-weight:700; color:#EC4899; width:40px;">TINF</span>
+                <div style="flex:1; height:8px; background:#1E1E3F; border-radius:4px; overflow:hidden;"><div style="height:100%; width:47%; background:linear-gradient(90deg,#BE185D,#F472B6); border-radius:4px;"></div></div>
+                <span style="font-size:12px; color:#64748B; width:32px; text-align:right;">47%</span>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+</x-dc>
+</body>
+</html>

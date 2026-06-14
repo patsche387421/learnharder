@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="true" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    body { margin:0; background:#0D0D1A; font-family:'Space Grotesk',sans-serif; color:#F1F5F9; }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+    @keyframes spin-slow { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+    @keyframes glow-pulse { 0%,100%{filter:drop-shadow(0 0 8px currentColor)} 50%{filter:drop-shadow(0 0 20px currentColor)} }
+    @keyframes bounce { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
+  </style>
+</helmet>
+
+<div style="min-height:100vh; background:#0D0D1A; padding:48px 32px; max-width:1100px; margin:0 auto; display:flex; flex-direction:column; gap:64px;">
+
+  <!-- Page title -->
+  <div style="display:flex; flex-direction:column; gap:8px; border-bottom:1px solid #1E1E3F; padding-bottom:32px;">
+    <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:3px; color:#4B5563; text-transform:uppercase;">learnharder.app</div>
+    <h1 style="margin:0; font-size:32px; font-weight:800; color:#F1F5F9; letter-spacing:-1px;">Custom Icons</h1>
+    <p style="margin:0; font-size:15px; color:#64748B;">Cartoon / Illustrated — Trophäen · Energy · Level · Fächer · UI-Icons</p>
+  </div>
+
+  <!-- ===== GAMIFICATION ICONS ===== -->
+  <section style="display:flex; flex-direction:column; gap:28px;">
+    <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:3px; color:#7C3AED; text-transform:uppercase;">01 — Gamification Icons</div>
+
+    <div style="display:flex; gap:32px; flex-wrap:wrap;">
+
+      <!-- TROPHY - Gold -->
+      <div style="display:flex; flex-direction:column; align-items:center; gap:16px;">
+        <div style="font-family:'Space Mono',monospace; font-size:9px; color:#64748B; letter-spacing:1px; text-transform:uppercase;">Trophäe — Gold</div>
+        <div style="animation: float 3s ease-in-out infinite; color:#F59E0B;">
+          <svg width="96" height="96" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="trophyGold" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#FDE68A"/>
+                <stop offset="50%" stop-color="#F59E0B"/>
+                <stop offset="100%" stop-color="#D97706"/>
+              </linearGradient>
+              <linearGradient id="trophyShine" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#FEFCE8" stop-opacity="0.9"/>
+                <stop offset="100%" stop-color="#F59E0B" stop-opacity="0"/>
+              </linearGradient>
+              <filter id="goldGlow">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+            <!-- Glow base -->
+            <ellipse cx="48" cy="88" rx="20" ry="4" fill="#F59E0B" opacity="0.3"/>
+            <!-- Base stand -->
+            <rect x="36" y="76" width="24" height="6" rx="3" fill="url(#trophyGold)"/>
+            <rect x="32" y="80" width="32" height="5" rx="2.5" fill="#D97706"/>
+            <!-- Stem -->
+            <rect x="43" y="68" width="10" height="10" fill="#F59E0B"/>
+            <!-- Cup body -->
+            <path d="M28 20 Q24 52 38 64 Q43 68 48 68 Q53 68 58 64 Q72 52 68 20 Z" fill="url(#trophyGold)"/>
+            <!-- Shine on cup -->
+            <path d="M35 22 Q31 44 38 58 Q34 42 36 24 Z" fill="url(#trophyShine)" opacity="0.8"/>
+            <!-- Handles left -->
+            <path d="M28 28 Q16 30 17 42 Q18 50 28 50" fill="none" stroke="#F59E0B" stroke-width="5" stroke-linecap="round"/>
+            <path d="M28 28 Q16 30 17 42 Q18 50 28 50" fill="none" stroke="#FDE68A" stroke-width="2" stroke-linecap="round"/>
+            <!-- Handles right -->
+            <path d="M68 28 Q80 30 79 42 Q78 50 68 50" fill="none" stroke="#F59E0B" stroke-width="5" stroke-linecap="round"/>
+            <path d="M68 28 Q80 30 79 42 Q78 50 68 50" fill="none" stroke="#FDE68A" stroke-width="2" stroke-linecap="round"/>
+            <!-- Star on cup -->
+            <polygon points="48,32 50,38 56,38 51,42 53,48 48,44 43,48 45,42 40,38 46,38" fill="#FFFBEB" opacity="0.95"/>
+            <!-- Top rim -->
+            <ellipse cx="48" cy="20" rx="20" ry="4" fill="#FDE68A"/>
+            <ellipse cx="48" cy="20" rx="20" ry="4" fill="none" stroke="#D97706" stroke-width="1"/>
+          </svg>
+        </div>
+        <!-- Sizes -->
+        <div style="display:flex; gap:12px; align-items:flex-end;">
+          <svg width="24" height="24" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FDE68A"/><stop offset="100%" stop-color="#D97706"/></linearGradient></defs><path d="M28 20 Q24 52 38 64 Q43 68 48 68 Q53 68 58 64 Q72 52 68 20 Z" fill="url(#tg1)"/><path d="M28 28 Q16 30 17 42 Q18 50 28 50" fill="none" stroke="#F59E0B" stroke-width="5" stroke-linecap="round"/><path d="M68 28 Q80 30 79 42 Q78 50 68 50" fill="none" stroke="#F59E0B" stroke-width="5" stroke-linecap="round"/><rect x="36" y="76" width="24" height="6" rx="3" fill="url(#tg1)"/><rect x="32" y="80" width="32" height="5" rx="2.5" fill="#D97706"/><rect x="43" y="68" width="10" height="10" fill="#F59E0B"/><ellipse cx="48" cy="20" rx="20" ry="4" fill="#FDE68A"/></svg>
+          <svg width="40" height="40" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FDE68A"/><stop offset="100%" stop-color="#D97706"/></linearGradient></defs><path d="M28 20 Q24 52 38 64 Q43 68 48 68 Q53 68 58 64 Q72 52 68 20 Z" fill="url(#tg2)"/><path d="M28 28 Q16 30 17 42 Q18 50 28 50" fill="none" stroke="#F59E0B" stroke-width="5" stroke-linecap="round"/><path d="M68 28 Q80 30 79 42 Q78 50 68 50" fill="none" stroke="#F59E0B" stroke-width="5" stroke-linecap="round"/><rect x="36" y="76" width="24" height="6" rx="3" fill="url(#tg2)"/><rect x="32" y="80" width="32" height="5" rx="2.5" fill="#D97706"/><rect x="43" y="68" width="10" height="10" fill="#F59E0B"/><ellipse cx="48" cy="20" rx="20" ry="4" fill="#FDE68A"/></svg>
+          <svg width="64" height="64" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tg3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FDE68A"/><stop offset="100%" stop-color="#D97706"/></linearGradient></defs><path d="M28 20 Q24 52 38 64 Q43 68 48 68 Q53 68 58 64 Q72 52 68 20 Z" fill="url(#tg3)"/><path d="M28 28 Q16 30 17 42 Q18 50 28 50" fill="none" stroke="#F59E0B" stroke-width="5" stroke-linecap="round"/><path d="M68 28 Q80 30 79 42 Q78 50 68 50" fill="none" stroke="#F59E0B" stroke-width="5" stroke-linecap="round"/><rect x="36" y="76" width="24" height="6" rx="3" fill="url(#tg3)"/><rect x="32" y="80" width="32" height="5" rx="2.5" fill="#D97706"/><rect x="43" y="68" width="10" height="10" fill="#F59E0B"/><ellipse cx="48" cy="20" rx="20" ry="4" fill="#FDE68A"/></svg>
+        </div>
+        <div style="font-family:'Space Mono',monospace; font-size:9px; color:#4B5563;">24 · 40 · 64 · 96px</div>
+      </div>
+
+      <!-- TROPHY Silver -->
+      <div style="display:flex; flex-direction:column; align-items:center; gap:16px;">
+        <div style="font-family:'Space Mono',monospace; font-size:9px; color:#64748B; letter-spacing:1px; text-transform:uppercase;">Trophäe — Silber</div>
+        <svg width="96" height="96" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" style="animation: float 3.5s ease-in-out infinite;">
+          <defs><linearGradient id="trophySilver" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#E2E8F0"/><stop offset="50%" stop-color="#94A3B8"/><stop offset="100%" stop-color="#64748B"/></linearGradient></defs>
+          <ellipse cx="48" cy="88" rx="20" ry="4" fill="#94A3B8" opacity="0.2"/>
+          <rect x="36" y="76" width="24" height="6" rx="3" fill="url(#trophySilver)"/>
+          <rect x="32" y="80" width="32" height="5" rx="2.5" fill="#64748B"/>
+          <rect x="43" y="68" width="10" height="10" fill="#94A3B8"/>
+          <path d="M28 20 Q24 52 38 64 Q43 68 48 68 Q53 68 58 64 Q72 52 68 20 Z" fill="url(#trophySilver)"/>
+          <path d="M35 22 Q31 44 38 58 Q34 42 36 24 Z" fill="white" opacity="0.4"/>
+          <path d="M28 28 Q16 30 17 42 Q18 50 28 50" fill="none" stroke="#94A3B8" stroke-width="5" stroke-linecap="round"/>
+          <path d="M68 28 Q80 30 79 42 Q78 50 68 50" fill="none" stroke="#94A3B8" stroke-width="5" stroke-linecap="round"/>
+          <polygon points="48,32 50,38 56,38 51,42 53,48 48,44 43,48 45,42 40,38 46,38" fill="white" opacity="0.8"/>
+          <ellipse cx="48" cy="20" rx="20" ry="4" fill="#E2E8F0"/>
+        </svg>
+      </div>
+
+      <!-- TROPHY Bronze -->
+      <div style="display:flex; flex-direction:column; align-items:center; gap:16px;">
+        <div style="font-family:'Space Mono',monospace; font-size:9px; color:#64748B; letter-spacing:1px; text-transform:uppercase;">Trophäe — Bronze</div>
+        <svg width="96" height="96" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" style="animation: float 4s ease-in-out infinite;">
+          <defs><linearGradient id="trophyBronze" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FDE68A"/><stop offset="50%" stop-color="#B45309"/><stop offset="100%" stop-color="#92400E"/></linearGradient></defs>
+          <ellipse cx="48" cy="88" rx="20" ry="4" fill="#B45309" opacity="0.2"/>
+          <rect x="36" y="76" width="24" height="6" rx="3" fill="url(#trophyBronze)"/>
+          <rect x="32" y="80" width="32" height="5" rx="2.5" fill="#92400E"/>
+          <rect x="43" y="68" width="10" height="10" fill="#B45309"/>
+          <path d="M28 20 Q24 52 38 64 Q43 68 48 68 Q53 68 58 64 Q72 52 68 20 Z" fill="url(#trophyBronze)"/>
+          <path d="M35 22 Q31 44 38 58 Q34 42 36 24 Z" fill="white" opacity="0.3"/>
+          <path d="M28 28 Q16 30 17 42 Q18 50 28 50" fill="none" stroke="#B45309" stroke-width="5" stroke-linecap="round"/>
+          <path d="M68 28 Q80 30 79 42 Q78 50 68 50" fill="none" stroke="#B45309" stroke-width="5" stroke-linecap="round"/>
+          <polygon points="48,32 50,38 56,38 51,42 53,48 48,44 43,48 45,42 40,38 46,38" fill="#FDE68A" opacity="0.8"/>
+          <ellipse cx="48" cy="20" rx="20" ry="4" fill="#D97706"/>
+        </svg>
+      </div>
+
+      <!-- ENERGY DRINK -->
+      <div style="display:flex; flex-direction:column; align-items:center; gap:16px;">
+        <div style="font-family:'Space Mono',monospace; font-size:9px; color:#64748B; letter-spacing:1px; text-transform:uppercase;">Energy Drink</div>
+        <div style="animation: float 2.8s ease-in-out infinite;">
+          <svg width="96" height="96" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="canGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#164E63"/>
+                <stop offset="40%" stop-color="#0891B2"/>
+                <stop offset="100%" stop-color="#06B6D4"/>
+              </linearGradient>
+              <linearGradient id="canTop" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#CBD5E1"/>
+                <stop offset="100%" stop-color="#94A3B8"/>
+              </linearGradient>
+              <linearGradient id="canShine" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="white" stop-opacity="0.3"/>
+                <stop offset="100%" stop-color="white" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <!-- Can shadow -->
+            <ellipse cx="48" cy="90" rx="18" ry="4" fill="#06B6D4" opacity="0.25"/>
+            <!-- Can body -->
+            <rect x="30" y="22" width="36" height="62" rx="6" fill="url(#canGrad)"/>
+            <!-- Shine -->
+            <rect x="30" y="22" width="14" height="62" rx="6" fill="url(#canShine)"/>
+            <!-- Can top -->
+            <ellipse cx="48" cy="22" rx="18" ry="5" fill="url(#canTop)"/>
+            <ellipse cx="48" cy="22" rx="18" ry="5" fill="none" stroke="#94A3B8" stroke-width="1"/>
+            <!-- Can bottom rim -->
+            <ellipse cx="48" cy="84" rx="18" ry="5" fill="#0E7490"/>
+            <!-- Tab -->
+            <ellipse cx="48" cy="20" rx="6" ry="2" fill="#E2E8F0" stroke="#94A3B8" stroke-width="1"/>
+            <rect x="45" y="16" width="6" height="6" rx="1" fill="#CBD5E1"/>
+            <!-- Brand stripe -->
+            <rect x="30" y="38" width="36" height="20" fill="#0E7490" opacity="0.5"/>
+            <!-- Lightning bolt on can -->
+            <polygon points="52,36 44,48 49,48 46,60 56,46 51,46" fill="#FDE68A"/>
+            <polygon points="52,36 44,48 49,48 46,60 56,46 51,46" fill="none" stroke="#F59E0B" stroke-width="0.5"/>
+            <!-- Sparkles -->
+            <circle cx="20" cy="30" r="2" fill="#06B6D4" opacity="0.7"/>
+            <circle cx="76" cy="40" r="2.5" fill="#06B6D4" opacity="0.5"/>
+            <circle cx="18" cy="55" r="1.5" fill="#A5F3FC" opacity="0.6"/>
+            <circle cx="78" cy="65" r="1.5" fill="#A5F3FC" opacity="0.5"/>
+            <!-- Text on can -->
+            <text x="48" y="34" font-family="'Space Grotesk'" font-weight="800" font-size="7" fill="white" text-anchor="middle" letter-spacing="1">ENERGY</text>
+          </svg>
+        </div>
+        <!-- States -->
+        <div style="display:flex; gap:12px; align-items:center;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+            <div style="background:#06B6D422; border:1px solid #06B6D444; border-radius:12px; padding:8px 12px; display:flex; align-items:center; gap:6px;">
+              <svg width="20" height="20" viewBox="0 0 96 96"><defs><linearGradient id="cg4" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#164E63"/><stop offset="100%" stop-color="#06B6D4"/></linearGradient></defs><rect x="30" y="22" width="36" height="62" rx="6" fill="url(#cg4)"/><polygon points="52,36 44,48 49,48 46,60 56,46 51,46" fill="#FDE68A"/></svg>
+              <span style="font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:700; color:#06B6D4;">3 Energie</span>
+            </div>
+            <span style="font-family:'Space Mono',monospace; font-size:8px; color:#4B5563;">UI Chip</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- LEVEL / XP BADGE -->
+      <div style="display:flex; flex-direction:column; align-items:center; gap:16px;">
+        <div style="font-family:'Space Mono',monospace; font-size:9px; color:#64748B; letter-spacing:1px; text-transform:uppercase;">Level Badge</div>
+        <div style="animation: bounce 2s ease-in-out infinite;">
+          <svg width="96" height="96" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="lvlGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#7C3AED"/>
+                <stop offset="100%" stop-color="#4F46E5"/>
+              </linearGradient>
+              <linearGradient id="lvlRing" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#A855F7"/>
+                <stop offset="100%" stop-color="#818CF8"/>
+              </linearGradient>
+            </defs>
+            <!-- Outer ring glow -->
+            <circle cx="48" cy="48" r="44" fill="none" stroke="#7C3AED" stroke-width="2" opacity="0.3"/>
+            <!-- Main badge hexagon shape -->
+            <path d="M48 6 L82 26 L82 66 L48 86 L14 66 L14 26 Z" fill="url(#lvlGrad)"/>
+            <path d="M48 6 L82 26 L82 66 L48 86 L14 66 L14 26 Z" fill="none" stroke="url(#lvlRing)" stroke-width="2"/>
+            <!-- Inner highlight ring -->
+            <path d="M48 12 L76 29 L76 63 L48 80 L20 63 L20 29 Z" fill="none" stroke="#A855F7" stroke-width="1" opacity="0.4"/>
+            <!-- Shine -->
+            <path d="M48 10 L70 23 L48 36 L26 23 Z" fill="white" opacity="0.08"/>
+            <!-- LVL text -->
+            <text x="48" y="40" font-family="'Space Mono'" font-weight="700" font-size="10" fill="#C4B5FD" text-anchor="middle" letter-spacing="2">LVL</text>
+            <!-- Number -->
+            <text x="48" y="64" font-family="'Space Grotesk'" font-weight="800" font-size="30" fill="white" text-anchor="middle" letter-spacing="-1">7</text>
+            <!-- Stars at corners -->
+            <circle cx="48" cy="6" r="3" fill="#A855F7"/>
+            <circle cx="82" cy="26" r="2.5" fill="#818CF8" opacity="0.7"/>
+            <circle cx="14" cy="26" r="2.5" fill="#818CF8" opacity="0.7"/>
+          </svg>
+        </div>
+        <!-- Level variants -->
+        <div style="display:flex; gap:8px; align-items:center;">
+          <svg width="32" height="32" viewBox="0 0 96 96"><defs><linearGradient id="lv1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#7C3AED"/><stop offset="100%" stop-color="#4F46E5"/></linearGradient></defs><path d="M48 6 L82 26 L82 66 L48 86 L14 66 L14 26 Z" fill="url(#lv1)"/><text x="48" y="58" font-family="'Space Grotesk'" font-weight="800" font-size="30" fill="white" text-anchor="middle">1</text></svg>
+          <svg width="32" height="32" viewBox="0 0 96 96"><defs><linearGradient id="lv5" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0EA5E9"/><stop offset="100%" stop-color="#0284C7"/></linearGradient></defs><path d="M48 6 L82 26 L82 66 L48 86 L14 66 L14 26 Z" fill="url(#lv5)"/><text x="48" y="58" font-family="'Space Grotesk'" font-weight="800" font-size="30" fill="white" text-anchor="middle">5</text></svg>
+          <svg width="32" height="32" viewBox="0 0 96 96"><defs><linearGradient id="lv10" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#10B981"/><stop offset="100%" stop-color="#059669"/></linearGradient></defs><path d="M48 6 L82 26 L82 66 L48 86 L14 66 L14 26 Z" fill="url(#lv10)"/><text x="48" y="58" font-family="'Space Grotesk'" font-weight="800" font-size="24" fill="white" text-anchor="middle">10</text></svg>
+          <svg width="32" height="32" viewBox="0 0 96 96"><defs><linearGradient id="lv25" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#F59E0B"/><stop offset="100%" stop-color="#D97706"/></linearGradient></defs><path d="M48 6 L82 26 L82 66 L48 86 L14 66 L14 26 Z" fill="url(#lv25)"/><text x="48" y="58" font-family="'Space Grotesk'" font-weight="800" font-size="24" fill="white" text-anchor="middle">25</text></svg>
+          <svg width="32" height="32" viewBox="0 0 96 96"><defs><linearGradient id="lv50" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#EC4899"/><stop offset="100%" stop-color="#DB2777"/></linearGradient></defs><path d="M48 6 L82 26 L82 66 L48 86 L14 66 L14 26 Z" fill="url(#lv50)"/><text x="48" y="58" font-family="'Space Grotesk'" font-weight="800" font-size="24" fill="white" text-anchor="middle">50</text></svg>
+        </div>
+        <div style="font-family:'Space Mono',monospace; font-size:9px; color:#4B5563;">Level 1 · 5 · 10 · 25 · 50</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== SUBJECT ICONS ===== -->
+  <section style="display:flex; flex-direction:column; gap:28px;">
+    <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:3px; color:#7C3AED; text-transform:uppercase;">02 — Fach-Icons</div>
+    <div style="display:flex; gap:20px; flex-wrap:wrap;">
+
+      <!-- POS - Code / Terminal -->
+      <div style="display:flex; flex-direction:column; align-items:center; gap:12px;">
+        <svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="posGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#7C3AED"/><stop offset="100%" stop-color="#5B21B6"/></linearGradient></defs>
+          <rect width="80" height="80" rx="20" fill="url(#posGrad)"/>
+          <rect x="10" y="10" width="60" height="60" rx="14" fill="white" opacity="0.06"/>
+          <!-- Terminal screen -->
+          <rect x="14" y="18" width="52" height="38" rx="6" fill="#1A0533"/>
+          <rect x="14" y="18" width="52" height="8" rx="6" fill="#2D1B69"/>
+          <!-- Dots -->
+          <circle cx="22" cy="22" r="2.5" fill="#EF4444"/>
+          <circle cx="30" cy="22" r="2.5" fill="#F59E0B"/>
+          <circle cx="38" cy="22" r="2.5" fill="#10B981"/>
+          <!-- Code lines -->
+          <text x="18" y="38" font-family="'Space Mono'" font-size="8" fill="#A855F7">&gt;_</text>
+          <rect x="30" y="33" width="22" height="3" rx="1.5" fill="#C4B5FD" opacity="0.8"/>
+          <rect x="18" y="41" width="34" height="2.5" rx="1.25" fill="#7C3AED" opacity="0.6"/>
+          <rect x="18" y="47" width="26" height="2.5" rx="1.25" fill="#A855F7" opacity="0.5"/>
+          <!-- Label -->
+          <rect x="20" y="60" width="40" height="14" rx="7" fill="#2D1B69"/>
+          <text x="40" y="71" font-family="'Space Grotesk'" font-weight="800" font-size="9" fill="#A855F7" text-anchor="middle" letter-spacing="1">POS</text>
+        </svg>
+        <span style="font-family:'Space Mono',monospace; font-size:10px; color:#94A3B8;">Prog. &amp; Softw.</span>
+      </div>
+
+      <!-- DBI - Database -->
+      <div style="display:flex; flex-direction:column; align-items:center; gap:12px;">
+        <svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="dbiGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0284C7"/><stop offset="100%" stop-color="#0369A1"/></linearGradient></defs>
+          <rect width="80" height="80" rx="20" fill="url(#dbiGrad)"/>
+          <rect x="10" y="10" width="60" height="60" rx="14" fill="white" opacity="0.06"/>
+          <!-- Database cylinders -->
+          <ellipse cx="40" cy="22" rx="18" ry="6" fill="#BAE6FD"/>
+          <rect x="22" y="22" width="36" height="12" fill="#0EA5E9"/>
+          <ellipse cx="40" cy="34" rx="18" ry="6" fill="#7DD3FC"/>
+          <rect x="22" y="34" width="36" height="12" fill="#0284C7"/>
+          <ellipse cx="40" cy="46" rx="18" ry="6" fill="#38BDF8"/>
+          <rect x="22" y="46" width="36" height="8" fill="#0369A1"/>
+          <ellipse cx="40" cy="54" rx="18" ry="6" fill="#0EA5E9"/>
+          <!-- Shine -->
+          <ellipse cx="34" cy="22" rx="6" ry="2" fill="white" opacity="0.3"/>
+          <!-- Label -->
+          <rect x="20" y="62" width="40" height="12" rx="6" fill="#0C4A6E"/>
+          <text x="40" y="72" font-family="'Space Grotesk'" font-weight="800" font-size="9" fill="#38BDF8" text-anchor="middle" letter-spacing="1">DBI</text>
+        </svg>
+        <span style="font-family:'Space Mono',monospace; font-size:10px; color:#94A3B8;">Datenbanken</span>
+      </div>
+
+      <!-- NSVS - Network -->
+      <div style="display:flex; flex-direction:column; align-items:center; gap:12px;">
+        <svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="nsvsGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#059669"/><stop offset="100%" stop-color="#065F46"/></linearGradient></defs>
+          <rect width="80" height="80" rx="20" fill="url(#nsvsGrad)"/>
+          <rect x="10" y="10" width="60" height="60" rx="14" fill="white" opacity="0.06"/>
+          <!-- Network nodes -->
+          <circle cx="40" cy="30" r="7" fill="#34D399"/>
+          <circle cx="18" cy="52" r="6" fill="#10B981"/>
+          <circle cx="62" cy="52" r="6" fill="#10B981"/>
+          <circle cx="40" cy="56" r="5" fill="#6EE7B7"/>
+          <!-- Connections -->
+          <line x1="40" y1="30" x2="18" y2="52" stroke="#34D399" stroke-width="2" opacity="0.8"/>
+          <line x1="40" y1="30" x2="62" y2="52" stroke="#34D399" stroke-width="2" opacity="0.8"/>
+          <line x1="18" y1="52" x2="40" y2="56" stroke="#10B981" stroke-width="1.5" opacity="0.6"/>
+          <line x1="62" y1="52" x2="40" y2="56" stroke="#10B981" stroke-width="1.5" opacity="0.6"/>
+          <!-- Signal arcs on center node -->
+          <circle cx="40" cy="30" r="11" fill="none" stroke="#34D399" stroke-width="1.5" opacity="0.4"/>
+          <circle cx="40" cy="30" r="15" fill="none" stroke="#34D399" stroke-width="1" opacity="0.2"/>
+          <!-- Label -->
+          <rect x="16" y="62" width="48" height="12" rx="6" fill="#064E3B"/>
+          <text x="40" y="72" font-family="'Space Grotesk'" font-weight="800" font-size="9" fill="#34D399" text-anchor="middle" letter-spacing="1">NSVS</text>
+        </svg>
+        <span style="font-family:'Space Mono',monospace; font-size:10px; color:#94A3B8;">Netzwerke</span>
+      </div>
+
+      <!-- MEDT - Media -->
+      <div style="display:flex; flex-direction:column; align-items:center; gap:12px;">
+        <svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="medtGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#EA580C"/><stop offset="100%" stop-color="#C2410C"/></linearGradient></defs>
+          <rect width="80" height="80" rx="20" fill="url(#medtGrad)"/>
+          <rect x="10" y="10" width="60" height="60" rx="14" fill="white" opacity="0.06"/>
+          <!-- Camera / clapboard -->
+          <rect x="14" y="26" width="38" height="28" rx="5" fill="#1C0D04"/>
+          <!-- Clapboard top -->
+          <rect x="14" y="20" width="38" height="10" rx="4" fill="#FED7AA"/>
+          <!-- Clapboard stripes -->
+          <rect x="18" y="20" width="6" height="10" fill="#EA580C"/>
+          <rect x="28" y="20" width="6" height="10" fill="#EA580C"/>
+          <rect x="38" y="20" width="6" height="10" fill="#EA580C"/>
+          <!-- Play button in screen -->
+          <circle cx="33" cy="40" r="9" fill="#F97316" opacity="0.2"/>
+          <polygon points="30,35 30,45 40,40" fill="#FDBA74"/>
+          <!-- Camera lens side -->
+          <circle cx="58" cy="40" r="8" fill="#1C0D04" stroke="#F97316" stroke-width="2"/>
+          <circle cx="58" cy="40" r="5" fill="#292524"/>
+          <circle cx="58" cy="40" r="3" fill="#1C0D04"/>
+          <circle cx="57" cy="39" r="1" fill="white" opacity="0.5"/>
+          <!-- Label -->
+          <rect x="18" y="62" width="44" height="12" rx="6" fill="#7C2D12"/>
+          <text x="40" y="72" font-family="'Space Grotesk'" font-weight="800" font-size="9" fill="#FDBA74" text-anchor="middle" letter-spacing="1">MEDT</text>
+        </svg>
+        <span style="font-family:'Space Mono',monospace; font-size:10px; color:#94A3B8;">Medientechnik</span>
+      </div>
+
+      <!-- SYP - System -->
+      <div style="display:flex; flex-direction:column; align-items:center; gap:12px;">
+        <svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="sypGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#DC2626"/><stop offset="100%" stop-color="#991B1B"/></linearGradient></defs>
+          <rect width="80" height="80" rx="20" fill="url(#sypGrad)"/>
+          <rect x="10" y="10" width="60" height="60" rx="14" fill="white" opacity="0.06"/>
+          <!-- Gear outer -->
+          <path d="M40 12 L43 20 L51 16 L51 24 L59 24 L55 32 L63 36 L55 40 L59 48 L51 48 L51 56 L43 52 L40 60 L37 52 L29 56 L29 48 L21 48 L25 40 L17 36 L25 32 L21 24 L29 24 L29 16 L37 20 Z" fill="#FCA5A5" opacity="0.15"/>
+          <!-- Gear inner details -->
+          <circle cx="40" cy="36" r="12" fill="#DC2626" stroke="#FCA5A5" stroke-width="2"/>
+          <circle cx="40" cy="36" r="7" fill="#1C0505"/>
+          <circle cx="40" cy="36" r="3" fill="#FCA5A5"/>
+          <!-- Teeth -->
+          <rect x="38" y="14" width="4" height="8" rx="2" fill="#F87171"/>
+          <rect x="38" y="54" width="4" height="8" rx="2" fill="#F87171"/>
+          <rect x="14" y="34" width="8" height="4" rx="2" fill="#F87171"/>
+          <rect x="58" y="34" width="8" height="4" rx="2" fill="#F87171"/>
+          <!-- Label -->
+          <rect x="20" y="62" width="40" height="12" rx="6" fill="#7F1D1D"/>
+          <text x="40" y="72" font-family="'Space Grotesk'" font-weight="800" font-size="9" fill="#FCA5A5" text-anchor="middle" letter-spacing="1">SYP</text>
+        </svg>
+        <span style="font-family:'Space Mono',monospace; font-size:10px; color:#94A3B8;">Systemplanung</span>
+      </div>
+
+      <!-- WIR - Business/Economy -->
+      <div style="display:flex; flex-direction:column; align-items:center; gap:12px;">
+        <svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="wirGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#D97706"/><stop offset="100%" stop-color="#92400E"/></linearGradient></defs>
+          <rect width="80" height="80" rx="20" fill="url(#wirGrad)"/>
+          <rect x="10" y="10" width="60" height="60" rx="14" fill="white" opacity="0.06"/>
+          <!-- Bar chart -->
+          <rect x="16" y="50" width="10" height="14" rx="3" fill="#FDE68A"/>
+          <rect x="29" y="38" width="10" height="26" rx="3" fill="#FCD34D"/>
+          <rect x="42" y="26" width="10" height="38" rx="3" fill="#FBBF24"/>
+          <rect x="55" y="18" width="10" height="46" rx="3" fill="#F59E0B"/>
+          <!-- Chart line -->
+          <polyline points="21,48 34,36 47,24 60,16" fill="none" stroke="#FEF3C7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- Dots on line -->
+          <circle cx="21" cy="48" r="3" fill="white"/>
+          <circle cx="34" cy="36" r="3" fill="white"/>
+          <circle cx="47" cy="24" r="3" fill="white"/>
+          <circle cx="60" cy="16" r="3" fill="white"/>
+          <!-- Label -->
+          <rect x="20" y="62" width="40" height="12" rx="6" fill="#78350F"/>
+          <text x="40" y="72" font-family="'Space Grotesk'" font-weight="800" font-size="9" fill="#FDE68A" text-anchor="middle" letter-spacing="1">WIR</text>
+        </svg>
+        <span style="font-family:'Space Mono',monospace; font-size:10px; color:#94A3B8;">Wirtschaft</span>
+      </div>
+
+      <!-- TINF - Theory/Informatik -->
+      <div style="display:flex; flex-direction:column; align-items:center; gap:12px;">
+        <svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="tinfGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#BE185D"/><stop offset="100%" stop-color="#831843"/></linearGradient></defs>
+          <rect width="80" height="80" rx="20" fill="url(#tinfGrad)"/>
+          <rect x="10" y="10" width="60" height="60" rx="14" fill="white" opacity="0.06"/>
+          <!-- Binary / math symbols -->
+          <text x="17" y="30" font-family="'Space Mono'" font-size="11" fill="#FBCFE8" opacity="0.9">01</text>
+          <text x="44" y="30" font-family="'Space Mono'" font-size="11" fill="#F9A8D4" opacity="0.7">10</text>
+          <text x="20" y="46" font-family="'Space Mono'" font-size="11" fill="#F472B6" opacity="0.8">11</text>
+          <text x="46" y="46" font-family="'Space Mono'" font-size="11" fill="#FBCFE8" opacity="0.6">00</text>
+          <!-- Infinity / theory symbol -->
+          <path d="M26 55 Q30 51 35 55 Q40 59 44 55 Q48 51 53 55" fill="none" stroke="#FBCFE8" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- Label -->
+          <rect x="18" y="62" width="44" height="12" rx="6" fill="#500724"/>
+          <text x="40" y="72" font-family="'Space Grotesk'" font-weight="800" font-size="9" fill="#F472B6" text-anchor="middle" letter-spacing="1">TINF</text>
+        </svg>
+        <span style="font-family:'Space Mono',monospace; font-size:10px; color:#94A3B8;">Theor. Informatik</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== UI ICONS ===== -->
+  <section style="display:flex; flex-direction:column; gap:28px;">
+    <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:3px; color:#7C3AED; text-transform:uppercase;">03 — UI Icons (24px)</div>
+    <div style="display:flex; gap:24px; flex-wrap:wrap; align-items:flex-start;">
+
+      <!-- Streak fire -->
+      <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+        <div style="background:#131320; border:1px solid #1E1E3F; border-radius:12px; padding:12px;">
+          <svg width="28" height="28" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="fireGrad" x1="0.5" y1="0" x2="0.5" y2="1"><stop offset="0%" stop-color="#FDE68A"/><stop offset="50%" stop-color="#F97316"/><stop offset="100%" stop-color="#DC2626"/></linearGradient></defs>
+            <path d="M14 3 Q16 8 20 10 Q22 5 20 2 Q26 7 25 14 Q24 20 19 23 Q20 19 17 17 Q17 21 14 24 Q11 21 11 17 Q8 19 9 23 Q4 20 3 14 Q2 7 8 2 Q6 5 8 10 Q12 8 14 3Z" fill="url(#fireGrad)"/>
+            <circle cx="14" cy="17" r="3" fill="#FDE68A" opacity="0.6"/>
+          </svg>
+        </div>
+        <span style="font-family:'Space Mono',monospace; font-size:9px; color:#64748B;">Streak</span>
+      </div>
+
+      <!-- XP Star -->
+      <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+        <div style="background:#131320; border:1px solid #1E1E3F; border-radius:12px; padding:12px;">
+          <svg width="28" height="28" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="xpGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#FDE68A"/><stop offset="100%" stop-color="#F59E0B"/></linearGradient></defs>
+            <polygon points="14,2 17,10 26,10 19,16 22,24 14,19 6,24 9,16 2,10 11,10" fill="url(#xpGrad)"/>
+            <polygon points="14,6 16,11 21,11 17,14 19,19 14,16 9,19 11,14 7,11 12,11" fill="#FFFBEB" opacity="0.5"/>
+          </svg>
+        </div>
+        <span style="font-family:'Space Mono',monospace; font-size:9px; color:#64748B;">XP Star</span>
+      </div>
+
+      <!-- Clock / Timer -->
+      <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+        <div style="background:#131320; border:1px solid #1E1E3F; border-radius:12px; padding:12px;">
+          <svg width="28" height="28" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="14" cy="15" r="11" fill="#1A0533" stroke="#F97316" stroke-width="2"/>
+            <circle cx="14" cy="15" r="1.5" fill="#F97316"/>
+            <line x1="14" y1="15" x2="14" y2="7" stroke="#F97316" stroke-width="2" stroke-linecap="round"/>
+            <line x1="14" y1="15" x2="20" y2="18" stroke="#FDBA74" stroke-width="1.5" stroke-linecap="round"/>
+            <rect x="11" y="2" width="6" height="3" rx="1.5" fill="#F97316"/>
+          </svg>
+        </div>
+        <span style="font-family:'Space Mono',monospace; font-size:9px; color:#64748B;">Timer</span>
+      </div>
+
+      <!-- Checkmark -->
+      <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+        <div style="background:#131320; border:1px solid #1E1E3F; border-radius:12px; padding:12px;">
+          <svg width="28" height="28" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="14" cy="14" r="12" fill="#10B981" opacity="0.2"/>
+            <circle cx="14" cy="14" r="12" fill="none" stroke="#10B981" stroke-width="2"/>
+            <polyline points="7,14 12,19 21,9" fill="none" stroke="#34D399" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span style="font-family:'Space Mono',monospace; font-size:9px; color:#64748B;">Richtig</span>
+      </div>
+
+      <!-- X mark -->
+      <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+        <div style="background:#131320; border:1px solid #1E1E3F; border-radius:12px; padding:12px;">
+          <svg width="28" height="28" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="14" cy="14" r="12" fill="#EF4444" opacity="0.2"/>
+            <circle cx="14" cy="14" r="12" fill="none" stroke="#EF4444" stroke-width="2"/>
+            <line x1="9" y1="9" x2="19" y2="19" stroke="#F87171" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="19" y1="9" x2="9" y2="19" stroke="#F87171" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span style="font-family:'Space Mono',monospace; font-size:9px; color:#64748B;">Falsch</span>
+      </div>
+
+      <!-- Lock -->
+      <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+        <div style="background:#131320; border:1px solid #1E1E3F; border-radius:12px; padding:12px;">
+          <svg width="28" height="28" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">
+            <rect x="6" y="13" width="16" height="13" rx="4" fill="#374151"/>
+            <rect x="6" y="13" width="16" height="13" rx="4" fill="none" stroke="#4B5563" stroke-width="1.5"/>
+            <path d="M9 13 Q9 5 14 5 Q19 5 19 13" fill="none" stroke="#6B7280" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="14" cy="19" r="2.5" fill="#9CA3AF"/>
+            <rect x="13" y="19" width="2" height="4" rx="1" fill="#6B7280"/>
+          </svg>
+        </div>
+        <span style="font-family:'Space Mono',monospace; font-size:9px; color:#64748B;">Gesperrt</span>
+      </div>
+
+      <!-- Book -->
+      <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+        <div style="background:#131320; border:1px solid #1E1E3F; border-radius:12px; padding:12px;">
+          <svg width="28" height="28" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 6 Q4 4 6 4 L13 4 Q14 4 14 5 L14 23 Q14 24 13 24 L6 24 Q4 24 4 22 Z" fill="#7C3AED" opacity="0.8"/>
+            <path d="M24 6 Q24 4 22 4 L15 4 Q14 4 14 5 L14 23 Q14 24 15 24 L22 24 Q24 24 24 22 Z" fill="#4F46E5"/>
+            <line x1="14" y1="4" x2="14" y2="24" stroke="#0D0D1A" stroke-width="1"/>
+            <rect x="6" y="8" width="5" height="1.5" rx="0.75" fill="#C4B5FD" opacity="0.7"/>
+            <rect x="6" y="11" width="5" height="1.5" rx="0.75" fill="#C4B5FD" opacity="0.5"/>
+            <rect x="17" y="8" width="5" height="1.5" rx="0.75" fill="#818CF8" opacity="0.7"/>
+            <rect x="17" y="11" width="5" height="1.5" rx="0.75" fill="#818CF8" opacity="0.5"/>
+          </svg>
+        </div>
+        <span style="font-family:'Space Mono',monospace; font-size:9px; color:#64748B;">Lernen</span>
+      </div>
+
+      <!-- Users/Team -->
+      <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+        <div style="background:#131320; border:1px solid #1E1E3F; border-radius:12px; padding:12px;">
+          <svg width="28" height="28" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="10" cy="10" r="4" fill="#7C3AED"/>
+            <path d="M2 24 Q2 17 10 17 Q18 17 18 24" fill="#7C3AED" opacity="0.6"/>
+            <circle cx="20" cy="9" r="3.5" fill="#A855F7"/>
+            <path d="M14 23 Q14 16 20 16 Q26 16 26 23" fill="#A855F7" opacity="0.5"/>
+          </svg>
+        </div>
+        <span style="font-family:'Space Mono',monospace; font-size:9px; color:#64748B;">Team</span>
+      </div>
+
+      <!-- Chart bar -->
+      <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+        <div style="background:#131320; border:1px solid #1E1E3F; border-radius:12px; padding:12px;">
+          <svg width="28" height="28" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3" y="18" width="5" height="8" rx="2" fill="#7C3AED"/>
+            <rect x="11" y="12" width="5" height="14" rx="2" fill="#A855F7"/>
+            <rect x="19" y="6" width="5" height="20" rx="2" fill="#4F46E5"/>
+            <line x1="2" y1="26" x2="26" y2="26" stroke="#1E1E3F" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <span style="font-family:'Space Mono',monospace; font-size:9px; color:#64748B;">Fortschritt</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== GAMIFICATION CHIPS ===== -->
+  <section style="display:flex; flex-direction:column; gap:20px;">
+    <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:3px; color:#7C3AED; text-transform:uppercase;">04 — Status-Chips (In-App)</div>
+    <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+
+      <div style="display:flex; align-items:center; gap:8px; background:#131320; border:1px solid #F59E0B33; border-radius:12px; padding:8px 14px;">
+        <svg width="20" height="20" viewBox="0 0 28 28"><defs><linearGradient id="fc1" x1="0.5" y1="0" x2="0.5" y2="1"><stop offset="0%" stop-color="#FDE68A"/><stop offset="100%" stop-color="#DC2626"/></linearGradient></defs><path d="M14 3 Q16 8 20 10 Q22 5 20 2 Q26 7 25 14 Q24 20 19 23 Q20 19 17 17 Q17 21 14 24 Q11 21 11 17 Q8 19 9 23 Q4 20 3 14 Q2 7 8 2 Q6 5 8 10 Q12 8 14 3Z" fill="url(#fc1)"/></svg>
+        <span style="font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:700; color:#FDE68A;">7 Tage Streak</span>
+      </div>
+
+      <div style="display:flex; align-items:center; gap:8px; background:#131320; border:1px solid #7C3AED33; border-radius:12px; padding:8px 14px;">
+        <svg width="20" height="20" viewBox="0 0 28 28"><defs><linearGradient id="xc1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#FDE68A"/><stop offset="100%" stop-color="#F59E0B"/></linearGradient></defs><polygon points="14,2 17,10 26,10 19,16 22,24 14,19 6,24 9,16 2,10 11,10" fill="url(#xc1)"/></svg>
+        <span style="font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:700; color:#FDE68A;">+250 XP</span>
+      </div>
+
+      <div style="display:flex; align-items:center; gap:8px; background:#131320; border:1px solid #06B6D433; border-radius:12px; padding:8px 14px;">
+        <svg width="20" height="20" viewBox="0 0 96 96"><defs><linearGradient id="ec1" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#164E63"/><stop offset="100%" stop-color="#06B6D4"/></linearGradient></defs><rect x="30" y="22" width="36" height="62" rx="6" fill="url(#ec1)"/><polygon points="52,36 44,48 49,48 46,60 56,46 51,46" fill="#FDE68A"/></svg>
+        <span style="font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:700; color:#06B6D4;">5 Energy</span>
+      </div>
+
+      <div style="display:flex; align-items:center; gap:8px; background:#131320; border:1px solid #7C3AED33; border-radius:12px; padding:8px 14px;">
+        <svg width="20" height="20" viewBox="0 0 96 96"><defs><linearGradient id="lc1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#7C3AED"/><stop offset="100%" stop-color="#4F46E5"/></linearGradient></defs><path d="M48 6 L82 26 L82 66 L48 86 L14 66 L14 26 Z" fill="url(#lc1)"/><text x="48" y="58" font-family="'Space Grotesk'" font-weight="800" font-size="30" fill="white" text-anchor="middle">4</text></svg>
+        <span style="font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:700; color:#A855F7;">Level 4</span>
+      </div>
+
+      <div style="display:flex; align-items:center; gap:8px; background:#10B98122; border:1px solid #10B98144; border-radius:12px; padding:8px 14px;">
+        <svg width="20" height="20" viewBox="0 0 28 28"><circle cx="14" cy="14" r="12" fill="#10B981" opacity="0.2"/><circle cx="14" cy="14" r="12" fill="none" stroke="#10B981" stroke-width="2"/><polyline points="7,14 12,19 21,9" fill="none" stroke="#34D399" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span style="font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:700; color:#34D399;">Richtig!</span>
+      </div>
+
+    </div>
+  </section>
+
+</div>
+</x-dc>
+</body>
+</html>

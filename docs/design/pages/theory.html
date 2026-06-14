@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="true" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    body { margin:0; background:#0D0D1A; font-family:'Space Grotesk',sans-serif; color:#F1F5F9; }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+    @keyframes reading-progress { from{width:0} to{width:65%} }
+  </style>
+</helmet>
+
+<div style="min-height:100vh; background:#0D0D1A; padding:48px 40px; max-width:1200px; margin:0 auto; display:flex; flex-direction:column; gap:80px;">
+
+  <!-- Title -->
+  <div style="display:flex; flex-direction:column; gap:8px; border-bottom:1px solid #1E1E3F; padding-bottom:32px;">
+    <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:3px; color:#4B5563; text-transform:uppercase;">learnharder.app</div>
+    <h1 style="margin:0; font-size:32px; font-weight:800; letter-spacing:-1px;">Themenübersicht & Theorie</h1>
+    <p style="margin:0; font-size:15px; color:#64748B;">Fachübersicht · Theorie-Artikel · Leseansicht · Inhaltsverzeichnis</p>
+  </div>
+
+
+  <!-- ================================================================ -->
+  <!-- 01 — FACHÜBERSICHT (Subject Overview Grid)                        -->
+  <!-- ================================================================ -->
+  <section style="display:flex; flex-direction:column; gap:20px;">
+    <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:3px; color:#7C3AED; text-transform:uppercase;">01 — Fachübersicht</div>
+
+    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:16px;">
+
+      <!-- POS Card -->
+      <div style="background:#131320; border:1px solid #7C3AED33; border-radius:18px; overflow:hidden; cursor:pointer; display:flex; flex-direction:column;">
+        <!-- Color banner -->
+        <div style="height:6px; background:linear-gradient(90deg,#7C3AED,#A855F7);"></div>
+        <div style="padding:20px; display:flex; flex-direction:column; gap:14px; flex:1;">
+          <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <div style="width:44px; height:44px; border-radius:12px; background:#7C3AED22; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg width="22" height="22" viewBox="0 0 28 28"><rect x="2" y="3" width="24" height="18" rx="3" fill="#1A0533"/><rect x="2" y="3" width="24" height="6" rx="3" fill="#2D1B69"/><circle cx="6" cy="6" r="1.5" fill="#EF4444"/><circle cx="10" cy="6" r="1.5" fill="#F59E0B"/><circle cx="14" cy="6" r="1.5" fill="#10B981"/><text x="5" y="17" font-family="'Space Mono'" font-size="5" fill="#A855F7">&gt;_</text></svg>
+              </div>
+              <div>
+                <div style="font-size:16px; font-weight:800; color:#F1F5F9;">POS</div>
+                <div style="font-size:12px; color:#64748B;">Programmierung &amp; Softwareentwicklung</div>
+              </div>
+            </div>
+            <span style="font-family:'Space Mono',monospace; font-size:10px; font-weight:700; color:#7C3AED; background:#7C3AED22; padding:3px 10px; border-radius:999px; white-space:nowrap; flex-shrink:0;">72%</span>
+          </div>
+          <!-- Progress bar -->
+          <div style="height:5px; background:#1E1E3F; border-radius:3px; overflow:hidden;"><div style="height:100%; width:72%; background:linear-gradient(90deg,#7C3AED,#A855F7); border-radius:3px;"></div></div>
+          <!-- Stats row -->
+          <div style="display:flex; gap:16px;">
+            <div style="display:flex; flex-direction:column; gap:2px;"><span style="font-size:16px; font-weight:700; color:#F1F5F9;">7</span><span style="font-size:11px; color:#64748B;">Kapitel</span></div>
+            <div style="display:flex; flex-direction:column; gap:2px;"><span style="font-size:16px; font-weight:700; color:#F1F5F9;">42</span><span style="font-size:11px; color:#64748B;">Themen</span></div>
+            <div style="display:flex; flex-direction:column; gap:2px;"><span style="font-size:16px; font-weight:700; color:#F59E0B;">+480 XP</span><span style="font-size:11px; color:#64748B;">gesammelt</span></div>
+          </div>
+          <!-- Topics preview -->
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <span style="font-size:11px; background:#7C3AED22; color:#A855F7; padding:3px 10px; border-radius:999px; border:1px solid #7C3AED33;">Variablen</span>
+            <span style="font-size:11px; background:#7C3AED22; color:#A855F7; padding:3px 10px; border-radius:999px; border:1px solid #7C3AED33;">OOP</span>
+            <span style="font-size:11px; background:#7C3AED22; color:#A855F7; padding:3px 10px; border-radius:999px; border:1px solid #7C3AED33;">Algorithmen</span>
+            <span style="font-size:11px; background:#1E1E3F; color:#4B5563; padding:3px 10px; border-radius:999px;">+39 mehr</span>
+          </div>
+          <button style="font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:700; padding:10px; background:linear-gradient(135deg,#7C3AED,#4F46E5); color:white; border:none; border-radius:10px; cursor:pointer; margin-top:auto;">Weiterlernen →</button>
+        </div>
+      </div>
+
+      <!-- DBI Card -->
+      <div style="background:#131320; border:1px solid #0EA5E933; border-radius:18px; overflow:hidden; cursor:pointer; display:flex; flex-direction:column;">
+        <div style="height:6px; background:linear-gradient(90deg,#0284C7,#38BDF8);"></div>
+        <div style="padding:20px; display:flex; flex-direction:column; gap:14px; flex:1;">
+          <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <div style="width:44px; height:44px; border-radius:12px; background:#0EA5E922; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg width="22" height="22" viewBox="0 0 28 28"><ellipse cx="14" cy="6" rx="9" ry="3" fill="#BAE6FD"/><rect x="5" y="6" width="18" height="6" fill="#0EA5E9"/><ellipse cx="14" cy="12" rx="9" ry="3" fill="#7DD3FC"/><rect x="5" y="12" width="18" height="5" fill="#0284C7"/><ellipse cx="14" cy="17" rx="9" ry="3" fill="#38BDF8"/></svg>
+              </div>
+              <div>
+                <div style="font-size:16px; font-weight:800; color:#F1F5F9;">DBI</div>
+                <div style="font-size:12px; color:#64748B;">Datenbanken &amp; Informationssysteme</div>
+              </div>
+            </div>
+            <span style="font-family:'Space Mono',monospace; font-size:10px; font-weight:700; color:#0EA5E9; background:#0EA5E922; padding:3px 10px; border-radius:999px; white-space:nowrap; flex-shrink:0;">55%</span>
+          </div>
+          <div style="height:5px; background:#1E1E3F; border-radius:3px; overflow:hidden;"><div style="height:100%; width:55%; background:linear-gradient(90deg,#0284C7,#38BDF8); border-radius:3px;"></div></div>
+          <div style="display:flex; gap:16px;">
+            <div style="display:flex; flex-direction:column; gap:2px;"><span style="font-size:16px; font-weight:700; color:#F1F5F9;">5</span><span style="font-size:11px; color:#64748B;">Kapitel</span></div>
+            <div style="display:flex; flex-direction:column; gap:2px;"><span style="font-size:16px; font-weight:700; color:#F1F5F9;">28</span><span style="font-size:11px; color:#64748B;">Themen</span></div>
+            <div style="display:flex; flex-direction:column; gap:2px;"><span style="font-size:16px; font-weight:700; color:#F59E0B;">+290 XP</span><span style="font-size:11px; color:#64748B;">gesammelt</span></div>
+          </div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <span style="font-size:11px; background:#0EA5E922; color:#38BDF8; padding:3px 10px; border-radius:999px; border:1px solid #0EA5E933;">SQL</span>
+            <span style="font-size:11px; background:#0EA5E922; color:#38BDF8; padding:3px 10px; border-radius:999px; border:1px solid #0EA5E933;">ERD</span>
+            <span style="font-size:11px; background:#0EA5E922; color:#38BDF8; padding:3px 10px; border-radius:999px; border:1px solid #0EA5E933;">Normalisierung</span>
+            <span style="font-size:11px; background:#1E1E3F; color:#4B5563; padding:3px 10px; border-radius:999px;">+25 mehr</span>
+          </div>
+          <button style="font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:700; padding:10px; background:linear-gradient(135deg,#0284C7,#0EA5E9); color:white; border:none; border-radius:10px; cursor:pointer; margin-top:auto;">Weiterlernen →</button>
+        </div>
+      </div>
+
+      <!-- NSVS Card -->
+      <div style="background:#131320; border:1px solid #10B98133; border-radius:18px; overflow:hidden; cursor:pointer; display:flex; flex-direction:column;">
+        <div style="height:6px; background:linear-gradient(90deg,#059669,#34D399);"></div>
+        <div style="padding:20px; display:flex; flex-direction:column; gap:14px; flex:1;">
+          <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <div style="width:44px; height:44px; border-radius:12px; background:#10B98122; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg width="22" height="22" viewBox="0 0 28 28"><circle cx="14" cy="8" r="4" fill="#34D399"/><circle cx="5" cy="21" r="3" fill="#10B981"/><circle cx="23" cy="21" r="3" fill="#10B981"/><line x1="14" y1="8" x2="5" y2="21" stroke="#34D399" stroke-width="1.5"/><line x1="14" y1="8" x2="23" y2="21" stroke="#34D399" stroke-width="1.5"/></svg>
+              </div>
+              <div>
+                <div style="font-size:16px; font-weight:800; color:#F1F5F9;">NSVS</div>
+                <div style="font-size:12px; color:#64748B;">Netzwerke &amp; Security</div>
+              </div>
+            </div>
+            <span style="font-family:'Space Mono',monospace; font-size:10px; font-weight:700; color:#10B981; background:#10B98122; padding:3px 10px; border-radius:999px; white-space:nowrap; flex-shrink:0;">38%</span>
+          </div>
+          <div style="height:5px; background:#1E1E3F; border-radius:3px; overflow:hidden;"><div style="height:100%; width:38%; background:linear-gradient(90deg,#059669,#34D399); border-radius:3px;"></div></div>
+          <div style="display:flex; gap:16px;">
+            <div style="display:flex; flex-direction:column; gap:2px;"><span style="font-size:16px; font-weight:700; color:#F1F5F9;">6</span><span style="font-size:11px; color:#64748B;">Kapitel</span></div>
+            <div style="display:flex; flex-direction:column; gap:2px;"><span style="font-size:16px; font-weight:700; color:#F1F5F9;">35</span><span style="font-size:11px; color:#64748B;">Themen</span></div>
+            <div style="display:flex; flex-direction:column; gap:2px;"><span style="font-size:16px; font-weight:700; color:#F59E0B;">+180 XP</span><span style="font-size:11px; color:#64748B;">gesammelt</span></div>
+          </div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <span style="font-size:11px; background:#10B98122; color:#34D399; padding:3px 10px; border-radius:999px; border:1px solid #10B98133;">OSI-Modell</span>
+            <span style="font-size:11px; background:#10B98122; color:#34D399; padding:3px 10px; border-radius:999px; border:1px solid #10B98133;">TCP/IP</span>
+            <span style="font-size:11px; background:#1E1E3F; color:#4B5563; padding:3px 10px; border-radius:999px;">+33 mehr</span>
+          </div>
+          <button style="font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:700; padding:10px; background:linear-gradient(135deg,#059669,#10B981); color:white; border:none; border-radius:10px; cursor:pointer; margin-top:auto;">Jetzt starten →</button>
+        </div>
+      </div>
+
+      <!-- WIR Card - compact -->
+      <div style="background:#131320; border:1px solid #F59E0B33; border-radius:18px; overflow:hidden; cursor:pointer; display:flex; flex-direction:column;">
+        <div style="height:6px; background:linear-gradient(90deg,#D97706,#FDE68A);"></div>
+        <div style="padding:20px; display:flex; flex-direction:column; gap:14px; flex:1;">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div style="width:44px; height:44px; border-radius:12px; background:#F59E0B22; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+              <svg width="22" height="22" viewBox="0 0 28 28"><rect x="3" y="16" width="4" height="9" rx="2" fill="#FDE68A"/><rect x="10" y="10" width="4" height="15" rx="2" fill="#FBBF24"/><rect x="17" y="4" width="4" height="21" rx="2" fill="#F59E0B"/><polyline points="5,14 12,8 19,2" fill="none" stroke="#FEF3C7" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </div>
+            <div style="flex:1;">
+              <div style="display:flex; align-items:center; justify-content:space-between;"><span style="font-size:16px; font-weight:800; color:#F1F5F9;">WIR</span><span style="font-family:'Space Mono',monospace; font-size:10px; font-weight:700; color:#F59E0B; background:#F59E0B22; padding:3px 10px; border-radius:999px;">84%</span></div>
+              <div style="font-size:12px; color:#64748B;">Wirtschaft &amp; Recht</div>
+            </div>
+          </div>
+          <div style="height:5px; background:#1E1E3F; border-radius:3px; overflow:hidden;"><div style="height:100%; width:84%; background:linear-gradient(90deg,#D97706,#FDE68A); border-radius:3px;"></div></div>
+          <button style="font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:700; padding:10px; background:linear-gradient(135deg,#D97706,#F59E0B); color:#0D0D1A; border:none; border-radius:10px; cursor:pointer;">Weiterlernen →</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ================================================================ -->
+  <!-- 02 — KAPITEL-INHALTSVERZEICHNIS                                   -->
+  <!-- ================================================================ -->
+  <section style="display:flex; flex-direction:column; gap:20px;">
+    <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:3px; color:#7C3AED; text-transform:uppercase;">02 — Kapitel / Inhaltsverzeichnis</div>
+
+    <div style="display:flex; gap:24px; flex-wrap:wrap; align-items:flex-start;">
+
+      <!-- TOC sidebar -->
+      <div style="width:260px; flex-shrink:0; background:#131320; border:1px solid #1E1E3F; border-radius:16px; padding:20px; display:flex; flex-direction:column; gap:16px;">
+        <div style="display:flex; align-items:center; gap:10px; padding-bottom:12px; border-bottom:1px solid #1E1E3F;">
+          <div style="width:10px; height:10px; border-radius:50%; background:#7C3AED;"></div>
+          <span style="font-size:14px; font-weight:700; color:#F1F5F9;">POS — Inhaltsverzeichnis</span>
+        </div>
+
+        <!-- Chapter list -->
+        <div style="display:flex; flex-direction:column; gap:4px;">
+
+          <!-- Chapter 1 - expanded -->
+          <div style="display:flex; flex-direction:column; gap:2px;">
+            <div style="display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:8px; background:#7C3AED22; cursor:pointer;">
+              <svg width="14" height="14" viewBox="0 0 14 14"><path d="M3 5 L7 9 L11 5" fill="none" stroke="#A855F7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span style="font-size:13px; font-weight:700; color:#A855F7;">1. Grundlagen</span>
+              <span style="margin-left:auto; font-family:'Space Mono',monospace; font-size:9px; color:#10B981;">100%</span>
+            </div>
+            <!-- Subchapters -->
+            <div style="padding-left:22px; display:flex; flex-direction:column; gap:1px;">
+              <div style="display:flex; align-items:center; gap:8px; padding:6px 10px; border-radius:6px; cursor:pointer;">
+                <svg width="10" height="10" viewBox="0 0 28 28"><polyline points="5,14 11,20 23,8" fill="none" stroke="#10B981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span style="font-size:12px; color:#64748B;">1.1 Variablen &amp; Typen</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:8px; padding:6px 10px; border-radius:6px; cursor:pointer;">
+                <svg width="10" height="10" viewBox="0 0 28 28"><polyline points="5,14 11,20 23,8" fill="none" stroke="#10B981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span style="font-size:12px; color:#64748B;">1.2 Operatoren</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:8px; padding:6px 10px; border-radius:6px; cursor:pointer;">
+                <svg width="10" height="10" viewBox="0 0 28 28"><polyline points="5,14 11,20 23,8" fill="none" stroke="#10B981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span style="font-size:12px; color:#64748B;">1.3 Kontrollfluss</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chapter 2 - current -->
+          <div style="display:flex; flex-direction:column; gap:2px;">
+            <div style="display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:8px; cursor:pointer; background:#1A1A2E;">
+              <svg width="14" height="14" viewBox="0 0 14 14"><path d="M5 3 L9 7 L5 11" fill="none" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span style="font-size:13px; font-weight:700; color:#F1F5F9;">2. OOP</span>
+              <span style="margin-left:auto; font-family:'Space Mono',monospace; font-size:9px; color:#7C3AED;">25%</span>
+            </div>
+            <div style="padding-left:22px; display:flex; flex-direction:column; gap:1px;">
+              <div style="display:flex; align-items:center; gap:8px; padding:6px 10px; border-radius:6px; background:#7C3AED11; cursor:pointer;">
+                <div style="width:8px; height:8px; border-radius:50%; background:#7C3AED; flex-shrink:0; animation:float 1.5s ease-in-out infinite;"></div>
+                <span style="font-size:12px; color:#A855F7; font-weight:600;">2.1 Klassen ← Aktuell</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:8px; padding:6px 10px; border-radius:6px; cursor:pointer; opacity:0.4;">
+                <svg width="10" height="10" viewBox="0 0 28 28"><rect x="6" y="13" width="16" height="12" rx="4" fill="#374151"/><path d="M9 13 Q9 6 14 6 Q19 6 19 13" fill="none" stroke="#4B5563" stroke-width="2" stroke-linecap="round"/></svg>
+                <span style="font-size:12px; color:#374151;">2.2 Vererbung</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:8px; padding:6px 10px; border-radius:6px; cursor:pointer; opacity:0.3;">
+                <svg width="10" height="10" viewBox="0 0 28 28"><rect x="6" y="13" width="16" height="12" rx="4" fill="#374151"/><path d="M9 13 Q9 6 14 6 Q19 6 19 13" fill="none" stroke="#4B5563" stroke-width="2" stroke-linecap="round"/></svg>
+                <span style="font-size:12px; color:#374151;">2.3 Interfaces</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chapter 3 locked -->
+          <div style="display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:8px; cursor:pointer; opacity:0.4;">
+            <svg width="14" height="14" viewBox="0 0 28 28"><rect x="6" y="13" width="16" height="12" rx="4" fill="#374151"/><path d="M9 13 Q9 6 14 6 Q19 6 19 13" fill="none" stroke="#4B5563" stroke-width="2.5" stroke-linecap="round"/></svg>
+            <span style="font-size:13px; font-weight:600; color:#374151;">3. Algorithmen</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:8px; cursor:pointer; opacity:0.3;">
+            <svg width="14" height="14" viewBox="0 0 28 28"><rect x="6" y="13" width="16" height="12" rx="4" fill="#374151"/><path d="M9 13 Q9 6 14 6 Q19 6 19 13" fill="none" stroke="#4B5563" stroke-width="2.5" stroke-linecap="round"/></svg>
+            <span style="font-size:13px; font-weight:600; color:#374151;">4. Datenstrukturen</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Theory article view -->
+      <div style="flex:1; min-width:320px; background:#131320; border:1px solid #1E1E3F; border-radius:16px; overflow:hidden; display:flex; flex-direction:column;">
+
+        <!-- Reading progress bar -->
+        <div style="height:3px; background:#1E1E3F;">
+          <div style="height:100%; width:65%; background:linear-gradient(90deg,#7C3AED,#A855F7); border-radius:0 2px 2px 0;"></div>
+        </div>
+
+        <div style="padding:28px; display:flex; flex-direction:column; gap:24px;">
+
+          <!-- Article header -->
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+              <span style="font-family:'Space Mono',monospace; font-size:10px; font-weight:700; color:#7C3AED; background:#7C3AED22; padding:3px 10px; border-radius:999px; border:1px solid #7C3AED44;">POS</span>
+              <span style="font-family:'Space Mono',monospace; font-size:10px; color:#4B5563;">Kapitel 2 · Abschnitt 2.1</span>
+              <span style="font-size:11px; color:#64748B; margin-left:auto;">⏱ 5 Min. Lesezeit</span>
+            </div>
+            <h2 style="margin:0; font-size:26px; font-weight:800; color:#F1F5F9; letter-spacing:-0.5px;">Klassen in Python</h2>
+            <p style="margin:0; font-size:14px; color:#64748B; line-height:1.6;">Eine Klasse ist ein Bauplan für Objekte. Sie definiert Attribute (Daten) und Methoden (Verhalten).</p>
+          </div>
+
+          <!-- Section: Definition -->
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <h3 style="margin:0; font-size:17px; font-weight:700; color:#F1F5F9; display:flex; align-items:center; gap:8px;">
+              <span style="font-family:'Space Mono',monospace; font-size:12px; color:#7C3AED; background:#7C3AED22; padding:2px 8px; border-radius:4px;">§1</span>
+              Was ist eine Klasse?
+            </h3>
+            <p style="margin:0; font-size:15px; color:#CBD5E1; line-height:1.7; text-wrap:pretty;">Eine <strong style="color:#A855F7;">Klasse</strong> ist eine Vorlage oder ein Bauplan zum Erstellen von Objekten. Sie bündelt zusammengehörige Daten (<em style="color:#818CF8;">Attribute</em>) und Funktionen (<em style="color:#818CF8;">Methoden</em>) in einer logischen Einheit. Objekte, die nach einer Klasse erstellt werden, nennt man <strong style="color:#A855F7;">Instanzen</strong>.</p>
+          </div>
+
+          <!-- Code block -->
+          <div style="background:#0D0D1A; border:1px solid #1E1E3F; border-radius:12px; overflow:hidden;">
+            <div style="background:#1A1A2E; padding:8px 16px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #1E1E3F;">
+              <span style="font-family:'Space Mono',monospace; font-size:11px; color:#7C3AED;">Python</span>
+              <div style="display:flex; gap:6px;">
+                <div style="width:8px; height:8px; border-radius:50%; background:#EF4444;"></div>
+                <div style="width:8px; height:8px; border-radius:50%; background:#F59E0B;"></div>
+                <div style="width:8px; height:8px; border-radius:50%; background:#10B981;"></div>
+              </div>
+            </div>
+            <pre style="margin:0; padding:16px; font-family:'Space Mono',monospace; font-size:13px; line-height:1.7; color:#E2E8F0; overflow-x:auto;"><span style="color:#7C3AED;">class</span> <span style="color:#FDE68A;">Auto</span>:
+    <span style="color:#A855F7;">def</span> <span style="color:#38BDF8;">__init__</span>(self, marke, baujahr):
+        self.<span style="color:#F1F5F9;">marke</span> <span style="color:#64748B;">=</span> marke
+        self.<span style="color:#F1F5F9;">baujahr</span> <span style="color:#64748B;">=</span> baujahr
+
+    <span style="color:#A855F7;">def</span> <span style="color:#38BDF8;">beschreibung</span>(self):
+        <span style="color:#A855F7;">return</span> <span style="color:#10B981;">f"</span><span style="color:#34D399;">{self.marke}</span><span style="color:#10B981;"> ({self.baujahr})"</span>
+
+<span style="color:#64748B;"># Instanz erstellen</span>
+mein_auto <span style="color:#64748B;">=</span> Auto(<span style="color:#10B981;">"VW Golf"</span>, <span style="color:#F59E0B;">2023</span>)
+<span style="color:#A855F7;">print</span>(mein_auto.beschreibung())
+<span style="color:#64748B;"># Ausgabe: VW Golf (2023)</span></pre>
+          </div>
+
+          <!-- Callout / Merksatz -->
+          <div style="background:linear-gradient(135deg,#1A0533,#131320); border:1px solid #7C3AED55; border-radius:12px; padding:16px 20px; display:flex; gap:12px; align-items:flex-start;">
+            <div style="width:32px; height:32px; border-radius:8px; background:#7C3AED22; border:1px solid #7C3AED44; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:2px;">
+              <svg width="16" height="16" viewBox="0 0 28 28"><polygon points="14,2 17,10 26,10 19,16 22,24 14,19 6,24 9,16 2,10 11,10" fill="#F59E0B"/></svg>
+            </div>
+            <div>
+              <div style="font-family:'Space Mono',monospace; font-size:10px; font-weight:700; color:#A855F7; letter-spacing:1px; margin-bottom:6px; text-transform:uppercase;">Merksatz</div>
+              <div style="font-size:14px; font-weight:600; color:#F1F5F9; line-height:1.6; text-wrap:pretty;">Klasse = Bauplan. Objekt = fertiges Ding. Mit <code style="background:#1E1E3F; padding:1px 6px; border-radius:3px; font-family:'Space Mono',monospace; color:#A855F7; font-size:13px;">__init__</code> wird jedes neue Objekt initialisiert.</div>
+            </div>
+          </div>
+
+          <!-- Section 2 -->
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <h3 style="margin:0; font-size:17px; font-weight:700; color:#F1F5F9; display:flex; align-items:center; gap:8px;">
+              <span style="font-family:'Space Mono',monospace; font-size:12px; color:#7C3AED; background:#7C3AED22; padding:2px 8px; border-radius:4px;">§2</span>
+              Attribute vs. Methoden
+            </h3>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div style="background:#0D0D1A; border:1px solid #7C3AED33; border-radius:12px; padding:16px; display:flex; flex-direction:column; gap:8px;">
+                <div style="font-size:13px; font-weight:700; color:#A855F7; font-family:'Space Mono',monospace;">Attribute</div>
+                <p style="margin:0; font-size:13px; color:#94A3B8; line-height:1.6;">Variablen, die zu einem Objekt gehören. Definiert in <code style="background:#1E1E3F; padding:1px 5px; border-radius:3px; font-family:'Space Mono',monospace; color:#A855F7; font-size:12px;">__init__</code> mit <code style="background:#1E1E3F; padding:1px 5px; border-radius:3px; font-family:'Space Mono',monospace; color:#A855F7; font-size:12px;">self.x</code></p>
+                <div style="display:flex; flex-wrap:wrap; gap:4px;">
+                  <span style="font-size:11px; background:#7C3AED22; color:#A855F7; padding:2px 8px; border-radius:999px; font-family:'Space Mono',monospace;">self.name</span>
+                  <span style="font-size:11px; background:#7C3AED22; color:#A855F7; padding:2px 8px; border-radius:999px; font-family:'Space Mono',monospace;">self.alter</span>
+                </div>
+              </div>
+              <div style="background:#0D0D1A; border:1px solid #0EA5E933; border-radius:12px; padding:16px; display:flex; flex-direction:column; gap:8px;">
+                <div style="font-size:13px; font-weight:700; color:#38BDF8; font-family:'Space Mono',monospace;">Methoden</div>
+                <p style="margin:0; font-size:13px; color:#94A3B8; line-height:1.6;">Funktionen innerhalb einer Klasse. Immer mit <code style="background:#1E1E3F; padding:1px 5px; border-radius:3px; font-family:'Space Mono',monospace; color:#38BDF8; font-size:12px;">self</code> als erstem Parameter</p>
+                <div style="display:flex; flex-wrap:wrap; gap:4px;">
+                  <span style="font-size:11px; background:#0EA5E922; color:#38BDF8; padding:2px 8px; border-radius:999px; font-family:'Space Mono',monospace;">def reden()</span>
+                  <span style="font-size:11px; background:#0EA5E922; color:#38BDF8; padding:2px 8px; border-radius:999px; font-family:'Space Mono',monospace;">def info()</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Navigation buttons -->
+          <div style="display:flex; justify-content:space-between; align-items:center; padding-top:8px; border-top:1px solid #1E1E3F;">
+            <button style="font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:600; padding:10px 18px; background:#131320; color:#64748B; border:1px solid #1E1E3F; border-radius:10px; cursor:pointer;">← 1.3 Kontrollfluss</button>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <span style="font-size:12px; color:#64748B;">Seite 1 von 3</span>
+            </div>
+            <button style="font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:700; padding:10px 18px; background:linear-gradient(135deg,#7C3AED,#4F46E5); color:white; border:none; border-radius:10px; cursor:pointer;">2.2 Vererbung →</button>
+          </div>
+
+          <!-- Quiz CTA after reading -->
+          <div style="background:linear-gradient(135deg,#1A0533,#0D0D2E); border:1px solid #7C3AED44; border-radius:14px; padding:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+            <div>
+              <div style="font-size:15px; font-weight:700; color:#F1F5F9;">Bereit zum Testen?</div>
+              <div style="font-size:13px; color:#64748B; margin-top:3px;">Festige dein Wissen über Klassen in Python</div>
+            </div>
+            <button style="font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:700; padding:11px 22px; background:linear-gradient(135deg,#7C3AED,#4F46E5); color:white; border:none; border-radius:11px; cursor:pointer; box-shadow:0 0 16px #7C3AED44; white-space:nowrap;">⚡ Quiz starten (+120 XP)</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ================================================================ -->
+  <!-- 03 — THEMEN-KACHELN (Topic Grid)                                  -->
+  <!-- ================================================================ -->
+  <section style="display:flex; flex-direction:column; gap:20px;">
+    <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:3px; color:#7C3AED; text-transform:uppercase;">03 — Themen-Kacheln (Kapitelansicht)</div>
+
+    <div style="background:#131320; border:1px solid #1E1E3F; border-radius:20px; padding:24px; display:flex; flex-direction:column; gap:20px;">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <div style="width:36px; height:36px; border-radius:10px; background:#0EA5E922; display:flex; align-items:center; justify-content:center;">
+          <svg width="18" height="18" viewBox="0 0 28 28"><ellipse cx="14" cy="6" rx="9" ry="3" fill="#BAE6FD"/><rect x="5" y="6" width="18" height="6" fill="#0EA5E9"/><ellipse cx="14" cy="12" rx="9" ry="3" fill="#7DD3FC"/><rect x="5" y="12" width="18" height="5" fill="#0284C7"/><ellipse cx="14" cy="17" rx="9" ry="3" fill="#38BDF8"/></svg>
+        </div>
+        <div>
+          <div style="font-size:17px; font-weight:800; color:#F1F5F9;">DBI — Kapitel 1: SQL Grundlagen</div>
+          <div style="font-size:12px; color:#64748B;">8 Themen · 3 abgeschlossen</div>
+        </div>
+        <span style="margin-left:auto; font-family:'Space Mono',monospace; font-size:11px; color:#0EA5E9; background:#0EA5E922; padding:4px 12px; border-radius:999px;">38%</span>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:12px;">
+
+        <!-- Done -->
+        <div style="background:#10B98111; border:1px solid #10B98133; border-radius:14px; padding:16px; display:flex; flex-direction:column; gap:8px; cursor:pointer;">
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <svg width="18" height="18" viewBox="0 0 28 28"><circle cx="14" cy="14" r="12" fill="#10B981" opacity="0.2"/><circle cx="14" cy="14" r="12" fill="none" stroke="#10B981" stroke-width="2"/><polyline points="7,14 12,19 21,9" fill="none" stroke="#34D399" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span style="font-family:'Space Mono',monospace; font-size:9px; color:#10B981;">+60 XP</span>
+          </div>
+          <div style="font-size:13px; font-weight:700; color:#F1F5F9;">SELECT & FROM</div>
+          <div style="font-size:11px; color:#64748B;">Grundlegende Abfragen</div>
+        </div>
+
+        <div style="background:#10B98111; border:1px solid #10B98133; border-radius:14px; padding:16px; display:flex; flex-direction:column; gap:8px; cursor:pointer;">
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <svg width="18" height="18" viewBox="0 0 28 28"><circle cx="14" cy="14" r="12" fill="#10B981" opacity="0.2"/><circle cx="14" cy="14" r="12" fill="none" stroke="#10B981" stroke-width="2"/><polyline points="7,14 12,19 21,9" fill="none" stroke="#34D399" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span style="font-family:'Space Mono',monospace; font-size:9px; color:#10B981;">+70 XP</span>
+          </div>
+          <div style="font-size:13px; font-weight:700; color:#F1F5F9;">WHERE Bedingungen</div>
+          <div style="font-size:11px; color:#64748B;">Filtern von Datensätzen</div>
+        </div>
+
+        <div style="background:#10B98111; border:1px solid #10B98133; border-radius:14px; padding:16px; display:flex; flex-direction:column; gap:8px; cursor:pointer;">
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <svg width="18" height="18" viewBox="0 0 28 28"><circle cx="14" cy="14" r="12" fill="#10B981" opacity="0.2"/><circle cx="14" cy="14" r="12" fill="none" stroke="#10B981" stroke-width="2"/><polyline points="7,14 12,19 21,9" fill="none" stroke="#34D399" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span style="font-family:'Space Mono',monospace; font-size:9px; color:#10B981;">+80 XP</span>
+          </div>
+          <div style="font-size:13px; font-weight:700; color:#F1F5F9;">ORDER BY</div>
+          <div style="font-size:11px; color:#64748B;">Sortierung von Ergebnissen</div>
+        </div>
+
+        <!-- Active -->
+        <div style="background:linear-gradient(135deg,#1A0533,#0C2233); border:2px solid #0EA5E955; border-radius:14px; padding:16px; display:flex; flex-direction:column; gap:8px; cursor:pointer; box-shadow:0 0 18px #0EA5E922;">
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <div style="width:18px; height:18px; border-radius:50%; background:#0EA5E9; display:flex; align-items:center; justify-content:center;"><div style="width:6px; height:6px; border-radius:50%; background:white;"></div></div>
+            <span style="font-size:10px; font-weight:700; color:#0EA5E9; background:#0EA5E922; padding:2px 8px; border-radius:999px; font-family:'Space Mono',monospace;">Aktuell</span>
+          </div>
+          <div style="font-size:13px; font-weight:700; color:#F1F5F9;">GROUP BY</div>
+          <div style="font-size:11px; color:#64748B;">Gruppierung &amp; Aggregation</div>
+          <div style="height:3px; background:#1E1E3F; border-radius:2px; overflow:hidden;"><div style="height:100%; width:30%; background:#0EA5E9; border-radius:2px;"></div></div>
+        </div>
+
+        <!-- Locked ones -->
+        <div style="background:#131320; border:1px solid #1E1E3F; border-radius:14px; padding:16px; display:flex; flex-direction:column; gap:8px; cursor:pointer; opacity:0.45;">
+          <svg width="18" height="18" viewBox="0 0 28 28"><rect x="6" y="13" width="16" height="12" rx="4" fill="#374151"/><path d="M9 13 Q9 6 14 6 Q19 6 19 13" fill="none" stroke="#4B5563" stroke-width="2" stroke-linecap="round"/></svg>
+          <div style="font-size:13px; font-weight:700; color:#475569;">JOIN Operationen</div>
+          <div style="font-size:11px; color:#374151;">Tabellenverknüpfungen</div>
+        </div>
+
+        <div style="background:#131320; border:1px solid #1E1E3F; border-radius:14px; padding:16px; display:flex; flex-direction:column; gap:8px; cursor:pointer; opacity:0.35;">
+          <svg width="18" height="18" viewBox="0 0 28 28"><rect x="6" y="13" width="16" height="12" rx="4" fill="#374151"/><path d="M9 13 Q9 6 14 6 Q19 6 19 13" fill="none" stroke="#4B5563" stroke-width="2" stroke-linecap="round"/></svg>
+          <div style="font-size:13px; font-weight:700; color:#374151;">Subqueries</div>
+          <div style="font-size:11px; color:#374151;">Unterabfragen</div>
+        </div>
+
+        <div style="background:#131320; border:1px solid #1E1E3F; border-radius:14px; padding:16px; display:flex; flex-direction:column; gap:8px; cursor:pointer; opacity:0.3;">
+          <svg width="18" height="18" viewBox="0 0 28 28"><rect x="6" y="13" width="16" height="12" rx="4" fill="#374151"/><path d="M9 13 Q9 6 14 6 Q19 6 19 13" fill="none" stroke="#4B5563" stroke-width="2" stroke-linecap="round"/></svg>
+          <div style="font-size:13px; font-weight:700; color:#374151;">Transaktionen</div>
+          <div style="font-size:11px; color:#374151;">ACID-Prinzip</div>
+        </div>
+
+        <div style="background:#131320; border:1px solid #1E1E3F; border-radius:14px; padding:16px; display:flex; flex-direction:column; gap:8px; cursor:pointer; opacity:0.25;">
+          <svg width="18" height="18" viewBox="0 0 28 28"><rect x="6" y="13" width="16" height="12" rx="4" fill="#374151"/><path d="M9 13 Q9 6 14 6 Q19 6 19 13" fill="none" stroke="#4B5563" stroke-width="2" stroke-linecap="round"/></svg>
+          <div style="font-size:13px; font-weight:700; color:#374151;">Normalisierung</div>
+          <div style="font-size:11px; color:#374151;">1NF bis 3NF</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</div>
+</x-dc>
+</body>
+</html>

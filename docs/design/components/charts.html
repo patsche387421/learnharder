@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="true" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    body { margin:0; background:#0D0D1A; font-family:'Space Grotesk',sans-serif; color:#F1F5F9; }
+    @keyframes bar-grow { from{transform:scaleY(0); transform-origin:bottom} to{transform:scaleY(1); transform-origin:bottom} }
+    @keyframes line-draw { from{stroke-dashoffset:600} to{stroke-dashoffset:0} }
+    @keyframes donut-fill { from{stroke-dashoffset:283} to{stroke-dashoffset:72} }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+    @keyframes fade-in { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+  </style>
+</helmet>
+
+<div style="min-height:100vh; background:#0D0D1A; padding:48px 40px; max-width:1200px; margin:0 auto; display:flex; flex-direction:column; gap:80px;">
+
+  <!-- Title -->
+  <div style="display:flex; flex-direction:column; gap:8px; border-bottom:1px solid #1E1E3F; padding-bottom:32px;">
+    <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:3px; color:#4B5563; text-transform:uppercase;">learnharder.app</div>
+    <h1 style="margin:0; font-size:32px; font-weight:800; letter-spacing:-1px;">Diagramme &amp; Charts</h1>
+    <p style="margin:0; font-size:15px; color:#64748B;">XP-Verlauf · Fachverteilung · Trefferquote · Streak-Heatmap · Fortschritts-Donuts</p>
+  </div>
+
+
+  <!-- ================================================================ -->
+  <!-- 01 — XP VERLAUF (Line Chart)                                      -->
+  <!-- ================================================================ -->
+  <section style="display:flex; flex-direction:column; gap:20px;">
+    <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:3px; color:#7C3AED; text-transform:uppercase;">01 — XP-Verlauf (Linienchart)</div>
+
+    <div style="background:#131320; border:1px solid #1E1E3F; border-radius:20px; padding:28px; display:flex; flex-direction:column; gap:20px;">
+
+      <!-- Header -->
+      <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+        <div>
+          <div style="font-size:18px; font-weight:700; color:#F1F5F9;">XP-Entwicklung</div>
+          <div style="font-size:13px; color:#64748B; margin-top:2px;">Letzte 4 Wochen</div>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button style="font-family:'Space Grotesk',sans-serif; font-size:12px; font-weight:700; padding:6px 14px; background:linear-gradient(135deg,#7C3AED,#4F46E5); color:white; border:none; border-radius:8px; cursor:pointer;">4 Wochen</button>
+          <button style="font-family:'Space Grotesk',sans-serif; font-size:12px; font-weight:500; padding:6px 14px; background:#0D0D1A; color:#64748B; border:1px solid #1E1E3F; border-radius:8px; cursor:pointer;">3 Monate</button>
+          <button style="font-family:'Space Grotesk',sans-serif; font-size:12px; font-weight:500; padding:6px 14px; background:#0D0D1A; color:#64748B; border:1px solid #1E1E3F; border-radius:8px; cursor:pointer;">Gesamt</button>
+        </div>
+      </div>
+
+      <!-- Line chart SVG -->
+      <div style="position:relative;">
+        <svg width="100%" height="240" viewBox="0 0 800 240" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="xpFill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#7C3AED" stop-opacity="0.35"/>
+              <stop offset="100%" stop-color="#7C3AED" stop-opacity="0"/>
+            </linearGradient>
+            <linearGradient id="xpLine" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#4F46E5"/>
+              <stop offset="100%" stop-color="#A855F7"/>
+            </linearGradient>
+            <filter id="glow-line">
+              <feGaussianBlur stdDeviation="2" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+
+          <!-- Grid lines -->
+          <line x1="0" y1="200" x2="800" y2="200" stroke="#1E1E3F" stroke-width="1"/>
+          <line x1="0" y1="155" x2="800" y2="155" stroke="#1E1E3F" stroke-width="1" stroke-dasharray="4 4"/>
+          <line x1="0" y1="110" x2="800" y2="110" stroke="#1E1E3F" stroke-width="1" stroke-dasharray="4 4"/>
+          <line x1="0" y1="65" x2="800" y2="65" stroke="#1E1E3F" stroke-width="1" stroke-dasharray="4 4"/>
+          <line x1="0" y1="20" x2="800" y2="20" stroke="#1E1E3F" stroke-width="1" stroke-dasharray="4 4"/>
+
+          <!-- Y labels -->
+          <text x="8" y="204" font-family="'Space Mono'" font-size="10" fill="#4B5563">0</text>
+          <text x="8" y="159" font-family="'Space Mono'" font-size="10" fill="#4B5563">1k</text>
+          <text x="8" y="114" font-family="'Space Mono'" font-size="10" fill="#4B5563">2k</text>
+          <text x="8" y="69" font-family="'Space Mono'" font-size="10" fill="#4B5563">3k</text>
+          <text x="8" y="24" font-family="'Space Mono'" font-size="10" fill="#4B5563">4k</text>
+
+          <!-- Fill area -->
+          <path d="M 80,190 L 160,175 L 240,160 L 320,145 L 400,120 L 480,100 L 560,80 L 640,55 L 720,40 L 720,200 L 80,200 Z"
+                fill="url(#xpFill)"/>
+
+          <!-- Line -->
+          <polyline points="80,190 160,175 240,160 320,145 400,120 480,100 560,80 640,55 720,40"
+                    fill="none" stroke="url(#xpLine)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                    stroke-dasharray="600" stroke-dashoffset="0"
+                    filter="url(#glow-line)"
+                    style="animation: line-draw 1.5s ease-out forwards;"/>
+
+          <!-- Data points -->
+          <circle cx="80"  cy="190" r="4" fill="#4F46E5" stroke="#A855F7" stroke-width="2"/>
+          <circle cx="160" cy="175" r="4" fill="#4F46E5" stroke="#A855F7" stroke-width="2"/>
+          <circle cx="240" cy="160" r="4" fill="#4F46E5" stroke="#A855F7" stroke-width="2"/>
+          <circle cx="320" cy="145" r="4" fill="#4F46E5" stroke="#A855F7" stroke-width="2"/>
+          <circle cx="400" cy="120" r="4" fill="#4F46E5" stroke="#A855F7" stroke-width="2"/>
+          <circle cx="480" cy="100" r="4" fill="#4F46E5" stroke="#A855F7" stroke-width="2"/>
+          <circle cx="560" cy="80"  r="4" fill="#4F46E5" stroke="#A855F7" stroke-width="2"/>
+          <circle cx="640" cy="55"  r="4" fill="#4F46E5" stroke="#A855F7" stroke-width="2"/>
+          <!-- Highlighted last point -->
+          <circle cx="720" cy="40"  r="7" fill="#7C3AED" stroke="#A855F7" stroke-width="2.5" filter="url(#glow-line)"/>
+          <circle cx="720" cy="40"  r="14" fill="#7C3AED" stroke="#7C3AED" stroke-width="0" opacity="0.2"/>
+
+          <!-- Tooltip at last point -->
+          <rect x="650" y="10" width="88" height="26" rx="6" fill="#1A0533" stroke="#7C3AED" stroke-width="1"/>
+          <text x="694" y="27" font-family="'Space Grotesk'" font-weight="700" font-size="11" fill="#F59E0B" text-anchor="middle">6,240 XP</text>
+
+          <!-- X labels -->
+          <text x="80"  y="220" font-family="'Space Mono'" font-size="10" fill="#4B5563" text-anchor="middle">KW 18</text>
+          <text x="160" y="220" font-family="'Space Mono'" font-size="10" fill="#4B5563" text-anchor="middle">KW 19</text>
+          <text x="240" y="220" font-family="'Space Mono'" font-size="10" fill="#4B5563" text-anchor="middle">KW 20</text>
+          <text x="320" y="220" font-family="'Space Mono'" font-size="10" fill="#4B5563" text-anchor="middle">KW 21</text>
+          <text x="400" y="220" font-family="'Space Mono'" font-size="10" fill="#4B5563" text-anchor="middle">KW 22</text>
+          <text x="480" y="220" font-family="'Space Mono'" font-size="10" fill="#4B5563" text-anchor="middle">KW 23</text>
+          <text x="560" y="220" font-family="'Space Mono'" font-size="10" fill="#4B5563" text-anchor="middle">KW 24</text>
+          <text x="640" y="220" font-family="'Space Mono'" font-size="10" fill="#4B5563" text-anchor="middle">KW 25</text>
+          <text x="720" y="220" font-family="'Space Mono'" font-size="10" fill="#A855F7" font-weight="700" text-anchor="middle">KW 26</text>
+        </svg>
+      </div>
+
+      <!-- Summary row -->
+      <div style="display:flex; gap:16px; flex-wrap:wrap;">
+        <div style="background:#0D0D1A; border:1px solid #1E1E3F; border-radius:12px; padding:14px 18px; display:flex; flex-direction:column; gap:4px; flex:1; min-width:120px;">
+          <div style="font-size:11px; color:#64748B; font-family:'Space Mono',monospace;">GESAMT</div>
+          <div style="font-size:22px; font-weight:800; color:#F59E0B; letter-spacing:-0.5px;">6,240 XP</div>
+          <div style="font-size:11px; color:#10B981;">↑ +18% vs. Vormonat</div>
+        </div>
+        <div style="background:#0D0D1A; border:1px solid #1E1E3F; border-radius:12px; padding:14px 18px; display:flex; flex-direction:column; gap:4px; flex:1; min-width:120px;">
+          <div style="font-size:11px; color:#64748B; font-family:'Space Mono',monospace;">DIESE WOCHE</div>
+          <div style="font-size:22px; font-weight:800; color:#A855F7; letter-spacing:-0.5px;">+370 XP</div>
+          <div style="font-size:11px; color:#64748B;">in 5 Sessions</div>
+        </div>
+        <div style="background:#0D0D1A; border:1px solid #1E1E3F; border-radius:12px; padding:14px 18px; display:flex; flex-direction:column; gap:4px; flex:1; min-width:120px;">
+          <div style="font-size:11px; color:#64748B; font-family:'Space Mono',monospace;">BESTER TAG</div>
+          <div style="font-size:22px; font-weight:800; color:#06B6D4; letter-spacing:-0.5px;">+420 XP</div>
+          <div style="font-size:11px; color:#64748B;">Di, 10. Juni</div>
+        </div>
+        <div style="background:#0D0D1A; border:1px solid #1E1E3F; border-radius:12px; padding:14px 18px; display:flex; flex-direction:column; gap:4px; flex:1; min-width:120px;">
+          <div style="font-size:11px; color:#64748B; font-family:'Space Mono',monospace;">Ø PRO TAG</div>
+          <div style="font-size:22px; font-weight:800; color:#F1F5F9; letter-spacing:-0.5px;">+222 XP</div>
+          <div style="font-size:11px; color:#64748B;">an Lerntagen</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ================================================================ -->
+  <!-- 02 — BALKENDIAGRAMM + DONUT                                       -->
+  <!-- ================================================================ -->
+  <section style="display:flex; flex-direction:column; gap:20px;">
+    <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:3px; color:#7C3AED; text-transform:uppercase;">02 — Balkendiagramm &amp; Donut Charts</div>
+
+    <div style="display:flex; gap:20px; flex-wrap:wrap; align-items:flex-start;">
+
+      <!-- Bar chart: Quizze pro Fach -->
+      <div style="background:#131320; border:1px solid #1E1E3F; border-radius:20px; padding:24px; flex:2; min-width:320px;">
+        <div style="font-size:16px; font-weight:700; color:#F1F5F9; margin-bottom:4px;">Quizze pro Fach</div>
+        <div style="font-size:12px; color:#64748B; margin-bottom:20px;">Anzahl gesamt &amp; Trefferquote</div>
+
+        <!-- Bar chart SVG -->
+        <svg width="100%" height="200" viewBox="0 0 560 200" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="bar-pos" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#A855F7"/><stop offset="100%" stop-color="#7C3AED"/></linearGradient>
+            <linearGradient id="bar-dbi" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#38BDF8"/><stop offset="100%" stop-color="#0284C7"/></linearGradient>
+            <linearGradient id="bar-nsvs" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#34D399"/><stop offset="100%" stop-color="#059669"/></linearGradient>
+            <linearGradient id="bar-medt" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FB923C"/><stop offset="100%" stop-color="#EA580C"/></linearGradient>
+            <linearGradient id="bar-syp" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#F87171"/><stop offset="100%" stop-color="#DC2626"/></linearGradient>
+            <linearGradient id="bar-wir" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FDE68A"/><stop offset="100%" stop-color="#D97706"/></linearGradient>
+            <linearGradient id="bar-tinf" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#F472B6"/><stop offset="100%" stop-color="#BE185D"/></linearGradient>
+          </defs>
+
+          <!-- Grid -->
+          <line x1="0" y1="0"   x2="560" y2="0"   stroke="#1E1E3F" stroke-width="1" stroke-dasharray="3 3"/>
+          <line x1="0" y1="50"  x2="560" y2="50"  stroke="#1E1E3F" stroke-width="1" stroke-dasharray="3 3"/>
+          <line x1="0" y1="100" x2="560" y2="100" stroke="#1E1E3F" stroke-width="1" stroke-dasharray="3 3"/>
+          <line x1="0" y1="150" x2="560" y2="150" stroke="#1E1E3F" stroke-width="1" stroke-dasharray="3 3"/>
+          <line x1="0" y1="175" x2="560" y2="175" stroke="#1E1E3F" stroke-width="1"/>
+
+          <!-- Y axis labels -->
+          <text x="0" y="4"   font-family="'Space Mono'" font-size="9" fill="#4B5563">40</text>
+          <text x="0" y="54"  font-family="'Space Mono'" font-size="9" fill="#4B5563">30</text>
+          <text x="0" y="104" font-family="'Space Mono'" font-size="9" fill="#4B5563">20</text>
+          <text x="0" y="154" font-family="'Space Mono'" font-size="9" fill="#4B5563">10</text>
+
+          <!-- Bars: POS=24, DBI=18, NSVS=8, MEDT=15, SYP=5, WIR=31, TINF=10 -->
+          <!-- POS: 24/40 = 60% = 105px height, y=175-105=70 -->
+          <rect x="30"  y="70"  width="40" height="105" rx="6" fill="url(#bar-pos)"  style="animation:bar-grow 0.8s 0.1s ease-out both;"/>
+          <text x="50"  y="65"  font-family="'Space Mono'" font-size="10" fill="#A855F7" text-anchor="middle">24</text>
+          <text x="50"  y="190" font-family="'Space Grotesk'" font-size="10" fill="#64748B" text-anchor="middle" font-weight="600">POS</text>
+
+          <!-- DBI: 18/40 = 45% = 78.75px -->
+          <rect x="110" y="96"  width="40" height="79"  rx="6" fill="url(#bar-dbi)"  style="animation:bar-grow 0.8s 0.2s ease-out both;"/>
+          <text x="130" y="91"  font-family="'Space Mono'" font-size="10" fill="#38BDF8" text-anchor="middle">18</text>
+          <text x="130" y="190" font-family="'Space Grotesk'" font-size="10" fill="#64748B" text-anchor="middle" font-weight="600">DBI</text>
+
+          <!-- NSVS: 8/40 = 20% = 35px -->
+          <rect x="190" y="140" width="40" height="35"  rx="6" fill="url(#bar-nsvs)" style="animation:bar-grow 0.8s 0.3s ease-out both;"/>
+          <text x="210" y="135" font-family="'Space Mono'" font-size="10" fill="#34D399" text-anchor="middle">8</text>
+          <text x="210" y="190" font-family="'Space Grotesk'" font-size="10" fill="#64748B" text-anchor="middle" font-weight="600">NSVS</text>
+
+          <!-- MEDT: 15/40 = 37.5% = 65px -->
+          <rect x="270" y="110" width="40" height="65"  rx="6" fill="url(#bar-medt)" style="animation:bar-grow 0.8s 0.4s ease-out both;"/>
+          <text x="290" y="105" font-family="'Space Mono'" font-size="10" fill="#FB923C" text-anchor="middle">15</text>
+          <text x="290" y="190" font-family="'Space Grotesk'" font-size="10" fill="#64748B" text-anchor="middle" font-weight="600">MEDT</text>
+
+          <!-- SYP: 5/40 = 12.5% = 22px -->
+          <rect x="350" y="153" width="40" height="22"  rx="6" fill="url(#bar-syp)"  style="animation:bar-grow 0.8s 0.5s ease-out both;"/>
+          <text x="370" y="148" font-family="'Space Mono'" font-size="10" fill="#F87171" text-anchor="middle">5</text>
+          <text x="370" y="190" font-family="'Space Grotesk'" font-size="10" fill="#64748B" text-anchor="middle" font-weight="600">SYP</text>
+
+          <!-- WIR: 31/40 = 77.5% = 135px -->
+          <rect x="430" y="40"  width="40" height="135" rx="6" fill="url(#bar-wir)"  style="animation:bar-grow 0.8s 0.6s ease-out both;"/>
+          <text x="450" y="35"  font-family="'Space Mono'" font-size="10" fill="#FDE68A" text-anchor="middle">31</text>
+          <text x="450" y="190" font-family="'Space Grotesk'" font-size="10" fill="#64748B" text-anchor="middle" font-weight="600">WIR</text>
+
+          <!-- TINF: 10/40 = 25% = 44px -->
+          <rect x="510" y="131" width="40" height="44"  rx="6" fill="url(#bar-tinf)" style="animation:bar-grow 0.8s 0.7s ease-out both;"/>
+          <text x="530" y="126" font-family="'Space Mono'" font-size="10" fill="#F472B6" text-anchor="middle">10</text>
+          <text x="530" y="190" font-family="'Space Grotesk'" font-size="10" fill="#64748B" text-anchor="middle" font-weight="600">TINF</text>
+        </svg>
+      </div>
+
+      <!-- Donut charts column -->
+      <div style="display:flex; flex-direction:column; gap:16px; min-width:280px; flex:1;">
+
+        <!-- Overall accuracy donut -->
+        <div style="background:#131320; border:1px solid #1E1E3F; border-radius:20px; padding:24px; display:flex; align-items:center; gap:24px;">
+          <div style="position:relative; width:100px; height:100px; flex-shrink:0;">
+            <svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="50" cy="50" r="38" fill="none" stroke="#1E1E3F" stroke-width="10"/>
+              <!-- 78% = 238.76 * 0.78 = 186.2 dash, offset = 238.76 - 186.2 = 52.5 -->
+              <circle cx="50" cy="50" r="38" fill="none" stroke="url(#acc-grad)" stroke-width="10"
+                      stroke-dasharray="238.76" stroke-dashoffset="52" stroke-linecap="round"
+                      transform="rotate(-90 50 50)" style="animation: donut-fill 1.2s ease-out forwards;"/>
+              <defs>
+                <linearGradient id="acc-grad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#7C3AED"/>
+                  <stop offset="100%" stop-color="#A855F7"/>
+                </linearGradient>
+              </defs>
+            </svg>
+            <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; flex-direction:column;">
+              <span style="font-size:20px; font-weight:800; color:#A855F7; line-height:1;">78%</span>
+              <span style="font-size:9px; color:#64748B; font-family:'Space Mono',monospace;">GENAU</span>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:15px; font-weight:700; color:#F1F5F9; margin-bottom:6px;">Trefferquote</div>
+            <div style="font-size:13px; color:#64748B; line-height:1.6;">826 richtig<br/>234 falsch<br/>von 1.060 gesamt</div>
+          </div>
+        </div>
+
+        <!-- Subject distribution donut -->
+        <div style="background:#131320; border:1px solid #1E1E3F; border-radius:20px; padding:24px; display:flex; flex-direction:column; gap:16px;">
+          <div style="font-size:15px; font-weight:700; color:#F1F5F9;">Fachverteilung (XP)</div>
+          <div style="display:flex; align-items:center; gap:20px;">
+            <!-- Stacked ring -->
+            <div style="position:relative; width:100px; height:100px; flex-shrink:0;">
+              <svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <!-- bg -->
+                <circle cx="50" cy="50" r="38" fill="none" stroke="#1E1E3F" stroke-width="10"/>
+                <!-- WIR 34% → 81deg of 238.76 = 81 dash -->
+                <circle cx="50" cy="50" r="38" fill="none" stroke="#F59E0B" stroke-width="10"
+                        stroke-dasharray="81 238" stroke-dashoffset="0" stroke-linecap="round"
+                        transform="rotate(-90 50 50)"/>
+                <!-- POS 26% → 62 dash, offset=-81 (negative = start after WIR) -->
+                <circle cx="50" cy="50" r="38" fill="none" stroke="#7C3AED" stroke-width="10"
+                        stroke-dasharray="62 238" stroke-dashoffset="-81" stroke-linecap="round"
+                        transform="rotate(-90 50 50)"/>
+                <!-- DBI 20% → 48 dash -->
+                <circle cx="50" cy="50" r="38" fill="none" stroke="#0EA5E9" stroke-width="10"
+                        stroke-dasharray="48 238" stroke-dashoffset="-143" stroke-linecap="round"
+                        transform="rotate(-90 50 50)"/>
+                <!-- MEDT 11% → 26 dash -->
+                <circle cx="50" cy="50" r="38" fill="none" stroke="#F97316" stroke-width="10"
+                        stroke-dasharray="26 238" stroke-dashoffset="-191" stroke-linecap="round"
+                        transform="rotate(-90 50 50)"/>
+                <!-- Other 9% → 22 dash -->
+                <circle cx="50" cy="50" r="38" fill="none" stroke="#4B5563" stroke-width="10"
+                        stroke-dasharray="22 238" stroke-dashoffset="-217" stroke-linecap="round"
+                        transform="rotate(-90 50 50)"/>
+              </svg>
+              <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;">
+                <span style="font-size:20px; font-weight:800; color:#F1F5F9; line-height:1;">XP</span>
+              </div>
+            </div>
+            <!-- Legend -->
+            <div style="display:flex; flex-direction:column; gap:6px; flex:1;">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+                <div style="display:flex; align-items:center; gap:6px;"><div style="width:10px; height:10px; border-radius:3px; background:#F59E0B; flex-shrink:0;"></div><span style="font-size:12px; color:#94A3B8;">WIR</span></div>
+                <span style="font-family:'Space Mono',monospace; font-size:11px; color:#F59E0B; font-weight:700;">34%</span>
+              </div>
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+                <div style="display:flex; align-items:center; gap:6px;"><div style="width:10px; height:10px; border-radius:3px; background:#7C3AED; flex-shrink:0;"></div><span style="font-size:12px; color:#94A3B8;">POS</span></div>
+                <span style="font-family:'Space Mono',monospace; font-size:11px; color:#A855F7; font-weight:700;">26%</span>
+              </div>
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+                <div style="display:flex; align-items:center; gap:6px;"><div style="width:10px; height:10px; border-radius:3px; background:#0EA5E9; flex-shrink:0;"></div><span style="font-size:12px; color:#94A3B8;">DBI</span></div>
+                <span style="font-family:'Space Mono',monospace; font-size:11px; color:#38BDF8; font-weight:700;">20%</span>
+              </div>
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+                <div style="display:flex; align-items:center; gap:6px;"><div style="width:10px; height:10px; border-radius:3px; background:#F97316; flex-shrink:0;"></div><span style="font-size:12px; color:#94A3B8;">MEDT</span></div>
+                <span style="font-family:'Space Mono',monospace; font-size:11px; color:#FB923C; font-weight:700;">11%</span>
+              </div>
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+                <div style="display:flex; align-items:center; gap:6px;"><div style="width:10px; height:10px; border-radius:3px; background:#4B5563; flex-shrink:0;"></div><span style="font-size:12px; color:#94A3B8;">Andere</span></div>
+                <span style="font-family:'Space Mono',monospace; font-size:11px; color:#64748B; font-weight:700;">9%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ================================================================ -->
+  <!-- 03 — STREAK HEATMAP                                               -->
+  <!-- ================================================================ -->
+  <section style="display:flex; flex-direction:column; gap:20px;">
+    <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:3px; color:#7C3AED; text-transform:uppercase;">03 — Streak Heatmap</div>
+
+    <div style="background:#131320; border:1px solid #1E1E3F; border-radius:20px; padding:28px; display:flex; flex-direction:column; gap:20px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+        <div>
+          <div style="font-size:16px; font-weight:700; color:#F1F5F9;">Aktivitäts-Heatmap</div>
+          <div style="font-size:12px; color:#64748B; margin-top:2px;">Juni 2026 — Lernintensität pro Tag</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+          <span style="font-size:11px; color:#4B5563;">Wenig</span>
+          <div style="width:14px; height:14px; border-radius:3px; background:#1E1E3F;"></div>
+          <div style="width:14px; height:14px; border-radius:3px; background:#2D1B69;"></div>
+          <div style="width:14px; height:14px; border-radius:3px; background:#5B21B6;"></div>
+          <div style="width:14px; height:14px; border-radius:3px; background:#7C3AED;"></div>
+          <div style="width:14px; height:14px; border-radius:3px; background:#A855F7; box-shadow:0 0 8px #A855F766;"></div>
+          <span style="font-size:11px; color:#4B5563;">Viel</span>
+        </div>
+      </div>
+
+      <!-- Heatmap grid -->
+      <div style="display:flex; flex-direction:column; gap:6px; overflow-x:auto;">
+        <!-- Day labels -->
+        <div style="display:flex; gap:2px; margin-left:28px;">
+          <div style="font-family:'Space Mono',monospace; font-size:9px; color:#4B5563; width:28px; text-align:center;">Mo</div>
+          <div style="font-family:'Space Mono',monospace; font-size:9px; color:#4B5563; width:28px; text-align:center;">Di</div>
+          <div style="font-family:'Space Mono',monospace; font-size:9px; color:#4B5563; width:28px; text-align:center;">Mi</div>
+          <div style="font-family:'Space Mono',monospace; font-size:9px; color:#4B5563; width:28px; text-align:center;">Do</div>
+          <div style="font-family:'Space Mono',monospace; font-size:9px; color:#4B5563; width:28px; text-align:center;">Fr</div>
+          <div style="font-family:'Space Mono',monospace; font-size:9px; color:#4B5563; width:28px; text-align:center;">Sa</div>
+          <div style="font-family:'Space Mono',monospace; font-size:9px; color:#4B5563; width:28px; text-align:center;">So</div>
+        </div>
+
+        <!-- Week rows: intensity 0-4 (0=none,1=low,2=mid,3=high,4=max) -->
+        <!-- KW 22 -->
+        <div style="display:flex; align-items:center; gap:2px;">
+          <div style="font-family:'Space Mono',monospace; font-size:9px; color:#4B5563; width:26px; text-align:right; padding-right:4px;">KW22</div>
+          <div style="width:26px; height:26px; border-radius:6px; background:#5B21B6;" title="+180 XP"></div>
+          <div style="width:26px; height:26px; border-radius:6px; background:#1E1E3F;" title="0 XP"></div>
+          <div style="width:26px; height:26px; border-radius:6px; background:#7C3AED;" title="+300 XP"></div>
+          <div style="width:26px; height:26px; border-radius:6px; background:#2D1B69;" title="+80 XP"></div>
+          <div style="width:26px; height:26px; border-radius:6px; background:#A855F7; box-shadow:0 0 8px #A855F766;" title="+420 XP"></div>
+          <div style="width:26px; height:26px; border-radius:6px; background:#5B21B6;" title="+200 XP"></div>
+          <div style="width:26px; height:26px; border-radius:6px; background:#1E1E3F;" title="0 XP"></div>
+        </div>
+        <!-- KW 23 -->
+        <div style="display:flex; align-items:center; gap:2px;">
+          <div style="font-family:'Space Mono',monospace; font-size:9px; color:#4B5563; width:26px; text-align:right; padding-right:4px;">KW23</div>
+          <div style="width:26px; height:26px; border-radius:6px; background:#7C3AED;" title="+280 XP"></div>
+          <div style="width:26px; height:26px; border-radius:6px; background:#2D1B69;" title="+90 XP"></div>
+          <div style="width:26px; height:26px; border-radius:6px; background:#1E1E3F;" title="0 XP"></div>
+          <div style="width:26px; height:26px; border-radius:6px; background:#A855F7; box-shadow:0 0 8px #A855F766;" title="+380 XP"></div>
+          <div style="width:26px; height:26px; border-radius:6px; background:#7C3AED;" title="+250 XP"></div>
+          <div style="width:26px; height:26px; border-radius:6px; background:#5B21B6;" title="+160 XP"></div>
+          <div style="width:26px; height:26px; border-radius:6px; background:#2D1B69;" title="+70 XP"></div>
+        </div>
+        <!-- KW 24 -->
+        <div style="display:flex; align-items:center; gap:2px;">
+          <div style="font-family:'Space Mono',monospace; font-size:9px; color:#4B5563; width:26px; text-align:right; padding-right:4px;">KW24</div>
+          <div style="width:26px; height:26px; border-radius:6px; background:#2D1B69;" title="+100 XP"></div>
+          <div style="width:26px; height:26px; border-radius:6px; background:#7C3AED;" title="+320 XP"></div>
+          <div style="width:26px; height:26px; border-radius:6px; background:#A855F7; box-shadow:0 0 8px #A855F766;" title="+420 XP"></div>
+          <div style="width:26px; height:26px; border-radius:6px; background:#1E1E3F;" title="0 XP"></div>
+          <div style="width:26px; height:26px; border-radius:6px; background:#5B21B6;" title="+180 XP"></div>
+          <div style="width:26px; height:26px; border-radius:6px; background:#7C3AED;" title="+290 XP"></div>
+          <div style="width:26px; height:26px; border-radius:6px; background:#2D1B69;" title="+110 XP"></div>
+        </div>
+        <!-- KW 25 -->
+        <div style="display:flex; align-items:center; gap:2px;">
+          <div style="font-family:'Space Mono',monospace; font-size:9px; color:#4B5563; width:26px; text-align:right; padding-right:4px;">KW25</div>
+          <div style="width:26px; height:26px; border-radius:6px; background:#7C3AED;" title="+260 XP"></div>
+          <div style="width:26px; height:26px; border-radius:6px; background:#A855F7; box-shadow:0 0 8px #A855F766;" title="+400 XP"></div>
+          <div style="width:26px; height:26px; border-radius:6px; background:#5B21B6;" title="+170 XP"></div>
+          <div style="width:26px; height:26px; border-radius:6px; background:#2D1B69;" title="+85 XP"></div>
+          <div style="width:26px; height:26px; border-radius:6px; background:#7C3AED;" title="+310 XP"></div>
+          <div style="width:26px; height:26px; border-radius:6px; background:#1E1E3F;" title="0 XP"></div>
+          <div style="width:26px; height:26px; border-radius:6px; background:#5B21B6;" title="+140 XP"></div>
+        </div>
+        <!-- KW 26 (current, partial) -->
+        <div style="display:flex; align-items:center; gap:2px;">
+          <div style="font-family:'Space Mono',monospace; font-size:9px; color:#7C3AED; width:26px; text-align:right; padding-right:4px;">KW26</div>
+          <div style="width:26px; height:26px; border-radius:6px; background:#5B21B6;" title="+150 XP"></div>
+          <div style="width:26px; height:26px; border-radius:6px; background:#7C3AED;" title="+220 XP"></div>
+          <div style="width:26px; height:26px; border-radius:6px; background:#A855F7; box-shadow:0 0 8px #A855F766; border:2px solid #C4B5FD;" title="+370 XP (heute)"></div>
+          <div style="width:26px; height:26px; border-radius:6px; background:#0D0D1A; border:1px dashed #1E1E3F;"></div>
+          <div style="width:26px; height:26px; border-radius:6px; background:#0D0D1A; border:1px dashed #1E1E3F;"></div>
+          <div style="width:26px; height:26px; border-radius:6px; background:#0D0D1A; border:1px dashed #1E1E3F;"></div>
+          <div style="width:26px; height:26px; border-radius:6px; background:#0D0D1A; border:1px dashed #1E1E3F;"></div>
+        </div>
+      </div>
+
+      <!-- Heatmap stats -->
+      <div style="display:flex; gap:16px; flex-wrap:wrap; border-top:1px solid #1E1E3F; padding-top:16px;">
+        <div style="display:flex; flex-direction:column; gap:2px;"><span style="font-size:18px; font-weight:800; color:#F97316;">7</span><span style="font-size:11px; color:#64748B;">Aktueller Streak</span></div>
+        <div style="display:flex; flex-direction:column; gap:2px;"><span style="font-size:18px; font-weight:800; color:#F1F5F9;">18</span><span style="font-size:11px; color:#64748B;">Aktive Tage</span></div>
+        <div style="display:flex; flex-direction:column; gap:2px;"><span style="font-size:18px; font-weight:800; color:#A855F7;">420 XP</span><span style="font-size:11px; color:#64748B;">Bester Tag</span></div>
+        <div style="display:flex; flex-direction:column; gap:2px;"><span style="font-size:18px; font-weight:800; color:#F59E0B;">5/7</span><span style="font-size:11px; color:#64748B;">Diese Woche</span></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ================================================================ -->
+  <!-- 04 — FORTSCHRITTS DONUTS (pro Fach)                               -->
+  <!-- ================================================================ -->
+  <section style="display:flex; flex-direction:column; gap:20px;">
+    <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:3px; color:#7C3AED; text-transform:uppercase;">04 — Fortschritts-Donuts (pro Fach)</div>
+
+    <div style="display:flex; gap:16px; flex-wrap:wrap; justify-content:flex-start;">
+
+      <!-- Helper: donut at given % and color -->
+      <!-- POS 72% -->
+      <div style="background:#131320; border:1px solid #7C3AED33; border-radius:16px; padding:20px; display:flex; flex-direction:column; align-items:center; gap:10px; min-width:130px; flex:1; max-width:160px;">
+        <div style="position:relative; width:80px; height:80px;">
+          <svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="28" fill="none" stroke="#1E1E3F" stroke-width="8"/><circle cx="40" cy="40" r="28" fill="none" stroke="#7C3AED" stroke-width="8" stroke-dasharray="175.9" stroke-dashoffset="49.3" stroke-linecap="round" transform="rotate(-90 40 40)" style="filter:drop-shadow(0 0 6px #7C3AED88);"/></svg>
+          <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;"><span style="font-size:16px; font-weight:800; color:#A855F7;">72%</span></div>
+        </div>
+        <span style="font-family:'Space Mono',monospace; font-size:11px; font-weight:700; color:#7C3AED;">POS</span>
+        <span style="font-size:11px; color:#64748B; text-align:center;">Programmierung</span>
+      </div>
+
+      <!-- DBI 55% -->
+      <div style="background:#131320; border:1px solid #0EA5E933; border-radius:16px; padding:20px; display:flex; flex-direction:column; align-items:center; gap:10px; min-width:130px; flex:1; max-width:160px;">
+        <div style="position:relative; width:80px; height:80px;">
+          <svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="28" fill="none" stroke="#1E1E3F" stroke-width="8"/><circle cx="40" cy="40" r="28" fill="none" stroke="#0EA5E9" stroke-width="8" stroke-dasharray="175.9" stroke-dashoffset="79.2" stroke-linecap="round" transform="rotate(-90 40 40)" style="filter:drop-shadow(0 0 6px #0EA5E988);"/></svg>
+          <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;"><span style="font-size:16px; font-weight:800; color:#38BDF8;">55%</span></div>
+        </div>
+        <span style="font-family:'Space Mono',monospace; font-size:11px; font-weight:700; color:#0EA5E9;">DBI</span>
+        <span style="font-size:11px; color:#64748B; text-align:center;">Datenbanken</span>
+      </div>
+
+      <!-- NSVS 38% -->
+      <div style="background:#131320; border:1px solid #10B98133; border-radius:16px; padding:20px; display:flex; flex-direction:column; align-items:center; gap:10px; min-width:130px; flex:1; max-width:160px;">
+        <div style="position:relative; width:80px; height:80px;">
+          <svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="28" fill="none" stroke="#1E1E3F" stroke-width="8"/><circle cx="40" cy="40" r="28" fill="none" stroke="#10B981" stroke-width="8" stroke-dasharray="175.9" stroke-dashoffset="109.1" stroke-linecap="round" transform="rotate(-90 40 40)" style="filter:drop-shadow(0 0 6px #10B98188);"/></svg>
+          <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;"><span style="font-size:16px; font-weight:800; color:#34D399;">38%</span></div>
+        </div>
+        <span style="font-family:'Space Mono',monospace; font-size:11px; font-weight:700; color:#10B981;">NSVS</span>
+        <span style="font-size:11px; color:#64748B; text-align:center;">Netzwerke</span>
+      </div>
+
+      <!-- MEDT 61% -->
+      <div style="background:#131320; border:1px solid #F9731633; border-radius:16px; padding:20px; display:flex; flex-direction:column; align-items:center; gap:10px; min-width:130px; flex:1; max-width:160px;">
+        <div style="position:relative; width:80px; height:80px;">
+          <svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="28" fill="none" stroke="#1E1E3F" stroke-width="8"/><circle cx="40" cy="40" r="28" fill="none" stroke="#F97316" stroke-width="8" stroke-dasharray="175.9" stroke-dashoffset="68.6" stroke-linecap="round" transform="rotate(-90 40 40)" style="filter:drop-shadow(0 0 6px #F9731688);"/></svg>
+          <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;"><span style="font-size:16px; font-weight:800; color:#FB923C;">61%</span></div>
+        </div>
+        <span style="font-family:'Space Mono',monospace; font-size:11px; font-weight:700; color:#F97316;">MEDT</span>
+        <span style="font-size:11px; color:#64748B; text-align:center;">Medientechnik</span>
+      </div>
+
+      <!-- SYP 29% -->
+      <div style="background:#131320; border:1px solid #EF444433; border-radius:16px; padding:20px; display:flex; flex-direction:column; align-items:center; gap:10px; min-width:130px; flex:1; max-width:160px;">
+        <div style="position:relative; width:80px; height:80px;">
+          <svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="28" fill="none" stroke="#1E1E3F" stroke-width="8"/><circle cx="40" cy="40" r="28" fill="none" stroke="#EF4444" stroke-width="8" stroke-dasharray="175.9" stroke-dashoffset="124.9" stroke-linecap="round" transform="rotate(-90 40 40)" style="filter:drop-shadow(0 0 6px #EF444488);"/></svg>
+          <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;"><span style="font-size:16px; font-weight:800; color:#F87171;">29%</span></div>
+        </div>
+        <span style="font-family:'Space Mono',monospace; font-size:11px; font-weight:700; color:#EF4444;">SYP</span>
+        <span style="font-size:11px; color:#64748B; text-align:center;">Systemplanung</span>
+      </div>
+
+      <!-- WIR 84% -->
+      <div style="background:#131320; border:1px solid #F59E0B33; border-radius:16px; padding:20px; display:flex; flex-direction:column; align-items:center; gap:10px; min-width:130px; flex:1; max-width:160px;">
+        <div style="position:relative; width:80px; height:80px;">
+          <svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="28" fill="none" stroke="#1E1E3F" stroke-width="8"/><circle cx="40" cy="40" r="28" fill="none" stroke="#F59E0B" stroke-width="8" stroke-dasharray="175.9" stroke-dashoffset="28.1" stroke-linecap="round" transform="rotate(-90 40 40)" style="filter:drop-shadow(0 0 8px #F59E0BAA);"/></svg>
+          <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;"><span style="font-size:16px; font-weight:800; color:#FBBF24;">84%</span></div>
+        </div>
+        <span style="font-family:'Space Mono',monospace; font-size:11px; font-weight:700; color:#F59E0B;">WIR</span>
+        <span style="font-size:11px; color:#64748B; text-align:center;">Wirtschaft</span>
+      </div>
+
+      <!-- TINF 47% -->
+      <div style="background:#131320; border:1px solid #EC489933; border-radius:16px; padding:20px; display:flex; flex-direction:column; align-items:center; gap:10px; min-width:130px; flex:1; max-width:160px;">
+        <div style="position:relative; width:80px; height:80px;">
+          <svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="28" fill="none" stroke="#1E1E3F" stroke-width="8"/><circle cx="40" cy="40" r="28" fill="none" stroke="#EC4899" stroke-width="8" stroke-dasharray="175.9" stroke-dashoffset="93.2" stroke-linecap="round" transform="rotate(-90 40 40)" style="filter:drop-shadow(0 0 6px #EC489988);"/></svg>
+          <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;"><span style="font-size:16px; font-weight:800; color:#F472B6;">47%</span></div>
+        </div>
+        <span style="font-family:'Space Mono',monospace; font-size:11px; font-weight:700; color:#EC4899;">TINF</span>
+        <span style="font-size:11px; color:#64748B; text-align:center;">Theor. Informatik</span>
+      </div>
+
+    </div>
+  </section>
+
+</div>
+</x-dc>
+</body>
+</html>

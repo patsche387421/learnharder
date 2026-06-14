@@ -242,4 +242,44 @@ Frontend-Änderungen.** Branch: `dev`.
 
 ---
 
+## Session 2026-06-14 (zweite Runde) — Design-INBOX sortiert
+
+10 HTML-Exporte aus `docs/design/INBOX/` einsortiert. Reine Doku-Arbeit,
+**kein `src/`-Code, kein `docs/BUGS.md` angefasst.**
+
+### Verschoben & umbenannt
+**Pages (4):**
+- `learnharder-dashboard.dc.html` → `pages/dashboard.html` (+ `dashboard.md`)
+- `learnharder-quiz.dc.html`      → `pages/quiz.html`      (+ `quiz.md`)
+- `learnharder-theory.dc.html`    → `pages/theory.html`    (+ `theory.md`)
+- `learnharder-teams.dc.html`     → `pages/teams.html`     (+ `teams.md`)
+
+**Components (6):**
+- `learnharder-nav.dc.html`      → `components/nav.html`      (+ `nav.md`)
+- `learnharder-progress.dc.html` → `components/progress.html` (+ `progress.md`)
+- `learnharder-charts.dc.html`   → `components/charts.html`   (+ `charts.md`)
+- `learnharder-brand.dc.html`    → `components/brand.html`    (+ `brand.md`)
+- `learnharder-icons.dc.html`    → `components/icons.html`    (+ `icons.md`)
+- `learnharder-logo.dc.html`     → `components/logo.html`     (+ `logo.md`)
+
+### Sonstige Änderungen
+- `docs/design/components/.gitkeep` und `docs/design/pages/.gitkeep` entfernt
+  (Ordner enthalten jetzt echte Inhalte).
+- `docs/design/INBOX/` enthält nur noch `README.md` (wie gefordert).
+
+### Inhalte der `.md`-Dateien
+Jede `.md` enthält: Kurzbeschreibung, Typ, verwendete Tokens
+(echte Namen aus `tokens.css`: `--bg`, `--surface`, `--primary` etc. —
+nicht die historischen `--color-*`-Namen aus `DESIGN_GUIDELINES.md`),
+betroffene `src/`-Seiten, TODOs/Abweichungen vom aktuellen Stand.
+
+### Mapping-Hinweis
+Erwartete Zuordnung war korrekt — keine Korrekturen nötig.
+- `teams` wurde als **Seite** eingeordnet (volle Feature-Ansicht
+  Rangliste+Teams), nicht als Komponente.
+- `progress` als **Komponente** (wiederverwendet auf Dashboard +
+  Fach-Übersichten).
+
+---
+
 *Bericht auto-generiert am Ende der Session. Alle Pfade relativ zum Projekt-Root.*
