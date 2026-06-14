@@ -282,4 +282,27 @@ Erwartete Zuordnung war korrekt — keine Korrekturen nötig.
 
 ---
 
+## Session 2026-06-14 (dritte Runde) — BUG-001 Fix: Tagesquiz lädt tagesquiz_test.json
+
+**Geänderte Datei:** `src/tagesquiz.html`
+
+### Was wurde geändert
+- `themaZuPfad()`-Funktion entfernt (nicht mehr benötigt)
+- `ladeFragen()` vollständig ersetzt: statt manifest.json + N×2 Themen-JSON-Fetches
+  jetzt ein einziger Fetch auf `/assets/data/tagesquiz_test.json`
+- Start-Screen-Text: „8 Fragen, 1 Versuch pro Tag" → „1 Versuch pro Tag"
+  (Anzahl variiert jetzt je nach JSON-Inhalt)
+
+### Verifikation
+- JSON-Fetch via Preview-Server getestet: HTTP 200, 5 Fragen geladen
+- Mapping geprüft: alle Felder (`frage`, `optionen`, `richtigeAntwort` als number,
+  `fachId` als lowercase-string) korrekt gesetzt
+- Kein anderer `src/`-Code angetastet
+
+### Zusammenhang
+Behebt BUG-001 (schwarzer Screen) für den Entwicklungsstand mit Test-JSON.
+Endgültige Lösung nach Daten-Migration V2 (Supabase `content_items`-Tabelle).
+
+---
+
 *Bericht auto-generiert am Ende der Session. Alle Pfade relativ zum Projekt-Root.*
