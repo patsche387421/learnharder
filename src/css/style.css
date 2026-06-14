@@ -858,7 +858,7 @@ button {
 
 .quiz-screen-inner {
   text-align: center;
-  max-width: 480px;
+  max-width: 600px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -900,6 +900,19 @@ button {
 .btn-lg {
   padding: 0.85rem 2rem;
   font-size: 1.05rem;
+}
+
+/* Tagesquiz: einheitliche Breite während des Quiz-Flows, damit der
+   Wechsel von #screen-start zu #screen-quiz keinen Layout-Sprung erzeugt. */
+#screen-quiz {
+  max-width: 100%;
+  margin-inline: auto;
+}
+
+@media (min-width: 600px) {
+  #screen-quiz {
+    max-width: 600px;
+  }
 }
 
 /* Lebensbalken */

@@ -258,18 +258,20 @@ const App = (() => {
           fieldset.classList.add("wrong");
         }
       });
-      resultEl.hidden = false;
-      resultEl.textContent = "Du hast " + richtig + " von " + fragen.length + " Fragen richtig.";
-
       const themaId = new URLSearchParams(location.search).get("fach") || "";
       Stats.speichereQuizErgebnis(themaId, richtig, fragen.length);
-      Level.buecheQuizErgebnis({
+      const ergebnis = await Level.buecheQuizErgebnis({
         richtig,
         gesamt:       fragen.length,
         fachId:       themaZuPfad(themaId).fach,
         istTagesQuiz: false,
         lebenProzent: 100
       });
+
+      resultEl.hidden = false;
+      resultEl.textContent =
+        "Du hast " + richtig + " von " + fragen.length + " Fragen richtig — " +
+        "+" + ergebnis.ep + " EP, +" + ergebnis.trophien + " 🏆";
     };
   }
 

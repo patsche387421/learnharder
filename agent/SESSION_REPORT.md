@@ -305,4 +305,44 @@ Endgültige Lösung nach Daten-Migration V2 (Supabase `content_items`-Tabelle).
 
 ---
 
+## Session 2026-06-14 (vierte Runde) — Drei Quiz-Bugfixes
+
+**Geänderte Dateien:** `src/js/level.js`, `src/js/app.js`, `src/css/style.css`
+
+### A1 — Completion-Bonus nur für Tagesquiz, EP quiztyp-abhängig
+`buecheQuizErgebnis()` (`level.js:89–98`): Basis-EP wird konditional gesetzt,
+Bonus-Block in `if (istTagesQuiz)` gekapselt.
+- Themen-Quiz: `ep = richtig * 1`, kein Bonus
+- Tagesquiz:   `ep = richtig * 5` + Completion-Bonus (10/20/35/50)
+- Trophäen (`richtig` Stück) und `subject_xp`-Buchung bleiben gleich.
+
+Verifikation: Logik isoliert nachgestellt im Preview, 7 Testfälle:
+Themen 4/4 → ep=4, Tages 5/5 → ep=75, Tages 4/5 → ep=40, Tages 3/5 → ep=25,
+Tages 2/5 → ep=10, Tages ohne Leben → ep=0. Alle erwartet.
+
+### A2 — Themen-Quiz „Auswerten" zeigt EP/Trophäen
+`renderQuiz()` (`app.js:261–275`): `Level.buecheQuizErgebnis(...)` wird jetzt
+mit `await` aufgerufen, Reihenfolge umgestellt (erst speichern + buchen, dann
+anzeigen). Result-Text erweitert auf
+`"Du hast X von N Fragen richtig — +<ep> EP, +<trophien> 🏆"`.
+Keine HTML-Änderung — `#quiz-result` ist in `fach.html:49` vorhanden.
+
+### A3 — Tagesquiz-Breite einheitlich, kein Sprung
+`style.css`: `.quiz-screen-inner` max-width von 480 px auf **600 px** angehoben.
+Neue Regel direkt davor: `#screen-quiz { max-width: 100%; margin-inline: auto }`,
+ab `@media (min-width: 600px)` ebenfalls `max-width: 600px`. Damit haben
+Start-, Gesperrt-/Gespielt- und Quiz-Screen visuell dieselbe Breite —
+Lebensanzeige springt beim Wechsel nicht mehr.
+
+Verifikation: CSS-Regeln im geladenen Stylesheet (`document.styleSheets`)
+ausgelesen — alle drei Regeln (`.quiz-screen-inner`, `#screen-quiz`,
+`@media (min-width: 600px) #screen-quiz`) liegen korrekt vor.
+
+### Bekannte Doku-Diskrepanz (NICHT in diesem Commit)
+`LEVEL_SYSTEM.md §4` sagt aktuell „5 EP überall". Mit A1 gelten ab jetzt
+1 EP für Themen-Quiz und 5 EP + Bonus für Tagesquiz. Doku-Anpassung kommt
+in einem separaten Konzept-Commit.
+
+---
+
 *Bericht auto-generiert am Ende der Session. Alle Pfade relativ zum Projekt-Root.*

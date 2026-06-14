@@ -87,12 +87,14 @@ const Level = (() => {
     let bonus = 0;
 
     if (hatLeben) {
-      ep = richtig * 5;
-      if      (score === 100) bonus = 50;
-      else if (score > 90)    bonus = 35;
-      else if (score > 70)    bonus = 20;
-      else if (score > 50)    bonus = 10;
-      ep += bonus;
+      ep = istTagesQuiz ? richtig * 5 : richtig * 1;
+      if (istTagesQuiz) {
+        if      (score === 100) bonus = 50;
+        else if (score > 90)    bonus = 35;
+        else if (score > 70)    bonus = 20;
+        else if (score > 50)    bonus = 10;
+        ep += bonus;
+      }
     }
 
     // user_stats aktualisieren (EP, Level, Trophäen)
