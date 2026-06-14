@@ -1,4 +1,3 @@
 [build]
-  # command = "node scripts/gen-config.js"
-  base = "src"
+  command = "node scripts/gen-config.js"
   publish = "src"

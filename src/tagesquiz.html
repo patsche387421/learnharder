@@ -61,7 +61,7 @@
       <div class="quiz-screen-inner">
         <span class="quiz-screen-icon">🎯</span>
         <h2>Tages-Quiz</h2>
-        <p>Zufällige Fragen aus allen Fächern — 8 Fragen, 1 Versuch pro Tag.</p>
+        <p>Zufällige Fragen aus allen Fächern — 1 Versuch pro Tag.</p>
         <p class="quiz-energie-hinweis">
           Kostet <strong>1 🥤 Energydrink</strong> — du hast noch <strong id="start-energie">5</strong>
         </p>
@@ -118,53 +118,18 @@
       return res.json();
     }
 
-    function themaZuPfad(themaId) {
-      const trenn = themaId.indexOf("-");
-      return { fach: themaId.slice(0, trenn), slug: themaId.slice(trenn + 1) };
-    }
-
-    // Fragen aus allen Fächern sammeln, mischen und 8 zurückgeben.
     async function ladeFragen() {
-      const manifest   = await loadJSON("/assets/data/manifest.json");
-      const alleFragen = [];
-
-      for (const fach of manifest.faecher) {
-        const standardThemen = (fach.themen || []).filter(t => t.typ === "fach");
-        if (!standardThemen.length) continue;
-
-        // Bis zu 2 zufällige Themen pro Fach
-        const gemischt    = [...standardThemen].sort(() => Math.random() - 0.5);
-        const ausgewaehlt = gemischt.slice(0, 2);
-
-        console.log('[Tagesquiz] Lade Themen:', ausgewaehlt.map(t => t.id));
-        for (const thema of ausgewaehlt) {
-          const { fach: fachPfad, slug } = themaZuPfad(thema.id);
-          const basis = "/assets/data/" + fachPfad + "/" + slug;
-          try {
-            const [fragenDaten, antwortenDaten] = await Promise.all([
-              loadJSON(basis + "_fragen.json"),
-              loadJSON(basis + "_antworten.json")
-            ]);
-            const fragen    = fragenDaten.fragen    || [];
-            const loesungen = antwortenDaten.loesungen || [];
-
-            fragen.forEach((f, i) => {
-              if (loesungen[i] !== undefined) {
-                alleFragen.push({
-                  frage:           f.frage,
-                  optionen:        f.optionen,
-                  richtigeAntwort: loesungen[i],
-                  fachId:          fach.id
-                });
-              }
-            });
-          } catch (err) {
-            console.error('[Tagesquiz] Fetch fehlgeschlagen:', basis, '-', err.message);
-          }
-        }
-      }
-
-      return alleFragen.sort(() => Math.random() - 0.5).slice(0, 8);
+      const daten = await loadJSON("/assets/data/tagesquiz_test.json");
+      const fragen = daten.questions || [];
+      // Mischen für Abwechslung
+      return fragen
+        .sort(() => Math.random() - 0.5)
+        .map(q => ({
+          frage:           q.frage,
+          optionen:        q.antworten,
+          richtigeAntwort: q.richtig,
+          fachId:          q.fach.toLowerCase()
+        }));
     }
 
     function zeigeScreen(id) {
@@ -225,7 +190,7 @@
       } else {
         quizZustand.leben -= quizZustand.schadensProFehler;
         aktualisiereLebenBar();
-        feedback.textContent = "❌ Falsch — richtig wäre: „" + frage.optionen[frage.richtigeAntwort] + """;
+        feedback.textContent = "❌ Falsch — richtig wäre: \"" + frage.optionen[frage.richtigeAntwort] + "\"";
         feedback.className   = "feedback-box feedback-falsch";
       }
       feedback.hidden = false;

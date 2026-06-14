@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="true">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+  <style>
+    body { margin: 0; background: #0D0D1A; font-family: 'Space Grotesk', sans-serif; }
+    @keyframes glow-pulse { 0%,100% { filter: drop-shadow(0 0 8px #7C3AED) drop-shadow(0 0 24px #4F46E5); } 50% { filter: drop-shadow(0 0 16px #A855F7) drop-shadow(0 0 40px #7C3AED); } }
+    @keyframes bolt-flash { 0%,100% { opacity: 1; } 50% { opacity: 0.7; } }
+  </style>
+</helmet>
+
+<!-- Page wrapper -->
+<div style="min-height:100vh; background:#0D0D1A; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:64px; padding:48px 32px;">
+
+  <!-- Header label -->
+  <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:3px; color:#4B5563; text-transform:uppercase;">learnharder.app — Logo Explorations</div>
+
+  <!-- ============ OPTION A: Logomark + Wordmark ============ -->
+  <div style="display:flex; flex-direction:column; align-items:center; gap:40px; width:100%;">
+    <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:2px; color:#6B7280; text-transform:uppercase;">Option A — Bolt Brain</div>
+
+    <!-- Large version -->
+    <div style="display:flex; align-items:center; gap:20px;">
+      <!-- Logomark SVG -->
+      <svg width="72" height="72" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" style="animation: glow-pulse 3s ease-in-out infinite; flex-shrink:0;">
+        <defs>
+          <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#7C3AED"></stop>
+            <stop offset="100%" stop-color="#4F46E5"></stop>
+          </linearGradient>
+          <linearGradient id="boltGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#FDE68A"></stop>
+            <stop offset="100%" stop-color="#F59E0B"></stop>
+          </linearGradient>
+        </defs>
+        <!-- Background circle -->
+        <circle cx="36" cy="36" r="34" fill="url(#bgGrad)"></circle>
+        <!-- Brain outline (cartoon) -->
+        <path d="M22 34c0-2 1-4 3-5 0-3 2-6 6-6 1-2 3-4 6-4 3 0 5 2 6 4 3 1 5 4 5 7 2 1 3 3 3 5 0 3-2 5-5 6v6H27v-6c-3-1-5-3-5-6z" fill="white" opacity="0.18"></path>
+        <!-- Brain folds -->
+        <path d="M30 30 Q36 27 42 30" stroke="white" stroke-width="1.5" fill="none" opacity="0.35"></path>
+        <path d="M28 36 Q36 33 44 36" stroke="white" stroke-width="1.5" fill="none" opacity="0.35"></path>
+        <!-- Lightning bolt -->
+        <polygon points="38,18 30,37 37,37 34,54 44,33 37,33" fill="url(#boltGrad)" style="animation: bolt-flash 2s ease-in-out infinite;"></polygon>
+        <!-- Outline ring -->
+        <circle cx="36" cy="36" r="34" fill="none" stroke="#A855F7" stroke-width="1.5" opacity="0.6"></circle>
+      </svg>
+
+      <!-- Wordmark -->
+      <div style="display:flex; flex-direction:column; line-height:1;">
+        <span style="font-family:'Space Grotesk',sans-serif; font-size:36px; font-weight:800; color:#F8F9FA; letter-spacing:-1px;">learn</span>
+        <span style="font-family:'Space Grotesk',sans-serif; font-size:36px; font-weight:800; background:linear-gradient(135deg,#A855F7,#818CF8); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; letter-spacing:-1px;">harder</span>
+      </div>
+    </div>
+
+    <!-- Medium version -->
+    <div style="display:flex; align-items:center; gap:12px;">
+      <svg width="40" height="40" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="bgGrad2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#7C3AED"></stop><stop offset="100%" stop-color="#4F46E5"></stop></linearGradient>
+          <linearGradient id="boltGrad2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FDE68A"></stop><stop offset="100%" stop-color="#F59E0B"></stop></linearGradient>
+        </defs>
+        <circle cx="36" cy="36" r="34" fill="url(#bgGrad2)"></circle>
+        <path d="M22 34c0-2 1-4 3-5 0-3 2-6 6-6 1-2 3-4 6-4 3 0 5 2 6 4 3 1 5 4 5 7 2 1 3 3 3 5 0 3-2 5-5 6v6H27v-6c-3-1-5-3-5-6z" fill="white" opacity="0.18"></path>
+        <polygon points="38,18 30,37 37,37 34,54 44,33 37,33" fill="url(#boltGrad2)"></polygon>
+        <circle cx="36" cy="36" r="34" fill="none" stroke="#A855F7" stroke-width="1.5" opacity="0.6"></circle>
+      </svg>
+      <span style="font-family:'Space Grotesk',sans-serif; font-size:20px; font-weight:700; color:#F8F9FA; letter-spacing:-0.5px;">learn<span style="background:linear-gradient(135deg,#A855F7,#818CF8); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">harder</span></span>
+    </div>
+
+    <!-- Small / favicon -->
+    <div style="display:flex; align-items:center; gap:16px;">
+      <svg width="24" height="24" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="bgGrad3" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#7C3AED"></stop><stop offset="100%" stop-color="#4F46E5"></stop></linearGradient><linearGradient id="boltGrad3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FDE68A"></stop><stop offset="100%" stop-color="#F59E0B"></stop></linearGradient></defs>
+        <circle cx="36" cy="36" r="34" fill="url(#bgGrad3)"></circle>
+        <polygon points="38,18 30,37 37,37 34,54 44,33 37,33" fill="url(#boltGrad3)"></polygon>
+      </svg>
+      <span style="font-family:'Space Mono',monospace; font-size:10px; color:#6B7280; letter-spacing:1px;">favicon / app icon</span>
+    </div>
+  </div>
+
+  <!-- Divider -->
+  <div style="width:100%; max-width:640px; height:1px; background:linear-gradient(90deg, transparent, #1E1E3F, transparent);"></div>
+
+  <!-- ============ OPTION B: Rounded Square Icon ============ -->
+  <div style="display:flex; flex-direction:column; align-items:center; gap:40px; width:100%;">
+    <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:2px; color:#6B7280; text-transform:uppercase;">Option B — Square Badge</div>
+
+    <div style="display:flex; align-items:center; gap:20px;">
+      <!-- Logomark -->
+      <svg width="72" height="72" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 0 12px #7C3AED88);">
+        <defs>
+          <linearGradient id="sqGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#5B21B6"></stop>
+            <stop offset="100%" stop-color="#312E81"></stop>
+          </linearGradient>
+        </defs>
+        <rect width="72" height="72" rx="18" fill="url(#sqGrad)"></rect>
+        <!-- L letterform with bolt -->
+        <text x="12" y="50" font-family="'Space Grotesk'" font-weight="800" font-size="38" fill="#F8F9FA" opacity="0.9">L</text>
+        <!-- bolt overlay -->
+        <polygon points="44,14 36,30 41,30 39,46 50,26 44,26" fill="#FDE68A"></polygon>
+        <polygon points="44,14 36,30 41,30 39,46 50,26 44,26" fill="none" stroke="#F59E0B" stroke-width="1"></polygon>
+      </svg>
+
+      <!-- Wordmark horizontal -->
+      <div style="font-family:'Space Grotesk',sans-serif; font-size:36px; font-weight:800; color:#F8F9FA; letter-spacing:-1.5px;">
+        LH<span style="color:#7C3AED">.</span><span style="font-size:22px; font-weight:500; color:#94A3B8; letter-spacing:-0.5px;">app</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Divider -->
+  <div style="width:100%; max-width:640px; height:1px; background:linear-gradient(90deg, transparent, #1E1E3F, transparent);"></div>
+
+  <!-- ============ OPTION C: Wordmark-only bold ============ -->
+  <div style="display:flex; flex-direction:column; align-items:center; gap:32px; width:100%;">
+    <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:2px; color:#6B7280; text-transform:uppercase;">Option C — Wordmark + Dot</div>
+
+    <div style="display:flex; align-items:center; gap:6px;">
+      <svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 0 10px #A855F7);">
+        <circle cx="24" cy="24" r="23" fill="#0D0D1A" stroke="#7C3AED" stroke-width="2"></circle>
+        <!-- Stylized open book -->
+        <path d="M12 30 Q12 18 24 20 Q36 18 36 30 L36 34 Q24 32 24 32 Q24 32 12 34 Z" fill="#7C3AED" opacity="0.7"></path>
+        <line x1="24" y1="20" x2="24" y2="34" stroke="#A855F7" stroke-width="1.5"></line>
+        <!-- bolt on book -->
+        <polygon points="26,18 22,26 25,26 23,34 30,24 26,24" fill="#FDE68A"></polygon>
+      </svg>
+
+      <div style="font-family:'Space Grotesk',sans-serif; font-weight:800; font-size:40px; letter-spacing:-2px; line-height:1;">
+        <span style="color:#E2E8F0;">learn</span><span style="color:#7C3AED;">harder</span><span style="color:#A855F7; font-size:48px;">.</span>
+      </div>
+    </div>
+
+    <!-- Tagline -->
+    <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:4px; color:#4B5563; text-transform:uppercase;">study smarter. push harder.</div>
+  </div>
+
+  <!-- Divider -->
+  <div style="width:100%; max-width:640px; height:1px; background:linear-gradient(90deg, transparent, #1E1E3F, transparent);"></div>
+
+  <!-- Color palette -->
+  <div style="display:flex; flex-direction:column; align-items:center; gap:20px;">
+    <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:2px; color:#6B7280; text-transform:uppercase;">Brand Colors</div>
+    <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center;">
+      <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+        <div style="width:52px; height:52px; border-radius:12px; background:#7C3AED; box-shadow:0 0 16px #7C3AED66;"></div>
+        <span style="font-family:'Space Mono',monospace; font-size:9px; color:#6B7280;">#7C3AED<br>Primary</span>
+      </div>
+      <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+        <div style="width:52px; height:52px; border-radius:12px; background:#4F46E5; box-shadow:0 0 16px #4F46E566;"></div>
+        <span style="font-family:'Space Mono',monospace; font-size:9px; color:#6B7280;">#4F46E5<br>Indigo</span>
+      </div>
+      <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+        <div style="width:52px; height:52px; border-radius:12px; background:#A855F7;"></div>
+        <span style="font-family:'Space Mono',monospace; font-size:9px; color:#6B7280;">#A855F7<br>Accent</span>
+      </div>
+      <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+        <div style="width:52px; height:52px; border-radius:12px; background:#F59E0B;"></div>
+        <span style="font-family:'Space Mono',monospace; font-size:9px; color:#6B7280;">#F59E0B<br>Gold</span>
+      </div>
+      <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+        <div style="width:52px; height:52px; border-radius:12px; background:#10B981;"></div>
+        <span style="font-family:'Space Mono',monospace; font-size:9px; color:#6B7280;">#10B981<br>Success</span>
+      </div>
+      <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+        <div style="width:52px; height:52px; border-radius:12px; background:#EF4444;"></div>
+        <span style="font-family:'Space Mono',monospace; font-size:9px; color:#6B7280;">#EF4444<br>Error</span>
+      </div>
+      <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+        <div style="width:52px; height:52px; border-radius:12px; background:#0D0D1A; border:1px solid #1E1E3F;"></div>
+        <span style="font-family:'Space Mono',monospace; font-size:9px; color:#6B7280;">#0D0D1A<br>BG Dark</span>
+      </div>
+      <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+        <div style="width:52px; height:52px; border-radius:12px; background:#131320; border:1px solid #1E1E3F;"></div>
+        <span style="font-family:'Space Mono',monospace; font-size:9px; color:#6B7280;">#131320<br>Surface</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

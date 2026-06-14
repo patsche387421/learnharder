@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="true" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    body { margin:0; background:#0D0D1A; font-family:'Space Grotesk',sans-serif; color:#F1F5F9; }
+    @keyframes float   { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
+    @keyframes glow-gold  { 0%,100%{box-shadow:0 0 16px #F59E0B44} 50%{box-shadow:0 0 32px #F59E0B88} }
+    @keyframes glow-silver{ 0%,100%{box-shadow:0 0 12px #94A3B833} 50%{box-shadow:0 0 24px #94A3B866} }
+    @keyframes rank-pulse { 0%{transform:scale(1)} 50%{transform:scale(1.04)} 100%{transform:scale(1)} }
+  </style>
+</helmet>
+
+<div style="min-height:100vh; background:#0D0D1A; padding:48px 40px; max-width:1200px; margin:0 auto; display:flex; flex-direction:column; gap:80px;">
+
+  <!-- Title -->
+  <div style="display:flex; flex-direction:column; gap:8px; border-bottom:1px solid #1E1E3F; padding-bottom:32px;">
+    <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:3px; color:#4B5563; text-transform:uppercase;">learnharder.app</div>
+    <h1 style="margin:0; font-size:32px; font-weight:800; letter-spacing:-1px;">Rangliste &amp; Lernteams</h1>
+    <p style="margin:0; font-size:15px; color:#64748B;">Globale Rangliste · Wochenrangliste · Lernteam-Übersicht · Team-Detail</p>
+  </div>
+
+
+  <!-- ================================================================ -->
+  <!-- 01 — GLOBALE RANGLISTE                                            -->
+  <!-- ================================================================ -->
+  <section style="display:flex; flex-direction:column; gap:20px;">
+    <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:3px; color:#7C3AED; text-transform:uppercase;">01 — Globale Rangliste</div>
+
+    <div style="display:flex; gap:24px; flex-wrap:wrap; align-items:flex-start;">
+
+      <!-- Leaderboard panel -->
+      <div style="flex:1; min-width:320px; background:#131320; border:1px solid #1E1E3F; border-radius:20px; overflow:hidden;">
+
+        <!-- Tabs -->
+        <div style="display:flex; border-bottom:1px solid #1E1E3F;">
+          <div style="flex:1; padding:14px 20px; font-size:14px; font-weight:700; color:#A855F7; border-bottom:2px solid #7C3AED; text-align:center; cursor:pointer;">Gesamt</div>
+          <div style="flex:1; padding:14px 20px; font-size:14px; font-weight:500; color:#4B5563; text-align:center; cursor:pointer;">Diese Woche</div>
+          <div style="flex:1; padding:14px 20px; font-size:14px; font-weight:500; color:#4B5563; text-align:center; cursor:pointer;">Klasse</div>
+        </div>
+
+        <!-- Top 3 podium -->
+        <div style="padding:28px 20px 20px; display:flex; align-items:flex-end; justify-content:center; gap:16px;">
+
+          <!-- 2nd place -->
+          <div style="display:flex; flex-direction:column; align-items:center; gap:8px; flex:1;">
+            <div style="width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg,#CBD5E1,#94A3B8); border:2px solid #94A3B8; display:flex; align-items:center; justify-content:center; animation: glow-silver 3s ease-in-out infinite;">
+              <span style="font-size:16px; font-weight:800; color:#0D0D1A;">SK</span>
+            </div>
+            <div style="text-align:center;">
+              <div style="font-size:12px; font-weight:700; color:#94A3B8;">Sarah K.</div>
+              <div style="font-family:'Space Mono',monospace; font-size:10px; color:#64748B;">4,820 XP</div>
+            </div>
+            <div style="width:100%; height:64px; background:linear-gradient(180deg,#94A3B822,#64748B11); border:1px solid #94A3B833; border-bottom:none; border-radius:10px 10px 0 0; display:flex; align-items:center; justify-content:center;">
+              <span style="font-size:28px; font-weight:800; color:#94A3B8;">2</span>
+            </div>
+          </div>
+
+          <!-- 1st place -->
+          <div style="display:flex; flex-direction:column; align-items:center; gap:8px; flex:1.1;">
+            <svg width="24" height="24" viewBox="0 0 28 28" style="animation:float 2s ease-in-out infinite;"><defs><linearGradient id="crown-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FDE68A"/><stop offset="100%" stop-color="#D97706"/></linearGradient></defs><path d="M4 20 L8 10 L14 16 L20 6 L24 20 Z" fill="url(#crown-g)"/><rect x="4" y="20" width="20" height="4" rx="2" fill="#F59E0B"/><circle cx="4" cy="10" r="2.5" fill="#FDE68A"/><circle cx="14" cy="5" r="2.5" fill="#FDE68A"/><circle cx="24" cy="6" r="2.5" fill="#FDE68A"/></svg>
+            <div style="width:60px; height:60px; border-radius:50%; background:linear-gradient(135deg,#FDE68A,#F59E0B); border:3px solid #F59E0B; display:flex; align-items:center; justify-content:center; animation: glow-gold 2.5s ease-in-out infinite;">
+              <span style="font-size:20px; font-weight:800; color:#0D0D1A;">MK</span>
+            </div>
+            <div style="text-align:center;">
+              <div style="font-size:13px; font-weight:800; color:#F1F5F9;">Max Koller</div>
+              <div style="font-family:'Space Mono',monospace; font-size:11px; color:#F59E0B; font-weight:700;">6,240 XP</div>
+            </div>
+            <div style="width:100%; height:88px; background:linear-gradient(180deg,#F59E0B22,#D9770611); border:1px solid #F59E0B44; border-bottom:none; border-radius:10px 10px 0 0; display:flex; align-items:center; justify-content:center;">
+              <span style="font-size:36px; font-weight:800; color:#F59E0B;">1</span>
+            </div>
+          </div>
+
+          <!-- 3rd place -->
+          <div style="display:flex; flex-direction:column; align-items:center; gap:8px; flex:1;">
+            <div style="width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg,#FDE68A,#B45309); border:2px solid #B45309; display:flex; align-items:center; justify-content:center;">
+              <span style="font-size:16px; font-weight:800; color:#FDE68A;">LP</span>
+            </div>
+            <div style="text-align:center;">
+              <div style="font-size:12px; font-weight:700; color:#B45309;">Lukas P.</div>
+              <div style="font-family:'Space Mono',monospace; font-size:10px; color:#64748B;">3,910 XP</div>
+            </div>
+            <div style="width:100%; height:48px; background:linear-gradient(180deg,#B4530922,#92400E11); border:1px solid #B4530933; border-bottom:none; border-radius:10px 10px 0 0; display:flex; align-items:center; justify-content:center;">
+              <span style="font-size:22px; font-weight:800; color:#B45309;">3</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Rest of list -->
+        <div style="display:flex; flex-direction:column; gap:0; border-top:1px solid #1E1E3F;">
+
+          <div style="display:flex; align-items:center; gap:12px; padding:14px 20px; border-bottom:1px solid #0D0D1A;">
+            <span style="font-family:'Space Mono',monospace; font-size:13px; font-weight:700; color:#64748B; width:24px; text-align:center;">4</span>
+            <div style="width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,#7C3AED,#4F46E5); display:flex; align-items:center; justify-content:center; flex-shrink:0;"><span style="font-size:12px; font-weight:700; color:white;">AH</span></div>
+            <div style="flex:1;">
+              <div style="font-size:13px; font-weight:600; color:#F1F5F9;">Anna H.</div>
+              <div style="display:flex; gap:6px; align-items:center; margin-top:1px;"><svg width="10" height="10" viewBox="0 0 28 28"><defs><linearGradient id="fs4" x1="0.5" y1="0" x2="0.5" y2="1"><stop offset="0%" stop-color="#FDE68A"/><stop offset="100%" stop-color="#DC2626"/></linearGradient></defs><path d="M14 3 Q16 8 20 10 Q22 5 20 2 Q26 7 25 14 Q24 20 14 24 Q4 20 3 14 Q2 7 8 2 Q6 5 8 10 Q12 8 14 3Z" fill="url(#fs4)"/></svg><span style="font-size:10px; color:#64748B;">5 Streak</span></div>
+            </div>
+            <div style="text-align:right;"><div style="font-family:'Space Mono',monospace; font-size:13px; font-weight:700; color:#F1F5F9;">3,650</div><div style="font-size:10px; color:#10B981;">↑ +2</div></div>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:12px; padding:14px 20px; border-bottom:1px solid #0D0D1A;">
+            <span style="font-family:'Space Mono',monospace; font-size:13px; font-weight:700; color:#64748B; width:24px; text-align:center;">5</span>
+            <div style="width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,#0284C7,#0EA5E9); display:flex; align-items:center; justify-content:center; flex-shrink:0;"><span style="font-size:12px; font-weight:700; color:white;">TW</span></div>
+            <div style="flex:1;"><div style="font-size:13px; font-weight:600; color:#F1F5F9;">Timo W.</div><div style="font-size:10px; color:#64748B; margin-top:1px;">3 Streak</div></div>
+            <div style="text-align:right;"><div style="font-family:'Space Mono',monospace; font-size:13px; font-weight:700; color:#F1F5F9;">2,980</div><div style="font-size:10px; color:#EF4444;">↓ -1</div></div>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:12px; padding:14px 20px; border-bottom:1px solid #0D0D1A;">
+            <span style="font-family:'Space Mono',monospace; font-size:13px; font-weight:700; color:#64748B; width:24px; text-align:center;">6</span>
+            <div style="width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,#10B981,#059669); display:flex; align-items:center; justify-content:center; flex-shrink:0;"><span style="font-size:12px; font-weight:700; color:white;">JM</span></div>
+            <div style="flex:1;"><div style="font-size:13px; font-weight:600; color:#F1F5F9;">Julia M.</div><div style="font-size:10px; color:#64748B; margin-top:1px;">12 Streak 🔥</div></div>
+            <div style="text-align:right;"><div style="font-family:'Space Mono',monospace; font-size:13px; font-weight:700; color:#F1F5F9;">2,740</div><div style="font-size:10px; color:#10B981;">↑ +5</div></div>
+          </div>
+
+          <!-- My rank (highlighted) -->
+          <div style="display:flex; align-items:center; gap:12px; padding:14px 20px; background:linear-gradient(90deg,#7C3AED11,transparent); border-bottom:1px solid #7C3AED22; animation: rank-pulse 3s ease-in-out infinite;">
+            <div style="width:24px; height:24px; border-radius:6px; background:linear-gradient(135deg,#7C3AED,#4F46E5); display:flex; align-items:center; justify-content:center; flex-shrink:0;"><span style="font-family:'Space Mono',monospace; font-size:10px; font-weight:700; color:white;">4</span></div>
+            <div style="width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,#A855F7,#7C3AED); border:2px solid #7C3AED; display:flex; align-items:center; justify-content:center; flex-shrink:0;"><span style="font-size:12px; font-weight:700; color:white;">MK</span></div>
+            <div style="flex:1;"><div style="font-size:13px; font-weight:700; color:#A855F7;">Max Koller <span style="font-size:11px; color:#7C3AED; background:#7C3AED22; padding:1px 6px; border-radius:999px; font-weight:600;">Du</span></div><div style="font-size:10px; color:#64748B; margin-top:1px;">7 Streak 🔥 · Level 4</div></div>
+            <div style="text-align:right;"><div style="font-family:'Space Mono',monospace; font-size:13px; font-weight:700; color:#A855F7;">1,240</div><div style="font-size:10px; color:#10B981;">↑ +12</div></div>
+          </div>
+
+        </div>
+      </div>
+
+
+      <!-- Weekly challenge + stats -->
+      <div style="display:flex; flex-direction:column; gap:16px; width:280px; flex-shrink:0;">
+
+        <!-- Weekly Challenge card -->
+        <div style="background:linear-gradient(135deg,#1A0533,#131320); border:1px solid #7C3AED44; border-radius:16px; padding:20px; display:flex; flex-direction:column; gap:14px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <svg width="18" height="18" viewBox="0 0 28 28"><defs><linearGradient id="wc-bolt" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FDE68A"/><stop offset="100%" stop-color="#F59E0B"/></linearGradient></defs><polygon points="14,3 6,14 11,14 8.5,24 20,11.5 14.5,11.5" fill="url(#wc-bolt)"/></svg>
+            <span style="font-family:'Space Mono',monospace; font-size:10px; font-weight:700; color:#A855F7; letter-spacing:1px; text-transform:uppercase;">Weekly Challenge</span>
+          </div>
+          <div style="font-size:16px; font-weight:700; color:#F1F5F9; line-height:1.4;">500 XP diese Woche sammeln</div>
+          <div style="height:8px; background:#1E1E3F; border-radius:4px; overflow:hidden;">
+            <div style="height:100%; width:74%; background:linear-gradient(90deg,#7C3AED,#A855F7); border-radius:4px;"></div>
+          </div>
+          <div style="display:flex; justify-content:space-between;">
+            <span style="font-size:12px; color:#64748B;">370 / 500 XP</span>
+            <span style="font-size:12px; font-weight:700; color:#A855F7;">74%</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px; background:#F59E0B11; border:1px solid #F59E0B33; border-radius:8px; padding:8px 12px;">
+            <svg width="16" height="16" viewBox="0 0 96 96"><defs><linearGradient id="tph-wc" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FDE68A"/><stop offset="100%" stop-color="#D97706"/></linearGradient></defs><path d="M28 20 Q24 52 38 64 Q43 68 48 68 Q53 68 58 64 Q72 52 68 20 Z" fill="url(#tph-wc)"/><path d="M28 28 Q16 30 17 42 Q18 50 28 50" fill="none" stroke="#F59E0B" stroke-width="5" stroke-linecap="round"/><path d="M68 28 Q80 30 79 42 Q78 50 68 50" fill="none" stroke="#F59E0B" stroke-width="5" stroke-linecap="round"/><rect x="36" y="76" width="24" height="6" rx="3" fill="url(#tph-wc)"/><rect x="43" y="68" width="10" height="8" fill="#F59E0B"/><ellipse cx="48" cy="20" rx="20" ry="4" fill="#FDE68A"/></svg>
+            <div>
+              <div style="font-size:11px; font-weight:700; color:#F59E0B;">Belohnung: Gold-Trophäe</div>
+              <div style="font-size:10px; color:#64748B;">+ 200 Bonus-XP</div>
+            </div>
+          </div>
+          <div style="font-family:'Space Mono',monospace; font-size:10px; color:#4B5563; text-align:center;">Endet in 2 Tagen, 14 Std.</div>
+        </div>
+
+        <!-- My stats -->
+        <div style="background:#131320; border:1px solid #1E1E3F; border-radius:16px; padding:20px; display:flex; flex-direction:column; gap:12px;">
+          <div style="font-size:14px; font-weight:700; color:#F1F5F9;">Meine Stats</div>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:#0D0D1A; border-radius:10px; border:1px solid #1E1E3F;">
+              <span style="font-size:12px; color:#94A3B8;">Gesamt-XP</span>
+              <span style="font-family:'Space Mono',monospace; font-size:13px; font-weight:700; color:#F59E0B;">6,240</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:#0D0D1A; border-radius:10px; border:1px solid #1E1E3F;">
+              <span style="font-size:12px; color:#94A3B8;">Globaler Rang</span>
+              <span style="font-family:'Space Mono',monospace; font-size:13px; font-weight:700; color:#A855F7;">#4</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:#0D0D1A; border-radius:10px; border:1px solid #1E1E3F;">
+              <span style="font-size:12px; color:#94A3B8;">Klassen-Rang</span>
+              <span style="font-family:'Space Mono',monospace; font-size:13px; font-weight:700; color:#F59E0B;">#1 🏆</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:#0D0D1A; border-radius:10px; border:1px solid #1E1E3F;">
+              <span style="font-size:12px; color:#94A3B8;">Quizze gespielt</span>
+              <span style="font-family:'Space Mono',monospace; font-size:13px; font-weight:700; color:#06B6D4;">42</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:#0D0D1A; border-radius:10px; border:1px solid #1E1E3F;">
+              <span style="font-size:12px; color:#94A3B8;">Trophäen</span>
+              <span style="font-family:'Space Mono',monospace; font-size:13px; font-weight:700; color:#F59E0B;">3 🥇1 🥈2</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ================================================================ -->
+  <!-- 02 — LERNTEAM ÜBERSICHT                                           -->
+  <!-- ================================================================ -->
+  <section style="display:flex; flex-direction:column; gap:20px;">
+    <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:3px; color:#7C3AED; text-transform:uppercase;">02 — Lernteam-Übersicht</div>
+
+    <div style="display:flex; gap:20px; flex-wrap:wrap;">
+
+      <!-- Team card — My team (active) -->
+      <div style="background:#131320; border:2px solid #7C3AED44; border-radius:18px; padding:22px; display:flex; flex-direction:column; gap:16px; flex:1; min-width:260px; max-width:340px; box-shadow:0 0 24px #7C3AED11;">
+        <div style="display:flex; align-items:center; justify-content:space-between;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:44px; height:44px; border-radius:12px; background:linear-gradient(135deg,#7C3AED,#4F46E5); display:flex; align-items:center; justify-content:center; font-size:22px;">⚡</div>
+            <div>
+              <div style="font-size:15px; font-weight:800; color:#F1F5F9;">Code Crushers</div>
+              <div style="font-size:11px; color:#64748B;">4 Mitglieder</div>
+            </div>
+          </div>
+          <span style="font-size:11px; font-weight:700; color:#A855F7; background:#7C3AED22; padding:3px 10px; border-radius:999px; border:1px solid #7C3AED44;">Mein Team</span>
+        </div>
+
+        <!-- Members row -->
+        <div style="display:flex; align-items:center; gap:0;">
+          <div style="width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,#F59E0B,#D97706); border:2px solid #131320; display:flex; align-items:center; justify-content:center; z-index:4; margin-right:-8px;"><span style="font-size:11px; font-weight:700; color:#0D0D1A;">MK</span></div>
+          <div style="width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,#A855F7,#7C3AED); border:2px solid #131320; display:flex; align-items:center; justify-content:center; z-index:3; margin-right:-8px;"><span style="font-size:11px; font-weight:700; color:white;">SK</span></div>
+          <div style="width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,#0EA5E9,#0284C7); border:2px solid #131320; display:flex; align-items:center; justify-content:center; z-index:2; margin-right:-8px;"><span style="font-size:11px; font-weight:700; color:white;">LP</span></div>
+          <div style="width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,#10B981,#059669); border:2px solid #131320; display:flex; align-items:center; justify-content:center; z-index:1;"><span style="font-size:11px; font-weight:700; color:white;">AH</span></div>
+          <div style="margin-left:12px; font-size:12px; color:#64748B;">+0 offen</div>
+        </div>
+
+        <!-- Team XP -->
+        <div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+            <span style="font-size:12px; color:#64748B;">Team-XP diese Woche</span>
+            <span style="font-family:'Space Mono',monospace; font-size:12px; font-weight:700; color:#F59E0B;">8,430 XP</span>
+          </div>
+          <div style="height:6px; background:#1E1E3F; border-radius:3px; overflow:hidden;"><div style="height:100%; width:84%; background:linear-gradient(90deg,#7C3AED,#F59E0B); border-radius:3px;"></div></div>
+        </div>
+
+        <!-- Ranking -->
+        <div style="background:#0D0D1A; border:1px solid #1E1E3F; border-radius:10px; padding:10px 14px; display:flex; align-items:center; justify-content:space-between;">
+          <span style="font-size:12px; color:#94A3B8;">Wochenrangliste</span>
+          <span style="font-family:'Space Mono',monospace; font-size:14px; font-weight:800; color:#F59E0B;">#2 🥈</span>
+        </div>
+
+        <button style="font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:700; padding:11px; background:linear-gradient(135deg,#7C3AED,#4F46E5); color:white; border:none; border-radius:11px; cursor:pointer;">Team öffnen →</button>
+      </div>
+
+      <!-- Team card — other -->
+      <div style="background:#131320; border:1px solid #1E1E3F; border-radius:18px; padding:22px; display:flex; flex-direction:column; gap:16px; flex:1; min-width:260px; max-width:340px;">
+        <div style="display:flex; align-items:center; justify-content:space-between;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:44px; height:44px; border-radius:12px; background:linear-gradient(135deg,#0284C7,#0EA5E9); display:flex; align-items:center; justify-content:center; font-size:22px;">🗄️</div>
+            <div>
+              <div style="font-size:15px; font-weight:800; color:#F1F5F9;">DB Masters</div>
+              <div style="font-size:11px; color:#64748B;">6 Mitglieder · DBI</div>
+            </div>
+          </div>
+          <span style="font-size:11px; font-weight:600; color:#4B5563; background:#1E1E3F; padding:3px 10px; border-radius:999px;">Offen</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:0;">
+          <div style="width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,#0EA5E9,#0284C7); border:2px solid #131320; display:flex; align-items:center; justify-content:center; z-index:4; margin-right:-8px;"><span style="font-size:11px; font-weight:700; color:white;">TW</span></div>
+          <div style="width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,#10B981,#059669); border:2px solid #131320; display:flex; align-items:center; justify-content:center; z-index:3; margin-right:-8px;"><span style="font-size:11px; font-weight:700; color:white;">JM</span></div>
+          <div style="width:34px; height:34px; border-radius:50%; background:#2D1B69; border:2px solid #131320; display:flex; align-items:center; justify-content:center; z-index:2;"><span style="font-size:10px; color:#94A3B8;">+4</span></div>
+          <div style="margin-left:12px; font-size:12px; color:#64748B;">1 Platz frei</div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:6px;"><span style="font-size:12px; color:#64748B;">Team-XP</span><span style="font-family:'Space Mono',monospace; font-size:12px; font-weight:700; color:#0EA5E9;">11,820 XP</span></div>
+          <div style="height:6px; background:#1E1E3F; border-radius:3px; overflow:hidden;"><div style="height:100%; width:100%; background:linear-gradient(90deg,#0284C7,#38BDF8); border-radius:3px;"></div></div>
+        </div>
+        <div style="background:#0D0D1A; border:1px solid #1E1E3F; border-radius:10px; padding:10px 14px; display:flex; align-items:center; justify-content:space-between;">
+          <span style="font-size:12px; color:#94A3B8;">Wochenrangliste</span>
+          <span style="font-family:'Space Mono',monospace; font-size:14px; font-weight:800; color:#F59E0B;">#1 🏆</span>
+        </div>
+        <button style="font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:600; padding:11px; background:#0D0D1A; color:#0EA5E9; border:1px solid #0EA5E933; border-radius:11px; cursor:pointer;">Beitreten</button>
+      </div>
+
+      <!-- Create team CTA -->
+      <div style="background:#0D0D1A; border:2px dashed #1E1E3F; border-radius:18px; padding:22px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; flex:1; min-width:200px; max-width:280px; cursor:pointer; min-height:240px;">
+        <div style="width:56px; height:56px; border-radius:16px; background:#131320; border:1px solid #1E1E3F; display:flex; align-items:center; justify-content:center;">
+          <svg width="24" height="24" viewBox="0 0 28 28"><line x1="14" y1="4" x2="14" y2="24" stroke="#4B5563" stroke-width="2.5" stroke-linecap="round"/><line x1="4" y1="14" x2="24" y2="14" stroke="#4B5563" stroke-width="2.5" stroke-linecap="round"/></svg>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:14px; font-weight:700; color:#64748B;">Neues Team erstellen</div>
+          <div style="font-size:12px; color:#374151; margin-top:4px;">Bis zu 8 Mitglieder</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ================================================================ -->
+  <!-- 03 — TEAM DETAIL VIEW                                             -->
+  <!-- ================================================================ -->
+  <section style="display:flex; flex-direction:column; gap:20px;">
+    <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:3px; color:#7C3AED; text-transform:uppercase;">03 — Team Detail</div>
+
+    <div style="background:#131320; border:1px solid #1E1E3F; border-radius:20px; overflow:hidden;">
+
+      <!-- Team header banner -->
+      <div style="background:linear-gradient(135deg,#1A0533 0%,#0D0D2E 60%,#0C2233 100%); padding:28px 28px 24px; position:relative; overflow:hidden;">
+        <div style="position:absolute; inset:0; background-image:radial-gradient(circle,#7C3AED11 1px,transparent 1px); background-size:22px 22px;"></div>
+        <div style="position:absolute; right:-20px; top:-20px; width:160px; height:160px; border-radius:50%; background:radial-gradient(circle,#7C3AED22,transparent 70%);"></div>
+        <div style="position:relative; display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+          <div style="width:60px; height:60px; border-radius:18px; background:linear-gradient(135deg,#7C3AED,#4F46E5); display:flex; align-items:center; justify-content:center; font-size:28px; box-shadow:0 0 24px #7C3AED44; flex-shrink:0;">⚡</div>
+          <div style="flex:1;">
+            <div style="font-size:24px; font-weight:800; color:#F1F5F9; letter-spacing:-0.5px;">Code Crushers</div>
+            <div style="font-size:13px; color:#94A3B8; margin-top:3px;">Gegründet von Max Koller · POS, DBI</div>
+          </div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <div style="background:#FFFFFF10; border:1px solid #FFFFFF20; border-radius:8px; padding:8px 14px; text-align:center;">
+              <div style="font-family:'Space Mono',monospace; font-size:18px; font-weight:800; color:#F59E0B;">#2</div>
+              <div style="font-size:10px; color:#94A3B8;">Rang</div>
+            </div>
+            <div style="background:#FFFFFF10; border:1px solid #FFFFFF20; border-radius:8px; padding:8px 14px; text-align:center;">
+              <div style="font-family:'Space Mono',monospace; font-size:18px; font-weight:800; color:#A855F7;">8,430</div>
+              <div style="font-size:10px; color:#94A3B8;">Team-XP</div>
+            </div>
+            <div style="background:#FFFFFF10; border:1px solid #FFFFFF20; border-radius:8px; padding:8px 14px; text-align:center;">
+              <div style="font-family:'Space Mono',monospace; font-size:18px; font-weight:800; color:#06B6D4;">4</div>
+              <div style="font-size:10px; color:#94A3B8;">Mitglieder</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Members table -->
+      <div style="padding:24px; display:flex; flex-direction:column; gap:20px;">
+        <div style="font-size:16px; font-weight:700; color:#F1F5F9;">Mitglieder</div>
+        <div style="display:flex; flex-direction:column; gap:0; border:1px solid #1E1E3F; border-radius:14px; overflow:hidden;">
+
+          <!-- Header row -->
+          <div style="display:grid; grid-template-columns:36px 2fr 1fr 1fr 1fr 80px; gap:0; padding:10px 16px; background:#0D0D1A; border-bottom:1px solid #1E1E3F;">
+            <span style="font-family:'Space Mono',monospace; font-size:9px; color:#4B5563;">#</span>
+            <span style="font-family:'Space Mono',monospace; font-size:9px; color:#4B5563;">NAME</span>
+            <span style="font-family:'Space Mono',monospace; font-size:9px; color:#4B5563;">XP</span>
+            <span style="font-family:'Space Mono',monospace; font-size:9px; color:#4B5563;">LEVEL</span>
+            <span style="font-family:'Space Mono',monospace; font-size:9px; color:#4B5563;">STREAK</span>
+            <span style="font-family:'Space Mono',monospace; font-size:9px; color:#4B5563;">STATUS</span>
+          </div>
+
+          <!-- Row 1 -->
+          <div style="display:grid; grid-template-columns:36px 2fr 1fr 1fr 1fr 80px; gap:0; padding:14px 16px; border-bottom:1px solid #0D0D1A; align-items:center; background:linear-gradient(90deg,#F59E0B08,transparent);">
+            <div style="width:24px; height:24px; border-radius:6px; background:linear-gradient(135deg,#F59E0B,#D97706); display:flex; align-items:center; justify-content:center;"><span style="font-size:11px; font-weight:800; color:#0D0D1A;">1</span></div>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#F59E0B,#D97706); border:2px solid #F59E0B44; display:flex; align-items:center; justify-content:center; flex-shrink:0;"><span style="font-size:11px; font-weight:700; color:#0D0D1A;">MK</span></div>
+              <div><div style="font-size:13px; font-weight:700; color:#F1F5F9;">Max Koller</div><div style="font-size:10px; color:#7C3AED; font-family:'Space Mono',monospace;">Admin</div></div>
+            </div>
+            <span style="font-family:'Space Mono',monospace; font-size:13px; font-weight:700; color:#F59E0B;">6,240</span>
+            <div style="display:flex; align-items:center; gap:5px;"><svg width="16" height="16" viewBox="0 0 96 96"><defs><linearGradient id="lv-t1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#7C3AED"/><stop offset="100%" stop-color="#4F46E5"/></linearGradient></defs><path d="M48 6 L82 26 L82 66 L48 86 L14 66 L14 26 Z" fill="url(#lv-t1)"/><text x="48" y="58" font-family="'Space Grotesk'" font-weight="800" font-size="30" fill="white" text-anchor="middle">4</text></svg><span style="font-size:12px; color:#A855F7; font-weight:600;">Lv 4</span></div>
+            <div style="display:flex; align-items:center; gap:4px;"><svg width="12" height="12" viewBox="0 0 28 28"><defs><linearGradient id="fs-t1" x1="0.5" y1="0" x2="0.5" y2="1"><stop offset="0%" stop-color="#FDE68A"/><stop offset="100%" stop-color="#DC2626"/></linearGradient></defs><path d="M14 3 Q16 8 20 10 Q22 5 20 2 Q26 7 25 14 Q24 20 14 24 Q4 20 3 14 Q2 7 8 2 Q6 5 8 10 Q12 8 14 3Z" fill="url(#fs-t1)"/></svg><span style="font-size:12px; color:#FDE68A; font-weight:600;">7</span></div>
+            <div style="width:8px; height:8px; border-radius:50%; background:#10B981;"></div>
+          </div>
+
+          <!-- Row 2 -->
+          <div style="display:grid; grid-template-columns:36px 2fr 1fr 1fr 1fr 80px; gap:0; padding:14px 16px; border-bottom:1px solid #0D0D1A; align-items:center;">
+            <div style="width:24px; height:24px; border-radius:6px; background:#94A3B822; display:flex; align-items:center; justify-content:center;"><span style="font-size:11px; font-weight:800; color:#94A3B8;">2</span></div>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#A855F7,#7C3AED); display:flex; align-items:center; justify-content:center; flex-shrink:0;"><span style="font-size:11px; font-weight:700; color:white;">SK</span></div>
+              <div><div style="font-size:13px; font-weight:600; color:#F1F5F9;">Sarah K.</div><div style="font-size:10px; color:#64748B;">Mitglied</div></div>
+            </div>
+            <span style="font-family:'Space Mono',monospace; font-size:13px; font-weight:700; color:#F1F5F9;">4,820</span>
+            <div style="display:flex; align-items:center; gap:5px;"><svg width="16" height="16" viewBox="0 0 96 96"><defs><linearGradient id="lv-t2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0284C7"/><stop offset="100%" stop-color="#0EA5E9"/></linearGradient></defs><path d="M48 6 L82 26 L82 66 L48 86 L14 66 L14 26 Z" fill="url(#lv-t2)"/><text x="48" y="58" font-family="'Space Grotesk'" font-weight="800" font-size="30" fill="white" text-anchor="middle">3</text></svg><span style="font-size:12px; color:#38BDF8; font-weight:600;">Lv 3</span></div>
+            <div style="display:flex; align-items:center; gap:4px;"><svg width="12" height="12" viewBox="0 0 28 28"><defs><linearGradient id="fs-t2" x1="0.5" y1="0" x2="0.5" y2="1"><stop offset="0%" stop-color="#FDE68A"/><stop offset="100%" stop-color="#DC2626"/></linearGradient></defs><path d="M14 3 Q16 8 20 10 Q22 5 20 2 Q26 7 25 14 Q24 20 14 24 Q4 20 3 14 Q2 7 8 2 Q6 5 8 10 Q12 8 14 3Z" fill="url(#fs-t2)"/></svg><span style="font-size:12px; color:#FDE68A; font-weight:600;">5</span></div>
+            <div style="width:8px; height:8px; border-radius:50%; background:#10B981;"></div>
+          </div>
+
+          <!-- Row 3 -->
+          <div style="display:grid; grid-template-columns:36px 2fr 1fr 1fr 1fr 80px; gap:0; padding:14px 16px; border-bottom:1px solid #0D0D1A; align-items:center;">
+            <div style="width:24px; height:24px; border-radius:6px; background:#B4530922; display:flex; align-items:center; justify-content:center;"><span style="font-size:11px; font-weight:800; color:#B45309;">3</span></div>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#0EA5E9,#0284C7); display:flex; align-items:center; justify-content:center; flex-shrink:0;"><span style="font-size:11px; font-weight:700; color:white;">LP</span></div>
+              <div><div style="font-size:13px; font-weight:600; color:#F1F5F9;">Lukas P.</div><div style="font-size:10px; color:#64748B;">Mitglied</div></div>
+            </div>
+            <span style="font-family:'Space Mono',monospace; font-size:13px; font-weight:700; color:#F1F5F9;">2,140</span>
+            <div style="display:flex; align-items:center; gap:5px;"><svg width="16" height="16" viewBox="0 0 96 96"><defs><linearGradient id="lv-t3" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#7C3AED"/><stop offset="100%" stop-color="#4F46E5"/></linearGradient></defs><path d="M48 6 L82 26 L82 66 L48 86 L14 66 L14 26 Z" fill="url(#lv-t3)"/><text x="48" y="58" font-family="'Space Grotesk'" font-weight="800" font-size="30" fill="white" text-anchor="middle">2</text></svg><span style="font-size:12px; color:#A855F7; font-weight:600;">Lv 2</span></div>
+            <div style="display:flex; align-items:center; gap:4px;"><span style="font-size:12px; color:#4B5563;">—</span></div>
+            <div style="width:8px; height:8px; border-radius:50%; background:#F59E0B;"></div>
+          </div>
+
+          <!-- Row 4 -->
+          <div style="display:grid; grid-template-columns:36px 2fr 1fr 1fr 1fr 80px; gap:0; padding:14px 16px; align-items:center;">
+            <div style="width:24px; height:24px; border-radius:6px; background:#1E1E3F; display:flex; align-items:center; justify-content:center;"><span style="font-size:11px; font-weight:800; color:#4B5563;">4</span></div>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#10B981,#059669); display:flex; align-items:center; justify-content:center; flex-shrink:0;"><span style="font-size:11px; font-weight:700; color:white;">AH</span></div>
+              <div><div style="font-size:13px; font-weight:600; color:#F1F5F9;">Anna H.</div><div style="font-size:10px; color:#64748B;">Mitglied</div></div>
+            </div>
+            <span style="font-family:'Space Mono',monospace; font-size:13px; font-weight:700; color:#F1F5F9;">1,890</span>
+            <div style="display:flex; align-items:center; gap:5px;"><svg width="16" height="16" viewBox="0 0 96 96"><defs><linearGradient id="lv-t4" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#10B981"/><stop offset="100%" stop-color="#059669"/></linearGradient></defs><path d="M48 6 L82 26 L82 66 L48 86 L14 66 L14 26 Z" fill="url(#lv-t4)"/><text x="48" y="58" font-family="'Space Grotesk'" font-weight="800" font-size="30" fill="white" text-anchor="middle">2</text></svg><span style="font-size:12px; color:#34D399; font-weight:600;">Lv 2</span></div>
+            <div style="display:flex; align-items:center; gap:4px;"><svg width="12" height="12" viewBox="0 0 28 28"><defs><linearGradient id="fs-t4" x1="0.5" y1="0" x2="0.5" y2="1"><stop offset="0%" stop-color="#FDE68A"/><stop offset="100%" stop-color="#DC2626"/></linearGradient></defs><path d="M14 3 Q16 8 20 10 Q22 5 20 2 Q26 7 25 14 Q24 20 14 24 Q4 20 3 14 Q2 7 8 2 Q6 5 8 10 Q12 8 14 3Z" fill="url(#fs-t4)"/></svg><span style="font-size:12px; color:#FDE68A; font-weight:600;">3</span></div>
+            <div style="width:8px; height:8px; border-radius:50%; background:#4B5563;"></div>
+          </div>
+
+        </div>
+
+        <!-- Status legend -->
+        <div style="display:flex; gap:16px; flex-wrap:wrap;">
+          <div style="display:flex; align-items:center; gap:6px;"><div style="width:8px; height:8px; border-radius:50%; background:#10B981;"></div><span style="font-size:12px; color:#64748B;">Online</span></div>
+          <div style="display:flex; align-items:center; gap:6px;"><div style="width:8px; height:8px; border-radius:50%; background:#F59E0B;"></div><span style="font-size:12px; color:#64748B;">Im Quiz</span></div>
+          <div style="display:flex; align-items:center; gap:6px;"><div style="width:8px; height:8px; border-radius:50%; background:#4B5563;"></div><span style="font-size:12px; color:#64748B;">Offline</span></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</div>
+</x-dc>
+</body>
+</html>

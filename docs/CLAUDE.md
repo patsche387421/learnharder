@@ -259,3 +259,26 @@ Seitenübergänge. Das ist aktuell **Chromium-only**.
 - In Firefox und älteren Browsern: **graceful degradation** – die Navigation
   funktioniert normal, nur ohne Übergangsanimation.
 - Niemals Funktionalität von View Transitions abhängig machen.
+
+## Design-System (seit Juni 2026)
+
+Vor JEDER UI-Änderung:
+1. Prüfe docs/design/components/ und docs/design/pages/
+   auf bestehende Mockups oder Spezifikationen
+2. Falls vorhanden: halte dich daran
+3. Verwende ausschließlich Tokens aus src/css/tokens.css
+4. Falls neue Tokens nötig: in tokens.css ergänzen, 
+   in docs/DESIGN_GUIDELINES.md dokumentieren
+
+## Design-Inbox-Workflow
+
+Wenn Dateien in docs/design/INBOX/ liegen:
+1. Jede Datei analysieren (Seite oder Komponente?)
+2. Mit aussagekräftigem Namen umbenennen
+3. In docs/design/components/ oder docs/design/pages/ verschieben
+4. Gleichnamiges .md daneben anlegen (siehe INBOX/README.md)
+
+## Bug-Tracking
+
+Alle bekannten Bugs werden in docs/BUGS.md gepflegt.
+Bei neuen Bugs: dort ergänzen, nicht im Code-Kommentar.

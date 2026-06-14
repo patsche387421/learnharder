@@ -212,4 +212,97 @@ NSVS, TINF, WIR, MEDT, SYP zeigen „Noch keine Themen verfügbar". Mit `docs/KI
 
 ---
 
+## Session 2026-06-14 — Projektstruktur für Daten-Migration vorbereiten
+
+Reine Struktur-/Dokumentations-Vorbereitung. **Kein Feature-Code, keine
+Frontend-Änderungen.** Branch: `dev`.
+
+### Neu erstellte Dateien
+- `docs/design/README.md` — Design-System-Übersicht + Workflow + Regel für Claude Code
+- `docs/design/INBOX/README.md` — Inbox-Beschreibung + Sortier-Regeln
+- `docs/design/components/.gitkeep` — hält leeren Ordner in Git
+- `docs/design/pages/.gitkeep` — hält leeren Ordner in Git
+- `docs/DATA_MIGRATION_V2.md` — neuer Migrations-Plan V2 (subjects/topics/content_items
+  mit jsonb) inkl. Abschnitte Sicherheit (RLS), Datenbank-Hygiene, Architektur-Entscheidung
+- `src/assets/data/tagesquiz_test.json` — Test-JSON mit 5 Tagesquiz-Fragen (tq-001…tq-005)
+
+### Geänderte Dateien
+- `docs/CLAUDE.md` — drei Abschnitte angehängt (Design-System, Design-Inbox-Workflow,
+  Bug-Tracking); bestehender Inhalt unverändert
+- `docs/DATENMIGRATION.md` — Hinweis-Block am Anfang („Überholt seit Juni 2026 –
+  siehe DATA_MIGRATION_V2.md"); restlicher Inhalt unverändert
+- `agent/SESSION_REPORT.md` — dieser Eintrag
+
+### Bereits vorhanden, NICHT verändert
+- `docs/BUGS.md` — von Patsche manuell angelegt/committed (2 KB), bewusst unangetastet
+
+### Offener Folge-Schritt
+- TODO (separater, isolierter Prompt): `tagesquiz.html` anpassen, um
+  `src/assets/data/tagesquiz_test.json` zu laden.
+
+---
+
+## Session 2026-06-14 (zweite Runde) — Design-INBOX sortiert
+
+10 HTML-Exporte aus `docs/design/INBOX/` einsortiert. Reine Doku-Arbeit,
+**kein `src/`-Code, kein `docs/BUGS.md` angefasst.**
+
+### Verschoben & umbenannt
+**Pages (4):**
+- `learnharder-dashboard.dc.html` → `pages/dashboard.html` (+ `dashboard.md`)
+- `learnharder-quiz.dc.html`      → `pages/quiz.html`      (+ `quiz.md`)
+- `learnharder-theory.dc.html`    → `pages/theory.html`    (+ `theory.md`)
+- `learnharder-teams.dc.html`     → `pages/teams.html`     (+ `teams.md`)
+
+**Components (6):**
+- `learnharder-nav.dc.html`      → `components/nav.html`      (+ `nav.md`)
+- `learnharder-progress.dc.html` → `components/progress.html` (+ `progress.md`)
+- `learnharder-charts.dc.html`   → `components/charts.html`   (+ `charts.md`)
+- `learnharder-brand.dc.html`    → `components/brand.html`    (+ `brand.md`)
+- `learnharder-icons.dc.html`    → `components/icons.html`    (+ `icons.md`)
+- `learnharder-logo.dc.html`     → `components/logo.html`     (+ `logo.md`)
+
+### Sonstige Änderungen
+- `docs/design/components/.gitkeep` und `docs/design/pages/.gitkeep` entfernt
+  (Ordner enthalten jetzt echte Inhalte).
+- `docs/design/INBOX/` enthält nur noch `README.md` (wie gefordert).
+
+### Inhalte der `.md`-Dateien
+Jede `.md` enthält: Kurzbeschreibung, Typ, verwendete Tokens
+(echte Namen aus `tokens.css`: `--bg`, `--surface`, `--primary` etc. —
+nicht die historischen `--color-*`-Namen aus `DESIGN_GUIDELINES.md`),
+betroffene `src/`-Seiten, TODOs/Abweichungen vom aktuellen Stand.
+
+### Mapping-Hinweis
+Erwartete Zuordnung war korrekt — keine Korrekturen nötig.
+- `teams` wurde als **Seite** eingeordnet (volle Feature-Ansicht
+  Rangliste+Teams), nicht als Komponente.
+- `progress` als **Komponente** (wiederverwendet auf Dashboard +
+  Fach-Übersichten).
+
+---
+
+## Session 2026-06-14 (dritte Runde) — BUG-001 Fix: Tagesquiz lädt tagesquiz_test.json
+
+**Geänderte Datei:** `src/tagesquiz.html`
+
+### Was wurde geändert
+- `themaZuPfad()`-Funktion entfernt (nicht mehr benötigt)
+- `ladeFragen()` vollständig ersetzt: statt manifest.json + N×2 Themen-JSON-Fetches
+  jetzt ein einziger Fetch auf `/assets/data/tagesquiz_test.json`
+- Start-Screen-Text: „8 Fragen, 1 Versuch pro Tag" → „1 Versuch pro Tag"
+  (Anzahl variiert jetzt je nach JSON-Inhalt)
+
+### Verifikation
+- JSON-Fetch via Preview-Server getestet: HTTP 200, 5 Fragen geladen
+- Mapping geprüft: alle Felder (`frage`, `optionen`, `richtigeAntwort` als number,
+  `fachId` als lowercase-string) korrekt gesetzt
+- Kein anderer `src/`-Code angetastet
+
+### Zusammenhang
+Behebt BUG-001 (schwarzer Screen) für den Entwicklungsstand mit Test-JSON.
+Endgültige Lösung nach Daten-Migration V2 (Supabase `content_items`-Tabelle).
+
+---
+
 *Bericht auto-generiert am Ende der Session. Alle Pfade relativ zum Projekt-Root.*

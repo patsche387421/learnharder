@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="true" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    body { margin:0; background:#0D0D1A; font-family:'Space Grotesk',sans-serif; color:#F1F5F9; }
+    @keyframes xp-glow { 0%,100%{box-shadow:0 0 8px #F59E0B44} 50%{box-shadow:0 0 18px #F59E0B88} }
+    @keyframes pulse-dot { 0%,100%{opacity:1; transform:scale(1)} 50%{opacity:0.6; transform:scale(0.85)} }
+  </style>
+</helmet>
+
+<div style="min-height:100vh; background:#0D0D1A; padding:48px 0; display:flex; flex-direction:column; gap:72px;">
+
+  <!-- Page title -->
+  <div style="padding:0 40px; display:flex; flex-direction:column; gap:8px; border-bottom:1px solid #1E1E3F; padding-bottom:32px; margin:0 40px;">
+    <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:3px; color:#4B5563; text-transform:uppercase;">learnharder.app</div>
+    <h1 style="margin:0; font-size:32px; font-weight:800; color:#F1F5F9; letter-spacing:-1px;">Navigation</h1>
+    <p style="margin:0; font-size:15px; color:#64748B;">Header · Sidebar · Bottom Nav · Footer — Desktop &amp; Mobile</p>
+  </div>
+
+
+  <!-- ===== DESKTOP HEADER A — Full Width ===== -->
+  <section style="display:flex; flex-direction:column; gap:16px; padding:0 40px;">
+    <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:3px; color:#7C3AED; text-transform:uppercase;">01 — Desktop Header / Variante A (Dark Solid)</div>
+
+    <!-- Header -->
+    <div style="background:#131320; border:1px solid #1E1E3F; border-radius:16px; overflow:hidden;">
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:0 28px; height:64px; gap:16px;">
+
+        <!-- Logo -->
+        <div style="display:flex; align-items:center; gap:12px; flex-shrink:0;">
+          <svg width="36" height="36" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="hLogo1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#7C3AED"/><stop offset="100%" stop-color="#4F46E5"/></linearGradient>
+              <linearGradient id="hBolt1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FDE68A"/><stop offset="100%" stop-color="#F59E0B"/></linearGradient>
+            </defs>
+            <circle cx="36" cy="36" r="34" fill="url(#hLogo1)"/>
+            <polygon points="38,18 30,37 37,37 34,54 44,33 37,33" fill="url(#hBolt1)"/>
+            <circle cx="36" cy="36" r="34" fill="none" stroke="#A855F7" stroke-width="1.5" opacity="0.5"/>
+          </svg>
+          <div style="line-height:1;">
+            <span style="font-size:18px; font-weight:800; color:#F1F5F9; letter-spacing:-0.5px;">learn</span><span style="font-size:18px; font-weight:800; background:linear-gradient(135deg,#A855F7,#818CF8); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; letter-spacing:-0.5px;">harder</span>
+          </div>
+        </div>
+
+        <!-- Nav links -->
+        <nav style="display:flex; align-items:center; gap:4px;">
+          <a href="#" style="font-size:14px; font-weight:600; color:#A855F7; padding:8px 16px; border-radius:10px; background:#7C3AED22; text-decoration:none;">Dashboard</a>
+          <a href="#" style="font-size:14px; font-weight:500; color:#94A3B8; padding:8px 16px; border-radius:10px; text-decoration:none;">Fächer</a>
+          <a href="#" style="font-size:14px; font-weight:500; color:#94A3B8; padding:8px 16px; border-radius:10px; text-decoration:none;">Quiz</a>
+          <a href="#" style="font-size:14px; font-weight:500; color:#94A3B8; padding:8px 16px; border-radius:10px; text-decoration:none;">Team</a>
+          <a href="#" style="font-size:14px; font-weight:500; color:#94A3B8; padding:8px 16px; border-radius:10px; text-decoration:none;">Rangliste</a>
+        </nav>
+
+        <!-- Right: stats + avatar -->
+        <div style="display:flex; align-items:center; gap:10px; flex-shrink:0;">
+          <!-- Streak -->
+          <div style="display:flex; align-items:center; gap:5px; background:#F97316, #DC2626; padding:6px 12px; border-radius:999px; background:#1C0D04; border:1px solid #F9731633;">
+            <svg width="16" height="16" viewBox="0 0 28 28"><defs><linearGradient id="fh1" x1="0.5" y1="0" x2="0.5" y2="1"><stop offset="0%" stop-color="#FDE68A"/><stop offset="100%" stop-color="#DC2626"/></linearGradient></defs><path d="M14 3 Q16 8 20 10 Q22 5 20 2 Q26 7 25 14 Q24 20 19 23 Q20 19 17 17 Q17 21 14 24 Q11 21 11 17 Q8 19 9 23 Q4 20 3 14 Q2 7 8 2 Q6 5 8 10 Q12 8 14 3Z" fill="url(#fh1)"/></svg>
+            <span style="font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:700; color:#FDE68A;">7</span>
+          </div>
+          <!-- Energy -->
+          <div style="display:flex; align-items:center; gap:5px; padding:6px 12px; border-radius:999px; background:#0C2233; border:1px solid #06B6D433;">
+            <svg width="14" height="14" viewBox="0 0 96 96"><defs><linearGradient id="eh1" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#0891B2"/><stop offset="100%" stop-color="#06B6D4"/></linearGradient></defs><rect x="30" y="22" width="36" height="62" rx="6" fill="url(#eh1)"/><polygon points="52,36 44,48 49,48 46,60 56,46 51,46" fill="#FDE68A"/></svg>
+            <span style="font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:700; color:#06B6D4;">5</span>
+          </div>
+          <!-- XP -->
+          <div style="display:flex; align-items:center; gap:5px; padding:6px 12px; border-radius:999px; background:#1A1200; border:1px solid #F59E0B33; animation: xp-glow 3s ease-in-out infinite;">
+            <svg width="14" height="14" viewBox="0 0 28 28"><defs><linearGradient id="xh1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#FDE68A"/><stop offset="100%" stop-color="#F59E0B"/></linearGradient></defs><polygon points="14,2 17,10 26,10 19,16 22,24 14,19 6,24 9,16 2,10 11,10" fill="url(#xh1)"/></svg>
+            <span style="font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:700; color:#F59E0B;">1,240 XP</span>
+          </div>
+          <!-- Level badge -->
+          <div style="display:flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:8px; background:linear-gradient(135deg,#7C3AED,#4F46E5);">
+            <span style="font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:800; color:white;">4</span>
+          </div>
+          <!-- Avatar -->
+          <div style="width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,#A855F7,#4F46E5); border:2px solid #7C3AED; display:flex; align-items:center; justify-content:center;">
+            <span style="font-size:14px; font-weight:700; color:white;">MK</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- XP Progress bar -->
+      <div style="height:3px; background:#1E1E3F;">
+        <div style="height:100%; width:68%; background:linear-gradient(90deg,#7C3AED,#A855F7); border-radius:0 2px 2px 0;"></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== DESKTOP HEADER B — Transparent / Blur ===== -->
+  <section style="display:flex; flex-direction:column; gap:16px; padding:0 40px;">
+    <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:3px; color:#7C3AED; text-transform:uppercase;">02 — Desktop Header / Variante B (Floating Pill)</div>
+
+    <div style="background:linear-gradient(135deg, #1A0533, #0D0D2E); border-radius:20px; padding:32px; position:relative; overflow:hidden;">
+      <!-- BG dots -->
+      <div style="position:absolute; top:0; left:0; right:0; bottom:0; background-image:radial-gradient(circle, #7C3AED11 1px, transparent 1px); background-size:28px 28px;"></div>
+
+      <div style="position:relative; display:flex; align-items:center; justify-content:center;">
+        <!-- Floating pill nav -->
+        <div style="display:flex; align-items:center; gap:4px; background:#131320CC; border:1px solid #7C3AED44; border-radius:999px; padding:6px 10px; backdrop-filter:blur(12px);">
+          <!-- Logo mark -->
+          <svg width="28" height="28" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" style="margin-right:4px;">
+            <defs><linearGradient id="hLogo2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#7C3AED"/><stop offset="100%" stop-color="#4F46E5"/></linearGradient><linearGradient id="hBolt2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FDE68A"/><stop offset="100%" stop-color="#F59E0B"/></linearGradient></defs>
+            <circle cx="36" cy="36" r="34" fill="url(#hLogo2)"/>
+            <polygon points="38,18 30,37 37,37 34,54 44,33 37,33" fill="url(#hBolt2)"/>
+          </svg>
+
+          <a href="#" style="font-size:14px; font-weight:600; color:white; padding:8px 18px; border-radius:999px; background:linear-gradient(135deg,#7C3AED,#4F46E5); text-decoration:none; white-space:nowrap;">Dashboard</a>
+          <a href="#" style="font-size:14px; font-weight:500; color:#94A3B8; padding:8px 16px; text-decoration:none; white-space:nowrap;">Fächer</a>
+          <a href="#" style="font-size:14px; font-weight:500; color:#94A3B8; padding:8px 16px; text-decoration:none; white-space:nowrap;">Quiz</a>
+          <a href="#" style="font-size:14px; font-weight:500; color:#94A3B8; padding:8px 16px; text-decoration:none; white-space:nowrap;">Team</a>
+          <a href="#" style="font-size:14px; font-weight:500; color:#94A3B8; padding:8px 16px; text-decoration:none; white-space:nowrap;">Rangliste</a>
+
+          <div style="width:1px; height:24px; background:#1E1E3F; margin:0 4px;"></div>
+
+          <!-- Avatar -->
+          <div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#A855F7,#4F46E5); display:flex; align-items:center; justify-content:center;">
+            <span style="font-size:12px; font-weight:700; color:white;">MK</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== DESKTOP SIDEBAR ===== -->
+  <section style="display:flex; flex-direction:column; gap:16px; padding:0 40px;">
+    <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:3px; color:#7C3AED; text-transform:uppercase;">03 — Desktop Sidebar</div>
+
+    <div style="display:flex; gap:0; border-radius:20px; overflow:hidden; border:1px solid #1E1E3F; max-width:900px;">
+      <!-- Sidebar -->
+      <div style="width:240px; background:#131320; flex-shrink:0; display:flex; flex-direction:column; gap:0; padding:20px 0;">
+
+        <!-- Logo -->
+        <div style="display:flex; align-items:center; gap:10px; padding:4px 20px 20px;">
+          <svg width="30" height="30" viewBox="0 0 72 72"><defs><linearGradient id="sLogo" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#7C3AED"/><stop offset="100%" stop-color="#4F46E5"/></linearGradient><linearGradient id="sBolt" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FDE68A"/><stop offset="100%" stop-color="#F59E0B"/></linearGradient></defs><circle cx="36" cy="36" r="34" fill="url(#sLogo)"/><polygon points="38,18 30,37 37,37 34,54 44,33 37,33" fill="url(#sBolt)"/></svg>
+          <span style="font-size:16px; font-weight:800; color:#F1F5F9; letter-spacing:-0.5px;">learn<span style="background:linear-gradient(135deg,#A855F7,#818CF8); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">harder</span></span>
+        </div>
+
+        <!-- User card -->
+        <div style="margin:0 12px 16px; background:#1A1A2E; border-radius:12px; padding:12px; display:flex; align-items:center; gap:10px; border:1px solid #1E1E3F;">
+          <div style="width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,#A855F7,#4F46E5); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <span style="font-size:13px; font-weight:700; color:white;">MK</span>
+          </div>
+          <div style="flex:1; min-width:0;">
+            <div style="font-size:13px; font-weight:700; color:#F1F5F9; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Max Koller</div>
+            <div style="font-size:11px; color:#64748B;">Level 4 · 1,240 XP</div>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 96 96"><defs><linearGradient id="lvs1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#7C3AED"/><stop offset="100%" stop-color="#4F46E5"/></linearGradient></defs><path d="M48 6 L82 26 L82 66 L48 86 L14 66 L14 26 Z" fill="url(#lvs1)"/><text x="48" y="58" font-family="'Space Grotesk'" font-weight="800" font-size="30" fill="white" text-anchor="middle">4</text></svg>
+        </div>
+
+        <!-- Nav items -->
+        <div style="display:flex; flex-direction:column; gap:2px; padding:0 8px;">
+          <a href="#" style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; background:#7C3AED22; text-decoration:none;">
+            <svg width="18" height="18" viewBox="0 0 28 28"><rect x="3" y="3" width="10" height="10" rx="3" fill="#A855F7"/><rect x="15" y="3" width="10" height="10" rx="3" fill="#A855F7" opacity="0.6"/><rect x="3" y="15" width="10" height="10" rx="3" fill="#A855F7" opacity="0.6"/><rect x="15" y="15" width="10" height="10" rx="3" fill="#A855F7" opacity="0.4"/></svg>
+            <span style="font-size:14px; font-weight:600; color:#A855F7;">Dashboard</span>
+          </a>
+          <a href="#" style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; text-decoration:none;">
+            <svg width="18" height="18" viewBox="0 0 28 28"><rect x="4" y="5" width="20" height="15" rx="3" fill="none" stroke="#64748B" stroke-width="2"/><rect x="7" y="8" width="5" height="1.5" rx="0.75" fill="#64748B"/><rect x="7" y="11" width="10" height="1.5" rx="0.75" fill="#64748B"/><line x1="14" y1="20" x2="14" y2="24" stroke="#64748B" stroke-width="2"/><line x1="9" y1="24" x2="19" y2="24" stroke="#64748B" stroke-width="2"/></svg>
+            <span style="font-size:14px; font-weight:500; color:#64748B;">Fächer</span>
+          </a>
+          <a href="#" style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; text-decoration:none;">
+            <svg width="18" height="18" viewBox="0 0 28 28"><circle cx="14" cy="14" r="10" fill="none" stroke="#64748B" stroke-width="2"/><path d="M11 10 Q11 8 14 8 Q17 8 17 11 Q17 13 14 14" stroke="#64748B" stroke-width="2" fill="none" stroke-linecap="round"/><circle cx="14" cy="18" r="1.5" fill="#64748B"/></svg>
+            <span style="font-size:14px; font-weight:500; color:#64748B;">Quiz</span>
+          </a>
+          <a href="#" style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; text-decoration:none;">
+            <svg width="18" height="18" viewBox="0 0 28 28"><circle cx="10" cy="10" r="4" fill="none" stroke="#64748B" stroke-width="2"/><path d="M2 24 Q2 17 10 17 Q18 17 18 24" fill="none" stroke="#64748B" stroke-width="2"/><circle cx="20" cy="9" r="3.5" fill="none" stroke="#64748B" stroke-width="1.5"/><path d="M14 23 Q14 16 20 16 Q26 16 26 23" fill="none" stroke="#64748B" stroke-width="1.5"/></svg>
+            <span style="font-size:14px; font-weight:500; color:#64748B;">Lernteam</span>
+          </a>
+          <a href="#" style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; text-decoration:none;">
+            <svg width="18" height="18" viewBox="0 0 28 28"><rect x="3" y="18" width="5" height="8" rx="2" fill="#64748B" opacity="0.6"/><rect x="11" y="12" width="5" height="14" rx="2" fill="#64748B" opacity="0.7"/><rect x="19" y="6" width="5" height="20" rx="2" fill="#64748B"/></svg>
+            <span style="font-size:14px; font-weight:500; color:#64748B;">Rangliste</span>
+          </a>
+          <a href="#" style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; text-decoration:none;">
+            <svg width="18" height="18" viewBox="0 0 28 28"><path d="M14 3 Q16 8 20 10 Q22 5 20 2 Q26 7 25 14 Q24 20 14 24 Q4 20 3 14 Q2 7 8 2 Q6 5 8 10 Q12 8 14 3Z" fill="none" stroke="#64748B" stroke-width="2"/></svg>
+            <span style="font-size:14px; font-weight:500; color:#64748B;">Fortschritt</span>
+          </a>
+        </div>
+
+        <!-- Spacer -->
+        <div style="flex:1; min-height:32px;"></div>
+
+        <!-- Bottom: stats mini -->
+        <div style="margin:0 12px; border-top:1px solid #1E1E3F; padding-top:12px; display:flex; gap:8px; justify-content:center;">
+          <div style="display:flex; align-items:center; gap:4px;">
+            <svg width="14" height="14" viewBox="0 0 28 28"><defs><linearGradient id="fsi" x1="0.5" y1="0" x2="0.5" y2="1"><stop offset="0%" stop-color="#FDE68A"/><stop offset="100%" stop-color="#DC2626"/></linearGradient></defs><path d="M14 3 Q16 8 20 10 Q22 5 20 2 Q26 7 25 14 Q24 20 14 24 Q4 20 3 14 Q2 7 8 2 Q6 5 8 10 Q12 8 14 3Z" fill="url(#fsi)"/></svg>
+            <span style="font-size:12px; font-weight:700; color:#FDE68A;">7</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:4px;">
+            <svg width="12" height="12" viewBox="0 0 96 96"><defs><linearGradient id="esi" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#0891B2"/><stop offset="100%" stop-color="#06B6D4"/></linearGradient></defs><rect x="30" y="22" width="36" height="62" rx="6" fill="url(#esi)"/><polygon points="52,36 44,48 49,48 46,60 56,46 51,46" fill="#FDE68A"/></svg>
+            <span style="font-size:12px; font-weight:700; color:#06B6D4;">5</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:4px;">
+            <svg width="12" height="12" viewBox="0 0 28 28"><defs><linearGradient id="xsi" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#FDE68A"/><stop offset="100%" stop-color="#F59E0B"/></linearGradient></defs><polygon points="14,2 17,10 26,10 19,16 22,24 14,19 6,24 9,16 2,10 11,10" fill="url(#xsi)"/></svg>
+            <span style="font-size:12px; font-weight:700; color:#F59E0B;">1,240</span>
+          </div>
+        </div>
+        <div style="height:12px;"></div>
+      </div>
+
+      <!-- Content preview area -->
+      <div style="flex:1; background:#0D0D1A; padding:24px; display:flex; align-items:center; justify-content:center; min-height:360px;">
+        <div style="text-align:center; display:flex; flex-direction:column; gap:8px; align-items:center;">
+          <div style="width:48px; height:48px; border-radius:12px; background:#1E1E3F; display:flex; align-items:center; justify-content:center;">
+            <svg width="24" height="24" viewBox="0 0 28 28"><rect x="4" y="5" width="20" height="15" rx="3" fill="none" stroke="#4B5563" stroke-width="2"/></svg>
+          </div>
+          <span style="font-size:13px; color:#4B5563; font-family:'Space Mono',monospace;">Seiteninhalt</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===== MOBILE BOTTOM NAV ===== -->
+  <section style="display:flex; flex-direction:column; gap:16px; padding:0 40px;">
+    <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:3px; color:#7C3AED; text-transform:uppercase;">04 — Mobile Bottom Navigation</div>
+
+    <div style="display:flex; gap:32px; flex-wrap:wrap; align-items:flex-start;">
+
+      <!-- Mobile frame A -->
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <span style="font-family:'Space Mono',monospace; font-size:9px; color:#64748B;">Variante A — Tabs</span>
+        <div style="width:360px; background:#0D0D1A; border:1px solid #1E1E3F; border-radius:20px; overflow:hidden;">
+          <!-- Mock content -->
+          <div style="height:200px; background:linear-gradient(160deg,#1A0533,#0D0D1A); display:flex; align-items:center; justify-content:center;">
+            <span style="font-family:'Space Mono',monospace; font-size:11px; color:#4B5563;">Seiteninhalt</span>
+          </div>
+          <!-- Bottom nav -->
+          <div style="background:#131320; border-top:1px solid #1E1E3F; display:flex; align-items:center; justify-content:space-around; padding:10px 0 20px;">
+
+            <!-- Home active -->
+            <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
+              <div style="width:44px; height:44px; border-radius:14px; background:#7C3AED22; border:1px solid #7C3AED44; display:flex; align-items:center; justify-content:center;">
+                <svg width="20" height="20" viewBox="0 0 28 28"><rect x="3" y="3" width="10" height="10" rx="3" fill="#A855F7"/><rect x="15" y="3" width="10" height="10" rx="3" fill="#A855F7" opacity="0.5"/><rect x="3" y="15" width="10" height="10" rx="3" fill="#A855F7" opacity="0.5"/><rect x="15" y="15" width="10" height="10" rx="3" fill="#A855F7" opacity="0.3"/></svg>
+              </div>
+              <span style="font-size:10px; font-weight:700; color:#A855F7;">Home</span>
+            </div>
+
+            <!-- Fächer -->
+            <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
+              <div style="width:44px; height:44px; border-radius:14px; display:flex; align-items:center; justify-content:center;">
+                <svg width="20" height="20" viewBox="0 0 28 28"><rect x="4" y="5" width="20" height="15" rx="3" fill="none" stroke="#4B5563" stroke-width="2"/><line x1="14" y1="20" x2="14" y2="24" stroke="#4B5563" stroke-width="2"/><line x1="9" y1="24" x2="19" y2="24" stroke="#4B5563" stroke-width="2"/></svg>
+              </div>
+              <span style="font-size:10px; font-weight:500; color:#4B5563;">Fächer</span>
+            </div>
+
+            <!-- Quiz — center CTA -->
+            <div style="display:flex; flex-direction:column; align-items:center; gap:4px; margin-top:-12px;">
+              <div style="width:56px; height:56px; border-radius:18px; background:linear-gradient(135deg,#7C3AED,#4F46E5); display:flex; align-items:center; justify-content:center; box-shadow:0 0 24px #7C3AED66;">
+                <svg width="24" height="24" viewBox="0 0 28 28"><polygon points="38,18 30,37 37,37 34,54 44,33 37,33" fill="#FDE68A" transform="scale(0.28) translate(-10,-2)"/><polygon points="14,3 6,14 11,14 8.5,24 20,11.5 14.5,11.5" fill="#FDE68A"/></svg>
+              </div>
+              <span style="font-size:10px; font-weight:700; color:#A855F7;">Quiz</span>
+            </div>
+
+            <!-- Team -->
+            <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
+              <div style="width:44px; height:44px; border-radius:14px; display:flex; align-items:center; justify-content:center;">
+                <svg width="20" height="20" viewBox="0 0 28 28"><circle cx="10" cy="10" r="4" fill="none" stroke="#4B5563" stroke-width="2"/><path d="M2 24 Q2 17 10 17 Q18 17 18 24" fill="none" stroke="#4B5563" stroke-width="2"/><circle cx="20" cy="9" r="3.5" fill="none" stroke="#4B5563" stroke-width="1.5"/></svg>
+              </div>
+              <span style="font-size:10px; font-weight:500; color:#4B5563;">Team</span>
+            </div>
+
+            <!-- Profil -->
+            <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
+              <div style="width:44px; height:44px; border-radius:50%; background:linear-gradient(135deg,#2D1B69,#1E1E3F); border:2px solid #1E1E3F; display:flex; align-items:center; justify-content:center;">
+                <span style="font-size:13px; font-weight:700; color:#64748B;">MK</span>
+              </div>
+              <span style="font-size:10px; font-weight:500; color:#4B5563;">Profil</span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile frame B — Minimal pill -->
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <span style="font-family:'Space Mono',monospace; font-size:9px; color:#64748B;">Variante B — Floating Pill</span>
+        <div style="width:360px; background:#0D0D1A; border:1px solid #1E1E3F; border-radius:20px; overflow:hidden;">
+          <div style="height:200px; background:linear-gradient(160deg,#1A0533,#0D0D1A); display:flex; align-items:center; justify-content:center;">
+            <span style="font-family:'Space Mono',monospace; font-size:11px; color:#4B5563;">Seiteninhalt</span>
+          </div>
+          <!-- Floating pill -->
+          <div style="background:#0D0D1A; padding:12px 20px 24px; display:flex; justify-content:center;">
+            <div style="display:flex; align-items:center; gap:2px; background:#131320; border:1px solid #1E1E3F; border-radius:999px; padding:6px 8px; box-shadow:0 8px 32px #00000066;">
+
+              <div style="display:flex; flex-direction:column; align-items:center; gap:2px; padding:6px 14px; border-radius:999px; background:#7C3AED22;">
+                <svg width="18" height="18" viewBox="0 0 28 28"><rect x="3" y="3" width="10" height="10" rx="3" fill="#A855F7"/><rect x="15" y="3" width="10" height="10" rx="3" fill="#A855F7" opacity="0.5"/><rect x="3" y="15" width="10" height="10" rx="3" fill="#A855F7" opacity="0.5"/><rect x="15" y="15" width="10" height="10" rx="3" fill="#A855F7" opacity="0.3"/></svg>
+                <span style="font-size:9px; font-weight:700; color:#A855F7;">Home</span>
+              </div>
+
+              <div style="display:flex; flex-direction:column; align-items:center; gap:2px; padding:6px 14px; border-radius:999px;">
+                <svg width="18" height="18" viewBox="0 0 28 28"><rect x="4" y="5" width="20" height="15" rx="3" fill="none" stroke="#4B5563" stroke-width="2"/><line x1="14" y1="20" x2="14" y2="24" stroke="#4B5563" stroke-width="2"/></svg>
+                <span style="font-size:9px; font-weight:500; color:#4B5563;">Fächer</span>
+              </div>
+
+              <div style="display:flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:14px; background:linear-gradient(135deg,#7C3AED,#4F46E5); box-shadow:0 0 16px #7C3AED55; margin:0 4px;">
+                <svg width="20" height="20" viewBox="0 0 28 28"><polygon points="14,3 6,14 11,14 8.5,24 20,11.5 14.5,11.5" fill="#FDE68A"/></svg>
+              </div>
+
+              <div style="display:flex; flex-direction:column; align-items:center; gap:2px; padding:6px 14px; border-radius:999px;">
+                <svg width="18" height="18" viewBox="0 0 28 28"><circle cx="10" cy="10" r="4" fill="none" stroke="#4B5563" stroke-width="2"/><path d="M2 24 Q2 17 10 17 Q18 17 18 24" fill="none" stroke="#4B5563" stroke-width="2"/></svg>
+                <span style="font-size:9px; font-weight:500; color:#4B5563;">Team</span>
+              </div>
+
+              <div style="display:flex; flex-direction:column; align-items:center; gap:2px; padding:6px 14px; border-radius:999px;">
+                <div style="width:18px; height:18px; border-radius:50%; background:linear-gradient(135deg,#A855F7,#4F46E5); display:flex; align-items:center; justify-content:center;">
+                  <span style="font-size:7px; font-weight:700; color:white;">MK</span>
+                </div>
+                <span style="font-size:9px; font-weight:500; color:#4B5563;">Profil</span>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ===== FOOTER ===== -->
+  <section style="display:flex; flex-direction:column; gap:16px; padding:0 40px;">
+    <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:3px; color:#7C3AED; text-transform:uppercase;">05 — Footer</div>
+
+    <div style="background:#131320; border:1px solid #1E1E3F; border-radius:20px; padding:40px 40px 28px; display:flex; flex-direction:column; gap:32px;">
+      <div style="display:flex; gap:48px; flex-wrap:wrap;">
+
+        <!-- Brand -->
+        <div style="display:flex; flex-direction:column; gap:14px; min-width:200px; flex:1.5;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <svg width="32" height="32" viewBox="0 0 72 72"><defs><linearGradient id="fLogo" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#7C3AED"/><stop offset="100%" stop-color="#4F46E5"/></linearGradient><linearGradient id="fBolt" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FDE68A"/><stop offset="100%" stop-color="#F59E0B"/></linearGradient></defs><circle cx="36" cy="36" r="34" fill="url(#fLogo)"/><polygon points="38,18 30,37 37,37 34,54 44,33 37,33" fill="url(#fBolt)"/></svg>
+            <span style="font-size:18px; font-weight:800; color:#F1F5F9;">learn<span style="background:linear-gradient(135deg,#A855F7,#818CF8); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">harder</span></span>
+          </div>
+          <p style="margin:0; font-size:14px; color:#475569; line-height:1.6; max-width:240px;">Dein Lernhub für die HTL. Meistere POS, DBI, NSVS und mehr — mit Quiz, Teams und echtem Fortschritt.</p>
+          <div style="font-family:'Space Mono',monospace; font-size:11px; color:#7C3AED; letter-spacing:1px;">study smarter. push harder.</div>
+        </div>
+
+        <!-- Links col 1 -->
+        <div style="display:flex; flex-direction:column; gap:12px; min-width:140px;">
+          <div style="font-family:'Space Mono',monospace; font-size:10px; font-weight:700; color:#4B5563; letter-spacing:2px; text-transform:uppercase; margin-bottom:4px;">Lernen</div>
+          <a href="#" style="font-size:14px; color:#64748B; text-decoration:none;">Dashboard</a>
+          <a href="#" style="font-size:14px; color:#64748B; text-decoration:none;">Fächer</a>
+          <a href="#" style="font-size:14px; color:#64748B; text-decoration:none;">Quiz starten</a>
+          <a href="#" style="font-size:14px; color:#64748B; text-decoration:none;">Karteikarten</a>
+          <a href="#" style="font-size:14px; color:#64748B; text-decoration:none;">Fortschritt</a>
+        </div>
+
+        <!-- Links col 2 -->
+        <div style="display:flex; flex-direction:column; gap:12px; min-width:140px;">
+          <div style="font-family:'Space Mono',monospace; font-size:10px; font-weight:700; color:#4B5563; letter-spacing:2px; text-transform:uppercase; margin-bottom:4px;">Community</div>
+          <a href="#" style="font-size:14px; color:#64748B; text-decoration:none;">Lernteams</a>
+          <a href="#" style="font-size:14px; color:#64748B; text-decoration:none;">Rangliste</a>
+          <a href="#" style="font-size:14px; color:#64748B; text-decoration:none;">Trophäen</a>
+        </div>
+
+        <!-- Links col 3 -->
+        <div style="display:flex; flex-direction:column; gap:12px; min-width:140px;">
+          <div style="font-family:'Space Mono',monospace; font-size:10px; font-weight:700; color:#4B5563; letter-spacing:2px; text-transform:uppercase; margin-bottom:4px;">Account</div>
+          <a href="#" style="font-size:14px; color:#64748B; text-decoration:none;">Profil</a>
+          <a href="#" style="font-size:14px; color:#64748B; text-decoration:none;">Einstellungen</a>
+          <a href="#" style="font-size:14px; color:#64748B; text-decoration:none;">Abmelden</a>
+        </div>
+
+      </div>
+
+      <!-- Bottom bar -->
+      <div style="border-top:1px solid #1E1E3F; padding-top:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+        <span style="font-family:'Space Mono',monospace; font-size:11px; color:#374151;">© 2026 learnharder.app — Made at HTL</span>
+        <div style="display:flex; gap:16px;">
+          <a href="#" style="font-size:12px; color:#374151; text-decoration:none;">Datenschutz</a>
+          <a href="#" style="font-size:12px; color:#374151; text-decoration:none;">Impressum</a>
+          <a href="#" style="font-size:12px; color:#374151; text-decoration:none;">Kontakt</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+</x-dc>
+</body>
+</html>
