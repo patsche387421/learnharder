@@ -131,149 +131,162 @@ button {
   margin-top: 1.5rem;
 }
 
-/* ---------- Topbar ---------- */
-#topbar-energy,
-#topbar-trophies {
-  font-weight: 600;
-  color: var(--text);
-  white-space: nowrap;
+/* ---------- Topbar (Komponente, via renderTopbar erzeugt) ---------- */
+/* Aufbau: Logo (links) · Nav (mitte) · Stats (rechts) · XP-Bar (unten).
+   Markup wird zentral in level.js generiert; alle Farben via Tokens. */
+.topbar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-base);
+  min-height: 64px;
+  padding: 0 var(--space-lg);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+/* Logo links: SVG-Logomark + Wordmark, klickbar → Dashboard */
+.topbar-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  flex-shrink: 0;
   text-decoration: none;
 }
 
-.topbar {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  padding: 0.75rem 1.5rem;
-  background: var(--surface);
-  border-bottom: 1px solid var(--surface-2);
-}
-
-.brand {
-  font-weight: 700;
-  font-size: 1.1rem;
-  justify-self: start;
-}
-
-/* Linke Topbar-Gruppe: Logo-Platzhalter + Seitenname */
-.topbar-links {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  justify-self: start;
-}
-
-.logo-placeholder {
-  width: 32px;
-  height: 32px;
-  background: var(--primary);
-  border-radius: 6px;
+.topbar-logo-mark {
+  display: block;
   flex-shrink: 0;
 }
 
-.topbar-seitenname {
-  font-weight: 600;
-  font-size: 0.95rem;
+.topbar-wordmark {
+  font-family: var(--font-display);
+  font-size: var(--fs-h3);
+  font-weight: var(--fw-bold);
+  letter-spacing: -0.5px;
+  line-height: 1;
   color: var(--text);
 }
 
-/* Navigation-Links rechts: PROFIL, HILFE */
+.topbar-wordmark-accent {
+  background: var(--gradient-text-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* Nav-Links in der Mitte mit URL-basiertem Active-State */
+.topbar-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
 .topbar-nav-link {
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
+  font-size: var(--fs-body);
+  font-weight: var(--fw-medium);
   color: var(--text-muted);
+  padding: var(--space-sm) var(--space-base);
+  border-radius: var(--radius-md);
   text-decoration: none;
-  transition: color 0.15s;
+  transition: color 0.15s, background 0.15s;
 }
 
 .topbar-nav-link:hover {
   color: var(--text);
 }
 
-.topbar-right {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  justify-self: end;
+.topbar-nav-link.active {
+  color: var(--purple-500);
+  font-weight: var(--fw-semibold);
+  background: var(--brand-muted);
 }
 
-/* Level-Mitte (mittlere Topbar-Zone) */
-.topbar-level-mitte {
+/* Stats-Gruppe rechts: Pills · Level-Badge · Avatar */
+.topbar-stats {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 2px;
-  text-decoration: none;
-  color: var(--text);
+  gap: var(--space-sm);
+  flex-shrink: 0;
 }
 
-.topbar-level-label {
-  font-size: 0.8rem;
-  font-weight: 600;
+.topbar-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 5px var(--space-md);
+  border-radius: var(--radius-full);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-bold);
   white-space: nowrap;
 }
 
-.topbar-level-bar-wrap {
-  width: 120px;
-  height: 6px;
-  background: var(--surface-2);
-  border-radius: 99px;
-  overflow: hidden;
+.topbar-pill--energy   { color: var(--energy); }
+.topbar-pill--trophies { color: var(--gold); }
+.topbar-pill--xp       { color: var(--gold); }
+
+.topbar-level-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
+  background: var(--gradient-brand);
+  color: var(--text-on-primary);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-bold);
 }
 
-#topbar-level-fill {
+.topbar-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  background: var(--gradient-brand);
+  border: 2px solid var(--purple-700);
+  color: var(--text-on-primary);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-bold);
+  text-decoration: none;
+}
+
+/* XP-Progress-Bar am unteren Topbar-Rand (3px, volle Breite) */
+.topbar-progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: var(--border);
+}
+
+.topbar-progress-fill {
   height: 100%;
-  background: var(--primary);
-  border-radius: 99px;
+  background: var(--gradient-brand);
+  border-radius: 0 2px 2px 0;
   transition: width 0.4s ease;
 }
 
-.topbar-level-ep {
-  font-size: 0.7rem;
-  color: var(--text-muted);
-}
-
-/* Vereinfachte Topbar-Mitte */
-.topbar-mitte {
-  font-size: 0.9rem;
+/* Zurück-Link zum Eltern-Fach (über dem Themen-Titel auf fach.html) */
+.breadcrumb-back {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
   color: var(--text-muted);
   text-decoration: none;
   transition: color 0.15s;
 }
 
-.topbar-mitte:hover {
+.breadcrumb-back:hover {
   color: var(--text);
-}
-
-/* Tooltips: data-tooltip Attribut auf .topbar-icon Elementen */
-.topbar-icon {
-  position: relative;
-  cursor: pointer;
-}
-
-.topbar-icon::after {
-  content: attr(data-tooltip);
-  position: absolute;
-  bottom: -28px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--surface-2);
-  color: var(--text);
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s;
-  z-index: 10;
-}
-
-.topbar-icon:hover::after {
-  opacity: 1;
 }
 
 .btn-ghost {
@@ -716,8 +729,6 @@ button {
 
 /* ---------- Footer (fix unten) ---------- */
 .site-footer {
-  position: sticky;
-  bottom: 0;
   margin-top: auto;
   width: 100%;
   background: var(--surface);
@@ -1166,15 +1177,17 @@ button {
 /* ---------- Mobile Grundoptimierung ---------- */
 @media (max-width: 768px) {
   .topbar {
-    padding: 0.5rem 0.75rem;
+    padding: 0 var(--space-md);
+    gap: var(--space-sm);
   }
 
-  .topbar-level-mitte {
+  /* Wordmark ausblenden – nur Logomark bleibt, spart Breite */
+  .topbar-wordmark {
     display: none;
   }
 
-  .topbar-right {
-    gap: 0.5rem;
+  .topbar-stats {
+    gap: var(--space-xs);
   }
 
   .card-grid {
