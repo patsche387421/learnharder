@@ -2,46 +2,92 @@
    tokens.css — Design-Tokens (Single Source of Truth)
    ---------------------------------------------------------------------
    Enthält AUSSCHLIESSLICH CSS Custom Properties.
-   Kein Reset, kein @view-transition, keine Komponenten-Styles.
+   Kein Reset, kein @view-transition, kein @font-face, keine Komponenten-Styles.
 
-   Token-Namen entsprechen den tatsächlich in style.css verwendeten
-   Custom Properties: --bg, --surface, --surface-2, --primary,
-   --primary-hover, --text, --text-muted, --success, --error, --radius.
+   Aufbau:
+     1. Skalen & Paletten (theme-unabhängig): Purple, Semantik, Fachfarben
+     2. Oberflächen & Textfarben — Dark (Standard)
+     3. Oberflächen & Textfarben — Light
+     4. Aliase: alte Token-Namen → neue Tokens (Abwärtskompatibilität)
 
-   Einbinden IMMER als erstes <link> – vor style.css:
+   Quelle der Werte: docs/design/components/brand.html
+
+   Einbinden NACH fonts.css, VOR style.css:
+     <link rel="stylesheet" href="/css/fonts.css" />
      <link rel="stylesheet" href="/css/tokens.css" />
      <link rel="stylesheet" href="/css/style.css" />
 
-   Theme: Dark Mode ist Standard (gilt für :root und [data-theme="dark"]).
+   Theme: Dark ist Standard (:root, auch ohne data-theme-Attribut).
    Light Mode wird über [data-theme="light"] auf <html> aktiviert.
    ===================================================================== */
 
-/* ---- Standard-Theme: Dark (auch ohne data-theme-Attribut aktiv) ---- */
-:root,
-[data-theme="dark"] {
-  --bg:            #0f172a;   /* Seitenhintergrund (tiefste Ebene) */
-  --surface:       #1e293b;   /* Card-Ebene 1 (Karten, Panels) */
-  --surface-2:     #334155;   /* Card-Ebene 2 (Inputs, hervorgehoben) */
-  --primary:       #6366f1;   /* Akzentfarbe: Buttons, Links, Highlights */
-  --primary-hover: #4f46e5;   /* Hover/aktiv – etwas kräftiger */
-  --text:          #e2e8f0;   /* Haupttext */
-  --text-muted:    #94a3b8;   /* Sekundärtext, Hinweise, Labels */
-  --success:       #22c55e;   /* Positiv-Feedback, Abschluss-Badges */
-  --error:         #ef4444;   /* Fehler-Meldungen */
-  --radius:        12px;      /* Standard-Eckenradius */
+/* ===== 1. Skalen & Paletten (theme-unabhängig) ====================== */
+:root {
+  /* ---- Purple (Primärpalette) ---- */
+  --purple-100: #F3E8FF;
+  --purple-200: #E9D5FF;
+  --purple-300: #D8B4FE;
+  --purple-400: #C084FC;
+  --purple-500: #A855F7;
+  --purple-600: #9333EA;
+  --purple-700: #7C3AED;   /* ★ Marken-Primärton */
+  --purple-800: #5B21B6;
+  --purple-900: #3B0764;
+
+  /* ---- Semantische Farben (mit sprechenden Aliasen) ---- */
+  --gold:      #F59E0B;     /* XP / Belohnung */
+  --xp:        var(--gold);
+  --success:   #10B981;     /* Richtig / Abschluss */
+  --error:     #EF4444;     /* Falsch / Fehler */
+  --warning:   #F97316;     /* Timer / Achtung */
+  --timer:     var(--warning);
+  --info:      #06B6D4;     /* Energie / Info */
+  --energy:    var(--info);
+  --indigo:    #4F46E5;     /* Sekundär-Akzent (Verläufe) */
+
+  /* ---- Fachfarben ---- */
+  --fach-pos:  #7C3AED;
+  --fach-dbi:  #0EA5E9;
+  --fach-nsvs: #10B981;
+  --fach-medt: #F97316;
+  --fach-syp:  #EF4444;
+  --fach-wir:  #F59E0B;
+  --fach-tinf: #EC4899;
 }
 
-/* ---- Light Mode (:root[data-theme="light"] hat Spezifität 0,2,0 – */
-/*      überschreibt :root aus style.css, das nach tokens.css lädt)  -- */
+/* ===== 2. Oberflächen & Textfarben — Dark (Standard) =============== */
+:root,
+[data-theme="dark"] {
+  --bg-base:     #0D0D1A;   /* Seitenhintergrund (tiefste Ebene) */
+  --surface:     #131320;   /* Card-Ebene 1 (Karten, Panels) */
+  --surface-2:   #1A1A2E;   /* Card-Ebene 2 (Inputs, hervorgehoben) */
+  --border:      #1E1E3F;   /* Rahmen / Trennlinien */
+  --brand-muted: #2D1B69;   /* gedämpfte Markenfläche */
+  --text:        #F1F5F9;   /* Haupttext */
+  --text-muted:  #94A3B8;   /* Sekundärtext */
+  --text-subtle: #64748B;   /* Tertiärtext / Hinweise */
+}
+
+/* ===== 3. Oberflächen & Textfarben — Light ========================= */
 :root[data-theme="light"] {
-  --bg:            #f1f5f9;
-  --surface:       #ffffff;
-  --surface-2:     #e2e8f0;
-  --primary:       #6366f1;
-  --primary-hover: #4f46e5;
-  --text:          #0f172a;
-  --text-muted:    #475569;
-  --success:       #16a34a;
-  --error:         #dc2626;
-  /* --radius ist theme-unabhängig – bleibt wie im Dark-Block */
+  --bg-base:     #F1F5F9;
+  --surface:     #FFFFFF;
+  --surface-2:   #E2E8F0;
+  --border:      #CBD5E1;
+  --brand-muted: #EDE9FE;
+  --text:        #0F172A;
+  --text-muted:  #475569;
+  --text-subtle: #64748B;
+}
+
+/* ===== 4. Aliase: alte Token-Namen → neue Tokens =================== */
+/* Halten bestehenden Code lauffähig, während wir auf das neue System
+   migrieren. Werte lösen sich theme-abhängig auf (var() wird erst bei
+   Nutzung substituiert). */
+:root {
+  --bg:            var(--bg-base);
+  --primary:       var(--purple-700);
+  --primary-hover: var(--indigo);
+  /* --surface, --surface-2, --text, --text-muted, --success, --error
+     behalten ihren Namen → kein Alias nötig (nur neue Werte oben). */
 }
