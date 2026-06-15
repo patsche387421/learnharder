@@ -53,19 +53,8 @@
     async function aktualisiereAnzeige() {
       const stats = await Level.getUserStats();
 
-      // Topbar-Stats nach Tausch aktualisieren (neue Element-IDs)
-      const energyEl = document.getElementById("topbar-energy");
-      if (energyEl) energyEl.textContent = "🥤 " + stats.energy;
-      const trophiesCountEl = document.getElementById("topbar-trophies-count");
-      if (trophiesCountEl) trophiesCountEl.textContent = stats.trophies;
-      const levelZahl = document.getElementById("topbar-level-zahl");
-      if (levelZahl) levelZahl.textContent = stats.level;
-      const naechste = Level.LEVEL_THRESHOLDS[stats.level] ?? null;
-      const prozent  = naechste ? Math.min(stats.totalXp / naechste * 100, 100) : 100;
-      const levelFill = document.getElementById("topbar-level-fill");
-      if (levelFill) levelFill.style.width = prozent + "%";
-      const levelEp = document.getElementById("topbar-level-ep");
-      if (levelEp) levelEp.textContent = stats.totalXp + " / " + (naechste ?? "–") + " EP";
+      // Topbar nach Tausch mit aktuellen Stats neu rendern
+      await Level.renderTopbar(stats);
 
       document.getElementById("tausch-trophies").textContent = stats.trophies;
       document.getElementById("tausch-energie").textContent  = stats.energy;

@@ -267,7 +267,7 @@
           const verbraucht = await Level.verbrauchEnergie();
           if (!verbraucht) { zeigeScreen("screen-gesperrt"); return; }
 
-          document.getElementById("topbar-energy").textContent = "🥤 " + (stats.energy - 1);
+          await Level.renderTopbar();
 
           quizZustand = {
             fragen,
