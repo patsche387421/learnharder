@@ -1,0 +1,69 @@
+/* =====================================================================
+   fonts.css — Lokale Schriftarten (@font-face)
+   ---------------------------------------------------------------------
+   Bindet die selbst gehosteten Fonts ein. KEINE externen CDNs.
+   Dateien liegen unter /assets/fonts/ (aus TTF nach WOFF2 konvertiert).
+
+   - Space Grotesk : Display-/UI-Schrift (Gewichte 400/500/600/700)
+   - Space Mono    : Labels/Code (Gewichte 400/700)
+
+   Es handelt sich um vollständige Fonts (nicht subgesetzt) – deshalb
+   kein unicode-range. Deutsche Sonderzeichen (ä ö ü ß) sind enthalten.
+
+   Einbinden IMMER als ERSTES <link> – vor tokens.css und style.css:
+     <link rel="stylesheet" href="/css/fonts.css" />
+     <link rel="stylesheet" href="/css/tokens.css" />
+     <link rel="stylesheet" href="/css/style.css" />
+
+   font-display: swap → Text sofort sichtbar (Fallback), tauscht nach.
+   ===================================================================== */
+
+/* ---- Space Grotesk ---- */
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/SpaceGrotesk-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/assets/fonts/SpaceGrotesk-Medium.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/assets/fonts/SpaceGrotesk-SemiBold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/assets/fonts/SpaceGrotesk-Bold.woff2') format('woff2');
+}
+
+/* ---- Space Mono ---- */
+@font-face {
+  font-family: 'Space Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/SpaceMono-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Space Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/assets/fonts/SpaceMono-Bold.woff2') format('woff2');
+}
