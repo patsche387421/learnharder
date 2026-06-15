@@ -156,58 +156,90 @@ const Level = (() => {
     return { ep, trophien, bonus, levelUp };
   }
 
-  // Befüllt alle Topbar-Elemente: Energie, Level-Mitte (Balken + EP), Trophäen, Name, Logout.
+  // Leitet 1–2 Initialen aus einem Anzeigenamen oder einer E-Mail ab.
+  // "patsche.kroeger@…" → "PK", "max@…" → "MA".
+  function topbarInitialen(roh) {
+    const basis = (roh || '').split('@')[0];
+    const teile = basis.split(/[.\s_-]+/).filter(Boolean);
+    const buchstaben = teile.length >= 2
+      ? teile[0][0] + teile[1][0]
+      : basis.slice(0, 2);
+    return buchstaben.toUpperCase();
+  }
+
+  // Bestimmt anhand des Pfads den aktiven Nav-Eintrag (Active-State).
+  // Fächerübersicht, alle Fach-Seiten und der Themen-Inhalt zählen zu "Fächer".
+  function aktiverNav(pfad) {
+    const datei = pfad.split('/').pop() || '';
+    if (datei === 'dashboard.html') return 'dashboard';
+    if (datei === 'tagesquiz.html') return 'tagesquiz';
+    const faecherSeiten = ['faecher.html', 'fach.html', 'pos.html', 'dbi.html',
+      'nsvs.html', 'medt.html', 'syp.html', 'wir.html', 'tinf.html'];
+    if (faecherSeiten.includes(datei)) return 'faecher';
+    return '';
+  }
+
+  // Baut Logo + Nav-Links – das immer sichtbare Grundgerüst (auch ausgeloggt).
+  function topbarGrundgeruest() {
+    const aktiv = aktiverNav(location.pathname);
+    const navLink = (key, href, label) =>
+      '<a class="topbar-nav-link' + (aktiv === key ? ' active' : '') + '" href="' + href + '">' + label + '</a>';
+    return (
+      '<a class="topbar-logo" href="/dashboard.html" aria-label="learnharder – Dashboard">' +
+        '<img class="topbar-logo-mark" src="/assets/logo.svg" width="36" height="36" alt="" />' +
+        '<span class="topbar-wordmark">learn<span class="topbar-wordmark-accent">harder</span></span>' +
+      '</a>' +
+      '<nav class="topbar-nav">' +
+        navLink('dashboard', '/dashboard.html', 'Dashboard') +
+        navLink('faecher',   '/faecher.html',   'Fächer') +
+        navLink('tagesquiz', '/tagesquiz.html', 'Tagesquiz') +
+      '</nav>'
+    );
+  }
+
+  // Erzeugt die komplette Topbar in <header id="topbar"></header>:
+  //   Logo · Nav · Stats (Energie/Trophäen/XP-Pills + Level-Badge + Avatar) · XP-Bar.
   // Prüft die Session intern — funktioniert auch auf öffentlichen Seiten ohne requireLogin().
   // stats: optional; wenn übergeben wird kein zweiter getUserStats()-Aufruf gemacht.
   async function renderTopbar(stats) {
+    const bar = document.getElementById('topbar');
+    if (!bar) return;
+
     const { data: sessionData } = await sb.auth.getSession();
     const user = sessionData.session?.user ?? null;
 
-    // Seitennamen aus data-page-title Attribut des body-Tags setzen
-    const seitenameEl = document.getElementById('topbar-seitenname');
-    if (seitenameEl) seitenameEl.textContent = document.body.dataset.pageTitle || '';
-
-    // onclick statt addEventListener → kein Doppel-Listener bei Mehrfachaufruf
-    const logoutBtn = document.getElementById('logout');
-    if (logoutBtn) logoutBtn.onclick = () => Auth.logout();
+    let markup = topbarGrundgeruest();
 
     if (!user) {
-      // Nicht eingeloggt (öffentliche Seiten): Stats ausblenden, Anmelden-Link zeigen
-      const mitte = document.querySelector('.topbar-level-mitte');
-      if (mitte) mitte.hidden = true;
-      const energyEl = document.getElementById('topbar-energy');
-      if (energyEl) energyEl.hidden = true;
-      const trophiesEl = document.getElementById('topbar-trophies');
-      if (trophiesEl) trophiesEl.hidden = true;
-      const welcomeEl = document.getElementById('welcome-name');
-      if (welcomeEl) welcomeEl.innerHTML = '<a href="/index.html" class="btn-ghost-sm">Anmelden</a>';
+      // Nicht eingeloggt (öffentliche Seiten): keine Stats, nur Anmelden-Link
+      markup +=
+        '<div class="topbar-stats">' +
+          '<a href="/index.html" class="btn-ghost-sm">Anmelden</a>' +
+        '</div>';
+      bar.innerHTML = markup;
       return;
     }
 
-    // Name setzen
-    const welcomeEl = document.getElementById('welcome-name');
-    if (welcomeEl) welcomeEl.textContent = user.email.split('@')[0];
-
-    // Stats laden wenn nicht übergeben
     if (!stats) stats = await getUserStats();
 
-    const energyEl = document.getElementById('topbar-energy');
-    if (energyEl) energyEl.textContent = '🥤 ' + stats.energy;
+    const naechste  = LEVEL_THRESHOLDS[stats.level] ?? null;
+    const prozent   = naechste ? Math.min(stats.totalXp / naechste * 100, 100) : 100;
+    const epText    = stats.totalXp + ' / ' + (naechste ?? '–') + ' EP';
+    const initialen = topbarInitialen(user.email);
 
-    const trophiesCountEl = document.getElementById('topbar-trophies-count');
-    if (trophiesCountEl) trophiesCountEl.textContent = stats.trophies;
+    markup +=
+      '<div class="topbar-stats">' +
+        '<span class="topbar-pill topbar-pill--energy" title="Energie">🥤 <span>' + stats.energy + '</span></span>' +
+        '<span class="topbar-pill topbar-pill--trophies" title="Trophäen">🏆 <span>' + stats.trophies + '</span></span>' +
+        '<span class="topbar-pill topbar-pill--xp" title="Erfahrungspunkte">⭐ <span>' + stats.totalXp + ' XP</span></span>' +
+        '<span class="topbar-level-badge" title="Level ' + stats.level + '">' + stats.level + '</span>' +
+        '<a class="topbar-avatar" href="/profil.html" title="Profil">' + initialen + '</a>' +
+      '</div>' +
+      '<div class="topbar-progress" title="' + epText + '">' +
+        '<div class="topbar-progress-fill" style="width: ' + prozent + '%"></div>' +
+      '</div>';
 
-    const levelZahl = document.getElementById('topbar-level-zahl');
-    if (levelZahl) levelZahl.textContent = stats.level;
-
-    const naechste = LEVEL_THRESHOLDS[stats.level] ?? null;
-    const prozent  = naechste ? Math.min(stats.totalXp / naechste * 100, 100) : 100;
-
-    const levelFill = document.getElementById('topbar-level-fill');
-    if (levelFill) levelFill.style.width = prozent + '%';
-
-    const levelEp = document.getElementById('topbar-level-ep');
-    if (levelEp) levelEp.textContent = stats.totalXp + ' / ' + (naechste ?? '–') + ' EP';
+    bar.innerHTML = markup;
   }
 
   // Tauscht Trophäen gegen Energie (50 Trophäen = 1 Energydrink).
