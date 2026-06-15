@@ -142,10 +142,11 @@ const App = (() => {
       }
 
       // Zurück-Link auf übergeordnete Fach-Seite setzen
-      const zurueckLink = document.querySelector(".brand");
+      const zurueckLink = document.getElementById("fach-zurueck");
       if (zurueckLink && elternFach && elternFach.seite) {
         zurueckLink.href        = elternFach.seite;
         zurueckLink.textContent = "← " + elternFach.name;
+        zurueckLink.hidden      = false;
       }
 
       if (themaEintrag.typ === "tool") {

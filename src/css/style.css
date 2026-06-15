@@ -276,6 +276,21 @@ button {
   opacity: 1;
 }
 
+/* Zurück-Link zum Eltern-Fach (über dem Themen-Titel auf fach.html) */
+.breadcrumb-back {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.breadcrumb-back:hover {
+  color: var(--text);
+}
+
 .btn-ghost {
   background: transparent;
   color: var(--text-muted);
