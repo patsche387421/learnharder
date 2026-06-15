@@ -618,14 +618,20 @@ button {
   filter: brightness(1.08);
 }
 
-/* Haken oben rechts für abgeschlossene Themen */
+/* Häkchen-Badge oben rechts für abgeschlossene Themen:
+   gefüllter Erfolgs-Kreis mit weißem Haken */
 .card-check {
   position: absolute;
   top: 0.9rem;
   right: 1rem;
-  color: var(--success);
-  font-weight: 700;
-  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-full);
+  background: var(--success);
+  color: var(--text-on-primary);
 }
 
 /* Score-Badge: zeigt den letzten Quiz-Prozentwert */

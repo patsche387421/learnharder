@@ -96,7 +96,7 @@ const App = (() => {
         karte.href = "/fach.html?fach=" + encodeURIComponent(thema.id);
         karte.innerHTML =
           '<span class="card-icon">' + (thema.icon || Icons.render('book', { size: 32 })) + "</span>" +
-          (done ? '<span class="card-check">✓</span>' : "") +
+          (done ? '<span class="card-check">' + Icons.render('check', { size: 15, title: 'Abgeschlossen' }) + '</span>' : "") +
           "<h2>" + thema.name + "</h2>" +
           "<p>" + (thema.beschreibung || "") + "</p>" +
           (score !== null ? '<span class="card-score">' + score + " %</span>" : "");
