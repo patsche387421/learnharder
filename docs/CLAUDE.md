@@ -76,19 +76,23 @@ lernhub-demo/
     │   ├── app.js              App-Modul: JSON laden, alle Navigationsebenen rendern
     │   └── <fach>/<thema>.js   Tool-Module (z. B. pos/datenstrukturen.js)
     ├── css/                  Styles
+    │   ├── fonts.css           @font-face für lokale Schriften (Space Grotesk/Mono)
     │   ├── tokens.css          Design-Tokens (:root Custom Properties)
     │   ├── style.css           Komponenten-/Layout-Styles
     │   └── <fach>/<thema>.css  Tool-spezifische Styles (z. B. pos/datenstrukturen.css)
-    └── assets/data/          JSON-Lerninhalte und Manifest
-        ├── manifest.json       Fächer-Index mit verschachtelten Themen (Single Source of Truth)
-        ├── <fach>/<thema>_{theorie,fragen,antworten}.json
-        └── schema/             JSON-Schemas für VS-Code-Validierung
+    ├── assets/data/          JSON-Lerninhalte und Manifest
+    │   ├── manifest.json       Fächer-Index mit verschachtelten Themen (Single Source of Truth)
+    │   ├── <fach>/<thema>_{theorie,fragen,antworten}.json
+    │   └── schema/             JSON-Schemas für VS-Code-Validierung
+    ├── assets/fonts/         Lokale WOFF2-Schriften (Space Grotesk, Space Mono)
+    └── assets/logo.svg       Logomark „Bolt Brain"
 ```
 
-**Reihenfolge der Stylesheets:** `tokens.css` wird **IMMER als erstes `<link>`
-vor `style.css`** eingebunden, damit die Custom Properties verfügbar sind:
+**Reihenfolge der Stylesheets:** Immer `fonts.css` → `tokens.css` → `style.css`,
+damit Schriften und Custom Properties vor den Komponenten-Styles verfügbar sind:
 
 ```html
+<link rel="stylesheet" href="/css/fonts.css" />
 <link rel="stylesheet" href="/css/tokens.css" />
 <link rel="stylesheet" href="/css/style.css" />
 ```
