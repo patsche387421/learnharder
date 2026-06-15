@@ -572,6 +572,11 @@ button {
   flex-shrink: 0;
 }
 
+/* Hinweis-Icons (Warnung / Platzhalter) in der Token-Warnfarbe */
+.icon-hinweis {
+  color: var(--warning);
+}
+
 /* Karten: Vollname als kleiner Untertitel unter dem Kürzel */
 .card-vollname {
   display: block;
