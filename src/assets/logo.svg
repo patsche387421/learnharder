@@ -1,0 +1,24 @@
+<!-- learnharder Logomark — Option A "Bolt Brain" (statisch, ohne Animation) -->
+<svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 72 72" role="img" aria-label="learnharder">
+  <defs>
+    <linearGradient id="lh-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7C3AED"/>
+      <stop offset="100%" stop-color="#4F46E5"/>
+    </linearGradient>
+    <linearGradient id="lh-bolt" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FDE68A"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
+    </linearGradient>
+  </defs>
+  <!-- Hintergrundkreis (Markenverlauf) -->
+  <circle cx="36" cy="36" r="34" fill="url(#lh-bg)"/>
+  <!-- Gehirn-Silhouette -->
+  <path d="M22 34c0-2 1-4 3-5 0-3 2-6 6-6 1-2 3-4 6-4 3 0 5 2 6 4 3 1 5 4 5 7 2 1 3 3 3 5 0 3-2 5-5 6v6H27v-6c-3-1-5-3-5-6z" fill="#FFFFFF" opacity="0.18"/>
+  <!-- Gehirn-Falten -->
+  <path d="M30 30 Q36 27 42 30" stroke="#FFFFFF" stroke-width="1.5" fill="none" opacity="0.35"/>
+  <path d="M28 36 Q36 33 44 36" stroke="#FFFFFF" stroke-width="1.5" fill="none" opacity="0.35"/>
+  <!-- Blitz -->
+  <polygon points="38,18 30,37 37,37 34,54 44,33 37,33" fill="url(#lh-bolt)"/>
+  <!-- Konturring -->
+  <circle cx="36" cy="36" r="34" fill="none" stroke="#A855F7" stroke-width="1.5" opacity="0.6"/>
+</svg>
