@@ -184,6 +184,9 @@ const Level = (() => {
     const aktiv = aktiverNav(location.pathname);
     const navLink = (key, href, label) =>
       '<a class="topbar-nav-link' + (aktiv === key ? ' active' : '') + '" href="' + href + '">' + label + '</a>';
+    // Deaktivierte Platzhalter für noch nicht gebaute Bereiche (soziale Ebene, siehe teams.html-Mockup)
+    const navPlatzhalter = (label) =>
+      '<span class="topbar-nav-link topbar-nav-link--disabled" aria-disabled="true" title="Kommt bald">' + label + '</span>';
     return (
       '<a class="topbar-logo" href="/dashboard.html" aria-label="learnharder – Dashboard">' +
         '<img class="topbar-logo-mark" src="/assets/logo.svg" width="36" height="36" alt="" />' +
@@ -193,6 +196,8 @@ const Level = (() => {
         navLink('dashboard', '/dashboard.html', 'Dashboard') +
         navLink('faecher',   '/faecher.html',   'Fächer') +
         navLink('tagesquiz', '/tagesquiz.html', 'Tagesquiz') +
+        navPlatzhalter('Team') +
+        navPlatzhalter('Rangliste') +
       '</nav>'
     );
   }
