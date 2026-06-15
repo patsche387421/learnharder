@@ -563,6 +563,15 @@ button {
   margin-bottom: 0.75rem;
 }
 
+/* SVG-Icons (zentral via icons.js gerendert).
+   Monochrome Icons erben die Textfarbe (currentColor); farbige Icons
+   behalten ihre eigenen Farbverläufe. */
+.icon {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
 /* Karten: Vollname als kleiner Untertitel unter dem Kürzel */
 .card-vollname {
   display: block;

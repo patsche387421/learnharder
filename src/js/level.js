@@ -229,9 +229,9 @@ const Level = (() => {
 
     markup +=
       '<div class="topbar-stats">' +
-        '<span class="topbar-pill topbar-pill--energy" title="Energie">🥤 <span>' + stats.energy + '</span></span>' +
-        '<span class="topbar-pill topbar-pill--trophies" title="Trophäen">🏆 <span>' + stats.trophies + '</span></span>' +
-        '<span class="topbar-pill topbar-pill--xp" title="Erfahrungspunkte">⭐ <span>' + stats.totalXp + ' XP</span></span>' +
+        '<span class="topbar-pill topbar-pill--energy" title="Energie">' + Icons.render('energy', { size: 18 }) + '<span>' + stats.energy + '</span></span>' +
+        '<span class="topbar-pill topbar-pill--trophies" title="Trophäen">' + Icons.render('trophy', { size: 18 }) + '<span>' + stats.trophies + '</span></span>' +
+        '<span class="topbar-pill topbar-pill--xp" title="Erfahrungspunkte">' + Icons.render('star', { size: 18 }) + '<span>' + stats.totalXp + ' XP</span></span>' +
         '<span class="topbar-level-badge" title="Level ' + stats.level + '">' + stats.level + '</span>' +
         '<a class="topbar-avatar" href="/profil.html" title="Profil">' + initialen + '</a>' +
       '</div>' +
@@ -251,7 +251,7 @@ const Level = (() => {
     const stats  = await getUserStats();
 
     if (stats.trophies < kostet) {
-      return { erfolg: false, fehler: `Nicht genug Trophäen (${kostet} 🏆 benötigt, du hast ${stats.trophies})` };
+      return { erfolg: false, fehler: `Nicht genug Trophäen (${kostet} benötigt, du hast ${stats.trophies})` };
     }
 
     const { error } = await sb.from('user_stats').update({
