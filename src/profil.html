@@ -138,7 +138,7 @@
       const row = document.createElement('div');
       row.className = 'profil-fach-row';
       row.innerHTML = `
-        <span class="profil-fach-name">${fach.icon} <span>${fach.name}</span></span>
+        <span class="profil-fach-name">${ContentIcons.render(fach.icon, fach.name, { size: "1.25rem" })}<span>${fach.name}</span></span>
         <span class="profil-fach-level">Level ${fachStats.fachLevel}</span>
         <div class="profil-fach-bar-wrap">
           <div class="profil-fach-bar-fill" style="width: ${prozent}%"></div>
