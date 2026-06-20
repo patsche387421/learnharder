@@ -33,7 +33,7 @@ const App = (() => {
         karte.className = "card";
         karte.href = fach.seite || ("/fach.html?fach=" + encodeURIComponent(fach.id));
         karte.innerHTML =
-          '<span class="card-icon">' + (fach.icon || "📘") + "</span>" +
+          '<span class="card-icon">' + (fach.icon || Icons.render('book', { size: 32 })) + "</span>" +
           "<h2>" + fach.name + "</h2>" +
           (fach.vollname ? '<span class="card-vollname">' + fach.vollname + "</span>" : "") +
           "<p>" + (fach.beschreibung || "") + "</p>";
@@ -81,7 +81,7 @@ const App = (() => {
       if (!themen.length) {
         grid.innerHTML =
           '<div class="empty-state">' +
-            '<span class="empty-icon">📭</span>' +
+            '<span class="empty-icon">' + Icons.render('empty', { size: 40 }) + '</span>' +
             "<p>Noch keine Themen verfügbar.</p>" +
           "</div>";
         return;
@@ -95,8 +95,8 @@ const App = (() => {
         karte.className = "card" + (done ? " card--done" : "");
         karte.href = "/fach.html?fach=" + encodeURIComponent(thema.id);
         karte.innerHTML =
-          '<span class="card-icon">' + (thema.icon || "📘") + "</span>" +
-          (done ? '<span class="card-check">✓</span>' : "") +
+          '<span class="card-icon">' + (thema.icon || Icons.render('book', { size: 32 })) + "</span>" +
+          (done ? '<span class="card-check">' + Icons.render('check', { size: 15, title: 'Abgeschlossen' }) + '</span>' : "") +
           "<h2>" + thema.name + "</h2>" +
           "<p>" + (thema.beschreibung || "") + "</p>" +
           (score !== null ? '<span class="card-score">' + score + " %</span>" : "");
@@ -311,7 +311,7 @@ const App = (() => {
       resultEl.hidden = false;
       resultEl.textContent =
         "Du hast " + richtig + " von " + fragen.length + " Fragen richtig — " +
-        "+" + ergebnis.ep + " EP, +" + ergebnis.trophien + " 🏆";
+        "+" + ergebnis.ep + " EP, +" + ergebnis.trophien + " Trophäen";
     };
   }
 

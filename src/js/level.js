@@ -184,6 +184,9 @@ const Level = (() => {
     const aktiv = aktiverNav(location.pathname);
     const navLink = (key, href, label) =>
       '<a class="topbar-nav-link' + (aktiv === key ? ' active' : '') + '" href="' + href + '">' + label + '</a>';
+    // Deaktivierte Platzhalter für noch nicht gebaute Bereiche (soziale Ebene, siehe teams.html-Mockup)
+    const navPlatzhalter = (label) =>
+      '<span class="topbar-nav-link topbar-nav-link--disabled" aria-disabled="true" title="Kommt bald">' + label + '</span>';
     return (
       '<a class="topbar-logo" href="/dashboard.html" aria-label="learnharder – Dashboard">' +
         '<img class="topbar-logo-mark" src="/assets/logo.svg" width="36" height="36" alt="" />' +
@@ -193,6 +196,8 @@ const Level = (() => {
         navLink('dashboard', '/dashboard.html', 'Dashboard') +
         navLink('faecher',   '/faecher.html',   'Fächer') +
         navLink('tagesquiz', '/tagesquiz.html', 'Tagesquiz') +
+        navPlatzhalter('Team') +
+        navPlatzhalter('Rangliste') +
       '</nav>'
     );
   }
@@ -229,9 +234,9 @@ const Level = (() => {
 
     markup +=
       '<div class="topbar-stats">' +
-        '<span class="topbar-pill topbar-pill--energy" title="Energie">🥤 <span>' + stats.energy + '</span></span>' +
-        '<span class="topbar-pill topbar-pill--trophies" title="Trophäen">🏆 <span>' + stats.trophies + '</span></span>' +
-        '<span class="topbar-pill topbar-pill--xp" title="Erfahrungspunkte">⭐ <span>' + stats.totalXp + ' XP</span></span>' +
+        '<span class="topbar-pill topbar-pill--energy" title="Energie">' + Icons.render('energy', { size: 18 }) + '<span>' + stats.energy + '</span></span>' +
+        '<span class="topbar-pill topbar-pill--trophies" title="Trophäen">' + Icons.render('trophy', { size: 18 }) + '<span>' + stats.trophies + '</span></span>' +
+        '<span class="topbar-pill topbar-pill--xp" title="Erfahrungspunkte">' + Icons.render('star', { size: 18 }) + '<span>' + stats.totalXp + ' XP</span></span>' +
         '<span class="topbar-level-badge" title="Level ' + stats.level + '">' + stats.level + '</span>' +
         '<a class="topbar-avatar" href="/profil.html" title="Profil">' + initialen + '</a>' +
       '</div>' +
@@ -251,7 +256,7 @@ const Level = (() => {
     const stats  = await getUserStats();
 
     if (stats.trophies < kostet) {
-      return { erfolg: false, fehler: `Nicht genug Trophäen (${kostet} 🏆 benötigt, du hast ${stats.trophies})` };
+      return { erfolg: false, fehler: `Nicht genug Trophäen (${kostet} benötigt, du hast ${stats.trophies})` };
     }
 
     const { error } = await sb.from('user_stats').update({

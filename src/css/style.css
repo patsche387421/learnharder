@@ -204,6 +204,21 @@ button {
   background: var(--brand-muted);
 }
 
+/* Deaktivierte Nav-Platzhalter (Team/Rangliste – Feature noch nicht gebaut).
+   Als <span> nicht navigierbar; not-allowed-Cursor + Tooltip "Kommt bald". */
+.topbar-nav-link--disabled,
+.topbar-nav-link--disabled:hover {
+  color: var(--text-subtle);
+  cursor: not-allowed;
+}
+
+/* Auf schmalen Screens ausblenden, damit die Nav nicht überläuft */
+@media (max-width: 768px) {
+  .topbar-nav-link--disabled {
+    display: none;
+  }
+}
+
 /* Stats-Gruppe rechts: Pills · Level-Badge · Avatar */
 .topbar-stats {
   display: flex;
@@ -563,6 +578,20 @@ button {
   margin-bottom: 0.75rem;
 }
 
+/* SVG-Icons (zentral via icons.js gerendert).
+   Monochrome Icons erben die Textfarbe (currentColor); farbige Icons
+   behalten ihre eigenen Farbverläufe. */
+.icon {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+/* Hinweis-Icons (Warnung / Platzhalter) in der Token-Warnfarbe */
+.icon-hinweis {
+  color: var(--warning);
+}
+
 /* Karten: Vollname als kleiner Untertitel unter dem Kürzel */
 .card-vollname {
   display: block;
@@ -604,14 +633,20 @@ button {
   filter: brightness(1.08);
 }
 
-/* Haken oben rechts für abgeschlossene Themen */
+/* Häkchen-Badge oben rechts für abgeschlossene Themen:
+   gefüllter Erfolgs-Kreis mit weißem Haken */
 .card-check {
   position: absolute;
   top: 0.9rem;
   right: 1rem;
-  color: var(--success);
-  font-weight: 700;
-  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-full);
+  background: var(--success);
+  color: var(--text-on-primary);
 }
 
 /* Score-Badge: zeigt den letzten Quiz-Prozentwert */
