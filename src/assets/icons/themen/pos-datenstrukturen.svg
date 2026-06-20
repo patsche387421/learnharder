@@ -1,0 +1,31 @@
+<svg width="96" height="96" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Neutraler, dunkler Premium-Gradient für den Hintergrund -->
+    <linearGradient id="placeholderGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#334155"/>
+      <stop offset="100%" stop-color="#1E293B"/>
+    </linearGradient>
+    
+    <!-- Subtiler Glow für das Fragezeichen -->
+    <linearGradient id="questionGlow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#94A3B8"/>
+      <stop offset="100%" stop-color="#475569"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Hauptkarte -->
+  <rect width="80" height="80" rx="20" fill="url(#placeholderGrad)"/>
+  <rect x="10" y="10" width="60" height="60" rx="14" fill="#FFFFFF" fill-opacity="0.03"/>
+  
+  <!-- Stilisierter, innerer Zielkreis (Dotted/Dashed Optik für "Hier entsteht etwas") -->
+  <circle cx="40" cy="40" r="24" fill="none" stroke="#475569" stroke-width="2" stroke-dasharray="4 4" stroke-opacity="0.6"/>
+  
+  <!-- Das geheimnisvolle Gamification-Fragezeichen -->
+  <g fill="url(#questionGlow)">
+    <path d="M40 23 C45.5 23 48.5 26 48.5 30.5 C48.5 34.5 46 36.5 43.5 38.5 C41.5 40 41.5 42 41.5 44.5 L38.5 44.5 C38.5 41 39.5 39 42 37 C44 35.5 45.5 34 45.5 30.5 C45.5 27.5 43.5 25.5 40 25.5 C36.5 25.5 34.5 27.5 34.2 31 L31.2 30.5 C31.7 25.5 35 23 40 23 Z"/>
+    <circle cx="40" cy="51" r="2.2"/>
+  </g>
+
+  <!-- Minimalistisches Code-Klammer-Detail unten als Tech-Anker -->
+  <path d="M28 58 L24 61 L28 64 M52 58 L56 61 L52 64" fill="none" stroke="#334155" stroke-width="2" stroke-linecap="round"/>
+</svg>

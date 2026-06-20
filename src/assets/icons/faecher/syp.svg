@@ -1,0 +1,20 @@
+<svg width="96" height="96" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sypFachGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#DC2626"/>
+      <stop offset="100%" stop-color="#991B1B"/>
+    </linearGradient>
+  </defs>
+  <rect width="80" height="80" rx="20" fill="url(#sypFachGrad)"/>
+  <rect x="10" y="10" width="60" height="60" rx="14" fill="#FFFFFF" fill-opacity="0.06"/>
+  <path d="M40 12 L43 20 L51 16 L51 24 L59 24 L55 32 L63 36 L55 40 L59 48 L51 48 L51 56 L43 52 L40 60 L37 52 L29 56 L29 48 L21 48 L25 40 L17 36 L25 32 L21 24 L29 24 L29 16 L37 20 Z" fill="#FCA5A5" fill-opacity="0.15"/>
+  <circle cx="40" cy="36" r="12" fill="#DC2626" stroke="#FCA5A5" stroke-width="2"/>
+  <circle cx="40" cy="36" r="7" fill="#1C0505"/>
+  <circle cx="40" cy="36" r="3" fill="#FCA5A5"/>
+  <rect x="38" y="14" width="4" height="8" rx="2" fill="#F87171"/>
+  <rect x="38" y="54" width="4" height="8" rx="2" fill="#F87171"/>
+  <rect x="14" y="34" width="8" height="4" rx="2" fill="#F87171"/>
+  <rect x="58" y="34" width="8" height="4" rx="2" fill="#F87171"/>
+  <rect x="20" y="62" width="40" height="12" rx="6" fill="#7F1D1D"/>
+  <text x="40" y="72" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="9" fill="#FCA5A5" text-anchor="middle" letter-spacing="1">SYP</text>
+</svg>
