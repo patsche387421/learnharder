@@ -20,9 +20,13 @@
 - Navigation (siehe `nav.md`)
 
 ## TODOs / Abweichungen vom aktuellen Stand
-- Aktuell verwendet `manifest.json` Emoji-Icons (z.B. `"💻"`). Wechsel auf
-  SVG-Icons ist nicht trivial — Migration separat planen.
-- Icons sollen `currentColor` als Fill/Stroke nutzen, damit Token-Wechsel
-  (Theme) automatisch greift. Im Mockup teils noch hartkodiert.
-- Icons als einzelne SVG-Dateien unter `src/assets/icons/` ablegen (Ordner
-  existiert noch nicht).
+- **Architektur erledigt:** Fach-/Themen-Icons-System ist von Emoji auf bunte
+  SVGs umgestellt — Dateien unter `src/assets/icons/{faecher,themen}/<id>.svg`,
+  `manifest.json` führt im Feld `icon` den Pfad. Eingebunden via
+  `ContentIcons.render()`. Fehlt eine SVG, greift ein Buchstaben-Badge-Fallback.
+  Vollständiger Stil-Guide: `icons-content.md`.
+- Status-/Nav-Icons (`icons.js`) sollen `currentColor` nutzen, damit der
+  Theme-Wechsel automatisch greift; im Mockup teils noch hartkodiert.
+  (Content-Icons sind bewusst fix-farbig — siehe `icons-content.md`.)
+- Offen: 21 DBI-Themen-Icons fehlen noch; bis dahin greift der
+  Buchstaben-Badge-Fallback.
