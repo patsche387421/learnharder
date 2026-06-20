@@ -3,41 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LernHub – Profil</title>
+  <title>LearnHarder – Profil</title>
   <link rel="stylesheet" href="/css/fonts.css" />
   <link rel="stylesheet" href="/css/tokens.css" />
   <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body class="page-profil" data-page-title="Profil">
 
-  <header class="topbar">
-    <div class="topbar-links">
-      <div class="logo-placeholder"></div>
-      <span class="topbar-seitenname" id="topbar-seitenname"></span>
-    </div>
-
-    <div class="topbar-level-mitte">
-      <span class="topbar-level-label">⭐ Level <span id="topbar-level-zahl">–</span></span>
-      <div class="topbar-level-bar-wrap">
-        <div id="topbar-level-fill" style="width: 0%"></div>
-      </div>
-      <span class="topbar-level-ep" id="topbar-level-ep">–</span>
-    </div>
-
-    <div class="topbar-right">
-      <span id="topbar-energy" class="topbar-icon" data-tooltip="Energie">🥤 –</span>
-      <span id="topbar-trophies" class="topbar-icon" data-tooltip="Trophäen">🏆 <span id="topbar-trophies-count">–</span></span>
-      <a href="/profil.html" class="topbar-nav-link">PROFIL</a>
-      <a href="#" class="topbar-nav-link" title="Kommt bald">HILFE</a>
-    </div>
-  </header>
+  <header class="topbar" id="topbar"></header>
 
   <main class="container">
     <h1>Mein Profil</h1>
 
     <!-- 1. Anmeldedaten -->
     <section class="profil-section">
-      <h2 class="profil-section-title">🔐 Anmeldedaten</h2>
+      <h2 class="profil-section-title"><span data-icon="lock" data-icon-size="20"></span> Anmeldedaten</h2>
       <div class="profil-card">
         <div class="profil-konto-zeile">
           <span class="profil-konto-label">E-Mail</span>
@@ -49,7 +29,7 @@
 
     <!-- 2. Meine Stats -->
     <section class="profil-section">
-      <h2 class="profil-section-title">⭐ Meine Stats</h2>
+      <h2 class="profil-section-title"><span data-icon="star" data-icon-size="20"></span> Meine Stats</h2>
       <div class="profil-global-card">
         <div class="profil-level-row">
           <span class="profil-level-badge">Level <span id="profil-level">–</span></span>
@@ -60,17 +40,17 @@
         </div>
         <div class="profil-global-stats">
           <div class="profil-stat">
-            <span class="profil-stat-icon">⭐</span>
+            <span class="profil-stat-icon" data-icon="star" data-icon-size="24"></span>
             <span class="profil-stat-wert" id="profil-total-xp">–</span>
             <span class="profil-stat-label">Gesamt-EP</span>
           </div>
           <div class="profil-stat">
-            <span class="profil-stat-icon">🏆</span>
+            <span class="profil-stat-icon" data-icon="trophy" data-icon-size="24"></span>
             <span class="profil-stat-wert" id="profil-trophies">–</span>
             <span class="profil-stat-label">Trophäen</span>
           </div>
           <div class="profil-stat">
-            <span class="profil-stat-icon">🥤</span>
+            <span class="profil-stat-icon" data-icon="energy" data-icon-size="24"></span>
             <span class="profil-stat-wert" id="profil-energy">–</span>
             <span class="profil-stat-label">Energie</span>
           </div>
@@ -80,7 +60,7 @@
 
     <!-- 3. Level pro Fach -->
     <section class="profil-section">
-      <h2 class="profil-section-title">📚 Level pro Fach</h2>
+      <h2 class="profil-section-title"><span data-icon="book" data-icon-size="20"></span> Level pro Fach</h2>
       <div class="profil-faecher" id="profil-faecher">
         <p class="profil-lade-text">Lade Fächer …</p>
       </div>
@@ -88,25 +68,25 @@
 
     <!-- 4. Level-Verlauf -->
     <section class="profil-section">
-      <h2 class="profil-section-title">📈 Level-Verlauf</h2>
+      <h2 class="profil-section-title"><span data-icon="chart" data-icon-size="20"></span> Level-Verlauf</h2>
       <div class="profil-placeholder">
-        <span class="profil-placeholder-icon">🚧</span>
+        <span class="profil-placeholder-icon icon-hinweis" data-icon="warning" data-icon-size="32"></span>
         <p>Verlauf kommt bald – level_log Tabelle fehlt noch</p>
       </div>
     </section>
 
     <!-- 5. Errungenschaften -->
     <section class="profil-section">
-      <h2 class="profil-section-title">🏅 Errungenschaften</h2>
+      <h2 class="profil-section-title"><span data-icon="medal" data-icon-size="20"></span> Errungenschaften</h2>
       <div class="profil-placeholder">
-        <span class="profil-placeholder-icon">🔒</span>
+        <span class="profil-placeholder-icon" data-icon="lock" data-icon-size="32"></span>
         <p>Kommt bald</p>
       </div>
     </section>
 
     <!-- 6. Einstellungen -->
     <section class="profil-section">
-      <h2 class="profil-section-title">⚙️ Einstellungen</h2>
+      <h2 class="profil-section-title"><span data-icon="settings" data-icon-size="20"></span> Einstellungen</h2>
       <div class="profil-card">
         <div class="profil-setting-row">
           <div class="profil-setting-info">
@@ -122,7 +102,7 @@
 
   <footer class="site-footer">
     <div class="footer-inner">
-      <span>© LernHub 2026</span>
+      <span>© LearnHarder 2026</span>
       <nav>
         <a href="/impressum.html">Impressum</a>
         <a href="/datenschutz.html">Datenschutz</a>
@@ -135,6 +115,8 @@
   <script src="/js/supabase.js"></script>
   <script src="/js/auth.js"></script>
   <script src="/js/stats.js"></script>
+  <script src="/js/icons.js"></script>
+  <script src="/js/content-icons.js"></script>
   <script src="/js/level.js"></script>
   <script>
     // Theme früh anwenden um Flash zu vermeiden
@@ -156,12 +138,12 @@
       const row = document.createElement('div');
       row.className = 'profil-fach-row';
       row.innerHTML = `
-        <span class="profil-fach-name">${fach.icon} <span>${fach.name}</span></span>
+        <span class="profil-fach-name">${ContentIcons.render(fach.icon, fach.name, { size: "1.25rem" })}<span>${fach.name}</span></span>
         <span class="profil-fach-level">Level ${fachStats.fachLevel}</span>
         <div class="profil-fach-bar-wrap">
           <div class="profil-fach-bar-fill" style="width: ${prozent}%"></div>
         </div>
-        <span class="profil-fach-antworten">✅ ${fachStats.correctAnswers}</span>
+        <span class="profil-fach-antworten">${Icons.render('check')} ${fachStats.correctAnswers}</span>
       `;
       return row;
     }

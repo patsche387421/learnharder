@@ -3,34 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LernHub – Dashboard</title>
+  <title>LearnHarder – Dashboard</title>
   <link rel="stylesheet" href="/css/fonts.css" />
   <link rel="stylesheet" href="/css/tokens.css" />
   <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body class="page-dashboard" data-page-title="Dashboard">
 
-  <header class="topbar">
-    <div class="topbar-links">
-      <div class="logo-placeholder"></div>
-      <span class="topbar-seitenname" id="topbar-seitenname"></span>
-    </div>
-
-    <div class="topbar-level-mitte">
-      <span class="topbar-level-label">⭐ Level <span id="topbar-level-zahl">–</span></span>
-      <div class="topbar-level-bar-wrap">
-        <div id="topbar-level-fill" style="width: 0%"></div>
-      </div>
-      <span class="topbar-level-ep" id="topbar-level-ep">–</span>
-    </div>
-
-    <div class="topbar-right">
-      <span id="topbar-energy" class="topbar-icon" data-tooltip="Energie">🥤 –</span>
-      <span id="topbar-trophies" class="topbar-icon" data-tooltip="Trophäen">🏆 <span id="topbar-trophies-count">–</span></span>
-      <a href="/profil.html" class="topbar-nav-link">PROFIL</a>
-      <a href="#" class="topbar-nav-link" title="Kommt bald">HILFE</a>
-    </div>
-  </header>
+  <header class="topbar" id="topbar"></header>
 
   <main class="db-layout">
 
@@ -49,31 +29,31 @@
     <!-- Tages-Quiz Karte -->
     <div class="tagesquiz-card">
       <div>
-        <h2>Tages-Quiz 🎯</h2>
+        <h2>Tages-Quiz <span data-icon="target" data-icon-size="22"></span></h2>
         <p>Zufällige Fragen aus allen Fächern</p>
       </div>
-      <a href="/tagesquiz.html" class="btn-primary">Quiz starten 🥤</a>
+      <a href="/tagesquiz.html" class="btn-primary">Quiz starten <span data-icon="energy" data-icon-size="20"></span></a>
     </div>
 
     <!-- Stats-Reihe -->
     <section class="db-stats">
       <div class="stat-card">
-        <span class="stat-icon">📚</span>
+        <span class="stat-icon" data-icon="book" data-icon-size="28"></span>
         <span class="stat-value" id="stat-themen">–</span>
         <span class="stat-label">Themen bearbeitet</span>
       </div>
       <div class="stat-card">
-        <span class="stat-icon">🎯</span>
+        <span class="stat-icon" data-icon="target" data-icon-size="28"></span>
         <span class="stat-value" id="stat-quiz">–</span>
         <span class="stat-label">Quiz-Punkte</span>
       </div>
       <div class="stat-card">
-        <span class="stat-icon">🔥</span>
+        <span class="stat-icon" data-icon="streak" data-icon-size="28"></span>
         <span class="stat-value" id="stat-streak">–</span>
         <span class="stat-label">Lerntage in Folge</span>
       </div>
       <div class="stat-card">
-        <span class="stat-icon">🥤</span>
+        <span class="stat-icon" data-icon="energy" data-icon-size="28"></span>
         <span class="stat-value" id="stat-energie">5</span>
         <span class="stat-label">Energie heute</span>
         <small class="stat-hint">+5 morgen</small>
@@ -84,7 +64,7 @@
     <section class="db-recent">
       <h2 class="db-section-title">Zuletzt gelernt</h2>
       <div class="db-recent-empty">
-        <span class="db-recent-icon">🗂</span>
+        <span class="db-recent-icon" data-icon="activity" data-icon-size="40"></span>
         <p>Noch keine Aktivität – leg jetzt los!</p>
         <a href="/faecher.html" class="btn-ghost-sm">Fächer ansehen</a>
       </div>
@@ -97,6 +77,7 @@
   <script src="/js/supabase.js"></script>
   <script src="/js/auth.js"></script>
   <script src="/js/stats.js"></script>
+  <script src="/js/icons.js"></script>
   <script src="/js/level.js"></script>
   <script>
     (async () => {
@@ -125,7 +106,7 @@
 
   <footer class="site-footer">
     <div class="footer-inner">
-      <span>© LernHub 2026</span>
+      <span>© LearnHarder 2026</span>
       <nav>
         <a href="/impressum.html">Impressum</a>
         <a href="/datenschutz.html">Datenschutz</a>

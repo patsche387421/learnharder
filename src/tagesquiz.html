@@ -3,45 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LernHub – Tages-Quiz</title>
+  <title>LearnHarder – Tages-Quiz</title>
   <link rel="stylesheet" href="/css/fonts.css" />
   <link rel="stylesheet" href="/css/tokens.css" />
   <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body class="page-tagesquiz" data-page-title="Tagesquiz">
 
-  <header class="topbar">
-    <div class="topbar-links">
-      <div class="logo-placeholder"></div>
-      <span class="topbar-seitenname" id="topbar-seitenname"></span>
-    </div>
-
-    <div class="topbar-level-mitte">
-      <span class="topbar-level-label">⭐ Level <span id="topbar-level-zahl">–</span></span>
-      <div class="topbar-level-bar-wrap">
-        <div id="topbar-level-fill" style="width: 0%"></div>
-      </div>
-      <span class="topbar-level-ep" id="topbar-level-ep">–</span>
-    </div>
-
-    <div class="topbar-right">
-      <span id="topbar-energy" class="topbar-icon" data-tooltip="Energie">🥤 –</span>
-      <span id="topbar-trophies" class="topbar-icon" data-tooltip="Trophäen">🏆 <span id="topbar-trophies-count">–</span></span>
-      <a href="/profil.html" class="topbar-nav-link">PROFIL</a>
-      <a href="#" class="topbar-nav-link" title="Kommt bald">HILFE</a>
-    </div>
-  </header>
+  <header class="topbar" id="topbar"></header>
 
   <main class="container">
 
     <!-- Screen: Keine Energie -->
     <section id="screen-gesperrt" class="quiz-screen" hidden>
       <div class="quiz-screen-inner">
-        <span class="quiz-screen-icon">🥤</span>
+        <span class="quiz-screen-icon" data-icon="energy" data-icon-size="56"></span>
         <h2>Keine Energie mehr</h2>
         <p>Deine Energydrinks sind aufgebraucht — komm morgen wieder!</p>
         <div class="quiz-screen-actions">
-          <a href="/tauschen.html" class="btn-primary">Trophäen tauschen 🏆</a>
+          <a href="/tauschen.html" class="btn-primary">Trophäen tauschen <span data-icon="trophy" data-icon-size="20"></span></a>
           <a href="/dashboard.html" class="btn-ghost-sm">Zurück zum Dashboard</a>
         </div>
       </div>
@@ -50,7 +30,7 @@
     <!-- Screen: Heute bereits gespielt -->
     <section id="screen-gespielt" class="quiz-screen" hidden>
       <div class="quiz-screen-inner">
-        <span class="quiz-screen-icon">✅</span>
+        <span class="quiz-screen-icon" data-icon="check" data-icon-size="56"></span>
         <h2>Heute bereits gespielt</h2>
         <p>Du hast das Tages-Quiz heute schon absolviert.<br>Morgen gibt es neue Fragen!</p>
         <a href="/dashboard.html" class="btn-primary">Zurück zum Dashboard</a>
@@ -60,13 +40,13 @@
     <!-- Screen: Start -->
     <section id="screen-start" class="quiz-screen" hidden>
       <div class="quiz-screen-inner">
-        <span class="quiz-screen-icon">🎯</span>
+        <span class="quiz-screen-icon" data-icon="target" data-icon-size="56"></span>
         <h2>Tages-Quiz</h2>
         <p>Zufällige Fragen aus allen Fächern — 1 Versuch pro Tag.</p>
         <p class="quiz-energie-hinweis">
-          Kostet <strong>1 🥤 Energydrink</strong> — du hast noch <strong id="start-energie">5</strong>
+          Kostet <strong>1 <span data-icon="energy" data-icon-size="18"></span> Energydrink</strong> — du hast noch <strong id="start-energie">5</strong>
         </p>
-        <button id="btn-start" class="btn-primary btn-lg">Quiz starten 🥤</button>
+        <button id="btn-start" class="btn-primary btn-lg">Quiz starten <span data-icon="energy" data-icon-size="20"></span></button>
         <p id="start-lade-fehler" class="error" hidden>Fragen konnten nicht geladen werden — bitte Seite neu laden.</p>
       </div>
     </section>
@@ -75,7 +55,7 @@
     <section id="screen-quiz" hidden>
       <div class="leben-container">
         <div class="leben-label">
-          <span>❤️ Leben</span>
+          <span><span data-icon="heart" data-icon-size="16"></span> Leben</span>
           <span id="leben-prozent">100%</span>
         </div>
         <div class="leben-bar">
@@ -111,6 +91,7 @@
   <script src="/js/supabase.js"></script>
   <script src="/js/auth.js"></script>
   <script src="/js/stats.js"></script>
+  <script src="/js/icons.js"></script>
   <script src="/js/level.js"></script>
   <script>
     async function loadJSON(pfad) {
@@ -186,12 +167,14 @@
       const feedback = document.getElementById("feedback");
       if (richtig) {
         quizZustand.richtig++;
-        feedback.textContent = "✅ Richtig!";
+        feedback.innerHTML = Icons.render('check');
+        feedback.insertAdjacentText('beforeend', ' Richtig!');
         feedback.className   = "feedback-box feedback-richtig";
       } else {
         quizZustand.leben -= quizZustand.schadensProFehler;
         aktualisiereLebenBar();
-        feedback.textContent = "❌ Falsch — richtig wäre: \"" + frage.optionen[frage.richtigeAntwort] + "\"";
+        feedback.innerHTML = Icons.render('xMark');
+        feedback.insertAdjacentText('beforeend', ' Falsch — richtig wäre: "' + frage.optionen[frage.richtigeAntwort] + '"');
         feedback.className   = "feedback-box feedback-falsch";
       }
       feedback.hidden = false;
@@ -230,20 +213,21 @@
       const box = document.getElementById("ergebnis-belohnungen");
       box.innerHTML = "";
 
-      const addZeile = (text, highlight) => {
+      const addZeile = (iconName, text, highlight) => {
         const p = document.createElement("p");
         p.className = "ergebnis-zeile" + (highlight ? " ergebnis-highlight" : "");
-        p.textContent = text;
+        if (iconName) p.innerHTML = Icons.render(iconName);
+        p.insertAdjacentText("beforeend", (iconName ? " " : "") + text);
         box.appendChild(p);
       };
 
-      addZeile("🏆 +" + ergebnis.trophien + " Trophäen");
+      addZeile("trophy", "+" + ergebnis.trophien + " Trophäen");
       if (ergebnis.ep > 0) {
-        addZeile("⭐ +" + ergebnis.ep + " EP verdient", true);
-        if (ergebnis.bonus > 0) addZeile("🎁 Bonus: +" + ergebnis.bonus + " EP");
-        if (ergebnis.levelUp)   addZeile("🆙 Level Up!", true);
+        addZeile("star", "+" + ergebnis.ep + " EP verdient", true);
+        if (ergebnis.bonus > 0) addZeile("gift", "Bonus: +" + ergebnis.bonus + " EP");
+        if (ergebnis.levelUp)   addZeile(null, "Level Up!", true);
       } else {
-        addZeile("Keine EP — Leben auf 0 gefallen (Trophäen zählen trotzdem)");
+        addZeile(null, "Keine EP — Leben auf 0 gefallen (Trophäen zählen trotzdem)");
       }
     }
 
@@ -287,7 +271,7 @@
           const verbraucht = await Level.verbrauchEnergie();
           if (!verbraucht) { zeigeScreen("screen-gesperrt"); return; }
 
-          document.getElementById("topbar-energy").textContent = "🥤 " + (stats.energy - 1);
+          await Level.renderTopbar();
 
           quizZustand = {
             fragen,
@@ -314,7 +298,7 @@
 
   <footer class="site-footer">
     <div class="footer-inner">
-      <span>© LernHub 2026</span>
+      <span>© LearnHarder 2026</span>
       <nav>
         <a href="/impressum.html">Impressum</a>
         <a href="/datenschutz.html">Datenschutz</a>

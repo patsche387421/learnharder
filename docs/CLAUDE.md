@@ -18,7 +18,7 @@ Themen-Inhaltsseiten (Theorie + Quiz oder interaktives Tool).
   ```
 
   Danach `http://localhost:3000` öffnen. Login mit Testuser
-  `test@lernhub.htl` / `lernhub123`.
+  `schueler1@lernhub.htl` / `lernhub123`.
 
 > Wichtig: Wegen `fetch()` auf die JSON-Dateien muss über einen Server geöffnet
 > werden – **nicht** per `file://` (sonst CORS-Fehler).
@@ -173,7 +173,7 @@ JS-Client.
 | `quiz_results`   | Verlauf einzelner Quiz-Versuche (richtig/gesamt/score)        |
 
 Schema und Testuser liegen als Migrations in `sql/migrations/`. Testuser-Passwort:
-`lernhub123` (z. B. `test@lernhub.htl`).
+`lernhub123` (z. B. `schueler1@lernhub.htl`).
 
 ## Coding-Konventionen
 
@@ -228,6 +228,9 @@ main  (stabil)   ←  dev  (aktiv)  ←  feature/xxx  (neue Features)
 - **Keine API-Keys oder Secrets im Code** (auch nicht „nur zum Testen").
 - **Kein Inline-JS in HTML** im Sinne von `onclick="…"`-Attributen oder Logik in
   Attributen. JS gehört in `js/`-Module bzw. saubere `<script>`-Verdrahtung.
+  - *Ausnahme:* `onerror` an `<img>`-Tags ist erlaubt, wenn es einen Fallback-Render
+    aus `content-icons.js` aufruft (Bild-Fehler-Behandlung ist semantisch korrekt am
+    Element).
 - **Kein `!important` in CSS.** Spezifität sauber über Selektoren lösen.
 - **Keine externen Fonts oder CDN-Skripte** ohne explizite Freigabe in diesem Dokument.
 

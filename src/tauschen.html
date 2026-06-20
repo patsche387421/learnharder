@@ -3,34 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LernHub – Trophäen tauschen</title>
+  <title>LearnHarder – Trophäen tauschen</title>
   <link rel="stylesheet" href="/css/fonts.css" />
   <link rel="stylesheet" href="/css/tokens.css" />
   <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body class="page-tauschen" data-page-title="Tauschen">
 
-  <header class="topbar">
-    <div class="topbar-links">
-      <div class="logo-placeholder"></div>
-      <span class="topbar-seitenname" id="topbar-seitenname"></span>
-    </div>
-
-    <div class="topbar-level-mitte">
-      <span class="topbar-level-label">⭐ Level <span id="topbar-level-zahl">–</span></span>
-      <div class="topbar-level-bar-wrap">
-        <div id="topbar-level-fill" style="width: 0%"></div>
-      </div>
-      <span class="topbar-level-ep" id="topbar-level-ep">–</span>
-    </div>
-
-    <div class="topbar-right">
-      <span id="topbar-energy" class="topbar-icon" data-tooltip="Energie">🥤 –</span>
-      <span id="topbar-trophies" class="topbar-icon" data-tooltip="Trophäen">🏆 <span id="topbar-trophies-count">–</span></span>
-      <a href="/profil.html" class="topbar-nav-link">PROFIL</a>
-      <a href="#" class="topbar-nav-link" title="Kommt bald">HILFE</a>
-    </div>
-  </header>
+  <header class="topbar" id="topbar"></header>
 
   <main class="container">
     <h1>Trophäen tauschen</h1>
@@ -39,24 +19,24 @@
     <div class="tausch-card">
       <div class="tausch-werte">
         <div class="tausch-wert">
-          <span class="tausch-icon">🏆</span>
+          <span class="tausch-icon" data-icon="trophy" data-icon-size="40"></span>
           <span class="tausch-zahl" id="tausch-trophies">–</span>
           <span class="tausch-label">Trophäen</span>
         </div>
         <div class="tausch-pfeil">→</div>
         <div class="tausch-wert">
-          <span class="tausch-icon">🥤</span>
+          <span class="tausch-icon" data-icon="energy" data-icon-size="40"></span>
           <span class="tausch-zahl" id="tausch-energie">–</span>
           <span class="tausch-label">Energydrinks</span>
         </div>
       </div>
 
       <div class="tausch-kurs">
-        <strong>50 🏆 = 1 🥤</strong>
+        <strong>50 <span data-icon="trophy" data-icon-size="18"></span> = 1 <span data-icon="energy" data-icon-size="18"></span></strong>
       </div>
 
       <button id="btn-tauschen" class="btn-primary" disabled>
-        50 🏆 gegen 1 🥤 tauschen
+        50 <span data-icon="trophy" data-icon-size="18"></span> gegen 1 <span data-icon="energy" data-icon-size="18"></span> tauschen
       </button>
 
       <p id="tausch-meldung" class="tausch-meldung" hidden></p>
@@ -68,24 +48,14 @@
   <script src="/js/supabase.js"></script>
   <script src="/js/auth.js"></script>
   <script src="/js/stats.js"></script>
+  <script src="/js/icons.js"></script>
   <script src="/js/level.js"></script>
   <script>
     async function aktualisiereAnzeige() {
       const stats = await Level.getUserStats();
 
-      // Topbar-Stats nach Tausch aktualisieren (neue Element-IDs)
-      const energyEl = document.getElementById("topbar-energy");
-      if (energyEl) energyEl.textContent = "🥤 " + stats.energy;
-      const trophiesCountEl = document.getElementById("topbar-trophies-count");
-      if (trophiesCountEl) trophiesCountEl.textContent = stats.trophies;
-      const levelZahl = document.getElementById("topbar-level-zahl");
-      if (levelZahl) levelZahl.textContent = stats.level;
-      const naechste = Level.LEVEL_THRESHOLDS[stats.level] ?? null;
-      const prozent  = naechste ? Math.min(stats.totalXp / naechste * 100, 100) : 100;
-      const levelFill = document.getElementById("topbar-level-fill");
-      if (levelFill) levelFill.style.width = prozent + "%";
-      const levelEp = document.getElementById("topbar-level-ep");
-      if (levelEp) levelEp.textContent = stats.totalXp + " / " + (naechste ?? "–") + " EP";
+      // Topbar nach Tausch mit aktuellen Stats neu rendern
+      await Level.renderTopbar(stats);
 
       document.getElementById("tausch-trophies").textContent = stats.trophies;
       document.getElementById("tausch-energie").textContent  = stats.energy;
@@ -108,10 +78,12 @@
 
         meldung.hidden = false;
         if (ergebnis.erfolg) {
-          meldung.textContent = "✅ Tausch erfolgreich! +1 🥤 Energydrink erhalten.";
+          meldung.innerHTML = Icons.render('check');
+          meldung.insertAdjacentText('beforeend', ' Tausch erfolgreich! +1 Energydrink erhalten.');
           meldung.className   = "tausch-meldung tausch-erfolg";
         } else {
-          meldung.textContent = "❌ " + ergebnis.fehler;
+          meldung.innerHTML = Icons.render('xMark');
+          meldung.insertAdjacentText('beforeend', ' ' + ergebnis.fehler);
           meldung.className   = "tausch-meldung tausch-fehler";
         }
 
@@ -122,7 +94,7 @@
 
   <footer class="site-footer">
     <div class="footer-inner">
-      <span>© LernHub 2026</span>
+      <span>© LearnHarder 2026</span>
       <nav>
         <a href="/impressum.html">Impressum</a>
         <a href="/datenschutz.html">Datenschutz</a>

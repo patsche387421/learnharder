@@ -19,7 +19,7 @@
           "id":          { "type": "string", "pattern": "^[a-z0-9-]+$", "description": "Eindeutige Kennung, z.B. \"pos\"." },
           "name":        { "type": "string", "minLength": 1, "description": "Kürzel, z.B. \"POS\"." },
           "vollname":    { "type": "string", "description": "Ausgeschriebener Name, z.B. \"Programmieren und Software-Engineering\"." },
-          "icon":        { "type": "string", "description": "Emoji oder Symbol für die Fach-Karte." },
+          "icon":        { "type": "string", "pattern": "^/assets/icons/(faecher|themen)/[a-z0-9-]+\\.svg(\\?v=[0-9]+)?$", "description": "Pfad zur SVG unter /assets/icons/faecher/, z.B. /assets/icons/faecher/pos.svg." },
           "beschreibung":{ "type": "string", "description": "Ein Satz Kurzbeschreibung." },
           "seite":       { "type": "string", "description": "Absoluter Pfad zur Fach-HTML-Seite, z.B. \"/pos.html\"." },
           "themen": {
@@ -32,7 +32,7 @@
               "properties": {
                 "id":          { "type": "string", "pattern": "^[a-z0-9-]+$", "description": "Eindeutige Themen-Kennung, z.B. \"pos-datenstrukturen\"." },
                 "name":        { "type": "string", "minLength": 1 },
-                "icon":        { "type": "string" },
+                "icon":        { "type": "string", "pattern": "^/assets/icons/(faecher|themen)/[a-z0-9-]+\\.svg(\\?v=[0-9]+)?$", "description": "Pfad zur SVG unter /assets/icons/themen/, z.B. /assets/icons/themen/pos-variablen.svg." },
                 "beschreibung":{ "type": "string" },
                 "typ":         { "type": "string", "enum": ["fach", "tool"], "description": "\"tool\" = eigenständiges Modul via DSTool.mount. Ohne Angabe = Standard Theorie/Quiz." },
                 "toolScript":  { "type": "string", "description": "Nur bei typ=tool: Pfad zum Tool-JS." },

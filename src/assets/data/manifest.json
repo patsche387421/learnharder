@@ -5,84 +5,84 @@
       "id": "pos",
       "name": "POS",
       "vollname": "Programmieren und Software-Engineering",
-      "icon": "💻",
+      "icon": "/assets/icons/faecher/pos.svg",
       "beschreibung": "Algorithmen, Datenstrukturen, OOP und Softwareentwicklung",
       "seite": "/pos.html",
       "themen": [
         {
           "id": "pos-variablen",
           "name": "Variablen & Datentypen",
-          "icon": "📦",
+          "icon": "/assets/icons/themen/pos-variablen.svg",
           "beschreibung": "int, string, bool & Co. – Typsicherheit, var, const und Namenskonventionen.",
           "typ": "fach"
         },
         {
           "id": "pos-kontrollstrukturen",
           "name": "Kontrollstrukturen",
-          "icon": "🔀",
+          "icon": "/assets/icons/themen/pos-kontrollstrukturen.svg",
           "beschreibung": "if, else if, switch und der ternäre Operator – Entscheidungen im Code treffen.",
           "typ": "fach"
         },
         {
           "id": "pos-schleifen",
           "name": "Schleifen",
-          "icon": "🔁",
+          "icon": "/assets/icons/themen/pos-schleifen.svg",
           "beschreibung": "for, while, do-while und foreach – wann man welche Schleife wählt.",
           "typ": "fach"
         },
         {
           "id": "pos-strings",
           "name": "Strings & String-Methoden",
-          "icon": "🔤",
+          "icon": "/assets/icons/themen/pos-strings.svg",
           "beschreibung": "Immutability, Contains/IndexOf, Substring, Trim/Replace, Split und Join.",
           "typ": "fach"
         },
         {
           "id": "pos-methoden",
           "name": "Methoden",
-          "icon": "🧩",
+          "icon": "/assets/icons/themen/pos-methoden.svg",
           "beschreibung": "Aufbau, Rückgabetypen, out-Parameter, Standardwerte und sicheres Einlesen.",
           "typ": "fach"
         },
         {
           "id": "pos-arrays",
           "name": "Arrays",
-          "icon": "📋",
+          "icon": "/assets/icons/themen/pos-arrays.svg",
           "beschreibung": "1D-Arrays, 2D-Arrays und Jagged Arrays – wann man welchen Typ wählt.",
           "typ": "fach"
         },
         {
           "id": "pos-collections",
           "name": "Collections",
-          "icon": "🗃️",
+          "icon": "/assets/icons/themen/pos-collections.svg",
           "beschreibung": "List, Dictionary, SortedList, HashSet, Queue und Stack im Vergleich.",
           "typ": "fach"
         },
         {
           "id": "pos-oop-grundlagen",
           "name": "OOP-Grundlagen",
-          "icon": "🏛️",
+          "icon": "/assets/icons/themen/pos-oop-grundlagen.svg",
           "beschreibung": "Klassen, Objekte, Konstruktoren, Encapsulation und Properties.",
           "typ": "fach"
         },
         {
           "id": "pos-vererbung",
           "name": "Vererbung & Interfaces",
-          "icon": "🌳",
+          "icon": "/assets/icons/themen/pos-vererbung.svg",
           "beschreibung": "virtual/override, Polymorphismus, abstrakte Klassen und Interfaces.",
           "typ": "fach"
         },
         {
           "id": "pos-exceptions",
           "name": "Exception Handling",
-          "icon": "🚨",
+          "icon": "/assets/icons/themen/pos-exceptions.svg",
           "beschreibung": "try-catch-finally, wichtige Exception-Typen, throw und eigene Exceptions.",
           "typ": "fach"
         },
         {
           "id": "pos-datenstrukturen",
           "name": "Datenstrukturen",
-          "icon": "⚙",
+          "icon": "/assets/icons/themen/pos-datenstrukturen.svg",
           "beschreibung": "String, List, Stack, Queue, Dictionary & mehr interaktiv erkunden",
           "typ": "tool",
           "toolScript": "/js/pos/datenstrukturen.js",
@@ -96,154 +96,154 @@
       "id": "dbi",
       "name": "DBI",
       "vollname": "Datenbanken und Informationssysteme",
-      "icon": "🗄️",
+      "icon": "/assets/icons/faecher/dbi.svg",
       "beschreibung": "Datenbankmodellierung, ERD, SQL-Abfragen und Implementierung.",
       "seite": "/dbi.html",
       "themen": [
         {
           "id": "dbi-konzeptionelles-datendesign",
           "name": "Konzeptionelles Datendesign",
-          "icon": "🗺️",
+          "icon": "/assets/icons/themen/dbi-konzeptionelles-datendesign.svg",
           "beschreibung": "Die 4 Phasen des Datenbankdesigns – von der Anforderungsanalyse bis zur DDL.",
           "typ": "fach"
         },
         {
           "id": "dbi-erd-lesen",
           "name": "ERD lesen",
-          "icon": "🔍",
+          "icon": "/assets/icons/themen/dbi-erd-lesen.svg",
           "beschreibung": "Entitytypen, Attribute, Beziehungen und (min,max)-Paare im ERD sicher lesen.",
           "typ": "fach"
         },
         {
           "id": "dbi-chen-notation",
           "name": "Chen-(min,max)-Notation",
-          "icon": "📌",
+          "icon": "/assets/icons/themen/dbi-chen-notation.svg",
           "beschreibung": "Was (min,max) bedeutet und wie es sich direkt auf FK, NOT NULL und UNIQUE auswirkt.",
           "typ": "fach"
         },
         {
           "id": "dbi-beziehungstypen",
           "name": "Beziehungstypen 1:1, 1:n, m:n",
-          "icon": "🔗",
+          "icon": "/assets/icons/themen/dbi-beziehungstypen.svg",
           "beschreibung": "Beziehungstypen aus max-Werten ableiten und was sie für die Implementierung bedeuten.",
           "typ": "fach"
         },
         {
           "id": "dbi-erd-tabellen",
           "name": "ERD in Tabellen umsetzen",
-          "icon": "🗂️",
+          "icon": "/assets/icons/themen/dbi-erd-tabellen.svg",
           "beschreibung": "Das Kernthema der Prüfung: Regeln für FK-Platzierung, Zwischentabellen und UNIQUE.",
           "typ": "fach"
         },
         {
           "id": "dbi-11-beziehungen",
           "name": "1:1-Beziehungen implementieren",
-          "icon": "🔑",
+          "icon": "/assets/icons/themen/dbi-11-beziehungen.svg",
           "beschreibung": "Der häufigste Fehler in der Prüfung: UNIQUE vergessen. Mit DDL-Fehler-Analyse.",
           "typ": "fach"
         },
         {
           "id": "dbi-1n-beziehungen",
           "name": "1:n-Beziehungen implementieren",
-          "icon": "📂",
+          "icon": "/assets/icons/themen/dbi-1n-beziehungen.svg",
           "beschreibung": "FK-Seite bestimmen, NOT NULL oder nullable – und warum kein UNIQUE nötig ist.",
           "typ": "fach"
         },
         {
           "id": "dbi-mn-beziehungen",
           "name": "m:n-Beziehungen implementieren",
-          "icon": "🔀",
+          "icon": "/assets/icons/themen/dbi-mn-beziehungen.svg",
           "beschreibung": "Zwischentabelle, zusammengesetzter PK und Beziehungsattribute.",
           "typ": "fach"
         },
         {
           "id": "dbi-kraehenfuss",
           "name": "Krähenfußnotation",
-          "icon": "🐾",
+          "icon": "/assets/icons/themen/dbi-kraehenfuss.svg",
           "beschreibung": "Symbole lesen, Chen-Notation vergleichen und Beziehungstypen erkennen.",
           "typ": "fach"
         },
         {
           "id": "dbi-umwandlung",
           "name": "Chen ↔ Krähenfuß umwandeln",
-          "icon": "🔄",
+          "icon": "/assets/icons/themen/dbi-umwandlung.svg",
           "beschreibung": "Systematische Umwandlung in beide Richtungen – die DDL bleibt dabei identisch.",
           "typ": "fach"
         },
         {
           "id": "dbi-abhaengige-entitytypen",
           "name": "Abhängige Entitytypen",
-          "icon": "🏗️",
+          "icon": "/assets/icons/themen/dbi-abhaengige-entitytypen.svg",
           "beschreibung": "Schwache Entitytypen erkennen, die Falle (1,1) ≠ abhängig, zusammengesetzter PK.",
           "typ": "fach"
         },
         {
           "id": "dbi-mehrwertige-beziehungen",
           "name": "Mehrwertige Beziehungstypen",
-          "icon": "🔧",
+          "icon": "/assets/icons/themen/dbi-mehrwertige-beziehungen.svg",
           "beschreibung": "Ternäre Beziehungen implementieren: PK aus allen FKs, Beziehungsattribute.",
           "typ": "fach"
         },
         {
           "id": "dbi-erd-rekonstruieren",
           "name": "ERD aus Tabellen rekonstruieren",
-          "icon": "🔁",
+          "icon": "/assets/icons/themen/dbi-erd-rekonstruieren.svg",
           "beschreibung": "Von DDL zurück ins ERD: FK-Analyse, was rekonstruierbar ist und was nicht.",
           "typ": "fach"
         },
         {
           "id": "dbi-outer-join",
           "name": "OUTER JOIN",
-          "icon": "↔️",
+          "icon": "/assets/icons/themen/dbi-outer-join.svg",
           "beschreibung": "LEFT JOIN, fehlende Zuordnungen mit IS NULL finden, count(*) vs. count(Spalte).",
           "typ": "fach"
         },
         {
           "id": "dbi-unterabfragen",
           "name": "Unterabfragen",
-          "icon": "🔎",
+          "icon": "/assets/icons/themen/dbi-unterabfragen.svg",
           "beschreibung": "Skalare und Mehrwert-Unterabfragen, der Mehrfachwert-Fehler, IN vs. EXISTS.",
           "typ": "fach"
         },
         {
           "id": "dbi-korrelierte-unterabfragen",
           "name": "Korrelierte Unterabfragen",
-          "icon": "🪢",
+          "icon": "/assets/icons/themen/dbi-korrelierte-unterabfragen.svg",
           "beschreibung": "Unterabfragen, die auf die äußere Abfrage verweisen – EXISTS mit Korrelation.",
           "typ": "fach"
         },
         {
           "id": "dbi-in-exists",
           "name": "IN, EXISTS und NOT EXISTS",
-          "icon": "🎯",
+          "icon": "/assets/icons/themen/dbi-in-exists.svg",
           "beschreibung": "NULL-Falle bei NOT IN, NULL-Sicherheit von NOT EXISTS, T1/T2-Denkfehler.",
           "typ": "fach"
         },
         {
           "id": "dbi-all-some-any",
           "name": "ANY, SOME und ALL",
-          "icon": "⚖️",
+          "icon": "/assets/icons/themen/dbi-all-some-any.svg",
           "beschreibung": "> ALL = > MAX, > SOME = > MIN – und warum die Verwechslung so häufig ist.",
           "typ": "fach"
         },
         {
           "id": "dbi-mengenoperationen",
           "name": "SQL-Mengenoperationen",
-          "icon": "∪",
+          "icon": "/assets/icons/themen/dbi-mengenoperationen.svg",
           "beschreibung": "UNION, UNION ALL, INTERSECT, EXCEPT – und warum die EXCEPT-Reihenfolge kritisch ist.",
           "typ": "fach"
         },
         {
           "id": "dbi-null-fallen",
           "name": "NULL-Fallen in SQL",
-          "icon": "⚠️",
+          "icon": "/assets/icons/themen/dbi-null-fallen.svg",
           "beschreibung": "NULL bei NOT IN, LEFT JOIN, count() und optionalen FKs – das Querschnittsthema.",
           "typ": "fach"
         },
         {
           "id": "dbi-pruefungsfehler",
           "name": "Prüfungsfehler & Gegenstrategien",
-          "icon": "🛡️",
+          "icon": "/assets/icons/themen/dbi-pruefungsfehler.svg",
           "beschreibung": "Die häufigsten Fehler aus der echten Testanalyse – von ERD bis SQL. Finale Wiederholung.",
           "typ": "fach"
         }
@@ -253,7 +253,7 @@
       "id": "nsvs",
       "name": "NSVS",
       "vollname": "Netzwerke, Sicherheit und verteilte Systeme",
-      "icon": "🔒",
+      "icon": "/assets/icons/faecher/nsvs.svg",
       "beschreibung": "Netzwerkprotokolle, IT-Sicherheit und verteilte Architekturen",
       "seite": "/nsvs.html",
       "themen": []
@@ -262,7 +262,7 @@
       "id": "tinf",
       "name": "TINF",
       "vollname": "Technische Informatik",
-      "icon": "🔧",
+      "icon": "/assets/icons/faecher/tinf.svg",
       "beschreibung": "Hardwarenahe Programmierung, Betriebssysteme und Systemarchitektur",
       "seite": "/tinf.html",
       "themen": []
@@ -271,7 +271,7 @@
       "id": "wir",
       "name": "WIR",
       "vollname": "Wirtschaft und Recht",
-      "icon": "⚖",
+      "icon": "/assets/icons/faecher/wir.svg",
       "beschreibung": "Betriebswirtschaft, Rechtskunde und wirtschaftliche Grundlagen",
       "seite": "/wir.html",
       "themen": []
@@ -280,7 +280,7 @@
       "id": "medt",
       "name": "MEDT",
       "vollname": "Medientechnik",
-      "icon": "🎨",
+      "icon": "/assets/icons/faecher/medt.svg",
       "beschreibung": "Grafik, Audio, Video und multimediale Anwendungen",
       "seite": "/medt.html",
       "themen": []
@@ -289,7 +289,7 @@
       "id": "syp",
       "name": "SYP",
       "vollname": "Systemplanung und Projektmanagement",
-      "icon": "📋",
+      "icon": "/assets/icons/faecher/syp.svg",
       "beschreibung": "Projektplanung, Systemanalyse und Softwareentwicklungsprozesse",
       "seite": "/syp.html",
       "themen": []
