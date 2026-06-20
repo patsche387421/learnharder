@@ -662,9 +662,41 @@ button {
 }
 
 .card-icon {
-  font-size: 2rem;
   display: block;
   margin-bottom: 0.5rem;
+}
+
+/* Illustratives Content-Icon (Fach-/Themen-SVG via <img>).
+   Größe steuert die Variable --icon-size; der Helper setzt nur
+   style="--icon-size: 3rem" (Karten) bzw. 1.25rem (Profil-Zeile).
+   Default 3rem, falls die Variable fehlt. */
+.content-icon {
+  display: inline-block;
+  width: var(--icon-size, 3rem);
+  height: var(--icon-size, 3rem);
+  object-fit: contain;
+  vertical-align: middle;
+}
+
+/* Fallback-Badge: erster Buchstabe in farbigem Kreis (solange keine SVG da ist).
+   Größe + font-size leiten sich aus --icon-size ab — Berechnung lebt im CSS,
+   nicht im JS. Hintergrund nutzt --primary (kein dedizierter Brand-Token in
+   tokens.css vorhanden). */
+.content-icon-fallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--icon-size, 3rem);
+  height: var(--icon-size, 3rem);
+  vertical-align: middle;
+  border-radius: var(--radius-full);
+  background: var(--primary);
+  color: var(--text-on-primary);
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: calc(var(--icon-size, 3rem) * 0.5);
+  line-height: 1;
+  user-select: none;
 }
 
 .card h2 {

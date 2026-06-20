@@ -1,0 +1,55 @@
+<svg width="96" height="96" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="posOopBlueprint" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#4C1D95"/>
+      <stop offset="100%" stop-color="#5B21B6"/>
+    </linearGradient>
+    <linearGradient id="posOopTop" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#C4B5FD"/>
+      <stop offset="100%" stop-color="#A78BFA"/>
+    </linearGradient>
+    <linearGradient id="posOopLeft" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8B5CF6"/>
+      <stop offset="100%" stop-color="#6D28D9"/>
+    </linearGradient>
+    <linearGradient id="posOopRight" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#6D28D9"/>
+      <stop offset="100%" stop-color="#4C1D95"/>
+    </linearGradient>
+    <clipPath id="posOopClip">
+      <rect x="14" y="16" width="68" height="52" rx="8"/>
+    </clipPath>
+  </defs>
+
+  <!-- Ground shadow -->
+  <ellipse cx="48" cy="84" rx="28" ry="4.6" fill="#5B21B6" opacity="0.26"/>
+
+  <!-- Blueprint panel -->
+  <rect x="14" y="16" width="68" height="52" rx="8" fill="url(#posOopBlueprint)"/>
+  <!-- Blueprint grid -->
+  <g clip-path="url(#posOopClip)" stroke="#A78BFA" stroke-width="1" opacity="0.32">
+    <path d="M24 16 v52 M34 16 v52 M44 16 v52 M54 16 v52 M64 16 v52 M74 16 v52"/>
+    <path d="M14 26 h68 M14 36 h68 M14 46 h68 M14 56 h68"/>
+  </g>
+  <!-- Panel inner border -->
+  <rect x="14.5" y="16.5" width="67" height="51" rx="7.5" fill="none" stroke="#C4B5FD" stroke-width="1" opacity="0.45"/>
+
+  <!-- 3D isometric cube rising from blueprint -->
+  <!-- top face -->
+  <path d="M48 26 L68 37 L48 48 L28 37 Z" fill="url(#posOopTop)"/>
+  <!-- left face -->
+  <path d="M28 37 L48 48 L48 72 L28 61 Z" fill="url(#posOopLeft)"/>
+  <!-- right face -->
+  <path d="M68 37 L48 48 L48 72 L68 61 Z" fill="url(#posOopRight)"/>
+  <!-- edge highlights -->
+  <path d="M48 26 L68 37 L48 48 Z" fill="#FFFFFF" opacity="0.12"/>
+  <path d="M28 37 L48 48 L48 72" fill="none" stroke="#C4B5FD" stroke-width="1" opacity="0.4"/>
+
+  <!-- Instance arrow / spark -->
+  <circle cx="48" cy="37" r="3" fill="#FDE68A" opacity="0.9"/>
+
+  <!-- Sparkle accents -->
+  <circle cx="20" cy="22" r="1.6" fill="#22D3EE" opacity="0.85"/>
+  <path d="M82 56 l0.9 2.2 2.2 0.9 -2.2 0.9 -0.9 2.2 -0.9 -2.2 -2.2 -0.9 2.2 -0.9 Z" fill="#C4B5FD" opacity="0.9"/>
+  <circle cx="76" cy="74" r="1.6" fill="#F0ABFC" opacity="0.85"/>
+</svg>

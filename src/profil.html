@@ -116,6 +116,7 @@
   <script src="/js/auth.js"></script>
   <script src="/js/stats.js"></script>
   <script src="/js/icons.js"></script>
+  <script src="/js/content-icons.js"></script>
   <script src="/js/level.js"></script>
   <script>
     // Theme früh anwenden um Flash zu vermeiden
@@ -137,7 +138,7 @@
       const row = document.createElement('div');
       row.className = 'profil-fach-row';
       row.innerHTML = `
-        <span class="profil-fach-name">${fach.icon} <span>${fach.name}</span></span>
+        <span class="profil-fach-name">${ContentIcons.render(fach.icon, fach.name, { size: "1.25rem" })}<span>${fach.name}</span></span>
         <span class="profil-fach-level">Level ${fachStats.fachLevel}</span>
         <div class="profil-fach-bar-wrap">
           <div class="profil-fach-bar-fill" style="width: ${prozent}%"></div>
