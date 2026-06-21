@@ -50,11 +50,10 @@
       });
 
       const fachStats = await Stats.ladeFachStatsKomplett("pos");
-      document.getElementById("fach-level").textContent = fachStats.fachLevel;
-      const naechste = Level.LEVEL_THRESHOLDS[fachStats.fachLevel] ?? "–";
-      document.getElementById("fach-xp-text").textContent = fachStats.fachXp + " / " + naechste + " EP";
-      const prozent = naechste !== "–" ? (fachStats.fachXp / naechste * 100) : 100;
-      document.getElementById("fach-level-fill").style.width = Math.min(prozent, 100) + "%";
+      const f = Level.berechneFortschritt(fachStats.fachXp);
+      document.getElementById("fach-level").textContent = f.level;
+      document.getElementById("fach-xp-text").textContent = f.epText;
+      document.getElementById("fach-level-fill").style.width = f.prozent + "%";
       document.getElementById("fach-correct").textContent = fachStats.correctAnswers + " richtige Antworten gesamt";
     })();
   </script>
