@@ -23,25 +23,6 @@ const Stats = (() => {
     };
   }
 
-  async function ladeThemaStats(themaId) {
-    const user = Auth.currentUser();
-    if (!user) return { abgeschlossen: false, quizPunkte: 0, letzterScore: null };
-
-    const { data } = await sb
-      .from('thema_progress')
-      .select('abgeschlossen, quiz_punkte, letzter_score')
-      .eq('user_id', user.id)
-      .eq('thema_id', themaId)
-      .maybeSingle();
-
-    if (!data) return { abgeschlossen: false, quizPunkte: 0, letzterScore: null };
-    return {
-      abgeschlossen: data.abgeschlossen ?? false,
-      quizPunkte:    data.quiz_punkte   ?? 0,
-      letzterScore:  data.letzter_score ?? null
-    };
-  }
-
   async function speichereQuizErgebnis(themaId, richtig, gesamt) {
     const user = Auth.currentUser();
     if (!user) return;
@@ -137,5 +118,5 @@ const Stats = (() => {
     return { fortschritt: 0, themenBearbeitet: 0, quizPunkte: 0, letzteAktivitaet: null };
   }
 
-  return { ladeFachStats, ladeThemaStats, speichereQuizErgebnis, ladeFachThemenProgress, ladeDashboardStats, ladeFachStatsKomplett };
+  return { ladeFachStats, speichereQuizErgebnis, ladeFachThemenProgress, ladeDashboardStats, ladeFachStatsKomplett };
 })();

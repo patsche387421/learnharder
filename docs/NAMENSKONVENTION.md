@@ -70,7 +70,6 @@ privat: `topbarInitialen`, `aktiverNav`, `topbarGrundgeruest` (UI-Helfer, keine 
 | Export | Signatur | Zweck | Art |
 |---|---|---|---|
 | `ladeFachStats` | `(fachId) ⇒ Promise<{fortschritt, themenBearbeitet, quizPunkte, letzteAktivitaet}>` | Fach-Aggregat | Seiteneffekt: DB-Lesen (`fach_stats`) |
-| `ladeThemaStats` | `(themaId) ⇒ Promise<{abgeschlossen, quizPunkte, letzterScore}>` | Pro-Thema-Fortschritt | Seiteneffekt: DB-Lesen (`thema_progress`) — ⚠️ **kein Aufrufer in `src/`** (toter Code, Kandidat Schritt F) |
 | `speichereQuizErgebnis` | `(themaId, richtig, gesamt) ⇒ Promise<void>` | schreibt Quiz-Verlauf + Thema-Fortschritt + Fach-Aggregat | Seiteneffekt: DB-Schreiben (`quiz_results`, `thema_progress`, `fach_stats`) |
 | `ladeFachThemenProgress` | `(fachId) ⇒ Promise<{ [thema_id]: {abgeschlossen, letzter_score} }>` | Abschluss-Map aller Themen eines Fachs | Seiteneffekt: DB-Lesen (`thema_progress`) |
 | `ladeDashboardStats` | `() ⇒ Promise<{themenBearbeitet, quizPunkte}>` | Aggregat über alle Fächer | Seiteneffekt: DB-Lesen (`fach_stats`) |
