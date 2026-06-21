@@ -46,7 +46,7 @@ const Stats = (() => {
     const user = Auth.currentUser();
     if (!user) return;
 
-    const score  = Math.round((richtig / gesamt) * 100);
+    const score  = gesamt > 0 ? Math.round((richtig / gesamt) * 100) : 0;
     const fachId = themaId.split('-')[0];
 
     // 1. Quiz-Verlauf speichern
