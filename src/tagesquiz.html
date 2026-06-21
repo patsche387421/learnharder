@@ -202,7 +202,7 @@
       document.getElementById("ergebnis-icon").textContent =
         score >= 70 ? "🎉" : score >= 40 ? "😊" : "💪";
 
-      const ergebnis = await Level.buecheQuizErgebnis({
+      const ergebnis = await Level.vergibBelohnungen({
         richtig,
         gesamt,
         fachId:       null,

@@ -23,7 +23,7 @@ const Stats = (() => {
     };
   }
 
-  async function speichereQuizErgebnis(themaId, richtig, gesamt) {
+  async function speichereLernfortschritt(themaId, richtig, gesamt) {
     const user = Auth.currentUser();
     if (!user) return;
 
@@ -118,5 +118,5 @@ const Stats = (() => {
     return { fortschritt: 0, themenBearbeitet: 0, quizPunkte: 0, letzteAktivitaet: null };
   }
 
-  return { ladeFachStats, speichereQuizErgebnis, ladeFachThemenProgress, ladeDashboardStats, ladeFachStatsKomplett };
+  return { ladeFachStats, speichereLernfortschritt, ladeFachThemenProgress, ladeDashboardStats, ladeFachStatsKomplett };
 })();

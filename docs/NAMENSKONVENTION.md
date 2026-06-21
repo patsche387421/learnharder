@@ -57,7 +57,7 @@ Code geschrieben wird.
 | `getUserStats` | `() ⇒ Promise<{energy, level, trophies, totalXp}>` | globale Gamification-Werte des Users | Seiteneffekt: DB-Lesen (`user_stats`) |
 | `verbrauchEnergie` | `() ⇒ Promise<boolean>` | zieht 1 Energydrink ab (false bei 0) | Seiteneffekt: DB-Schreiben (`user_stats`) |
 | `hatHeuteTagesQuizGespielt` | `() ⇒ Promise<boolean>` | Tagessperre-Prüfung (UTC-Tag) | Seiteneffekt: DB-Lesen (`daily_quiz_log`) |
-| `buecheQuizErgebnis` | `({richtig, gesamt, fachId, istTagesQuiz=false, lebenProzent}) ⇒ Promise<{ep, trophien, bonus, levelUp}>` | berechnet **und** schreibt EP/Trophäen/Level + Tagesquiz-Log | Seiteneffekt: DB-Lesen+Schreiben (`user_stats`, `subject_xp`, `daily_quiz_log`) + `console.log` |
+| `vergibBelohnungen` | `({richtig, gesamt, fachId, istTagesQuiz=false, lebenProzent}) ⇒ Promise<{ep, trophien, bonus, levelUp}>` | berechnet **und** schreibt EP/Trophäen/Level + Tagesquiz-Log | Seiteneffekt: DB-Lesen+Schreiben (`user_stats`, `subject_xp`, `daily_quiz_log`) + `console.log` |
 | `tauscheTrophäen` | `(anzahlEnergie) ⇒ Promise<{erfolg, fehler?}>` | tauscht 50 Trophäen → 1 Energie | Seiteneffekt: DB-Lesen+Schreiben (`user_stats`) |
 | `renderTopbar` | `(stats?) ⇒ Promise<void>` | rendert die Topbar in `#topbar` | Seiteneffekt: DOM-Schreiben + ggf. DB-Lesen (Session, `getUserStats`) |
 
@@ -70,7 +70,7 @@ privat: `topbarInitialen`, `aktiverNav`, `topbarGrundgeruest` (UI-Helfer, keine 
 | Export | Signatur | Zweck | Art |
 |---|---|---|---|
 | `ladeFachStats` | `(fachId) ⇒ Promise<{fortschritt, themenBearbeitet, quizPunkte, letzteAktivitaet}>` | Fach-Aggregat | Seiteneffekt: DB-Lesen (`fach_stats`) |
-| `speichereQuizErgebnis` | `(themaId, richtig, gesamt) ⇒ Promise<void>` | schreibt Quiz-Verlauf + Thema-Fortschritt + Fach-Aggregat | Seiteneffekt: DB-Schreiben (`quiz_results`, `thema_progress`, `fach_stats`) |
+| `speichereLernfortschritt` | `(themaId, richtig, gesamt) ⇒ Promise<void>` | schreibt Quiz-Verlauf + Thema-Fortschritt + Fach-Aggregat | Seiteneffekt: DB-Schreiben (`quiz_results`, `thema_progress`, `fach_stats`) |
 | `ladeFachThemenProgress` | `(fachId) ⇒ Promise<{ [thema_id]: {abgeschlossen, letzter_score} }>` | Abschluss-Map aller Themen eines Fachs | Seiteneffekt: DB-Lesen (`thema_progress`) |
 | `ladeDashboardStats` | `() ⇒ Promise<{themenBearbeitet, quizPunkte}>` | Aggregat über alle Fächer | Seiteneffekt: DB-Lesen (`fach_stats`) |
 | `ladeFachStatsKomplett` | `(fachId) ⇒ Promise<{fachLevel, fachXp, correctAnswers}>` | Fach-Level/-XP für die Level-Leiste | Seiteneffekt: DB-Lesen (`subject_xp`) |
@@ -79,43 +79,7 @@ privat: `topbarInitialen`, `aktiverNav`, `topbarGrundgeruest` (UI-Helfer, keine 
 
 ---
 
-## 4. Ziel-Namen für spätere Umbenennung (Schritt E — NICHT jetzt umsetzen)
-
-Begründung: Zwei fast gleich heißende „QuizErgebnis"-Funktionen sind verwechselbar. Klarere,
-disjunkte Namen — **eine** für Belohnung, **eine** für Lernfortschritt.
-
-| IST-Name (verifiziert) | Ziel-Name | Begründung |
-|---|---|---|
-| `Level.buecheQuizErgebnis` | `Level.vergibBelohnungen` | vergibt EP/Trophäen/Level — „Belohnung", nicht „Ergebnis" |
-| `Stats.speichereQuizErgebnis` | `Stats.speichereLernfortschritt` | schreibt Fortschritt/Abschluss, keine Belohnung |
-
-> Der IST-Name der ersten Funktion ist real **`buecheQuizErgebnis`** (mit „ue", von „buchen"
-> im Buchhaltungs-Sinn) — verifiziert in `src/js/level.js`, **nicht** zu `bucheQuizErgebnis`
-> korrigiert.
-
-### Vollständiges Grep-Netz für Schritt E (alle Vorkommen)
-
-Beim Rename **jede** Zeile mitziehen. Spalte „Art": *Code-Referenz* = Identifier (Rename
-greift via Grep/Tooling); *String-Literal* = freier Text, muss **inhaltlich** angepasst
-werden, sonst zeigt z. B. das Log einen falschen Funktionsnamen.
-
-| Symbol | Stelle | Rolle | Art |
-|---|---|---|---|
-| `buecheQuizErgebnis` | `src/js/level.js:77` | Definition | Code-Referenz |
-| `buecheQuizErgebnis` | `src/js/level.js:78` | `console.log`-Label | **String-Literal** (inhaltlich mitziehen) |
-| `buecheQuizErgebnis` | `src/js/level.js:277` | Export | Code-Referenz |
-| `buecheQuizErgebnis` | `src/js/app.js:303` | Aufrufer | Code-Referenz |
-| `buecheQuizErgebnis` | `src/tagesquiz.html:205` | Aufrufer | Code-Referenz |
-| `speichereQuizErgebnis` | `src/js/stats.js:45` | Definition | Code-Referenz |
-| `speichereQuizErgebnis` | `src/js/stats.js:140` | Export | Code-Referenz |
-| `speichereQuizErgebnis` | `src/js/app.js:302` | Aufrufer | Code-Referenz |
-
-> Zeilennummern: Stand vor Schritt A — beim Rename ist der **Symbolname** (grep) maßgeblich,
-> nicht die Zeile.
-
----
-
-## 5. Offene Entscheidung: vollständige Englisch-Migration
+## 4. Offene Entscheidung: vollständige Englisch-Migration
 
 Eine durchgängige Umstellung aller Identifier **und** Kommentare auf Englisch (nach
 internationalen Konventionen) ist **zurückgestellt** — eigener Scope, eigene Session:

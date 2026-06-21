@@ -88,10 +88,10 @@ const Level = (() => {
     return !!data;
   }
 
-  // Bucht das Quiz-Ergebnis: EP, Trophäen, Level-Update.
+  // Vergibt die Belohnungen eines Quiz: EP, Trophäen, Level-Update.
   // lebenProzent: verbleibende Leben nach Quiz (0 = keine EP/Bonus, aber Trophäen)
-  async function buecheQuizErgebnis({ richtig, gesamt, fachId, istTagesQuiz = false, lebenProzent }) {
-    console.log('[Level] buecheQuizErgebnis:', { richtig, gesamt, fachId, istTagesQuiz, lebenProzent });
+  async function vergibBelohnungen({ richtig, gesamt, fachId, istTagesQuiz = false, lebenProzent }) {
+    console.log('[Level] vergibBelohnungen:', { richtig, gesamt, fachId, istTagesQuiz, lebenProzent });
     const user = Auth.currentUser();
     if (!user) return { ep: 0, trophien: 0, bonus: 0, levelUp: false };
 
@@ -290,7 +290,7 @@ const Level = (() => {
     getUserStats,
     verbrauchEnergie,
     hatHeuteTagesQuizGespielt,
-    buecheQuizErgebnis,
+    vergibBelohnungen,
     tauscheTrophäen,
     renderTopbar
   };

@@ -302,8 +302,8 @@ const App = (() => {
       let ergebnis;
       try {
         // Erst Lernfortschritt speichern, dann Belohnung buchen (beides awaited).
-        await Stats.speichereQuizErgebnis(themaId, richtig, fragen.length);
-        ergebnis = await Level.buecheQuizErgebnis({
+        await Stats.speichereLernfortschritt(themaId, richtig, fragen.length);
+        ergebnis = await Level.vergibBelohnungen({
           richtig,
           gesamt:       fragen.length,
           fachId:       themaZuPfad(themaId).fach,
