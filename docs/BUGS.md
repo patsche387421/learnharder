@@ -8,7 +8,7 @@ Legende: 🔴 Kritisch · 🟡 Wichtig · 🟢 Nice-to-have · ✅ Erledigt
 ## 🟡 Wichtig
 
 ### BUG-003: EP-Buchung nicht verifiziert
-- **Symptom:** `Level.buecheQuizErgebnis()` wurde ohne `await` aufgerufen —
+- **Symptom:** `Level.buecheQuizErgebnis()` (heute `Level.vergibBelohnungen()`) wurde ohne `await` aufgerufen —
   Rückgabewert (EP/Trophäen) war nicht nutzbar, Fehler wurden lautlos
   verschluckt.
 - **Status:** Teilweise behoben — Code-Fix in `9ed1548` (`await` + EP/🏆
@@ -36,9 +36,12 @@ Legende: 🔴 Kritisch · 🟡 Wichtig · 🟢 Nice-to-have · ✅ Erledigt
   ein Netzwerkfehler auftritt, werden `quiz_results`, `thema_progress` und
   `fach_stats` nicht aktualisiert — ohne Fehlermeldung im UI.
 - **Ursache:** Bewusstes Design (blockiert UI nicht), aber kein Error-Handling.
-- **Aktion:** `.catch(err => console.error(...))` ergänzen oder mit `await`
-  + Try/Catch absichern und Fehler im UI signalisieren.
-- **Status:** Offen
+- **Fix:** Beide Calls (Lernfortschritt speichern + Belohnung buchen) in `app.js` in
+  **einen** `try/catch` umschlossen (awaited); Fehler wird im UI (`#quiz-result`)
+  signalisiert statt lautlos verschluckt. Unter den heutigen Namen
+  `Stats.speichereLernfortschritt` bzw. `Level.vergibBelohnungen` zu finden. Zusätzlich
+  Division-durch-0-Guard in `speichereLernfortschritt`.
+- **Status:** ✅ Behoben in `2030aed`
 
 ---
 

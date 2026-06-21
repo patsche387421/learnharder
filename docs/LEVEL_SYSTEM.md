@@ -162,7 +162,7 @@ Zusätzlich zur bereits vorhandenen Stats-Leiste
 (Fortschritt % · Themen bearbeitet · Quiz-Punkte) erscheint eine
 **Fach-Level-Leiste**:
 - „Fach-Level X" (klein angezeigt)
-- Fortschrittsbalken: EP bis zum nächsten Level
+- Fortschrittsbalken: EP innerhalb des aktuellen Level-Bands (0→100 % pro Level)
 - Richtige Antworten gesamt in diesem Fach
 
 ### Themen-Karten (unverändert)
@@ -173,6 +173,12 @@ Zusätzlich zur bereits vorhandenen Stats-Leiste
 ### Globales Level
 Das globale User-Level (aus Gesamt-EP über alle Fächer) wird in der **Topbar** und
 auf dem **Dashboard** angezeigt — auf der Fach-Seite gilt dagegen das **Fach-Level**.
+
+### Berechnungsquelle (SSOT)
+Alle Level- und Fortschrittsanzeigen (Topbar, Fach-Seiten, Profil) werden zentral aus den
+Gesamt-EP über `Level.berechneFortschritt(gesamtEp)` in `src/js/level.js` abgeleitet. Das
+angezeigte **Level wird IMMER aus den EP berechnet**, nicht aus einer gespeicherten DB-Spalte
+gelesen — `user_stats.level` und `subject_xp.level` gelten nur noch als denormalisierter Cache.
 
 ---
 

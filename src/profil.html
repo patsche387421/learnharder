@@ -132,16 +132,15 @@
     }
 
     function renderFachZeile(fach, fachStats) {
-      const naechste = Level.LEVEL_THRESHOLDS[fachStats.fachLevel] ?? null;
-      const prozent  = naechste ? Math.min(fachStats.fachXp / naechste * 100, 100) : 100;
+      const f = Level.berechneFortschritt(fachStats.fachXp);
 
       const row = document.createElement('div');
       row.className = 'profil-fach-row';
       row.innerHTML = `
         <span class="profil-fach-name">${ContentIcons.render(fach.icon, fach.name, { size: "1.25rem" })}<span>${fach.name}</span></span>
-        <span class="profil-fach-level">Level ${fachStats.fachLevel}</span>
+        <span class="profil-fach-level">Level ${f.level}</span>
         <div class="profil-fach-bar-wrap">
-          <div class="profil-fach-bar-fill" style="width: ${prozent}%"></div>
+          <div class="profil-fach-bar-fill" style="width: ${f.prozent}%"></div>
         </div>
         <span class="profil-fach-antworten">${Icons.render('check')} ${fachStats.correctAnswers}</span>
       `;
@@ -174,12 +173,11 @@
         const userStats = await Level.getUserStats();
         await Level.renderTopbar(userStats);
 
-        const naechste = Level.LEVEL_THRESHOLDS[userStats.level] ?? null;
-        const prozent  = naechste ? Math.min(userStats.totalXp / naechste * 100, 100) : 100;
+        const f = Level.berechneFortschritt(userStats.totalXp);
 
-        document.getElementById('profil-level').textContent    = userStats.level;
-        document.getElementById('profil-ep-text').textContent  = userStats.totalXp + ' / ' + (naechste ?? '–') + ' EP';
-        document.getElementById('profil-bar-fill').style.width = prozent + '%';
+        document.getElementById('profil-level').textContent    = f.level;
+        document.getElementById('profil-ep-text').textContent  = f.epText;
+        document.getElementById('profil-bar-fill').style.width = f.prozent + '%';
         document.getElementById('profil-total-xp').textContent = userStats.totalXp;
         document.getElementById('profil-trophies').textContent = userStats.trophies;
         document.getElementById('profil-energy').textContent   = userStats.energy;

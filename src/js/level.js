@@ -18,6 +18,22 @@ const Level = (() => {
     return Math.min(level, 10);
   }
 
+  // Reine SSOT-Funktion: Fortschritt im AKTUELLEN Level-Band aus Gesamt-EP.
+  // Nimmt nur EP entgegen → quelle-agnostisch (User-, Fach-, später Team-/Saison-EP).
+  // prozent ist auf 0–100 gekappt; bei Max-Level (10) immer 100 %, kein nächstes Band.
+  function berechneFortschritt(gesamtEp) {
+    const level       = berechneLevel(gesamtEp);
+    const istMax      = level === 10;
+    const untere      = LEVEL_THRESHOLDS[level - 1] ?? 0;
+    const obere       = LEVEL_THRESHOLDS[level];
+    const epImBand    = gesamtEp - untere;
+    const bandGroesse = istMax ? 0 : obere - untere;
+    const prozent     = istMax ? 100 : Math.min((gesamtEp - untere) / (obere - untere) * 100, 100);
+    const naechsteSchwelle = istMax ? null : obere;
+    const epText      = istMax ? `${gesamtEp} EP (Max)` : `${epImBand} / ${bandGroesse} EP`;
+    return { level, prozent, epImBand, bandGroesse, naechsteSchwelle, istMax, epText };
+  }
+
   // Gibt globale Gamification-Werte des eingeloggten Users zurück.
   // Liefert Standardwerte wenn kein Datenbankeintrag vorhanden.
   async function getUserStats() {
@@ -72,10 +88,10 @@ const Level = (() => {
     return !!data;
   }
 
-  // Bucht das Quiz-Ergebnis: EP, Trophäen, Level-Update.
+  // Vergibt die Belohnungen eines Quiz: EP, Trophäen, Level-Update.
   // lebenProzent: verbleibende Leben nach Quiz (0 = keine EP/Bonus, aber Trophäen)
-  async function buecheQuizErgebnis({ richtig, gesamt, fachId, istTagesQuiz = false, lebenProzent }) {
-    console.log('[Level] buecheQuizErgebnis:', { richtig, gesamt, fachId, istTagesQuiz, lebenProzent });
+  async function vergibBelohnungen({ richtig, gesamt, fachId, istTagesQuiz = false, lebenProzent }) {
+    console.log('[Level] vergibBelohnungen:', { richtig, gesamt, fachId, istTagesQuiz, lebenProzent });
     const user = Auth.currentUser();
     if (!user) return { ep: 0, trophien: 0, bonus: 0, levelUp: false };
 
@@ -227,9 +243,7 @@ const Level = (() => {
 
     if (!stats) stats = await getUserStats();
 
-    const naechste  = LEVEL_THRESHOLDS[stats.level] ?? null;
-    const prozent   = naechste ? Math.min(stats.totalXp / naechste * 100, 100) : 100;
-    const epText    = stats.totalXp + ' / ' + (naechste ?? '–') + ' EP';
+    const f         = berechneFortschritt(stats.totalXp);
     const initialen = topbarInitialen(user.email);
 
     markup +=
@@ -237,11 +251,11 @@ const Level = (() => {
         '<span class="topbar-pill topbar-pill--energy" title="Energie">' + Icons.render('energy', { size: 18 }) + '<span>' + stats.energy + '</span></span>' +
         '<span class="topbar-pill topbar-pill--trophies" title="Trophäen">' + Icons.render('trophy', { size: 18 }) + '<span>' + stats.trophies + '</span></span>' +
         '<span class="topbar-pill topbar-pill--xp" title="Erfahrungspunkte">' + Icons.render('star', { size: 18 }) + '<span>' + stats.totalXp + ' XP</span></span>' +
-        '<span class="topbar-level-badge" title="Level ' + stats.level + '">' + stats.level + '</span>' +
+        '<span class="topbar-level-badge" title="Level ' + f.level + '">' + f.level + '</span>' +
         '<a class="topbar-avatar" href="/profil.html" title="Profil">' + initialen + '</a>' +
       '</div>' +
-      '<div class="topbar-progress" title="' + epText + '">' +
-        '<div class="topbar-progress-fill" style="width: ' + prozent + '%"></div>' +
+      '<div class="topbar-progress" title="' + f.epText + '">' +
+        '<div class="topbar-progress-fill" style="width: ' + f.prozent + '%"></div>' +
       '</div>';
 
     bar.innerHTML = markup;
@@ -271,10 +285,12 @@ const Level = (() => {
 
   return {
     LEVEL_THRESHOLDS,
+    berechneLevel,
+    berechneFortschritt,
     getUserStats,
     verbrauchEnergie,
     hatHeuteTagesQuizGespielt,
-    buecheQuizErgebnis,
+    vergibBelohnungen,
     tauscheTrophäen,
     renderTopbar
   };
