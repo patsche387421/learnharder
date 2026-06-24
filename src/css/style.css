@@ -212,6 +212,25 @@ button {
   cursor: not-allowed;
 }
 
+/* Hamburger-Button: nur auf Mobile sichtbar (siehe Media-Query unten) */
+.topbar-hamburger {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+.topbar-hamburger:hover {
+  background: var(--brand-muted);
+  color: var(--purple-500);
+}
+
 /* Auf schmalen Screens ausblenden, damit die Nav nicht überläuft */
 @media (max-width: 768px) {
   .topbar-nav-link--disabled {
@@ -1259,6 +1278,36 @@ button {
 
   .card-grid {
     grid-template-columns: 1fr;
+  }
+
+  /* Hamburger sichtbar; Nav wird zum abklappbaren Panel unter der Topbar */
+  .topbar-hamburger {
+    display: inline-flex;
+  }
+
+  .topbar-nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-xs);
+    margin: 0;
+    padding: var(--space-sm);
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow-lg);
+    z-index: 50;
+    display: none;
+  }
+
+  .topbar--nav-open .topbar-nav {
+    display: flex;
+  }
+
+  .topbar-nav-link {
+    width: 100%;
   }
 }
 
