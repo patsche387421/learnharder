@@ -24,3 +24,12 @@ User-Bereich und Theme-Toggle.
 - Active-State soll automatisch anhand der aktuellen URL gesetzt werden.
 - Theme-Toggle (Dark/Light) anbinden an `data-theme`-Attribut auf `<html>`
   (siehe `DESIGN_GUIDELINES.md` §2).
+
+### Abweichung: Mobile-Hamburger statt Bottom-Nav
+Abweichung (Session fix/topbar-behavior, Juni 2026): Für Mobile (≤768px) wird statt der
+hier skizzierten Bottom-Navigation ein Hamburger-Menü umgesetzt. Die Nav-Links
+(Dashboard/Fächer/Tagesquiz) werden hinter einem Toggle-Button gebündelt; Team/Rangliste
+bleiben ausgeblendet. Begründung: minimale Angriffsfläche bei aktuell nur drei aktiven
+Links, kein fixes Bottom-Element (vermeidet Interaktion mit Footer/Sticky-Verhalten),
+scope-treu zur Session. Die Bottom-Nav bleibt als möglicher späterer Schritt im Mockup
+dokumentiert.
