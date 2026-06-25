@@ -458,4 +458,40 @@ aktualisiert: `docs/LEVEL_SYSTEM.md`, `docs/BUGS.md`.
 
 ---
 
+## Session 2026-06-25 — BUG-012: Tagessperre der Herausforderung entfernen
+
+**Branch:** `feat/tagessperre-entfernen` (von `dev`), 2 Commits, via `--no-ff` nach
+`dev` gemergt (Merge `1d3de7d`), gepusht nach `origin/dev` (`dev` == `origin/dev`).
+
+**Geänderte Datei:** `src/tagesquiz.html` (einzige; `level.js` unangetastet).
+
+**Commits:**
+- `cce4d4a` feat(tagesquiz): Tagessperre entfernen, Mehrfachspiel via Nochmal-Button (BUG-012)
+- `76f2bbc` docs(tagesquiz): Hinweistext an Mehrfachspiel anpassen
+
+### Was geändert wurde
+- Lade-Gate (`hatHeuteTagesQuizGespielt()`-Weiche → `screen-gespielt`) aus der IIFE
+  entfernt; Limit ist jetzt **ausschließlich Energie**.
+- Start-Run in `starteVersuch()` extrahiert, von `btn-start` und neuem `btn-nochmal`
+  geteilt → jeder Versuch eigene `logId` + eigener Energie-Abzug.
+- „Nochmal"-Button im Ergebnis-Screen (Label „−1 ⚡, X übrig"); bei Energie 0
+  `disabled` + Hinweis statt Sprung auf `screen-gesperrt`.
+- Frische Stats nach jedem Versuch (Topbar + Nochmal-Label aktualisiert).
+- Hinweistext auf `screen-start` an Mehrfachspiel angepasst.
+- `#screen-gespielt`-Markup bewusst stehengelassen (ungenutzt).
+
+### Verifikation
+Live gegen Supabase (User `schueler1`), Checkliste 1–7 grün:
+- EP/Trophäen addieren (totalXp 1010 → 1310), Energie −1 pro Versuch (4 → 0).
+- Doppelklick-Guard greift (`startLaeuft`-Flag vor dem ersten `await`).
+- Reload bei Energie > 0 → `screen-start` (Kern des Tickets); Reload bei Energie 0
+  → `screen-gesperrt`.
+- Jeder Versuch erzeugt eine eigene `daily_quiz_log`-Zeile (frische `logId`).
+
+### Vorgemerkt (§12 Streak, Folge-Session)
+`daily_quiz_log` hat seit BUG-012 mehrere Zeilen pro Tag → Streak muss **Tage statt
+Zeilen** zählen und entscheiden, ob abgebrochene `success=false`-Versuche mitzählen.
+
+---
+
 *Bericht auto-generiert am Ende der Session. Alle Pfade relativ zum Projekt-Root.*

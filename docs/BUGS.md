@@ -29,7 +29,9 @@ Legende: 🔴 Kritisch · 🟡 Wichtig · 🟢 Nice-to-have · ✅ Erledigt
 - **Doku-Widerspruch:** LEVEL_SYSTEM.md §4 ("1 Versuch pro Tag") und §6
   ("Verhindert Mehrfach-Spielen pro UTC-Tag") kodieren die alte Sperre als IST →
   in dieser Session als GEPLANT-Abweichung markiert, Code-Fix folgt eigener Branch.
-- **Status:** 🟡 Offen — Code-Fix in eigener Session ("Tagessperre entfernen").
+- **Status:** ✅ Erledigt — Lade-Gate aus `tagesquiz.html` entfernt, Mehrfachspiel
+  via „Nochmal"-Button (Merge `1d3de7d`). Live gegen Supabase verifiziert
+  (Checkliste 1–7 grün). `level.js` unangetastet.
 
 ### BUG-004: POS-Datenstrukturen-Tool verschwunden
 - **Symptom:** Interaktives Tool aus POS-Fach ist weg
