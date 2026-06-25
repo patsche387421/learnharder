@@ -35,3 +35,12 @@ Topbar-Darstellung im ausgeloggten Zustand, nicht den Hamburger.
 In docs/design/components/nav.md sind die TODOs Z. 22-24 (zentrale JS-Injektion via
 renderTopbar + URL-basierter Active-State via aktiverNav) durch fix/topbar-behavior
 faktisch erledigt → als erledigt markieren oder entfernen. Reiner docs-Commit, kein Code.
+
+## Nav-Breite 'Herausforderung' prüfen
+Nach UI-Rename ist das Nav-Label 'Herausforderung' (15 Z.) deutlich länger als
+vorher 'Tagesquiz' (9 Z.). Beim nächsten echten Deploy (config.js + Login) auf
+Desktop-Breite prüfen, ob im Topbar-Nav neben Dashboard/Fächer/Team/Rangliste
+nichts umbricht. Falls doch: separater CSS-/Wording-Folge-Fix (Nav-Spacing oder
+Label-Kürzung), eigener Commit.
+
+Status: offen, kein Blocker.
