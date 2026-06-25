@@ -26,9 +26,12 @@ keinen Lebensbalken und verbraucht keine Energie.
   kein Warndialog — Offene Entscheidung §11.1 damit beantwortet)
 - 50 Trophäen können gegen 1 Energydrink eingetauscht werden (Tausch-Seite)
 
-### Energie-Regeneration ⚠️ Geplant, noch nicht implementiert
-- 1 Energydrink pro Tag automatisch, Deckel bei 5
-- Reset-Modus (Mitternacht vs. rollierend 24 h) noch nicht entschieden — §11.2
+### Energie-Regeneration ✅ Implementiert (Juni 2026)
+- +1 Energydrink pro vergangenem **UTC-Kalendertag** automatisch, Deckel bei 5
+- Reset-Modus: **Kalendertag UTC** (entschieden, §11.2) — konsistent mit `played_at`
+- Umsetzung: `rechargeEnergie()` in `level.js`, ausgelöst von `getUserStats()`.
+  Client-seitig als SSOT (kein Energy-Schreibzugriff außerhalb `level.js`).
+  Reduziert nie (Trophäen-Tausch kann Energie > 5 erzeugen, BUG-011).
 
 ## 2. Lebensbalken ❤️
 
@@ -76,6 +79,13 @@ keinen Lebensbalken und verbraucht keine Energie.
 
 - Bei Leben = 0 %: keine EP, kein Bonus (Trophäen zählen trotzdem)
 - 1 Versuch pro Tag (kontrolliert über `daily_quiz_log`)
+
+> ⚠️ **GEPLANT (noch nicht im Code) — Produktentscheidung Juni 2026:**
+> Das "1 Versuch pro Tag"-Limit entfällt. Limit ist künftig **nur die Energie**:
+> Mehrfachspielen erlaubt, solange Energie > 0. Jeder Versuch gibt volle EP +
+> Completion-Bonus. `#screen-gespielt` wird nicht mehr als Block genutzt.
+> `hatHeuteTagesQuizGespielt()` bleibt erhalten, dient aber künftig nur noch der
+> Streak-Berechnung (siehe §12). Code-Fix: eigener Branch (siehe BUGS BUG-012).
 
 ### Wichtige Regeln (beide Quiz-Typen)
 - EP werden erst AM ENDE des Quiz gebucht (nicht live)
@@ -126,6 +136,10 @@ CREATE TABLE subject_xp (
 Speichert pro Tagesquiz-Versuch: `score`, `xp_earned`, `trophies_earned`,
 `success` (ob Leben > 0). Verhindert Mehrfach-Spielen pro UTC-Tag.
 
+> ⚠️ **GEPLANT:** Mit Wegfall der Tagessperre (BUG-012) enthält die Tabelle künftig
+> **mehrere Zeilen pro UTC-Tag** (Versuchs-Log) und dient zusätzlich als Quelle für
+> die Streak-Berechnung (§12).
+
 ## 7. Fragen-Pool & Versuche
 
 > Aktualisiert Juni 2026 — war vorher: Beschreibt einen geplanten Zustand.
@@ -162,7 +176,7 @@ Zusätzlich zur bereits vorhandenen Stats-Leiste
 (Fortschritt % · Themen bearbeitet · Quiz-Punkte) erscheint eine
 **Fach-Level-Leiste**:
 - „Fach-Level X" (klein angezeigt)
-- Fortschrittsbalken: EP bis zum nächsten Level
+- Fortschrittsbalken: EP innerhalb des aktuellen Level-Bands (0→100 % pro Level)
 - Richtige Antworten gesamt in diesem Fach
 
 ### Themen-Karten (unverändert)
@@ -173,6 +187,12 @@ Zusätzlich zur bereits vorhandenen Stats-Leiste
 ### Globales Level
 Das globale User-Level (aus Gesamt-EP über alle Fächer) wird in der **Topbar** und
 auf dem **Dashboard** angezeigt — auf der Fach-Seite gilt dagegen das **Fach-Level**.
+
+### Berechnungsquelle (SSOT)
+Alle Level- und Fortschrittsanzeigen (Topbar, Fach-Seiten, Profil) werden zentral aus den
+Gesamt-EP über `Level.berechneFortschritt(gesamtEp)` in `src/js/level.js` abgeleitet. Das
+angezeigte **Level wird IMMER aus den EP berechnet**, nicht aus einer gespeicherten DB-Spalte
+gelesen — `user_stats.level` und `subject_xp.level` gelten nur noch als denormalisierter Cache.
 
 ---
 
@@ -259,13 +279,36 @@ FOOTER (alle Seiten, fix unten)
 1. ✅ **Gelöst — Energie = 0:** Tagesquiz-Start ist bei Energie = 0 komplett
    gesperrt (`#screen-gesperrt` in `tagesquiz.html`). Kein Warndialog.
 
-2. **⚠️ Offen — Energie-Regeneration:** Derzeit kein automatisches Aufladen
-   implementiert. Geplant: +1 Energydrink pro Tag, Deckel bei 5. Modus
-   (Mitternacht UTC vs. rollierend 24 h) noch nicht entschieden. Wird als
-   Supabase-Funktion oder scheduled Edge-Function umgesetzt.
+2. ✅ **Gelöst — Energie-Regeneration:** Automatisches Aufladen implementiert
+   (`level.js` `rechargeEnergie`, ausgelöst von `getUserStats`): +1 Energydrink
+   pro vergangenem UTC-Kalendertag, Deckel bei 5. Reset-Modus = **Kalendertag UTC**
+   (konsistent mit `played_at`). Client-seitig als SSOT statt Edge-Function.
 
 3. **⚠️ Offen — Impressum/Datenschutz-Inhalt:** vorerst Platzhalter, echter
    rechtlicher Inhalt (DSGVO) folgt später.
+
+---
+
+## 12. Streak (Lerntage in Folge) ⚠️ GEPLANT
+
+> Produktentscheidung Juni 2026. Noch nicht im Code.
+
+- **Definition:** Streak = Anzahl aufeinanderfolgender **UTC-Kalendertage** mit
+  jeweils **≥1 Herausforderungs-Versuch** (eine `daily_quiz_log`-Zeile am Tag genügt).
+- **Berechnung (SSOT, KEINE neue Spalte, KEINE Migration):** client-seitig, rückwärts
+  aus den distinct UTC-Tagen von `daily_quiz_log.played_at`:
+  - Ab heute (UTC) rückwärts zählen, solange jeder Tag eine Zeile hat.
+  - Ist **heute** (noch) leer, aber **gestern** vorhanden → Streak läuft weiter
+    (zählt ab gestern). Der heutige Tag bricht die Streak NICHT vorzeitig.
+  - Sind **gestern UND heute** leer → Streak = 0.
+  - Mehrere Versuche am selben Tag zählen nur **einmal**.
+- **Warum berechnet statt Zähler-Spalte:** Es gibt keinen Server-Cron; ein
+  hochgezählter Zähler könnte einen "vergessenen" Reset nicht zuverlässig auslösen.
+  Rückwärtsberechnung ist immer korrekt und passt zum SSOT-Prinzip (level.js).
+- **Anzeige:** `dashboard.html` `#stat-streak` ("Lerntage in Folge") — existiert
+  bereits im Markup, wird aktuell nie befüllt.
+- **Abgrenzung:** unabhängig von der geplanten `level_log`-Tabelle (BUG-006), die
+  nur die Level-Verlaufsgrafik im Profil speist.
 
 ---
 *Erstellt: Juni 2026 | Aktualisiert: Juni 2026 | Status: Teilweise implementiert*

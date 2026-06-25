@@ -412,4 +412,86 @@ JS implementiert. Nur manuell über Trophäen-Tausch oder Direkt-DB-Eingriff.
 
 ---
 
+## Session 2026-06-22 — Level-System SSOT, BUG-010-Fix, Teams/Saisons-Konzept
+
+**Branch:** `fix/level-design` (von `dev`), 11 Commits, via `--no-ff` nach `dev`
+gemergt (Merge `9766912`). Kein Push, `main` unberührt. `fix/level-design` lokal erhalten.
+
+**Geänderte/neue Dateien:** `src/js/level.js`, `src/js/stats.js`, `src/js/app.js`,
+`src/profil.html`, `src/{dbi,medt,nsvs,pos,syp,tinf,wir}.html`, `src/tagesquiz.html`;
+neu: `docs/KONZEPT_TEAMS_SAISONS.md`, `docs/NAMENSKONVENTION.md`, `docs/IDEEN.md`;
+aktualisiert: `docs/LEVEL_SYSTEM.md`, `docs/BUGS.md`.
+
+### SSOT-Umbau (A–C)
+- Neue reine Funktion `Level.berechneFortschritt(gesamtEp)` (+ `berechneLevel`
+  exportiert) als SSOT für Level/Fortschritt; quelle-agnostisch (später Team-/Saison-EP).
+- Fortschrittsbalken auf Level-Band-Semantik (0→100 % pro Level) — behebt den
+  Rückwärts-Sprung beim Level-Up. Level wird IMMER aus EP abgeleitet, DB-Spalten = Cache.
+- Umgestellt: Topbar (`renderTopbar`), 7 Fach-Seiten, Profil (User-Leiste + Fach-Zeilen).
+
+### BUG-010-Fix (D)
+- `app.js`: Speichern + Belohnungs-Buchung in EINEM `await`-`try/catch`; Fehler im UI
+  (`#quiz-result`) statt lautlos. Division-durch-0-Guard in `stats.js`. BUG-010 → ✅ (`2030aed`).
+
+### Cleanup + Renames (F, E)
+- Toter Code `Stats.ladeThemaStats` entfernt.
+- Renames: `buecheQuizErgebnis` → `vergibBelohnungen`,
+  `speichereQuizErgebnis` → `speichereLernfortschritt` (inkl. `console.log`-Label);
+  alle Aufrufer + Doku mitgezogen.
+
+### Doku (H, G, I)
+- `KONZEPT_TEAMS_SAISONS.md` (neu): XP-Ledger als künftige Daten-SSOT (`xp_events`),
+  ersetzt geplantes `level_log` (BUG-006); Saison `YYYY-MM`; Sicherheits-Hinweis
+  (EP serverseitig via RPC, nie vom Client) + Atomaritäts-Hinweis.
+- `NAMENSKONVENTION.md` (neu): Konventionen, Domänen-Glossar, Funktions-Registry.
+- `IDEEN.md` (neu): Backlog „Doku-Index in CLAUDE.md ergänzen".
+- `LEVEL_SYSTEM.md` §8 (Level-Band + SSOT); `BUGS.md` (BUG-010 → ✅, BUG-003 Name aktualisiert).
+
+### Offen / nächste Schritte
+- Energie-Auto-Regen (+1/Tag) offen; XP-Ledger/Teams nur Konzept (DB-Migration eigene
+  Session); `fix/level-design`-Cleanup erst nach Push; nächste Session: Branch
+  `fix/topbar-behavior`.
+- Nächste Sessions vorgemerkt (Reihenfolge offen, alle als IDEEN.md-Einträge zu Beginn
+  der jeweiligen Session): `fix/topbar-behavior` (Hamburger-Menü), `fix/trophy-shop`
+  (Energydrinks kaufbar machen), Topbar für nicht-eingeloggte Nutzer auf öffentlichen
+  Seiten, `fix/daily-challenge` (Tagesquiz einmal-pro-Tag-Sperre + Energie-Aufladung).
+
+---
+
+## Session 2026-06-25 — BUG-012: Tagessperre der Herausforderung entfernen
+
+**Branch:** `feat/tagessperre-entfernen` (von `dev`), 2 Commits, via `--no-ff` nach
+`dev` gemergt (Merge `1d3de7d`), gepusht nach `origin/dev` (`dev` == `origin/dev`).
+
+**Geänderte Datei:** `src/tagesquiz.html` (einzige; `level.js` unangetastet).
+
+**Commits:**
+- `cce4d4a` feat(tagesquiz): Tagessperre entfernen, Mehrfachspiel via Nochmal-Button (BUG-012)
+- `76f2bbc` docs(tagesquiz): Hinweistext an Mehrfachspiel anpassen
+
+### Was geändert wurde
+- Lade-Gate (`hatHeuteTagesQuizGespielt()`-Weiche → `screen-gespielt`) aus der IIFE
+  entfernt; Limit ist jetzt **ausschließlich Energie**.
+- Start-Run in `starteVersuch()` extrahiert, von `btn-start` und neuem `btn-nochmal`
+  geteilt → jeder Versuch eigene `logId` + eigener Energie-Abzug.
+- „Nochmal"-Button im Ergebnis-Screen (Label „−1 ⚡, X übrig"); bei Energie 0
+  `disabled` + Hinweis statt Sprung auf `screen-gesperrt`.
+- Frische Stats nach jedem Versuch (Topbar + Nochmal-Label aktualisiert).
+- Hinweistext auf `screen-start` an Mehrfachspiel angepasst.
+- `#screen-gespielt`-Markup bewusst stehengelassen (ungenutzt).
+
+### Verifikation
+Live gegen Supabase (User `schueler1`), Checkliste 1–7 grün:
+- EP/Trophäen addieren (totalXp 1010 → 1310), Energie −1 pro Versuch (4 → 0).
+- Doppelklick-Guard greift (`startLaeuft`-Flag vor dem ersten `await`).
+- Reload bei Energie > 0 → `screen-start` (Kern des Tickets); Reload bei Energie 0
+  → `screen-gesperrt`.
+- Jeder Versuch erzeugt eine eigene `daily_quiz_log`-Zeile (frische `logId`).
+
+### Vorgemerkt (§12 Streak, Folge-Session)
+`daily_quiz_log` hat seit BUG-012 mehrere Zeilen pro Tag → Streak muss **Tage statt
+Zeilen** zählen und entscheiden, ob abgebrochene `success=false`-Versuche mitzählen.
+
+---
+
 *Bericht auto-generiert am Ende der Session. Alle Pfade relativ zum Projekt-Root.*

@@ -8,7 +8,7 @@ Legende: 🔴 Kritisch · 🟡 Wichtig · 🟢 Nice-to-have · ✅ Erledigt
 ## 🟡 Wichtig
 
 ### BUG-003: EP-Buchung nicht verifiziert
-- **Symptom:** `Level.buecheQuizErgebnis()` wurde ohne `await` aufgerufen —
+- **Symptom:** `Level.buecheQuizErgebnis()` (heute `Level.vergibBelohnungen()`) wurde ohne `await` aufgerufen —
   Rückgabewert (EP/Trophäen) war nicht nutzbar, Fehler wurden lautlos
   verschluckt.
 - **Status:** Teilweise behoben — Code-Fix in `9ed1548` (`await` + EP/🏆
@@ -16,6 +16,22 @@ Legende: 🔴 Kritisch · 🟡 Wichtig · 🟢 Nice-to-have · ✅ Erledigt
   Table Editor (`user_stats`, `subject_xp`) steht noch aus.
 - **Aktion:** Nach Login einmal Quiz absolvieren, dann in Supabase prüfen
   ob `total_xp`, `trophies` und `subject_xp.xp` korrekt aktualisiert wurden.
+
+### BUG-012: Tagessperre widerspricht Energie-Limit (Herausforderung nur 1×/Tag spielbar)
+- **Symptom:** Die Herausforderung lässt sich pro UTC-Tag nur einmal starten —
+  danach landet man auf `#screen-gespielt`, auch mit voller Energie.
+- **Ursache:** `starteTagesQuiz()` schreibt die `daily_quiz_log`-Zeile bereits beim
+  Start; `hatHeuteTagesQuizGespielt()` blockt anschließend für den Rest des UTC-Tags.
+- **SOLL (Produktentscheidung Juni 2026):** Limit ist **nur die Energie**.
+  Mehrfachspielen erlaubt, solange Energie > 0. `#screen-gespielt` wird nicht mehr
+  als Block verwendet — die Funktion bleibt aber als Streak-Quelle erhalten
+  (siehe LEVEL_SYSTEM §4/§12 "Streak").
+- **Doku-Widerspruch:** LEVEL_SYSTEM.md §4 ("1 Versuch pro Tag") und §6
+  ("Verhindert Mehrfach-Spielen pro UTC-Tag") kodieren die alte Sperre als IST →
+  in dieser Session als GEPLANT-Abweichung markiert, Code-Fix folgt eigener Branch.
+- **Status:** ✅ Erledigt — Lade-Gate aus `tagesquiz.html` entfernt, Mehrfachspiel
+  via „Nochmal"-Button (Merge `1d3de7d`). Live gegen Supabase verifiziert
+  (Checkliste 1–7 grün). `level.js` unangetastet.
 
 ### BUG-004: POS-Datenstrukturen-Tool verschwunden
 - **Symptom:** Interaktives Tool aus POS-Fach ist weg
@@ -36,9 +52,12 @@ Legende: 🔴 Kritisch · 🟡 Wichtig · 🟢 Nice-to-have · ✅ Erledigt
   ein Netzwerkfehler auftritt, werden `quiz_results`, `thema_progress` und
   `fach_stats` nicht aktualisiert — ohne Fehlermeldung im UI.
 - **Ursache:** Bewusstes Design (blockiert UI nicht), aber kein Error-Handling.
-- **Aktion:** `.catch(err => console.error(...))` ergänzen oder mit `await`
-  + Try/Catch absichern und Fehler im UI signalisieren.
-- **Status:** Offen
+- **Fix:** Beide Calls (Lernfortschritt speichern + Belohnung buchen) in `app.js` in
+  **einen** `try/catch` umschlossen (awaited); Fehler wird im UI (`#quiz-result`)
+  signalisiert statt lautlos verschluckt. Unter den heutigen Namen
+  `Stats.speichereLernfortschritt` bzw. `Level.vergibBelohnungen` zu finden. Zusätzlich
+  Division-durch-0-Guard in `speichereLernfortschritt`.
+- **Status:** ✅ Behoben in `2030aed`
 
 ---
 
@@ -56,6 +75,31 @@ Legende: 🔴 Kritisch · 🟡 Wichtig · 🟢 Nice-to-have · ✅ Erledigt
   Bilder, Tabellen in Quiz/Theorie
 - **Aktion:** Content-Render-Modul planen
 - **Status:** Offen
+
+### BUG-013: Dashboard-Energie-Hinweis "+5 morgen" falsch
+- **Symptom:** `dashboard.html:59` zeigt statisch `<small class="stat-hint">+5 morgen</small>`.
+- **Ursache:** Hartkodiert; `rechargeEnergie()` (level.js) lädt tatsächlich **+1 pro
+  vergangenem UTC-Kalendertag, gedeckelt bei 5** — nicht +5, und nur unter dem Cap.
+- **Auswirkung:** Irreführend (verspricht das 5-fache, ignoriert Cap).
+- **Aktion:** Hinweis dynamisch aus den echten Stats ableiten oder entfernen.
+- **Status:** 🟢 Offen — reiner Anzeigefehler, kein Bug an level.js.
+
+### BUG-014: Dashboard-Begrüßung zeigt E-Mail-Präfix + unpassende Copy
+- **Symptom:** Drei statische Stellen in `dashboard.html`:
+  Z. 20 `Willkommen zurück`, Z. 22 `Bereit weiterzulernen?`, sowie der
+  Laufzeit-Override Z. 86 `"Hey, " + Auth.displayName() + "!"` (Z. 21 Fallback `Hey!`).
+- **Ursache:** `Auth.displayName()` gibt den E-Mail-Lokalteil zurück (z. B. `schueler1`);
+  kein echtes Anzeigename-Feld im Datenmodell. Begrüßungs-Copy ist statisch.
+- **Auswirkung:** Begrüßung wirkt unpersönlich/technisch (`Hey, schueler1!`).
+- **Aktion:** Anzeigename-Quelle klären (Profil-Feld o. Ä.) + Copy überarbeiten.
+- **Status:** 🟢 Offen — kosmetisch.
+
+### BUG-011: Trophäen-Tausch cappt Energie nicht bei 5
+- **Symptom:** `Level.tauscheTrophäen()` (`level.js`) setzt `energy = stats.energy +
+  anzahlEnergie` ohne Obergrenze → Energie kann über 5 steigen.
+- **Auswirkung:** Gering. Der Recharge respektiert das (reduziert nie), aber der
+  Cap von 5 ist über den Tausch umgehbar.
+- **Aktion:** Gehört zu `fix/trophy-shop` (Kauf-Flow). Dort `Math.min(5, …)` o. ä.
 
 ### BUG-009: LEVEL_SYSTEM.md §4 veraltet (EP-Unterschied fehlt)
 - **Status:** ✅ Erledigt — LEVEL_SYSTEM.md vollständig aktualisiert
@@ -83,14 +127,22 @@ Legende: 🔴 Kritisch · 🟡 Wichtig · 🟢 Nice-to-have · ✅ Erledigt
 - **Lösung:** Nach Daten-Migration V2 liefert Supabase einen echten Fragen-Pool;
   Test-JSON ist dann obsolet.
 
-### Energie-Auto-Regen: geplant, nicht implementiert
-- **LEVEL_SYSTEM.md §1** plant: +1 Energydrink pro Tag, Deckel bei 5.
-- **Code:** `verbrauchEnergie()` (`level.js`) dekrementiert nur. Kein
-  automatisches Aufladen in JS implementiert. Kein Supabase-Trigger/Edge-Function
-  erkennbar.
-- **Auswirkung:** Energie kann aktuell nur durch Trophäen-Tausch steigen.
-  Ohne Implementierung haben User nach einigen Tagesquiz-Versuchen dauerhaft 0.
-- **Lösung ausstehend:** Supabase Edge-Function oder DB-Trigger (LEVEL_SYSTEM.md §11.2).
+### Energie-Auto-Regen: ✅ implementiert (fix/daily-challenge)
+- **LEVEL_SYSTEM.md §1** plante: +1 Energydrink pro Tag, Deckel bei 5.
+- **Fix:** `rechargeEnergie()` in `level.js` (ausgelöst von `getUserStats`) füllt
+  +1 Energie pro vergangenem **UTC-Kalendertag** auf, gedeckelt bei 5. Reset-Modus
+  = Kalendertag UTC (§11.2 entschieden). Client-seitig als SSOT — kein Energy-
+  Schreibzugriff außerhalb `level.js`. Reduziert **nie** (Trophäen-Tausch kann
+  Energie > 5 erzeugen, siehe BUG-011).
+- **Auswirkung behoben:** Energie regeneriert sich automatisch; kein dauerhaftes 0 mehr.
+
+### Tagessperre-Abbruch-Lücke: ✅ behoben (fix/daily-challenge)
+- **Symptom:** Die `daily_quiz_log`-Sperrzeile wurde erst beim Quiz-**Abschluss**
+  geschrieben. Bei Abbruch (Tab zu) war die Energie schon verbraucht, aber keine
+  Sperre gesetzt → bei Reload erneut spielbar.
+- **Fix:** Neue Funktion `Level.starteTagesQuiz()` legt die Sperrzeile schon beim
+  **Start** an (`success=false`, `score=null`); `vergibBelohnungen({ logId })`
+  trägt das Ergebnis am Ende per `id` nach (statt zweitem Insert).
 
 ### BUG-001-Workaround: Tagesquiz läuft nur mit Test-JSON
 - Tagesquiz funktioniert aktuell über `tagesquiz_test.json` (5 statische Fragen).

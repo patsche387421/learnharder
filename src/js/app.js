@@ -299,14 +299,23 @@ const App = (() => {
         }
       });
       const themaId = new URLSearchParams(location.search).get("fach") || "";
-      Stats.speichereQuizErgebnis(themaId, richtig, fragen.length);
-      const ergebnis = await Level.buecheQuizErgebnis({
-        richtig,
-        gesamt:       fragen.length,
-        fachId:       themaZuPfad(themaId).fach,
-        istTagesQuiz: false,
-        lebenProzent: 100
-      });
+      let ergebnis;
+      try {
+        // Erst Lernfortschritt speichern, dann Belohnung buchen (beides awaited).
+        await Stats.speichereLernfortschritt(themaId, richtig, fragen.length);
+        ergebnis = await Level.vergibBelohnungen({
+          richtig,
+          gesamt:       fragen.length,
+          fachId:       themaZuPfad(themaId).fach,
+          istTagesQuiz: false,
+          lebenProzent: 100
+        });
+      } catch (err) {
+        console.error("[Quiz] Speichern/Buchen fehlgeschlagen:", err);
+        resultEl.hidden = false;
+        resultEl.textContent = "Ergebnis konnte nicht gespeichert werden — bitte Verbindung prüfen.";
+        return;
+      }
 
       resultEl.hidden = false;
       resultEl.textContent =

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LearnHarder – Tages-Quiz</title>
+  <title>LearnHarder – Herausforderung</title>
   <link rel="stylesheet" href="/css/fonts.css" />
   <link rel="stylesheet" href="/css/tokens.css" />
   <link rel="stylesheet" href="/css/style.css" />
@@ -32,7 +32,7 @@
       <div class="quiz-screen-inner">
         <span class="quiz-screen-icon" data-icon="check" data-icon-size="56"></span>
         <h2>Heute bereits gespielt</h2>
-        <p>Du hast das Tages-Quiz heute schon absolviert.<br>Morgen gibt es neue Fragen!</p>
+        <p>Du hast die Herausforderung heute schon absolviert.<br>Morgen gibt es neue Fragen!</p>
         <a href="/dashboard.html" class="btn-primary">Zurück zum Dashboard</a>
       </div>
     </section>
@@ -41,12 +41,12 @@
     <section id="screen-start" class="quiz-screen" hidden>
       <div class="quiz-screen-inner">
         <span class="quiz-screen-icon" data-icon="target" data-icon-size="56"></span>
-        <h2>Tages-Quiz</h2>
-        <p>Zufällige Fragen aus allen Fächern — 1 Versuch pro Tag.</p>
+        <h2>Herausforderung</h2>
+        <p>Zufällige Fragen aus allen Fächern — so oft du willst, solange du Energie hast.</p>
         <p class="quiz-energie-hinweis">
           Kostet <strong>1 <span data-icon="energy" data-icon-size="18"></span> Energydrink</strong> — du hast noch <strong id="start-energie">5</strong>
         </p>
-        <button id="btn-start" class="btn-primary btn-lg">Quiz starten <span data-icon="energy" data-icon-size="20"></span></button>
+        <button id="btn-start" class="btn-primary btn-lg">Herausforderung starten <span data-icon="energy" data-icon-size="20"></span></button>
         <p id="start-lade-fehler" class="error" hidden>Fragen konnten nicht geladen werden — bitte Seite neu laden.</p>
       </div>
     </section>
@@ -80,7 +80,11 @@
         <h2>Quiz beendet!</h2>
         <p class="ergebnis-score" id="ergebnis-score"></p>
         <div class="ergebnis-belohnungen" id="ergebnis-belohnungen"></div>
-        <a href="/dashboard.html" class="btn-primary">Zurück zum Dashboard</a>
+        <div class="quiz-screen-actions">
+          <button id="btn-nochmal" class="btn-primary">Nochmal <span data-icon="energy" data-icon-size="20"></span></button>
+          <a href="/dashboard.html" class="btn-ghost-sm">Zurück zum Dashboard</a>
+        </div>
+        <p id="nochmal-hinweis" class="quiz-energie-hinweis" hidden>Keine Energie mehr — morgen wieder.</p>
       </div>
     </section>
 
@@ -202,12 +206,13 @@
       document.getElementById("ergebnis-icon").textContent =
         score >= 70 ? "🎉" : score >= 40 ? "😊" : "💪";
 
-      const ergebnis = await Level.buecheQuizErgebnis({
+      const ergebnis = await Level.vergibBelohnungen({
         richtig,
         gesamt,
         fachId:       null,
         istTagesQuiz: true,
-        lebenProzent: leben
+        lebenProzent: leben,
+        logId:        quizZustand.logId
       });
 
       const box = document.getElementById("ergebnis-belohnungen");
@@ -229,6 +234,101 @@
       } else {
         addZeile(null, "Keine EP — Leben auf 0 gefallen (Trophäen zählen trotzdem)");
       }
+
+      // Frische Stats nach dem Versuch: Energie wurde verbraucht (ggf. EP/Level
+      // dazu) → Topbar und "Nochmal"-Button mit aktuellem Reststand aktualisieren.
+      const stats = await Level.getUserStats();
+      await Level.renderTopbar(stats);
+      aktualisiereNochmalButton(stats.energy);
+
+      // Re-Entry-Guard für den nächsten Versuch wieder freigeben.
+      startLaeuft = false;
+    }
+
+    // Re-Entry-Schutz gegen Doppelklick (Start- wie Nochmal-Button): schließt das
+    // Race vor dem ersten await, sonst zwei starteVersuch()-Läufe = doppelter
+    // Energie-Abzug + zwei daily_quiz_log-Zeilen.
+    let startLaeuft = false;
+
+    function startFreigeben() {
+      startLaeuft = false;
+      const btnStart   = document.getElementById("btn-start");
+      const btnNochmal = document.getElementById("btn-nochmal");
+      if (btnStart)   btnStart.disabled   = false;
+      if (btnNochmal) btnNochmal.disabled = false;
+    }
+
+    // Setzt Label und Zustand des "Nochmal"-Buttons anhand der Rest-Energie.
+    // Bei 0 Energie: Button gesperrt + Hinweis, KEIN Wechsel zu screen-gesperrt.
+    function aktualisiereNochmalButton(energy) {
+      const btn     = document.getElementById("btn-nochmal");
+      const hinweis = document.getElementById("nochmal-hinweis");
+      if (!btn) return;
+      if (energy <= 0) {
+        btn.disabled  = true;
+        btn.innerHTML = "Nochmal " + Icons.render("energy", { size: 20 });
+        if (hinweis) hinweis.hidden = false;
+      } else {
+        btn.disabled  = false;
+        if (hinweis) hinweis.hidden = true;
+        btn.innerHTML =
+          "Nochmal (−1 " + Icons.render("energy", { size: 18 }) + ", " + energy + " übrig)";
+      }
+    }
+
+    // Ein vollständiger Quiz-Versuch: Fragen laden → Energie verbrauchen + frische
+    // logId anlegen → Quiz-Screen. Wird vom Start- UND vom Nochmal-Button genutzt;
+    // jeder Aufruf ist ein eigenständiger Versuch (frische logId, eigener Abzug).
+    async function starteVersuch() {
+      if (startLaeuft) return;
+      startLaeuft = true;
+      const btnStart   = document.getElementById("btn-start");
+      const btnNochmal = document.getElementById("btn-nochmal");
+      if (btnStart)   btnStart.disabled   = true;
+      if (btnNochmal) btnNochmal.disabled = true;
+
+      // Erst Fragen laden — Energie wird nur verbraucht wenn Laden erfolgreich war
+      let fragen;
+      try {
+        fragen = await ladeFragen();
+      } catch (err) {
+        console.error('[Tagesquiz] ladeFragen Fehler:', err.message);
+        const hinweis = document.getElementById("start-lade-fehler");
+        if (hinweis) hinweis.hidden = false;
+        startFreigeben();   // kein Quiz gestartet → Retry erlauben
+        return;
+      }
+      if (!fragen.length) {
+        const hinweis = document.getElementById("start-lade-fehler");
+        if (hinweis) hinweis.hidden = false;
+        startFreigeben();   // kein Quiz gestartet → Retry erlauben
+        return;
+      }
+
+      // Verbraucht Energie und legt eine neue daily_quiz_log-Zeile an
+      // (frische logId pro Versuch, auch bei Abbruch wirksam).
+      const start = await Level.starteTagesQuiz();
+      if (!start.ok) {
+        zeigeScreen("screen-gesperrt");
+        startFreigeben();   // Energie leer → Retry nach Recharge erlauben
+        return;
+      }
+
+      // Erfolgspfad: Buttons bleiben gesperrt, der aktuelle Screen wird verlassen.
+      await Level.renderTopbar();
+
+      quizZustand = {
+        fragen,
+        aktuell:          0,
+        richtig:          0,
+        leben:            100,
+        schadensProFehler: 100 / fragen.length,
+        logId:            start.logId
+      };
+
+      zeigeScreen("screen-quiz");
+      aktualisiereLebenBar();
+      zeigeFrage();
     }
 
     (async () => {
@@ -237,56 +337,21 @@
         const stats = await Level.getUserStats();
         await Level.renderTopbar(stats);
 
+        // Buttons sind immer im DOM → Listener unabhängig vom Start-Screen verdrahten.
+        document.getElementById("btn-start").addEventListener("click", starteVersuch);
+        document.getElementById("btn-nochmal").addEventListener("click", starteVersuch);
+        document.getElementById("btn-weiter").addEventListener("click", naechsteFrage);
+
         if (stats.energy <= 0) {
           zeigeScreen("screen-gesperrt");
           return;
         }
 
-        const bereitsGespielt = await Level.hatHeuteTagesQuizGespielt();
-        if (bereitsGespielt) {
-          zeigeScreen("screen-gespielt");
-          return;
-        }
-
+        // Tagessperre entfernt (BUG-012): Mehrfachspiel erlaubt, einziges Limit ist
+        // die Energie. hatHeuteTagesQuizGespielt() wird bewusst nicht mehr abgefragt;
+        // #screen-gespielt bleibt ungenutzt im Markup stehen.
         document.getElementById("start-energie").textContent = stats.energy;
         zeigeScreen("screen-start");
-
-        document.getElementById("btn-start").addEventListener("click", async () => {
-          // Erst Fragen laden — Energie wird nur verbraucht wenn Laden erfolgreich war
-          let fragen;
-          try {
-            fragen = await ladeFragen();
-          } catch (err) {
-            console.error('[Tagesquiz] ladeFragen Fehler:', err.message);
-            const hinweis = document.getElementById("start-lade-fehler");
-            if (hinweis) hinweis.hidden = false;
-            return;
-          }
-          if (!fragen.length) {
-            const hinweis = document.getElementById("start-lade-fehler");
-            if (hinweis) hinweis.hidden = false;
-            return;
-          }
-
-          const verbraucht = await Level.verbrauchEnergie();
-          if (!verbraucht) { zeigeScreen("screen-gesperrt"); return; }
-
-          await Level.renderTopbar();
-
-          quizZustand = {
-            fragen,
-            aktuell:          0,
-            richtig:          0,
-            leben:            100,
-            schadensProFehler: 100 / fragen.length
-          };
-
-          zeigeScreen("screen-quiz");
-          aktualisiereLebenBar();
-          zeigeFrage();
-        });
-
-        document.getElementById("btn-weiter").addEventListener("click", naechsteFrage);
       } catch (err) {
         console.error('[Tagesquiz] Initialisierungsfehler:', err.message);
         zeigeScreen("screen-start");

@@ -3,6 +3,10 @@
 const Level = (() => {
   const sb = SupabaseClient.client;
 
+  // Merkt, ob die globalen Hamburger-Listener (document/keydown/resize) schon
+  // verdrahtet sind. renderTopbar kann mehrfach laufen → nur einmal anhängen.
+  let globaleHamburgerListenerAktiv = false;
+
   // EP-Schwellen pro Level-Stufe: Index = Level-Nummer (1–10)
   // LEVEL_THRESHOLDS[n] = Gesamt-EP, die zum Erreichen von Level n benötigt werden.
   // Level 10 ist Maximum → LEVEL_THRESHOLDS[10] = undefined (zeigt "–" im UI).
@@ -18,6 +22,55 @@ const Level = (() => {
     return Math.min(level, 10);
   }
 
+  // Reine SSOT-Funktion: Fortschritt im AKTUELLEN Level-Band aus Gesamt-EP.
+  // Nimmt nur EP entgegen → quelle-agnostisch (User-, Fach-, später Team-/Saison-EP).
+  // prozent ist auf 0–100 gekappt; bei Max-Level (10) immer 100 %, kein nächstes Band.
+  function berechneFortschritt(gesamtEp) {
+    const level       = berechneLevel(gesamtEp);
+    const istMax      = level === 10;
+    const untere      = LEVEL_THRESHOLDS[level - 1] ?? 0;
+    const obere       = LEVEL_THRESHOLDS[level];
+    const epImBand    = gesamtEp - untere;
+    const bandGroesse = istMax ? 0 : obere - untere;
+    const prozent     = istMax ? 100 : Math.min((gesamtEp - untere) / (obere - untere) * 100, 100);
+    const naechsteSchwelle = istMax ? null : obere;
+    const epText      = istMax ? `${gesamtEp} EP (Max)` : `${epImBand} / ${bandGroesse} EP`;
+    return { level, prozent, epImBand, bandGroesse, naechsteSchwelle, istMax, epText };
+  }
+
+  // Füllt Energie automatisch auf: +1 je vergangenem UTC-Kalendertag seit
+  // energy_last_reset, gedeckelt bei 5. Reduziert NIE (Trophäen-Tausch kann
+  // Energie > 5 erzeugen). Schreibt höchstens einmal pro UTC-Tag und User.
+  // Gibt die effektive Energie zurück. SSOT: einzige Stelle, die Energie auflädt.
+  async function rechargeEnergie(user, data) {
+    const aktuelleEnergie = data.energy ?? 5;
+    if (!data.energy_last_reset) return aktuelleEnergie;
+
+    const heuteStr  = new Date().toISOString().split('T')[0];               // UTC-Tag
+    const resetStr  = new Date(data.energy_last_reset).toISOString().split('T')[0];
+    const tageOffen = Math.floor((Date.parse(heuteStr) - Date.parse(resetStr)) / 86_400_000);
+    if (tageOffen < 1) return aktuelleEnergie;
+
+    const neueEnergie = aktuelleEnergie < 5
+      ? Math.min(5, aktuelleEnergie + tageOffen)
+      : aktuelleEnergie;
+
+    const { error } = await sb
+      .from('user_stats')
+      .update({
+        energy:            neueEnergie,
+        energy_last_reset: heuteStr + 'T00:00:00.000Z',
+        updated_at:        new Date().toISOString()
+      })
+      .eq('user_id', user.id);
+
+    if (error) {
+      console.error('[Level] Energie-Recharge Fehler:', error);
+      return aktuelleEnergie;
+    }
+    return neueEnergie;
+  }
+
   // Gibt globale Gamification-Werte des eingeloggten Users zurück.
   // Liefert Standardwerte wenn kein Datenbankeintrag vorhanden.
   async function getUserStats() {
@@ -26,13 +79,13 @@ const Level = (() => {
 
     const { data } = await sb
       .from('user_stats')
-      .select('total_xp, level, energy, trophies')
+      .select('total_xp, level, energy, trophies, energy_last_reset')
       .eq('user_id', user.id)
       .maybeSingle();
 
     if (!data) return { energy: 5, level: 1, trophies: 0, totalXp: 0 };
     return {
-      energy:   data.energy   ?? 5,
+      energy:   await rechargeEnergie(user, data),
       level:    data.level    ?? 1,
       trophies: data.trophies ?? 0,
       totalXp:  data.total_xp ?? 0
@@ -55,6 +108,38 @@ const Level = (() => {
     return !error;
   }
 
+  // Startet einen Tagesquiz-Versuch: verbraucht 1 Energie und legt sofort die
+  // Sperrzeile in daily_quiz_log an (success=false, score=null). Dadurch greift
+  // die Tagessperre auch bei Abbruch mitten im Quiz. Gibt { ok, logId } zurück;
+  // logId dient zum Nachtragen des Ergebnisses in vergibBelohnungen.
+  async function starteTagesQuiz() {
+    const user = Auth.currentUser();
+    if (!user) return { ok: false, logId: null };
+
+    const verbraucht = await verbrauchEnergie();
+    if (!verbraucht) return { ok: false, logId: null };
+
+    const { data, error } = await sb
+      .from('daily_quiz_log')
+      .insert({
+        user_id:         user.id,
+        score:           null,
+        xp_earned:       0,
+        trophies_earned: 0,
+        success:         false
+      })
+      .select('id')
+      .single();
+
+    if (error) {
+      // Energie ist bereits verbraucht → Quiz trotzdem starten (best effort),
+      // aber ohne Sperrzeile. logId fehlt → vergibBelohnungen fällt auf Insert zurück.
+      console.error('[Level] daily_quiz_log Startzeile Fehler:', error);
+      return { ok: true, logId: null };
+    }
+    return { ok: true, logId: data.id };
+  }
+
   // Prüft ob der User das Tages-Quiz heute bereits gespielt hat (UTC-Tag).
   async function hatHeuteTagesQuizGespielt() {
     const user = Auth.currentUser();
@@ -72,10 +157,10 @@ const Level = (() => {
     return !!data;
   }
 
-  // Bucht das Quiz-Ergebnis: EP, Trophäen, Level-Update.
+  // Vergibt die Belohnungen eines Quiz: EP, Trophäen, Level-Update.
   // lebenProzent: verbleibende Leben nach Quiz (0 = keine EP/Bonus, aber Trophäen)
-  async function buecheQuizErgebnis({ richtig, gesamt, fachId, istTagesQuiz = false, lebenProzent }) {
-    console.log('[Level] buecheQuizErgebnis:', { richtig, gesamt, fachId, istTagesQuiz, lebenProzent });
+  async function vergibBelohnungen({ richtig, gesamt, fachId, istTagesQuiz = false, lebenProzent, logId = null }) {
+    console.log('[Level] vergibBelohnungen:', { richtig, gesamt, fachId, istTagesQuiz, lebenProzent, logId });
     const user = Auth.currentUser();
     if (!user) return { ep: 0, trophien: 0, bonus: 0, levelUp: false };
 
@@ -141,16 +226,25 @@ const Level = (() => {
       if (fachErr) console.error('[Level] subject_xp upsert Fehler:', fachErr);
     }
 
-    // Tages-Quiz-Ergebnis in daily_quiz_log festhalten
+    // Tages-Quiz-Ergebnis in daily_quiz_log festhalten. Die Sperrzeile wurde
+    // bereits beim Start angelegt (starteTagesQuiz) → per logId aktualisieren.
+    // Fallback-Insert nur, falls keine Startzeile existiert (logId == null).
     if (istTagesQuiz) {
-      const { error: logErr } = await sb.from('daily_quiz_log').insert({
-        user_id:         user.id,
-        score,
-        xp_earned:       ep,
-        trophies_earned: trophien,
-        success:         hatLeben
-      });
-      if (logErr) console.error('[Level] daily_quiz_log insert Fehler:', logErr);
+      if (logId) {
+        const { error: logErr } = await sb.from('daily_quiz_log')
+          .update({ score, xp_earned: ep, trophies_earned: trophien, success: hatLeben })
+          .eq('id', logId);
+        if (logErr) console.error('[Level] daily_quiz_log update Fehler:', logErr);
+      } else {
+        const { error: logErr } = await sb.from('daily_quiz_log').insert({
+          user_id:         user.id,
+          score,
+          xp_earned:       ep,
+          trophies_earned: trophien,
+          success:         hatLeben
+        });
+        if (logErr) console.error('[Level] daily_quiz_log insert Fehler:', logErr);
+      }
     }
 
     return { ep, trophien, bonus, levelUp };
@@ -188,18 +282,78 @@ const Level = (() => {
     const navPlatzhalter = (label) =>
       '<span class="topbar-nav-link topbar-nav-link--disabled" aria-disabled="true" title="Kommt bald">' + label + '</span>';
     return (
+      '<button class="topbar-hamburger" type="button" aria-expanded="false" aria-controls="topbar-nav" aria-label="Menü öffnen">' +
+        '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">' +
+          '<line x1="4" y1="7" x2="20" y2="7" />' +
+          '<line x1="4" y1="12" x2="20" y2="12" />' +
+          '<line x1="4" y1="17" x2="20" y2="17" />' +
+        '</svg>' +
+      '</button>' +
       '<a class="topbar-logo" href="/dashboard.html" aria-label="learnharder – Dashboard">' +
         '<img class="topbar-logo-mark" src="/assets/logo.svg" width="36" height="36" alt="" />' +
         '<span class="topbar-wordmark">learn<span class="topbar-wordmark-accent">harder</span></span>' +
       '</a>' +
-      '<nav class="topbar-nav">' +
+      '<nav class="topbar-nav" id="topbar-nav">' +
         navLink('dashboard', '/dashboard.html', 'Dashboard') +
         navLink('faecher',   '/faecher.html',   'Fächer') +
-        navLink('tagesquiz', '/tagesquiz.html', 'Tagesquiz') +
+        navLink('tagesquiz', '/tagesquiz.html', 'Herausforderung') +
         navPlatzhalter('Team') +
         navPlatzhalter('Rangliste') +
       '</nav>'
     );
+  }
+
+  // Schließt das mobile Nav-Panel und setzt den Hamburger-Button zurück.
+  function schliesseNav(bar) {
+    if (!bar.classList.contains('topbar--nav-open')) return;
+    bar.classList.remove('topbar--nav-open');
+    const btn = bar.querySelector('.topbar-hamburger');
+    if (btn) {
+      btn.setAttribute('aria-expanded', 'false');
+      btn.setAttribute('aria-label', 'Menü öffnen');
+    }
+  }
+
+  // Verdrahtet den Hamburger-Button: Toggle des Panels + Schließen bei
+  // Link-Klick, Klick außerhalb, Escape und Wechsel zurück auf Desktop-Breite.
+  function verdrahteHamburger(bar) {
+    const btn = bar.querySelector('.topbar-hamburger');
+    const nav = bar.querySelector('#topbar-nav');
+    if (!btn || !nav) return;
+
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      const offen = bar.classList.toggle('topbar--nav-open');
+      btn.setAttribute('aria-expanded', offen ? 'true' : 'false');
+      btn.setAttribute('aria-label', offen ? 'Menü schließen' : 'Menü öffnen');
+    });
+
+    nav.addEventListener('click', function (e) {
+      if (e.target.closest('a')) schliesseNav(bar);
+    });
+
+    // Globale Listener nur EINMAL verdrahten (renderTopbar kann mehrfach laufen).
+    // Bar wird pro Event frisch per ID geholt -> überlebt Re-Renders ohne Stacking.
+    if (globaleHamburgerListenerAktiv) return;
+    globaleHamburgerListenerAktiv = true;
+
+    document.addEventListener('click', function (e) {
+      const b = document.getElementById('topbar');
+      if (b && !b.contains(e.target)) schliesseNav(b);
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        const b = document.getElementById('topbar');
+        if (b) schliesseNav(b);
+      }
+    });
+    // Breakpoint 768 gespiegelt zur Media-Query in style.css (bei Änderung beide anpassen)
+    window.addEventListener('resize', function () {
+      if (window.innerWidth > 768) {
+        const b = document.getElementById('topbar');
+        if (b) schliesseNav(b);
+      }
+    });
   }
 
   // Erzeugt die komplette Topbar in <header id="topbar"></header>:
@@ -222,14 +376,13 @@ const Level = (() => {
           '<a href="/index.html" class="btn-ghost-sm">Anmelden</a>' +
         '</div>';
       bar.innerHTML = markup;
+      verdrahteHamburger(bar);
       return;
     }
 
     if (!stats) stats = await getUserStats();
 
-    const naechste  = LEVEL_THRESHOLDS[stats.level] ?? null;
-    const prozent   = naechste ? Math.min(stats.totalXp / naechste * 100, 100) : 100;
-    const epText    = stats.totalXp + ' / ' + (naechste ?? '–') + ' EP';
+    const f         = berechneFortschritt(stats.totalXp);
     const initialen = topbarInitialen(user.email);
 
     markup +=
@@ -237,14 +390,15 @@ const Level = (() => {
         '<span class="topbar-pill topbar-pill--energy" title="Energie">' + Icons.render('energy', { size: 18 }) + '<span>' + stats.energy + '</span></span>' +
         '<span class="topbar-pill topbar-pill--trophies" title="Trophäen">' + Icons.render('trophy', { size: 18 }) + '<span>' + stats.trophies + '</span></span>' +
         '<span class="topbar-pill topbar-pill--xp" title="Erfahrungspunkte">' + Icons.render('star', { size: 18 }) + '<span>' + stats.totalXp + ' XP</span></span>' +
-        '<span class="topbar-level-badge" title="Level ' + stats.level + '">' + stats.level + '</span>' +
+        '<span class="topbar-level-badge" title="Level ' + f.level + '">' + f.level + '</span>' +
         '<a class="topbar-avatar" href="/profil.html" title="Profil">' + initialen + '</a>' +
       '</div>' +
-      '<div class="topbar-progress" title="' + epText + '">' +
-        '<div class="topbar-progress-fill" style="width: ' + prozent + '%"></div>' +
+      '<div class="topbar-progress" title="' + f.epText + '">' +
+        '<div class="topbar-progress-fill" style="width: ' + f.prozent + '%"></div>' +
       '</div>';
 
     bar.innerHTML = markup;
+    verdrahteHamburger(bar);
   }
 
   // Tauscht Trophäen gegen Energie (50 Trophäen = 1 Energydrink).
@@ -271,10 +425,13 @@ const Level = (() => {
 
   return {
     LEVEL_THRESHOLDS,
+    berechneLevel,
+    berechneFortschritt,
     getUserStats,
     verbrauchEnergie,
+    starteTagesQuiz,
     hatHeuteTagesQuizGespielt,
-    buecheQuizErgebnis,
+    vergibBelohnungen,
     tauscheTrophäen,
     renderTopbar
   };
