@@ -44,3 +44,21 @@ nichts umbricht. Falls doch: separater CSS-/Wording-Folge-Fix (Nav-Spacing oder
 Label-Kürzung), eigener Commit.
 
 Status: offen, kein Blocker.
+
+## Tagessperre entfernen (eigene Session, Code)
+`#screen-gespielt` aus dem Block-Pfad in tagesquiz.html lösen; Herausforderung nur
+noch über Energie begrenzen (BUG-012). `hatHeuteTagesQuizGespielt()` bleibt, wird
+aber nur noch für die Streak-Berechnung genutzt.
+Status: offen.
+
+## Streak implementieren (eigene Session, Code)
+`berechneStreak()` in level.js als reine Funktion (rückwärts aus
+`daily_quiz_log.played_at`, Definition siehe LEVEL_SYSTEM §12). Anzeige in
+dashboard.html `#stat-streak`. Keine Migration. Abhängig von / sinnvoll nach
+"Tagessperre entfernen".
+Status: offen.
+
+## Dashboard-Anzeigefehler fixen (eigene Session, Code)
+"+5 morgen" dynamisch ableiten oder entfernen (BUG-013); Begrüßungs-Copy +
+Anzeigename überarbeiten (BUG-014).
+Status: offen.

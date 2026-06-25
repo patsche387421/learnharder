@@ -17,6 +17,20 @@ Legende: 🔴 Kritisch · 🟡 Wichtig · 🟢 Nice-to-have · ✅ Erledigt
 - **Aktion:** Nach Login einmal Quiz absolvieren, dann in Supabase prüfen
   ob `total_xp`, `trophies` und `subject_xp.xp` korrekt aktualisiert wurden.
 
+### BUG-012: Tagessperre widerspricht Energie-Limit (Herausforderung nur 1×/Tag spielbar)
+- **Symptom:** Die Herausforderung lässt sich pro UTC-Tag nur einmal starten —
+  danach landet man auf `#screen-gespielt`, auch mit voller Energie.
+- **Ursache:** `starteTagesQuiz()` schreibt die `daily_quiz_log`-Zeile bereits beim
+  Start; `hatHeuteTagesQuizGespielt()` blockt anschließend für den Rest des UTC-Tags.
+- **SOLL (Produktentscheidung Juni 2026):** Limit ist **nur die Energie**.
+  Mehrfachspielen erlaubt, solange Energie > 0. `#screen-gespielt` wird nicht mehr
+  als Block verwendet — die Funktion bleibt aber als Streak-Quelle erhalten
+  (siehe LEVEL_SYSTEM §4/§12 "Streak").
+- **Doku-Widerspruch:** LEVEL_SYSTEM.md §4 ("1 Versuch pro Tag") und §6
+  ("Verhindert Mehrfach-Spielen pro UTC-Tag") kodieren die alte Sperre als IST →
+  in dieser Session als GEPLANT-Abweichung markiert, Code-Fix folgt eigener Branch.
+- **Status:** 🟡 Offen — Code-Fix in eigener Session ("Tagessperre entfernen").
+
 ### BUG-004: POS-Datenstrukturen-Tool verschwunden
 - **Symptom:** Interaktives Tool aus POS-Fach ist weg
 - **Ursache:** Bei einer Refactoring-Runde entfernt
@@ -59,6 +73,24 @@ Legende: 🔴 Kritisch · 🟡 Wichtig · 🟢 Nice-to-have · ✅ Erledigt
   Bilder, Tabellen in Quiz/Theorie
 - **Aktion:** Content-Render-Modul planen
 - **Status:** Offen
+
+### BUG-013: Dashboard-Energie-Hinweis "+5 morgen" falsch
+- **Symptom:** `dashboard.html:59` zeigt statisch `<small class="stat-hint">+5 morgen</small>`.
+- **Ursache:** Hartkodiert; `rechargeEnergie()` (level.js) lädt tatsächlich **+1 pro
+  vergangenem UTC-Kalendertag, gedeckelt bei 5** — nicht +5, und nur unter dem Cap.
+- **Auswirkung:** Irreführend (verspricht das 5-fache, ignoriert Cap).
+- **Aktion:** Hinweis dynamisch aus den echten Stats ableiten oder entfernen.
+- **Status:** 🟢 Offen — reiner Anzeigefehler, kein Bug an level.js.
+
+### BUG-014: Dashboard-Begrüßung zeigt E-Mail-Präfix + unpassende Copy
+- **Symptom:** Drei statische Stellen in `dashboard.html`:
+  Z. 20 `Willkommen zurück`, Z. 22 `Bereit weiterzulernen?`, sowie der
+  Laufzeit-Override Z. 86 `"Hey, " + Auth.displayName() + "!"` (Z. 21 Fallback `Hey!`).
+- **Ursache:** `Auth.displayName()` gibt den E-Mail-Lokalteil zurück (z. B. `schueler1`);
+  kein echtes Anzeigename-Feld im Datenmodell. Begrüßungs-Copy ist statisch.
+- **Auswirkung:** Begrüßung wirkt unpersönlich/technisch (`Hey, schueler1!`).
+- **Aktion:** Anzeigename-Quelle klären (Profil-Feld o. Ä.) + Copy überarbeiten.
+- **Status:** 🟢 Offen — kosmetisch.
 
 ### BUG-011: Trophäen-Tausch cappt Energie nicht bei 5
 - **Symptom:** `Level.tauscheTrophäen()` (`level.js`) setzt `energy = stats.energy +
