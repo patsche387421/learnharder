@@ -26,9 +26,12 @@ keinen Lebensbalken und verbraucht keine Energie.
   kein Warndialog — Offene Entscheidung §11.1 damit beantwortet)
 - 50 Trophäen können gegen 1 Energydrink eingetauscht werden (Tausch-Seite)
 
-### Energie-Regeneration ⚠️ Geplant, noch nicht implementiert
-- 1 Energydrink pro Tag automatisch, Deckel bei 5
-- Reset-Modus (Mitternacht vs. rollierend 24 h) noch nicht entschieden — §11.2
+### Energie-Regeneration ✅ Implementiert (Juni 2026)
+- +1 Energydrink pro vergangenem **UTC-Kalendertag** automatisch, Deckel bei 5
+- Reset-Modus: **Kalendertag UTC** (entschieden, §11.2) — konsistent mit `played_at`
+- Umsetzung: `rechargeEnergie()` in `level.js`, ausgelöst von `getUserStats()`.
+  Client-seitig als SSOT (kein Energy-Schreibzugriff außerhalb `level.js`).
+  Reduziert nie (Trophäen-Tausch kann Energie > 5 erzeugen, BUG-011).
 
 ## 2. Lebensbalken ❤️
 
@@ -265,10 +268,10 @@ FOOTER (alle Seiten, fix unten)
 1. ✅ **Gelöst — Energie = 0:** Tagesquiz-Start ist bei Energie = 0 komplett
    gesperrt (`#screen-gesperrt` in `tagesquiz.html`). Kein Warndialog.
 
-2. **⚠️ Offen — Energie-Regeneration:** Derzeit kein automatisches Aufladen
-   implementiert. Geplant: +1 Energydrink pro Tag, Deckel bei 5. Modus
-   (Mitternacht UTC vs. rollierend 24 h) noch nicht entschieden. Wird als
-   Supabase-Funktion oder scheduled Edge-Function umgesetzt.
+2. ✅ **Gelöst — Energie-Regeneration:** Automatisches Aufladen implementiert
+   (`level.js` `rechargeEnergie`, ausgelöst von `getUserStats`): +1 Energydrink
+   pro vergangenem UTC-Kalendertag, Deckel bei 5. Reset-Modus = **Kalendertag UTC**
+   (konsistent mit `played_at`). Client-seitig als SSOT statt Edge-Function.
 
 3. **⚠️ Offen — Impressum/Datenschutz-Inhalt:** vorerst Platzhalter, echter
    rechtlicher Inhalt (DSGVO) folgt später.
