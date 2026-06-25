@@ -296,7 +296,7 @@ const Level = (() => {
       '<nav class="topbar-nav" id="topbar-nav">' +
         navLink('dashboard', '/dashboard.html', 'Dashboard') +
         navLink('faecher',   '/faecher.html',   'Fächer') +
-        navLink('tagesquiz', '/tagesquiz.html', 'Tagesquiz') +
+        navLink('tagesquiz', '/tagesquiz.html', 'Herausforderung') +
         navPlatzhalter('Team') +
         navPlatzhalter('Rangliste') +
       '</nav>'
