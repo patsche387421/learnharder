@@ -38,6 +38,39 @@ const Level = (() => {
     return { level, prozent, epImBand, bandGroesse, naechsteSchwelle, istMax, epText };
   }
 
+  // Füllt Energie automatisch auf: +1 je vergangenem UTC-Kalendertag seit
+  // energy_last_reset, gedeckelt bei 5. Reduziert NIE (Trophäen-Tausch kann
+  // Energie > 5 erzeugen). Schreibt höchstens einmal pro UTC-Tag und User.
+  // Gibt die effektive Energie zurück. SSOT: einzige Stelle, die Energie auflädt.
+  async function rechargeEnergie(user, data) {
+    const aktuelleEnergie = data.energy ?? 5;
+    if (!data.energy_last_reset) return aktuelleEnergie;
+
+    const heuteStr  = new Date().toISOString().split('T')[0];               // UTC-Tag
+    const resetStr  = new Date(data.energy_last_reset).toISOString().split('T')[0];
+    const tageOffen = Math.floor((Date.parse(heuteStr) - Date.parse(resetStr)) / 86_400_000);
+    if (tageOffen < 1) return aktuelleEnergie;
+
+    const neueEnergie = aktuelleEnergie < 5
+      ? Math.min(5, aktuelleEnergie + tageOffen)
+      : aktuelleEnergie;
+
+    const { error } = await sb
+      .from('user_stats')
+      .update({
+        energy:            neueEnergie,
+        energy_last_reset: heuteStr + 'T00:00:00.000Z',
+        updated_at:        new Date().toISOString()
+      })
+      .eq('user_id', user.id);
+
+    if (error) {
+      console.error('[Level] Energie-Recharge Fehler:', error);
+      return aktuelleEnergie;
+    }
+    return neueEnergie;
+  }
+
   // Gibt globale Gamification-Werte des eingeloggten Users zurück.
   // Liefert Standardwerte wenn kein Datenbankeintrag vorhanden.
   async function getUserStats() {
@@ -46,13 +79,13 @@ const Level = (() => {
 
     const { data } = await sb
       .from('user_stats')
-      .select('total_xp, level, energy, trophies')
+      .select('total_xp, level, energy, trophies, energy_last_reset')
       .eq('user_id', user.id)
       .maybeSingle();
 
     if (!data) return { energy: 5, level: 1, trophies: 0, totalXp: 0 };
     return {
-      energy:   data.energy   ?? 5,
+      energy:   await rechargeEnergie(user, data),
       level:    data.level    ?? 1,
       trophies: data.trophies ?? 0,
       totalXp:  data.total_xp ?? 0
