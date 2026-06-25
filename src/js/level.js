@@ -38,6 +38,39 @@ const Level = (() => {
     return { level, prozent, epImBand, bandGroesse, naechsteSchwelle, istMax, epText };
   }
 
+  // Füllt Energie automatisch auf: +1 je vergangenem UTC-Kalendertag seit
+  // energy_last_reset, gedeckelt bei 5. Reduziert NIE (Trophäen-Tausch kann
+  // Energie > 5 erzeugen). Schreibt höchstens einmal pro UTC-Tag und User.
+  // Gibt die effektive Energie zurück. SSOT: einzige Stelle, die Energie auflädt.
+  async function rechargeEnergie(user, data) {
+    const aktuelleEnergie = data.energy ?? 5;
+    if (!data.energy_last_reset) return aktuelleEnergie;
+
+    const heuteStr  = new Date().toISOString().split('T')[0];               // UTC-Tag
+    const resetStr  = new Date(data.energy_last_reset).toISOString().split('T')[0];
+    const tageOffen = Math.floor((Date.parse(heuteStr) - Date.parse(resetStr)) / 86_400_000);
+    if (tageOffen < 1) return aktuelleEnergie;
+
+    const neueEnergie = aktuelleEnergie < 5
+      ? Math.min(5, aktuelleEnergie + tageOffen)
+      : aktuelleEnergie;
+
+    const { error } = await sb
+      .from('user_stats')
+      .update({
+        energy:            neueEnergie,
+        energy_last_reset: heuteStr + 'T00:00:00.000Z',
+        updated_at:        new Date().toISOString()
+      })
+      .eq('user_id', user.id);
+
+    if (error) {
+      console.error('[Level] Energie-Recharge Fehler:', error);
+      return aktuelleEnergie;
+    }
+    return neueEnergie;
+  }
+
   // Gibt globale Gamification-Werte des eingeloggten Users zurück.
   // Liefert Standardwerte wenn kein Datenbankeintrag vorhanden.
   async function getUserStats() {
@@ -46,13 +79,13 @@ const Level = (() => {
 
     const { data } = await sb
       .from('user_stats')
-      .select('total_xp, level, energy, trophies')
+      .select('total_xp, level, energy, trophies, energy_last_reset')
       .eq('user_id', user.id)
       .maybeSingle();
 
     if (!data) return { energy: 5, level: 1, trophies: 0, totalXp: 0 };
     return {
-      energy:   data.energy   ?? 5,
+      energy:   await rechargeEnergie(user, data),
       level:    data.level    ?? 1,
       trophies: data.trophies ?? 0,
       totalXp:  data.total_xp ?? 0
@@ -75,6 +108,38 @@ const Level = (() => {
     return !error;
   }
 
+  // Startet einen Tagesquiz-Versuch: verbraucht 1 Energie und legt sofort die
+  // Sperrzeile in daily_quiz_log an (success=false, score=null). Dadurch greift
+  // die Tagessperre auch bei Abbruch mitten im Quiz. Gibt { ok, logId } zurück;
+  // logId dient zum Nachtragen des Ergebnisses in vergibBelohnungen.
+  async function starteTagesQuiz() {
+    const user = Auth.currentUser();
+    if (!user) return { ok: false, logId: null };
+
+    const verbraucht = await verbrauchEnergie();
+    if (!verbraucht) return { ok: false, logId: null };
+
+    const { data, error } = await sb
+      .from('daily_quiz_log')
+      .insert({
+        user_id:         user.id,
+        score:           null,
+        xp_earned:       0,
+        trophies_earned: 0,
+        success:         false
+      })
+      .select('id')
+      .single();
+
+    if (error) {
+      // Energie ist bereits verbraucht → Quiz trotzdem starten (best effort),
+      // aber ohne Sperrzeile. logId fehlt → vergibBelohnungen fällt auf Insert zurück.
+      console.error('[Level] daily_quiz_log Startzeile Fehler:', error);
+      return { ok: true, logId: null };
+    }
+    return { ok: true, logId: data.id };
+  }
+
   // Prüft ob der User das Tages-Quiz heute bereits gespielt hat (UTC-Tag).
   async function hatHeuteTagesQuizGespielt() {
     const user = Auth.currentUser();
@@ -94,8 +159,8 @@ const Level = (() => {
 
   // Vergibt die Belohnungen eines Quiz: EP, Trophäen, Level-Update.
   // lebenProzent: verbleibende Leben nach Quiz (0 = keine EP/Bonus, aber Trophäen)
-  async function vergibBelohnungen({ richtig, gesamt, fachId, istTagesQuiz = false, lebenProzent }) {
-    console.log('[Level] vergibBelohnungen:', { richtig, gesamt, fachId, istTagesQuiz, lebenProzent });
+  async function vergibBelohnungen({ richtig, gesamt, fachId, istTagesQuiz = false, lebenProzent, logId = null }) {
+    console.log('[Level] vergibBelohnungen:', { richtig, gesamt, fachId, istTagesQuiz, lebenProzent, logId });
     const user = Auth.currentUser();
     if (!user) return { ep: 0, trophien: 0, bonus: 0, levelUp: false };
 
@@ -161,16 +226,25 @@ const Level = (() => {
       if (fachErr) console.error('[Level] subject_xp upsert Fehler:', fachErr);
     }
 
-    // Tages-Quiz-Ergebnis in daily_quiz_log festhalten
+    // Tages-Quiz-Ergebnis in daily_quiz_log festhalten. Die Sperrzeile wurde
+    // bereits beim Start angelegt (starteTagesQuiz) → per logId aktualisieren.
+    // Fallback-Insert nur, falls keine Startzeile existiert (logId == null).
     if (istTagesQuiz) {
-      const { error: logErr } = await sb.from('daily_quiz_log').insert({
-        user_id:         user.id,
-        score,
-        xp_earned:       ep,
-        trophies_earned: trophien,
-        success:         hatLeben
-      });
-      if (logErr) console.error('[Level] daily_quiz_log insert Fehler:', logErr);
+      if (logId) {
+        const { error: logErr } = await sb.from('daily_quiz_log')
+          .update({ score, xp_earned: ep, trophies_earned: trophien, success: hatLeben })
+          .eq('id', logId);
+        if (logErr) console.error('[Level] daily_quiz_log update Fehler:', logErr);
+      } else {
+        const { error: logErr } = await sb.from('daily_quiz_log').insert({
+          user_id:         user.id,
+          score,
+          xp_earned:       ep,
+          trophies_earned: trophien,
+          success:         hatLeben
+        });
+        if (logErr) console.error('[Level] daily_quiz_log insert Fehler:', logErr);
+      }
     }
 
     return { ep, trophien, bonus, levelUp };
@@ -355,6 +429,7 @@ const Level = (() => {
     berechneFortschritt,
     getUserStats,
     verbrauchEnergie,
+    starteTagesQuiz,
     hatHeuteTagesQuizGespielt,
     vergibBelohnungen,
     tauscheTrophäen,

@@ -13,12 +13,13 @@ sofort, welche Detail-Datei relevant ist, ohne dass CLAUDE.md selbst die Inhalte
 Dokumente trägt. Trennung von Regeln (CLAUDE.md) und Stand/Plänen (einzelne
 `docs/*.md`) bleibt bestehen — nur die Übersicht wird zentralisiert.
 
-## fix/daily-challenge (eigene Session) — NÄCHSTE SESSION
-Tagesquiz: Einmal-pro-Tag-Sperre und Energy-Recharge funktionieren nicht. Sperre soll
-verhindern, dass das Tagesquiz mehrfach pro Tag gespielt wird; Energy-Recharge (Refill
-1/Tag, Cap 5) muss greifen. Logik gehört in level.js als SSOT (kein Supabase-Call für
-Energy außerhalb level.js). Vor Implementierung: Ist-Verhalten gegen daily_quiz_log
-und user_stats prüfen.
+## fix/daily-challenge (eigene Session) — ✅ ERLEDIGT
+Tagesquiz: Einmal-pro-Tag-Sperre und Energy-Recharge funktionierten nicht.
+- **Recharge:** `rechargeEnergie()` in level.js (SSOT, via getUserStats) — +1/Tag
+  pro UTC-Kalendertag, Cap 5, reduziert nie. Reset-Modus = Kalendertag UTC.
+- **Sperre:** `starteTagesQuiz()` legt die daily_quiz_log-Zeile schon beim Start an
+  (Abbruch-Lücke geschlossen); `vergibBelohnungen({ logId })` trägt das Ergebnis nach.
+- Offen geblieben: Trophäen-Tausch ohne Energie-Cap → BUG-011 (gehört zu fix/trophy-shop).
 
 ## fix/trophy-shop (eigene Session)
 Trophy-Shop wieder erreichbar machen (Energydrink-Kauf: 50 Trophäen = 1 Drink). Scope

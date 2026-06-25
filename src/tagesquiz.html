@@ -207,7 +207,8 @@
         gesamt,
         fachId:       null,
         istTagesQuiz: true,
-        lebenProzent: leben
+        lebenProzent: leben,
+        logId:        quizZustand.logId
       });
 
       const box = document.getElementById("ergebnis-belohnungen");
@@ -251,7 +252,17 @@
         document.getElementById("start-energie").textContent = stats.energy;
         zeigeScreen("screen-start");
 
-        document.getElementById("btn-start").addEventListener("click", async () => {
+        // Re-Entry-Schutz: schließt das Race vor dem ersten await (Doppelklick →
+        // sonst zwei starteTagesQuiz()-Aufrufe = doppelter Energie-Abzug + 2 Sperrzeilen).
+        const btnStart = document.getElementById("btn-start");
+        let startLaeuft = false;
+        const startFreigeben = () => { startLaeuft = false; btnStart.disabled = false; };
+
+        btnStart.addEventListener("click", async () => {
+          if (startLaeuft) return;
+          startLaeuft = true;
+          btnStart.disabled = true;
+
           // Erst Fragen laden — Energie wird nur verbraucht wenn Laden erfolgreich war
           let fragen;
           try {
@@ -260,17 +271,25 @@
             console.error('[Tagesquiz] ladeFragen Fehler:', err.message);
             const hinweis = document.getElementById("start-lade-fehler");
             if (hinweis) hinweis.hidden = false;
+            startFreigeben();   // kein Quiz gestartet → Retry erlauben
             return;
           }
           if (!fragen.length) {
             const hinweis = document.getElementById("start-lade-fehler");
             if (hinweis) hinweis.hidden = false;
+            startFreigeben();   // kein Quiz gestartet → Retry erlauben
             return;
           }
 
-          const verbraucht = await Level.verbrauchEnergie();
-          if (!verbraucht) { zeigeScreen("screen-gesperrt"); return; }
+          // Verbraucht Energie UND legt die Tagessperre an (auch bei Abbruch wirksam).
+          const start = await Level.starteTagesQuiz();
+          if (!start.ok) {
+            zeigeScreen("screen-gesperrt");
+            startFreigeben();   // Energie leer / Sperre greift → Retry nach Recharge erlauben
+            return;
+          }
 
+          // Erfolgspfad: Button bleibt gesperrt, Start-Screen wird ohnehin verlassen.
           await Level.renderTopbar();
 
           quizZustand = {
@@ -278,7 +297,8 @@
             aktuell:          0,
             richtig:          0,
             leben:            100,
-            schadensProFehler: 100 / fragen.length
+            schadensProFehler: 100 / fragen.length,
+            logId:            start.logId
           };
 
           zeigeScreen("screen-quiz");
