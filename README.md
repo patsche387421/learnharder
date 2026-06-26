@@ -25,12 +25,12 @@ src/          Alle Web-Dateien (Publish-Root)
 └── assets/
     └── data/ Lerninhalte (manifest.json, Fach-Unterordner mit Theorie/Fragen/Antworten)
 
-docs/         Projektdokumentation (CLAUDE.md, DESIGN_GUIDELINES.md, …)
-agent/        Claude Code Prompts und Automatisierungen
+docs/         Produkt-/Design-Doku (DESIGN_GUIDELINES.md, …), archive/ = Überholtes
+agent/        Agent-/Prozess-Artefakte: CLAUDE.md (Projektregeln), prompts/, SESSION_REPORT.md
 ```
 
 ## Hosting
 
 Kompatibel mit jedem statischen Host (Apache, Nginx, Netlify). Publish-Verzeichnis: `src/`.
 
-Weitere Details: [docs/CLAUDE.md](docs/CLAUDE.md)
+Weitere Details: [agent/CLAUDE.md](agent/CLAUDE.md)
