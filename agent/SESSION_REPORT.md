@@ -494,4 +494,71 @@ Zeilen** zählen und entscheiden, ob abgebrochene `success=false`-Versuche mitz�
 
 ---
 
+## Session 2026-06-27 — Session A „Fundament": Doku-Struktur + globaler Header/Footer
+
+**Branch:** `feature/fundament` (von `dev`). Zwei Commits; Merge nach `dev` (`--no-ff`)
+im Anschluss an diesen Report-Commit. Kein push, kein `main`, kein Deploy.
+
+**Commits:**
+- `6eeeb1b` chore(docs): Doku-Struktur & Archiv einführen
+- `223c03e` refactor(layout): Header und Footer global per layout.js injizieren
+
+### Bereich 1 — Doku-Struktur & Archiv (Commit `6eeeb1b`)
+- `git mv` (Historie erhalten): `docs/KI_VORLAGE.md` + `data/import/MIGRATION_PROMPT.md`
+  → `agent/prompts/`; `docs/CLAUDE.md` → `agent/CLAUDE.md`;
+  `docs/DATENMIGRATION.md` → `docs/archive/` (abgelöst durch `DATA_MIGRATION_V2.md`).
+- Neu: `docs/README.md` (Wegweiser docs/ ↔ docs/archive/ ↔ agent/).
+- `README.md`: Link + Struktur-Prosa auf `agent/CLAUDE.md` angepasst (einziger harter
+  Verweis). Prosa-/Kommentar-Erwähnungen anderswo bewusst out of scope.
+- `agent/` bleibt getrackt (Entscheidung Patsche); `.gitignore` unverändert.
+
+### Bereich 2 — Globaler Header + Footer (Commit `223c03e`)
+- Neu `src/js/layout.js`: `renderTopbar` + Helfer (`topbarGrundgeruest`, `aktiverNav`,
+  `schliesseNav`, `verdrahteHamburger`, `topbarInitialen`) **1:1 aus `level.js`
+  verschoben** — nur die zwei Cross-Modul-Aufrufe auf `Level.getUserStats` /
+  `Level.berechneFortschritt` umgestellt; neu `Layout.renderFooter()`.
+- `level.js`: −158 (Topbar-Block + Modul-State + `renderTopbar`-Export entfernt;
+  Daten-/Logik-Funktionen byte-identisch unberührt).
+- 16 HTML-Seiten: inline `<footer>` → Platzhalter `<footer class="site-footer"
+  id="site-footer">`; `Level.→Layout.renderTopbar`; `<script src="/js/layout.js">`
+  nach `level.js` (auf `index.html` nach `auth.js`).
+
+### Entscheidungen
+- **Footer-Auto-Run statt Pro-Seite-Aufruf:** `renderFooter()` läuft per
+  `DOMContentLoaded` (Muster wie `icons.js`). Grund: auf allen Seiten steht `<footer>`
+  *nach* den Scripts → ein synchroner Aufruf liefe vor dem Parsen des Footer-Elements
+  ins Leere (auf `index.html` garantiert leer). Auto-Run ist robust + DRY; `renderFooter`
+  bleibt zusätzlich exportiert.
+- **`index.html`-Sonderfall:** Footer ja (Auto-Run), Topbar nein; `layout.js` nach
+  `auth.js` (also nach `supabase.js` → `SupabaseClient` definiert), **kein** `level.js`,
+  **kein** `renderTopbar`-Aufruf → kein `undefined`.
+- **Session-Split:** A = Fundament (dieser Branch), B = UI-Schliff (Bereich 3–6) —
+  damit `renderTopbar` nicht in derselben Session verschoben **und** umgebaut wird.
+
+### Verifikation
+- `node --check` für `layout.js` + `level.js` grün; grep: 0 zurückgelassene Topbar-
+  Referenzen in `level.js`, 0 verbliebene `Level.renderTopbar` in HTML, 16× Footer-
+  Platzhalter, 15× korrekte Script-Reihenfolge (index ausgenommen).
+- Live-Smoke-Test (Server `lernhub`, User `schueler1`), Console überall clean:
+  - **dashboard** — Topbar via `Layout.renderTopbar` (Cross-Modul `Level.*` +
+    `Icons.render`, 3 SVGs, Leiste 10 %) + Footer ✓.
+  - **pos.html** — Topbar + Footer + Fach-Inhalt (3 Stat-Pills, 11 Themen-Karten) ✓.
+  - **index.html** (logged-out) — Footer via Auto-Run **ohne** `level.js`,
+    `Level` undefined, **kein** Fehler ✓.
+
+### Offen — Session B (UI-Schliff, Bereich 3–6; eigene Session, neuer Branch auf `dev`)
+- **Bereich 3 Header-Umbau:** „Profil" als echter Nav-Link (Avatar-Initialen raus);
+  Mobile-Hamburger zeigt alle sechs Punkte (inkl. Team/Rangliste/Profil); Energie-Pill
+  „X/5"; Total-XP-Pill raus; Fortschritt (EP-Text) in die Leiste.
+- **Bereich 4 Dashboard:** „Zuletzt gelernt" aus `quiz_results` — Sortier-Spalte heißt
+  **`erstellt_at`** (NICHT `created_at`!), und `quiz_results` enthält **nur Themen-Quiz**
+  (Herausforderung liegt in `daily_quiz_log`, ohne `thema_id`). „+5 morgen" raus →
+  sichtbarer Trophäen-Tausch-Link (`tauschen.html` ist sonst verwaist, nur aus
+  `tagesquiz.html` verlinkt).
+- **Bereich 5 Mobile-First-Politur** + **Bereich 6 Buttons/Icons vereinheitlichen**
+  (Fach-Stat-Pills in `renderStatPill` brauchen Icons via `Icons.render`).
+- Baut komplett auf dem jetzt stabilen `layout.js` auf.
+
+---
+
 *Bericht auto-generiert am Ende der Session. Alle Pfade relativ zum Projekt-Root.*
