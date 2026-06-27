@@ -100,15 +100,7 @@
     </section>
   </main>
 
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <span>© LearnHarder 2026</span>
-      <nav>
-        <a href="/impressum.html">Impressum</a>
-        <a href="/datenschutz.html">Datenschutz</a>
-      </nav>
-    </div>
-  </footer>
+  <footer class="site-footer" id="site-footer"></footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="/js/config.js"></script>
@@ -118,6 +110,7 @@
   <script src="/js/icons.js"></script>
   <script src="/js/content-icons.js"></script>
   <script src="/js/level.js"></script>
+  <script src="/js/layout.js"></script>
   <script>
     // Theme früh anwenden um Flash zu vermeiden
     (function () {
@@ -171,7 +164,7 @@
       // Sektion 2: Meine Stats
       try {
         const userStats = await Level.getUserStats();
-        await Level.renderTopbar(userStats);
+        await Layout.renderTopbar(userStats);
 
         const f = Level.berechneFortschritt(userStats.totalXp);
 
