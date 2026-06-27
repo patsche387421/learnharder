@@ -561,4 +561,72 @@ im Anschluss an diesen Report-Commit. Kein push, kein `main`, kein Deploy.
 
 ---
 
+## Session 2026-06-27 (Session B) — Bereich 4: Dashboard-Bugs
+
+**Branch:** `fix/dashboard` (von `dev`). Ein Code-Commit; Merge nach `dev`
+(`--no-ff`); dieser Doku-Commit kommt **nach** dem Merge separat obendrauf
+(nicht in den Merge gefaltet). Kein push, kein `main`, kein Deploy.
+
+**Commits:**
+- `5d4e701` fix(dashboard): Zuletzt-gelernt mit echter Quiz-Historie füllen
+- `b8ca928` merge: Bereich 4 — Dashboard-Bugs (`--no-ff`)
+
+### Umgesetzt
+- **„Zuletzt gelernt" gefüllt:** neue `Stats.ladeLetzteAktivitaet(n=5)`
+  ([stats.js](../src/js/stats.js)) liest die letzten Themen-Quiz aus
+  `quiz_results` (sortiert nach **`erstellt_at`** desc, `limit n`), löst
+  `thema_id → Name` über `manifest.json` auf und gibt angereicherte Zeilen
+  `{name, score, erstelltAt}` zurück. Das Dashboard rendert daraus eine Liste
+  (Thema · Score % · relative Zeit via `Intl.RelativeTimeFormat('de')`);
+  Leerzustand bleibt nur bei wirklich keinen Daten.
+- **Energie-Karte → Aktion:** die 4. Stat-Karte „Energie heute" (Dublette zur
+  Topbar) ist jetzt eine klickbare **Trophäen-Tausch-Aktion** „Energie aufladen
+  — Trophäen tauschen", Link auf `tauschen.html` (vorher verwaiste Seite
+  sichtbar gemacht).
+- **„+5 morgen" entfernt** sowie die tote `stat-energie`-Referenz im
+  Inline-Script.
+- Stats-Reihe sonst unverändert (Themen · Quiz-Punkte · Lerntage in Folge).
+  Streak „–" bleibt BUG-013/014 (separat, nicht im Scope).
+
+### Verifizierte Annahmen (künftig nicht erneut prüfen)
+- `manifest.json` liegt unter **`src/assets/data/manifest.json`** und wird als
+  **`/assets/data/manifest.json`** gefetcht.
+- Manifest-Struktur: **`faecher[].themen[].id` / `.name`** (SSOT für Namen).
+- **`quiz_results.score` ist ein gerundeter Prozentwert (0–100)** → Anzeige
+  `{score} %` ist korrekt. (`richtig`/`gesamt` lägen für „4/5" ebenfalls vor.)
+- `quiz_results` enthält **nur Themen-Quiz**; die Herausforderung liegt in
+  `daily_quiz_log` (ohne `thema_id`) → „Zuletzt gelernt" zeigt nur Themen-Quiz.
+
+### Entscheidungen
+- **Mapping in `stats.js` (angereichert), nicht auf dem Dashboard:** `app.js`
+  ist auf `dashboard.html` nicht eingebunden; `ladeLetzteAktivitaet` fetcht das
+  Manifest selbst (modulinternes `manifestCache`) und hält das Inline-Script
+  dünn. Manifest bleibt Single Source of Truth für Themen-Namen.
+- **4. Karte → Aktions-Karte** (statt 3 Karten + separatem Banner): minimaler
+  Markup-Churn, Grid `repeat(4,1fr)` unverändert.
+
+### Verifikation
+- Live über statischen Server (`lernhub`, User `schueler1`), Console clean.
+- Netzwerk: `GET …/quiz_results?select=thema_id,score,erstellt_at&order=
+  erstellt_at.desc&limit=5 → 200`; `manifest.json → 200`.
+- „Zuletzt gelernt" zeigt echte Historie (Namen aus Manifest, Score %, rel.
+  Zeit), neueste zuerst. Aktions-Karte verlinkt auf `tauschen.html`; kein
+  „+5 morgen", keine `stat-energie`-Fehler.
+- Mobile (390px): `.db-stats` bricht 1-spaltig, Karten + Liste füllen die
+  Viewport-Breite (per `getBoundingClientRect` geprüft).
+
+### Offen — nächste Sessions (Reihenfolge-Vorschlag: 3 → 5 → 6)
+- **Bereich 3 — Header-Umbau:** Energie als **`X/5`-Pill in die Topbar**,
+  Total-XP-Pill raus, „Profil" als echter Nav-Link, vollständiges Mobile-Menü
+  (alle 6 Punkte), EP-Text in die Fortschrittsleiste.
+- **Abhängigkeit / wichtig:** Bereich 3 holt die Energie-Anzeige **final in die
+  Topbar** — das rechtfertigt rückwirkend den Wegfall der Energie-Karte aus
+  Bereich 4. **Bis Bereich 3 gemerged ist, existiert die Energie-Anzeige nur in
+  der bestehenden Topbar, nicht mehr auf dem Dashboard. Das ist so gewollt —
+  kein Regressionsbug.**
+- **Bereich 5 (Mobile-Politur)** und **Bereich 6 (Buttons/Icons,
+  `renderStatPill`-Icons via `Icons.render`)** hängen teils an Bereich 3.
+
+---
+
 *Bericht auto-generiert am Ende der Session. Alle Pfade relativ zum Projekt-Root.*
