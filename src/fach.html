@@ -52,6 +52,7 @@
   <script src="/js/icons.js"></script>
   <script src="/js/content-icons.js"></script>
   <script src="/js/level.js"></script>
+  <script src="/js/layout.js"></script>
   <script src="/js/app.js"></script>
   <script>
     (async () => {
@@ -60,20 +61,12 @@
       document.body.dataset.pageTitle = (fachId.split('-')[0] || 'Thema').toUpperCase();
 
       await Auth.requireLogin();
-      await Level.renderTopbar();
+      await Layout.renderTopbar();
 
       App.renderFach(fachId);
     })();
   </script>
 
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <span>© LearnHarder 2026</span>
-      <nav>
-        <a href="/impressum.html">Impressum</a>
-        <a href="/datenschutz.html">Datenschutz</a>
-      </nav>
-    </div>
-  </footer>
+  <footer class="site-footer" id="site-footer"></footer>
 </body>
 </html>

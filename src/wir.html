@@ -37,11 +37,12 @@
   <script src="/js/icons.js"></script>
   <script src="/js/content-icons.js"></script>
   <script src="/js/level.js"></script>
+  <script src="/js/layout.js"></script>
   <script src="/js/app.js"></script>
   <script>
     (async () => {
       await Auth.requireLogin();
-      await Level.renderTopbar();
+      await Layout.renderTopbar();
 
       await App.renderFachSeite("wir", {
         header: document.getElementById("fach-header"),
@@ -58,15 +59,7 @@
     })();
   </script>
 
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <span>© LearnHarder 2026</span>
-      <nav>
-        <a href="/impressum.html">Impressum</a>
-        <a href="/datenschutz.html">Datenschutz</a>
-      </nav>
-    </div>
-  </footer>
+  <footer class="site-footer" id="site-footer"></footer>
 
 </body>
 </html>

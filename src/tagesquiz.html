@@ -97,6 +97,7 @@
   <script src="/js/stats.js"></script>
   <script src="/js/icons.js"></script>
   <script src="/js/level.js"></script>
+  <script src="/js/layout.js"></script>
   <script>
     async function loadJSON(pfad) {
       const res = await fetch(pfad);
@@ -238,7 +239,7 @@
       // Frische Stats nach dem Versuch: Energie wurde verbraucht (ggf. EP/Level
       // dazu) → Topbar und "Nochmal"-Button mit aktuellem Reststand aktualisieren.
       const stats = await Level.getUserStats();
-      await Level.renderTopbar(stats);
+      await Layout.renderTopbar(stats);
       aktualisiereNochmalButton(stats.energy);
 
       // Re-Entry-Guard für den nächsten Versuch wieder freigeben.
@@ -315,7 +316,7 @@
       }
 
       // Erfolgspfad: Buttons bleiben gesperrt, der aktuelle Screen wird verlassen.
-      await Level.renderTopbar();
+      await Layout.renderTopbar();
 
       quizZustand = {
         fragen,
@@ -335,7 +336,7 @@
       try {
         await Auth.requireLogin();
         const stats = await Level.getUserStats();
-        await Level.renderTopbar(stats);
+        await Layout.renderTopbar(stats);
 
         // Buttons sind immer im DOM → Listener unabhängig vom Start-Screen verdrahten.
         document.getElementById("btn-start").addEventListener("click", starteVersuch);
@@ -361,15 +362,7 @@
     })();
   </script>
 
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <span>© LearnHarder 2026</span>
-      <nav>
-        <a href="/impressum.html">Impressum</a>
-        <a href="/datenschutz.html">Datenschutz</a>
-      </nav>
-    </div>
-  </footer>
+  <footer class="site-footer" id="site-footer"></footer>
 
 </body>
 </html>
