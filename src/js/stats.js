@@ -114,9 +114,50 @@ const Stats = (() => {
     };
   }
 
+  // Manifest einmal laden und im Modul cachen (thema_id → Name auflösen).
+  let manifestCache = null;
+  async function ladeManifest() {
+    if (manifestCache) return manifestCache;
+    const res = await fetch("/assets/data/manifest.json");
+    manifestCache = res.ok ? await res.json() : { faecher: [] };
+    return manifestCache;
+  }
+
+  // Sucht den Anzeige-Namen einer Thema-ID im Manifest; Fallback: rohe ID.
+  function themaName(manifest, themaId) {
+    for (const fach of (manifest.faecher || [])) {
+      const treffer = (fach.themen || []).find((t) => t.id === themaId);
+      if (treffer) return treffer.name;
+    }
+    return themaId;
+  }
+
+  // Lädt die letzten n Themen-Quiz (neueste zuerst) als angereicherte Liste
+  // fürs Dashboard ("Zuletzt gelernt"). Sortier-Spalte ist erstellt_at.
+  async function ladeLetzteAktivitaet(n = 5) {
+    const user = Auth.currentUser();
+    if (!user) return [];
+
+    const { data } = await sb
+      .from("quiz_results")
+      .select("thema_id, score, erstellt_at")
+      .eq("user_id", user.id)
+      .order("erstellt_at", { ascending: false })
+      .limit(n);
+
+    if (!data || !data.length) return [];
+
+    const manifest = await ladeManifest();
+    return data.map((eintrag) => ({
+      name:       themaName(manifest, eintrag.thema_id),
+      score:      eintrag.score,
+      erstelltAt: eintrag.erstellt_at
+    }));
+  }
+
   function leerFachStats() {
     return { fortschritt: 0, themenBearbeitet: 0, quizPunkte: 0, letzteAktivitaet: null };
   }
 
-  return { ladeFachStats, speichereLernfortschritt, ladeFachThemenProgress, ladeDashboardStats, ladeFachStatsKomplett };
+  return { ladeFachStats, speichereLernfortschritt, ladeFachThemenProgress, ladeDashboardStats, ladeFachStatsKomplett, ladeLetzteAktivitaet };
 })();

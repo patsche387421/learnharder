@@ -52,12 +52,11 @@
         <span class="stat-value" id="stat-streak">–</span>
         <span class="stat-label">Lerntage in Folge</span>
       </div>
-      <div class="stat-card">
+      <a href="/tauschen.html" class="stat-card stat-card--action">
         <span class="stat-icon" data-icon="energy" data-icon-size="28"></span>
-        <span class="stat-value" id="stat-energie">5</span>
-        <span class="stat-label">Energie heute</span>
-        <small class="stat-hint">+5 morgen</small>
-      </div>
+        <span class="stat-value">Energie aufladen</span>
+        <span class="stat-label">Trophäen tauschen</span>
+      </a>
     </section>
 
     <!-- Letzte Aktivität (Platzhalter) -->
@@ -86,10 +85,11 @@
 
       document.getElementById("db-greeting").textContent = "Hey, " + Auth.displayName() + "!";
 
-      // Topbar und Dashboard-Stats parallel befüllen; levelStats an renderTopbar übergeben
-      const [dbStats, levelStats] = await Promise.all([
+      // Topbar, Dashboard-Stats und letzte Aktivität parallel laden
+      const [dbStats, levelStats, letzteAktivitaet] = await Promise.all([
         Stats.ladeDashboardStats(),
-        Level.getUserStats()
+        Level.getUserStats(),
+        Stats.ladeLetzteAktivitaet()
       ]);
 
       await Layout.renderTopbar(levelStats);
@@ -100,9 +100,39 @@
       document.getElementById("stat-quiz").textContent =
         dbStats.quizPunkte > 0 ? dbStats.quizPunkte : "–";
 
-      // Energie-Karte
-      document.getElementById("stat-energie").textContent = levelStats.energy;
+      // "Zuletzt gelernt" mit echter Quiz-Historie befüllen
+      rendereLetzteAktivitaet(letzteAktivitaet);
     })();
+
+    // Wandelt einen ISO-Zeitstempel in eine relative deutsche Angabe um
+    // (z. B. "vor 2 Stunden", "gestern"). Nutzt das eingebaute Intl-API.
+    function relativeZeit(iso) {
+      const rtf       = new Intl.RelativeTimeFormat("de", { numeric: "auto" });
+      const diffMin   = Math.round((new Date(iso) - Date.now()) / 60000);
+      if (Math.abs(diffMin) < 60)  return rtf.format(diffMin, "minute");
+      const diffStd   = Math.round(diffMin / 60);
+      if (Math.abs(diffStd) < 24)  return rtf.format(diffStd, "hour");
+      const diffTage  = Math.round(diffStd / 24);
+      return rtf.format(diffTage, "day");
+    }
+
+    // Rendert die Liste der zuletzt gelernten Themen oder belässt den Leerzustand.
+    function rendereLetzteAktivitaet(eintraege) {
+      const sektion = document.querySelector(".db-recent");
+      if (!eintraege.length) return; // Leerzustand bleibt unverändert
+
+      const liste = eintraege.map((e) =>
+        '<li class="db-recent-item">' +
+          '<span class="db-recent-name">' + e.name + "</span>" +
+          '<span class="db-recent-score">' + e.score + " %</span>" +
+          '<span class="db-recent-time">' + relativeZeit(e.erstelltAt) + "</span>" +
+        "</li>"
+      ).join("");
+
+      sektion.innerHTML =
+        '<h2 class="db-section-title">Zuletzt gelernt</h2>' +
+        '<ul class="db-recent-list">' + liste + "</ul>";
+    }
   </script>
 
   <footer class="site-footer" id="site-footer"></footer>
