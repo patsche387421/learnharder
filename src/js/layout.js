@@ -19,30 +19,30 @@ const Layout = (() => {
   // verdrahtet sind. renderTopbar kann mehrfach laufen → nur einmal anhängen.
   let globaleHamburgerListenerAktiv = false;
 
-  // Leitet 1–2 Initialen aus einem Anzeigenamen oder einer E-Mail ab.
-  // "patsche.kroeger@…" → "PK", "max@…" → "MA".
-  function topbarInitialen(roh) {
-    const basis = (roh || '').split('@')[0];
-    const teile = basis.split(/[.\s_-]+/).filter(Boolean);
-    const buchstaben = teile.length >= 2
-      ? teile[0][0] + teile[1][0]
-      : basis.slice(0, 2);
-    return buchstaben.toUpperCase();
-  }
-
   // Bestimmt anhand des Pfads den aktiven Nav-Eintrag (Active-State).
   // Fächerübersicht, alle Fach-Seiten und der Themen-Inhalt zählen zu "Fächer".
   function aktiverNav(pfad) {
     const datei = pfad.split('/').pop() || '';
     if (datei === 'dashboard.html') return 'dashboard';
     if (datei === 'tagesquiz.html') return 'tagesquiz';
+    if (datei === 'profil.html') return 'profil';
     const faecherSeiten = ['faecher.html', 'fach.html', 'pos.html', 'dbi.html',
       'nsvs.html', 'medt.html', 'syp.html', 'wir.html', 'tinf.html'];
     if (faecherSeiten.includes(datei)) return 'faecher';
     return '';
   }
 
-  // Baut Logo + Nav-Links – das immer sichtbare Grundgerüst (auch ausgeloggt).
+  // Logo + Wortmarke — immer sichtbar, auch abgemeldet. Klickbar → Dashboard.
+  function topbarLogo() {
+    return (
+      '<a class="topbar-logo" href="/dashboard.html" aria-label="learnharder – Dashboard">' +
+        '<img class="topbar-logo-mark" src="/assets/logo.svg" width="36" height="36" alt="" />' +
+        '<span class="topbar-wordmark">learn<span class="topbar-wordmark-accent">harder</span></span>' +
+      '</a>'
+    );
+  }
+
+  // Baut Hamburger + Logo + Nav-Links – das Grundgerüst für angemeldete Nutzer.
   function topbarGrundgeruest() {
     const aktiv = aktiverNav(location.pathname);
     const navLink = (key, href, label) =>
@@ -58,16 +58,14 @@ const Layout = (() => {
           '<line x1="4" y1="17" x2="20" y2="17" />' +
         '</svg>' +
       '</button>' +
-      '<a class="topbar-logo" href="/dashboard.html" aria-label="learnharder – Dashboard">' +
-        '<img class="topbar-logo-mark" src="/assets/logo.svg" width="36" height="36" alt="" />' +
-        '<span class="topbar-wordmark">learn<span class="topbar-wordmark-accent">harder</span></span>' +
-      '</a>' +
+      topbarLogo() +
       '<nav class="topbar-nav" id="topbar-nav">' +
         navLink('dashboard', '/dashboard.html', 'Dashboard') +
         navLink('faecher',   '/faecher.html',   'Fächer') +
         navLink('tagesquiz', '/tagesquiz.html', 'Herausforderung') +
         navPlatzhalter('Team') +
         navPlatzhalter('Rangliste') +
+        navLink('profil',    '/profil.html',    'Profil') +
       '</nav>'
     );
   }
@@ -126,8 +124,9 @@ const Layout = (() => {
   }
 
   // Erzeugt die komplette Topbar in <header id="topbar"></header>:
-  //   Logo · Nav · Stats (Energie/Trophäen/XP-Pills + Level-Badge + Avatar) · XP-Bar.
+  //   Logo · Nav · Stats (Energie/Trophäen-Pills + Level-Badge) · EP-Leiste mit Zahl.
   // Prüft die Session intern — funktioniert auch auf öffentlichen Seiten ohne requireLogin().
+  // Abgemeldet: NUR Logo + Branding + Anmelden; angemeldet: voller Header.
   // stats: optional; wenn übergeben wird kein zweiter Level.getUserStats()-Aufruf gemacht.
   async function renderTopbar(stats) {
     const bar = document.getElementById('topbar');
@@ -136,34 +135,32 @@ const Layout = (() => {
     const { data: sessionData } = await sb.auth.getSession();
     const user = sessionData.session?.user ?? null;
 
-    let markup = topbarGrundgeruest();
-
     if (!user) {
-      // Nicht eingeloggt (öffentliche Seiten): keine Stats, nur Anmelden-Link
-      markup +=
+      // Abgemeldet (öffentliche Seiten): NUR Logo + Branding + Anmelden-Link.
+      // Kein Hamburger, keine Nav, keine Stats/Leiste → nichts zu verdrahten.
+      bar.innerHTML =
+        topbarLogo() +
         '<div class="topbar-stats">' +
           '<a href="/index.html" class="btn-ghost-sm">Anmelden</a>' +
         '</div>';
-      bar.innerHTML = markup;
-      verdrahteHamburger(bar);
       return;
     }
 
+    let markup = topbarGrundgeruest();
+
     if (!stats) stats = await Level.getUserStats();
 
-    const f         = Level.berechneFortschritt(stats.totalXp);
-    const initialen = topbarInitialen(user.email);
+    const f = Level.berechneFortschritt(stats.totalXp);
 
     markup +=
       '<div class="topbar-stats">' +
         '<span class="topbar-pill topbar-pill--energy" title="Energie">' + Icons.render('energy', { size: 18 }) + '<span>' + stats.energy + '</span></span>' +
         '<span class="topbar-pill topbar-pill--trophies" title="Trophäen">' + Icons.render('trophy', { size: 18 }) + '<span>' + stats.trophies + '</span></span>' +
-        '<span class="topbar-pill topbar-pill--xp" title="Erfahrungspunkte">' + Icons.render('star', { size: 18 }) + '<span>' + stats.totalXp + ' XP</span></span>' +
         '<span class="topbar-level-badge" title="Level ' + f.level + '">' + f.level + '</span>' +
-        '<a class="topbar-avatar" href="/profil.html" title="Profil">' + initialen + '</a>' +
       '</div>' +
       '<div class="topbar-progress" title="' + f.epText + '">' +
         '<div class="topbar-progress-fill" style="width: ' + f.prozent + '%"></div>' +
+        '<span class="topbar-progress-text">' + f.epText + '</span>' +
       '</div>';
 
     bar.innerHTML = markup;
