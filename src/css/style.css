@@ -135,6 +135,7 @@ button {
 /* Aufbau: Logo (links) · Nav (mitte) · Stats (rechts) · XP-Bar (unten).
    Markup wird zentral in level.js generiert; alle Farben via Tokens. */
 .topbar {
+  --progress-h: 1.125rem;            /* Höhe der EP-Leiste — Single Source für alle Bezüge */
   position: relative;
   display: flex;
   align-items: center;
@@ -144,6 +145,13 @@ button {
   padding: 0 var(--space-lg);
   background: var(--surface);
   border-bottom: 1px solid var(--border);
+}
+
+/* Nur wenn die EP-Leiste gerendert wird (eingeloggt), unten Platz dafür reservieren.
+   Abgemeldet (nur Logo + Anmelden) bleibt der Header kompakt — kein Leerraum. */
+.topbar:has(.topbar-progress) {
+  min-height: calc(64px + var(--progress-h));
+  padding-bottom: var(--progress-h);
 }
 
 /* Logo links: SVG-Logomark + Wordmark, klickbar → Dashboard */
@@ -261,7 +269,6 @@ button {
 
 .topbar-pill--energy   { color: var(--energy); }
 .topbar-pill--trophies { color: var(--gold); }
-.topbar-pill--xp       { color: var(--gold); }
 
 .topbar-level-badge {
   display: inline-flex;
@@ -276,36 +283,40 @@ button {
   font-weight: var(--fw-bold);
 }
 
-.topbar-avatar {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: var(--radius-full);
-  background: var(--gradient-brand);
-  border: 2px solid var(--purple-700);
-  color: var(--text-on-primary);
-  font-size: var(--fs-caption);
-  font-weight: var(--fw-bold);
-  text-decoration: none;
-}
-
-/* XP-Progress-Bar am unteren Topbar-Rand (3px, volle Breite) */
+/* EP-Progress-Bar am unteren Topbar-Rand: Füllung + lesbare EP-Zahl (volle Breite) */
 .topbar-progress {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  height: 3px;
+  height: var(--progress-h);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: var(--border);
+  overflow: hidden;
 }
 
 .topbar-progress-fill {
-  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
   background: var(--gradient-brand);
   border-radius: 0 2px 2px 0;
   transition: width 0.4s ease;
+}
+
+/* EP-Zahl ("34 / 200 EP") zentriert über der Füllung; Token-Farbe für Text auf Brand-Gradient.
+   text-shadow (einziger Nicht-Token-Wert) sichert Lesbarkeit über Füllung UND Track. */
+.topbar-progress-text {
+  position: relative;
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-bold);
+  line-height: 1;
+  color: var(--text-on-primary);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
 }
 
 /* Zurück-Link zum Eltern-Fach (über dem Themen-Titel auf fach.html) */
