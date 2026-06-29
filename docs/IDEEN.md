@@ -62,3 +62,28 @@ Status: offen.
 "+5 morgen" dynamisch ableiten oder entfernen (BUG-013); Begrüßungs-Copy +
 Anzeigename überarbeiten (BUG-014).
 Status: offen.
+
+## Account-Löschung (eigene Session, DSGVO)
+User-Auth-Delete + alle zugehörigen Daten-Rows (`user_stats`, `quiz_results`,
+`daily_quiz_log`, `subject_xp`/`fach_stats`, `thema_progress`) plus Bestätigungs-Flow
+im Profil. Setzt DSGVO Art. 17 (Recht auf Löschung) um. Sauber planen, kein Quick-Fix —
+betrifft mehrere Tabellen und den Auth-Layer.
+Status: offen.
+
+## Level-Rang-Badge pro Band (Teil S3)
+Das Topbar-Level-Badge (Zahl) existiert bereits; zusätzlich ein Rang-Symbol pro
+Level-Band einführen. Reines client-seitiges Mapping aus
+`Level.berechneFortschritt().level` (1–10) auf ein Symbol — keine DB-Logik nötig.
+Status: offen.
+
+## Button-System zentralisieren (Teil S2)
+Es gibt keine zentrale `.btn`-Basis (stattdessen verstreute `.btn-*`-Klassen) und keine
+Button-Token. S2 baut eine `.btn`-Basis + Modifier sowie `--btn-radius`/`--btn-border`/
+`--btn-shadow` in `tokens.css`.
+Status: offen.
+
+## Icon-Restarbeiten (Teil S3)
+Quiz-Punkte und Herausforderung nutzen beide das `target`-Icon → differenzieren.
+Verbliebene UI-Emojis: ☀️/🌙 Theme-Toggle (sun/moon neu im Icon-Modul bauen) sowie
+🎉/😊/💪 im Tagesquiz-Ergebnis (Entscheid noch offen, ob ersetzen oder behalten).
+Status: offen.
