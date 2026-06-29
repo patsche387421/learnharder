@@ -3,6 +3,17 @@
 Diese Datei definiert die verbindlichen Regeln für jede Änderung an diesem Projekt.
 Bei Konflikten zwischen Nutzerwunsch und diesen Regeln: kurz nachfragen.
 
+## Kontext-Dateien
+
+| Datei | Zweck | Bei Session-Start lesen? |
+|---|---|---|
+| agent/SESSION_REPORT.md | Letzte 3 Sessions, aktueller Stand | ✅ Immer |
+| agent/SESSION_REPORT_ARCHIVE.md | Ältere Sessions | ❌ Nur bei Bedarf |
+| docs/BUGS.md | Offene Bugs | Nur wenn Bug-Session |
+| docs/LEVEL_SYSTEM.md | Gamification-Logik | Nur wenn level.js betroffen |
+| docs/NAMENSKONVENTION.md | Funktionsnamen, Glossar | Nur wenn neue Funktionen |
+| agent/MOBILE_FIRST.md | Mobile-Richtlinien | Nur wenn CSS/Layout betroffen |
+
 ## Projektbeschreibung
 
 `lernhub-demo` ist eine **lokale Lernwebsite** für HTL-Schüler:innen. Login,
