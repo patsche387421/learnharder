@@ -105,12 +105,17 @@
   --radius-xl:   16px;
   --radius-2xl:  24px;
   --radius-full: 999px;
+  /* Off-Scale-Ausreißer (zwischen md=8 und lg=12): bewusst eigener Token,
+     statt CTA/Stat-Pill auf --radius-lg zu verbiegen. Semantisch nach dem
+     Haupt-Konsument .btn-cta benannt; .stat-pill teilt sich den Radius. */
+  --radius-cta:  10px;
 }
 
 /* ===== 5. Schatten & Glows ========================================= */
 :root {
   --shadow-sm:    0 2px 8px #00000066;
   --shadow-lg:    0 4px 24px #00000088;
+  --shadow-xl:    0 20px 40px #0000004D;   /* tiefe Elevation (Auth-Card); Hex-Alpha ≈0.30 */
   --glow-brand:   0 0 20px #7C3AED44;
   --glow-gold:    0 0 20px #F59E0B55;
   --glow-success: 0 0 20px #10B98155;
@@ -124,6 +129,10 @@
   --gradient-success:    linear-gradient(135deg, var(--success), #059669);
   --gradient-text-brand: linear-gradient(135deg, var(--purple-500), #818CF8);
   --text-on-primary:     #FFFFFF;   /* Text auf farbigen Buttons/Flächen */
+
+  /* ---- Button-Tokens (Basisklasse .btn, s. style.css) ---- */
+  --btn-radius:          var(--radius-md);             /* einheitlicher Button-Radius (8px) */
+  --btn-border:          1px solid var(--surface-2);   /* Rahmen der Ghost-Buttons */
 }
 
 /* ===== 7. Oberflächen & Textfarben — Dark (Standard) =============== */
