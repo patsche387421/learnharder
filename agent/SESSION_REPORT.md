@@ -4,76 +4,9 @@ Erstellt: 2026-06-12 | Branch: `dev` | Commit: `76684f2`
 
 ---
 
-> **Archiv-Hinweis:** Ältere Sessions (2026-06-12 bis 2026-06-25) wurden nach
+> **Archiv-Hinweis:** Ältere Sessions (2026-06-12 bis 2026-06-27) wurden nach
 > [SESSION_REPORT_ARCHIVE.md](SESSION_REPORT_ARCHIVE.md) ausgelagert. Diese Datei
 > führt nur die **letzten 3 Sessions** und wird bei jedem Session-Start gelesen.
-
----
-
-## Session 2026-06-27 — Session A „Fundament": Doku-Struktur + globaler Header/Footer
-
-**Branch:** `feature/fundament` (von `dev`). Zwei Commits; Merge nach `dev` (`--no-ff`)
-im Anschluss an diesen Report-Commit. Kein push, kein `main`, kein Deploy.
-
-**Commits:**
-- `6eeeb1b` chore(docs): Doku-Struktur & Archiv einführen
-- `223c03e` refactor(layout): Header und Footer global per layout.js injizieren
-
-### Bereich 1 — Doku-Struktur & Archiv (Commit `6eeeb1b`)
-- `git mv` (Historie erhalten): `docs/KI_VORLAGE.md` + `data/import/MIGRATION_PROMPT.md`
-  → `agent/prompts/`; `docs/CLAUDE.md` → `agent/CLAUDE.md`;
-  `docs/DATENMIGRATION.md` → `docs/archive/` (abgelöst durch `DATA_MIGRATION_V2.md`).
-- Neu: `docs/README.md` (Wegweiser docs/ ↔ docs/archive/ ↔ agent/).
-- `README.md`: Link + Struktur-Prosa auf `agent/CLAUDE.md` angepasst (einziger harter
-  Verweis). Prosa-/Kommentar-Erwähnungen anderswo bewusst out of scope.
-- `agent/` bleibt getrackt (Entscheidung Patsche); `.gitignore` unverändert.
-
-### Bereich 2 — Globaler Header + Footer (Commit `223c03e`)
-- Neu `src/js/layout.js`: `renderTopbar` + Helfer (`topbarGrundgeruest`, `aktiverNav`,
-  `schliesseNav`, `verdrahteHamburger`, `topbarInitialen`) **1:1 aus `level.js`
-  verschoben** — nur die zwei Cross-Modul-Aufrufe auf `Level.getUserStats` /
-  `Level.berechneFortschritt` umgestellt; neu `Layout.renderFooter()`.
-- `level.js`: −158 (Topbar-Block + Modul-State + `renderTopbar`-Export entfernt;
-  Daten-/Logik-Funktionen byte-identisch unberührt).
-- 16 HTML-Seiten: inline `<footer>` → Platzhalter `<footer class="site-footer"
-  id="site-footer">`; `Level.→Layout.renderTopbar`; `<script src="/js/layout.js">`
-  nach `level.js` (auf `index.html` nach `auth.js`).
-
-### Entscheidungen
-- **Footer-Auto-Run statt Pro-Seite-Aufruf:** `renderFooter()` läuft per
-  `DOMContentLoaded` (Muster wie `icons.js`). Grund: auf allen Seiten steht `<footer>`
-  *nach* den Scripts → ein synchroner Aufruf liefe vor dem Parsen des Footer-Elements
-  ins Leere (auf `index.html` garantiert leer). Auto-Run ist robust + DRY; `renderFooter`
-  bleibt zusätzlich exportiert.
-- **`index.html`-Sonderfall:** Footer ja (Auto-Run), Topbar nein; `layout.js` nach
-  `auth.js` (also nach `supabase.js` → `SupabaseClient` definiert), **kein** `level.js`,
-  **kein** `renderTopbar`-Aufruf → kein `undefined`.
-- **Session-Split:** A = Fundament (dieser Branch), B = UI-Schliff (Bereich 3–6) —
-  damit `renderTopbar` nicht in derselben Session verschoben **und** umgebaut wird.
-
-### Verifikation
-- `node --check` für `layout.js` + `level.js` grün; grep: 0 zurückgelassene Topbar-
-  Referenzen in `level.js`, 0 verbliebene `Level.renderTopbar` in HTML, 16× Footer-
-  Platzhalter, 15× korrekte Script-Reihenfolge (index ausgenommen).
-- Live-Smoke-Test (Server `lernhub`, User `schueler1`), Console überall clean:
-  - **dashboard** — Topbar via `Layout.renderTopbar` (Cross-Modul `Level.*` +
-    `Icons.render`, 3 SVGs, Leiste 10 %) + Footer ✓.
-  - **pos.html** — Topbar + Footer + Fach-Inhalt (3 Stat-Pills, 11 Themen-Karten) ✓.
-  - **index.html** (logged-out) — Footer via Auto-Run **ohne** `level.js`,
-    `Level` undefined, **kein** Fehler ✓.
-
-### Offen — Session B (UI-Schliff, Bereich 3–6; eigene Session, neuer Branch auf `dev`)
-- **Bereich 3 Header-Umbau:** „Profil" als echter Nav-Link (Avatar-Initialen raus);
-  Mobile-Hamburger zeigt alle sechs Punkte (inkl. Team/Rangliste/Profil); Energie-Pill
-  „X/5"; Total-XP-Pill raus; Fortschritt (EP-Text) in die Leiste.
-- **Bereich 4 Dashboard:** „Zuletzt gelernt" aus `quiz_results` — Sortier-Spalte heißt
-  **`erstellt_at`** (NICHT `created_at`!), und `quiz_results` enthält **nur Themen-Quiz**
-  (Herausforderung liegt in `daily_quiz_log`, ohne `thema_id`). „+5 morgen" raus →
-  sichtbarer Trophäen-Tausch-Link (`tauschen.html` ist sonst verwaist, nur aus
-  `tagesquiz.html` verlinkt).
-- **Bereich 5 Mobile-First-Politur** + **Bereich 6 Buttons/Icons vereinheitlichen**
-  (Fach-Stat-Pills in `renderStatPill` brauchen Icons via `Icons.render`).
-- Baut komplett auf dem jetzt stabilen `layout.js` auf.
 
 ---
 
@@ -202,6 +135,71 @@ Live über statischen Server (`lernhub`, User `schueler1`), Konsole überall sau
   `.topbar-nav-link` in der Mobile-Media-Query) bewusst nach Bereich 5 vertagt.
 - Mobile-Menü zeigt Team/Rangliste weiter nicht (disabled-Platzhalter, auf <768px
   ausgeblendet) — „alle 6 Punkte" gilt nur auf Desktop.
+
+---
+
+## Session 2026-06-30 — S2: Token-Konsolidierung (Shadow-/Radius-/Button-Token)
+
+**Branch:** `chore/s2-token-konsolidierung` (von `dev`), 4 Commits. Merge nach `dev`
+(Fast-Forward, `46cc005`) und nach `main` (`--no-ff`, Merge `831d80c`); **beide gepusht**
+(`origin/dev`, `origin/main`). Branch nach Merge lokal gelöscht. Dieser Doku-Commit
+(Session-Report) kommt separat obendrauf — ohne Push.
+
+**Commits:**
+- `8d73575` chore(tokens): Shadow-/Button-Token (+10px-CTA-Radius) für S2 ergänzt
+- `e2d8d75` refactor(css): Schatten-/Radius-Hardcodes auf Token umgestellt
+- `a08c036` refactor(css): zentrale .btn-Basis + Button-Token eingeführt
+- `46cc005` refactor(ui): Button-Markup auf .btn-Basis + Modifier umgestellt
+
+### Umgesetzt (Leitprinzip: visuell ändert sich nichts ungewollt)
+- **C1 `tokens.css` (additiv, kein visueller Effekt):** neue Tokens `--shadow-xl`
+  (`0 20px 40px #0000004D`, Hex-Alpha-Stil wie `--shadow-sm/-lg`), `--radius-cta` (10px)
+  sowie Button-Tokens `--btn-radius` (= `--radius-md`) und `--btn-border`
+  (`1px solid var(--surface-2)`).
+- **C2 `style.css` Hardcodes → Token:** `.auth-card`-Schatten → `--shadow-xl`;
+  8px → `--radius-md` (Input, generischer `button`, `.btn-ghost-sm`, `.static-hinweis`);
+  10px → `--radius-cta` (`.btn-cta`, `.stat-pill`); alle Fortschrittsbalken (99px/5px/3px)
+  → `--radius-full`; 6px → `--radius-sm` (`code`, `.card-score`). `.topbar-progress-fill`
+  (`0 2px 2px 0`) und `.tab` (`0`) bewusst als Einzelwerte gelassen.
+- **C3a `.btn`-Basis + Modifier:** zentrale `.btn { cursor; border-radius: var(--btn-radius) }`
+  + `.btn--primary/-ghost/-cta/-ghost-sm/-lg`; Ghost-Border auf `--btn-border`;
+  `#login-form button` auf der Basis mitgezogen (Alt-Namen vorübergehend als Alias).
+- **C3b Markup:** 15 Aufrufstellen (`dashboard/fach/profil/tagesquiz/tauschen.html`,
+  `js/layout.js`) auf `class="btn btn--…"` umgestellt; CSS-Aliase entfernt. `.btn-arrow`
+  bleibt bewusst Deko-Kind (kein Button-Modifier).
+
+### Bewusste Abweichungen vom Plan (je begründet)
+- **`--radius-10` → `--radius-cta`:** der ursprüngliche Plan-Name `--radius-xl` war in
+  `tokens.css` bereits mit **16px** belegt (Kollision) → semantischer Name nach dem
+  Haupt-Konsument `.btn-cta` (`.stat-pill` als Mitnutzer im Kommentar vermerkt).
+- **E3-Korrektur — Profil-EP-Bars `5px`/`3px` → `--radius-full` statt `--radius-sm`:**
+  `.profil-bar-wrap/-fill` (Höhe 10px) und `.profil-fach-bar-wrap/-fill` (Höhe 6px) haben
+  Radius = halbe Höhe = **volle Pill-Kappen**; `--radius-sm` (4px) hätte sie abgeflacht.
+  `--radius-full` ist hier visuell-neutral (wie alle anderen Balken).
+- **`.btn`-Basis „Nur Radius" (ohne `font-family`):** bewusster Verzicht auf Font-Angleich;
+  einzige sichtbare Folge ist, dass die **3 vormals eckigen `a.btn--primary`** (Dashboard-
+  CTA-Link + 2× Tagesquiz) jetzt **8px rund** sind (der Radius des generischen `button{}`
+  griff bei `<a>` nicht).
+- **`--btn-shadow` und `--brand`-Alias weggelassen:** kein Konsument in S2 (Shadow gehört
+  zu S4, Brand-Alias zu S3).
+
+### Verifikation
+Eingeloggter Seiten-Sweep (Server `lernhub`, User `schueler1@lernhub.htl`), Konsole
+**überall sauber**, **keine mutierenden Klicks** (kein Quiz-Start, kein Tausch):
+- **Dashboard:** `a.btn--cta` 10px, `a.btn--primary` **8px** (vormals eckig → jetzt rund).
+- **Fach (dbi):** `button.btn--primary` „Auswerten" 8px.
+- **Tagesquiz:** 7 Buttons inkl. sichtbarem `btn--primary btn--lg` (Padding 32px /
+  Font 16.8px) + ghost-sm mit Border — alle korrekt.
+- **Profil:** 2× `btn--ghost` 8px; EP-Bars rendern als volle Pills (999px @ 10/6px Höhe);
+  `--btn-border` folgt dem Theme (dark `#1A1A2E` / light `#E2E8F0`); Abmelden-Rot intakt.
+- **Tauschen:** `button.btn--primary` (disabled) 8px.
+- Token-Auflösung + `.auth-card`-Schatten byte-identisch in Dark **und** Light; kein JS
+  hängt an den Button-Klassen.
+
+### Offen / bekannt (nicht S2-Scope)
+- **`<button>`-Elemente laufen weiter in der System-Schrift** statt Space Grotesk
+  (Form-Controls erben `font-family` nicht; im `.btn`-Kommentar dokumentiert) → Kandidat
+  für eine spätere Font-Vereinheitlichung. S2 war bewusst „nur Radius".
 
 ---
 
