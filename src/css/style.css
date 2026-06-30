@@ -109,7 +109,21 @@ button {
   border-radius: var(--radius-md);
 }
 
+/* ---------- Buttons: Basisklasse .btn + Modifier .btn--* ----------
+   Geteilte Basis (auch für <a class="btn">): vereinheitlicht Cursor und
+   Radius. Bewusst OHNE font-family — <button> behält die System-Schrift
+   (S2-Entscheidung: nur Radius angleichen). Die Modifier liefern
+   Farbe/Padding/Border etc.
+   Hinweis: Die alten Einfach-Bindestrich-Namen (.btn-primary …) bleiben
+   Alias, bis das Markup in C3b auf "btn btn--…" umgestellt ist; danach
+   werden sie entfernt. */
+.btn {
+  cursor: pointer;
+  border-radius: var(--btn-radius);
+}
+
 #login-form button,
+.btn--primary,
 .btn-primary {
   background: var(--primary);
   color: var(--text-on-primary);
@@ -119,6 +133,7 @@ button {
 }
 
 #login-form button:hover,
+.btn--primary:hover,
 .btn-primary:hover {
   background: var(--primary-hover);
 }
@@ -334,13 +349,15 @@ button {
   color: var(--text);
 }
 
+.btn--ghost,
 .btn-ghost {
   background: transparent;
   color: var(--text-muted);
-  border: 1px solid var(--surface-2);
+  border: var(--btn-border);
   padding: 0.4rem 0.8rem;
 }
 
+.btn--ghost:hover,
 .btn-ghost:hover {
   color: var(--text);
   border-color: var(--text-muted);
@@ -399,6 +416,7 @@ button {
   color: var(--text-muted);
 }
 
+.btn--cta,
 .btn-cta {
   display: inline-flex;
   align-items: center;
@@ -413,16 +431,19 @@ button {
   transition: background 0.15s, transform 0.15s;
 }
 
+.btn--cta:hover,
 .btn-cta:hover {
   background: var(--primary-hover);
   transform: translateY(-2px);
 }
 
+/* Deko-Kind des CTA (Pfeil) — kein Button-Modifier, bleibt .btn-arrow */
 .btn-arrow {
   font-size: 1.1rem;
   transition: transform 0.15s;
 }
 
+.btn--cta:hover .btn-arrow,
 .btn-cta:hover .btn-arrow {
   transform: translateX(3px);
 }
@@ -554,12 +575,13 @@ button {
   font-size: 1.1rem;
 }
 
+.btn--ghost-sm,
 .btn-ghost-sm {
   display: inline-block;
   background: transparent;
   color: var(--text-muted);
-  border: 1px solid var(--surface-2);
-  border-radius: var(--radius-md);
+  border: var(--btn-border);
+  border-radius: var(--btn-radius);
   padding: 0.4rem 1rem;
   font-size: 0.9rem;
   cursor: pointer;
@@ -567,6 +589,7 @@ button {
   text-decoration: none;
 }
 
+.btn--ghost-sm:hover,
 .btn-ghost-sm:hover {
   color: var(--text);
   border-color: var(--text-muted);
@@ -1054,6 +1077,7 @@ button {
   font-size: 0.9rem;
 }
 
+.btn--lg,
 .btn-lg {
   padding: 0.85rem 2rem;
   font-size: 1.05rem;
@@ -1380,6 +1404,7 @@ button {
     grid-template-columns: 1fr;
   }
 
+  .btn--primary,
   .btn-primary {
     width: 100%;
     text-align: center;
