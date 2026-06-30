@@ -35,7 +35,7 @@ code {
   font-family: var(--font-mono);
   background: var(--surface-2);
   padding: 0.1em 0.4em;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   font-size: 0.9em;
 }
 
@@ -57,7 +57,7 @@ code {
   border-radius: var(--radius);
   width: 100%;
   max-width: 360px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-xl);
 }
 
 .auth-card h1 {
@@ -91,7 +91,7 @@ input[type="email"],
 input[type="password"] {
   padding: 0.6rem 0.75rem;
   border: 1px solid var(--surface-2);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   background: var(--bg);
   color: var(--text);
   font-size: 1rem;
@@ -106,11 +106,21 @@ button {
   cursor: pointer;
   font-size: 1rem;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
+}
+
+/* ---------- Buttons: Basisklasse .btn + Modifier .btn--* ----------
+   Geteilte Basis (auch für <a class="btn">): vereinheitlicht Cursor und
+   Radius. Bewusst OHNE font-family — <button> behält die System-Schrift
+   (S2-Entscheidung: nur Radius angleichen). Die Modifier liefern
+   Farbe/Padding/Border etc. */
+.btn {
+  cursor: pointer;
+  border-radius: var(--btn-radius);
 }
 
 #login-form button,
-.btn-primary {
+.btn--primary {
   background: var(--primary);
   color: var(--text-on-primary);
   padding: 0.7rem;
@@ -119,7 +129,7 @@ button {
 }
 
 #login-form button:hover,
-.btn-primary:hover {
+.btn--primary:hover {
   background: var(--primary-hover);
 }
 
@@ -334,14 +344,14 @@ button {
   color: var(--text);
 }
 
-.btn-ghost {
+.btn--ghost {
   background: transparent;
   color: var(--text-muted);
-  border: 1px solid var(--surface-2);
+  border: var(--btn-border);
   padding: 0.4rem 0.8rem;
 }
 
-.btn-ghost:hover {
+.btn--ghost:hover {
   color: var(--text);
   border-color: var(--text-muted);
 }
@@ -399,31 +409,32 @@ button {
   color: var(--text-muted);
 }
 
-.btn-cta {
+.btn--cta {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
   background: var(--primary);
   color: var(--text-on-primary);
   padding: 0.85rem 1.75rem;
-  border-radius: 10px;
+  border-radius: var(--radius-cta);
   font-weight: 700;
   font-size: 1rem;
   white-space: nowrap;
   transition: background 0.15s, transform 0.15s;
 }
 
-.btn-cta:hover {
+.btn--cta:hover {
   background: var(--primary-hover);
   transform: translateY(-2px);
 }
 
+/* Deko-Kind des CTA (Pfeil) — kein Button-Modifier, bleibt .btn-arrow */
 .btn-arrow {
   font-size: 1.1rem;
   transition: transform 0.15s;
 }
 
-.btn-cta:hover .btn-arrow {
+.btn--cta:hover .btn-arrow {
   transform: translateX(3px);
 }
 
@@ -554,12 +565,12 @@ button {
   font-size: 1.1rem;
 }
 
-.btn-ghost-sm {
+.btn--ghost-sm {
   display: inline-block;
   background: transparent;
   color: var(--text-muted);
-  border: 1px solid var(--surface-2);
-  border-radius: 8px;
+  border: var(--btn-border);
+  border-radius: var(--btn-radius);
   padding: 0.4rem 1rem;
   font-size: 0.9rem;
   cursor: pointer;
@@ -567,7 +578,7 @@ button {
   text-decoration: none;
 }
 
-.btn-ghost-sm:hover {
+.btn--ghost-sm:hover {
   color: var(--text);
   border-color: var(--text-muted);
 }
@@ -613,7 +624,7 @@ button {
 .stat-pill {
   background: var(--surface);
   border: 1px solid var(--surface-2);
-  border-radius: 10px;
+  border-radius: var(--radius-cta);
   padding: 0.75rem 1.25rem;
   display: flex;
   flex-direction: column;
@@ -741,7 +752,7 @@ button {
   color: var(--success);
   background: rgba(34, 197, 94, 0.12);
   padding: 0.2rem 0.55rem;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
 }
 
 .card-icon {
@@ -936,7 +947,7 @@ button {
 
 .fach-level-bar {
   background: var(--surface-2);
-  border-radius: 99px;
+  border-radius: var(--radius-full);
   height: 8px;
   overflow: hidden;
 }
@@ -944,7 +955,7 @@ button {
 #fach-level-fill {
   height: 100%;
   background: var(--primary);
-  border-radius: 99px;
+  border-radius: var(--radius-full);
   transition: width 0.4s ease;
 }
 
@@ -956,7 +967,7 @@ button {
 /* ---------- Dashboard: Fortschrittsbalken & Hinweis in Stat-Karte ---------- */
 .stat-progress-bar {
   background: var(--surface-2);
-  border-radius: 99px;
+  border-radius: var(--radius-full);
   height: 6px;
   overflow: hidden;
   margin-top: 0.5rem;
@@ -966,7 +977,7 @@ button {
 .stat-progress-fill {
   height: 100%;
   background: var(--primary);
-  border-radius: 99px;
+  border-radius: var(--radius-full);
   transition: width 0.4s ease;
 }
 
@@ -1054,7 +1065,7 @@ button {
   font-size: 0.9rem;
 }
 
-.btn-lg {
+.btn--lg {
   padding: 0.85rem 2rem;
   font-size: 1.05rem;
 }
@@ -1087,7 +1098,7 @@ button {
 
 .leben-bar {
   background: var(--surface-2);
-  border-radius: 99px;
+  border-radius: var(--radius-full);
   height: 12px;
   overflow: hidden;
 }
@@ -1095,7 +1106,7 @@ button {
 #leben-fill {
   height: 100%;
   background: var(--success);
-  border-radius: 99px;
+  border-radius: var(--radius-full);
   transition: width 0.3s ease, background 0.3s ease;
 }
 
@@ -1318,7 +1329,7 @@ button {
 
 .static-hinweis {
   background: var(--surface-2);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   padding: 0.6rem 1rem;
   font-size: 0.85rem;
   color: var(--text-muted);
@@ -1380,7 +1391,7 @@ button {
     grid-template-columns: 1fr;
   }
 
-  .btn-primary {
+  .btn--primary {
     width: 100%;
     text-align: center;
   }
@@ -1427,14 +1438,14 @@ button {
 .profil-bar-wrap {
   height: 10px;
   background: var(--surface-2);
-  border-radius: 5px;
+  border-radius: var(--radius-full);
   overflow: hidden;
 }
 
 .profil-bar-fill {
   height: 100%;
   background: var(--primary);
-  border-radius: 5px;
+  border-radius: var(--radius-full);
   transition: width 0.4s ease;
 }
 
@@ -1506,14 +1517,14 @@ button {
 .profil-fach-bar-wrap {
   height: 6px;
   background: var(--surface-2);
-  border-radius: 3px;
+  border-radius: var(--radius-full);
   overflow: hidden;
 }
 
 .profil-fach-bar-fill {
   height: 100%;
   background: var(--primary);
-  border-radius: 3px;
+  border-radius: var(--radius-full);
   transition: width 0.4s ease;
 }
 
