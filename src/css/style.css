@@ -35,7 +35,7 @@ code {
   font-family: var(--font-mono);
   background: var(--surface-2);
   padding: 0.1em 0.4em;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   font-size: 0.9em;
 }
 
@@ -57,7 +57,7 @@ code {
   border-radius: var(--radius);
   width: 100%;
   max-width: 360px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-xl);
 }
 
 .auth-card h1 {
@@ -91,7 +91,7 @@ input[type="email"],
 input[type="password"] {
   padding: 0.6rem 0.75rem;
   border: 1px solid var(--surface-2);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   background: var(--bg);
   color: var(--text);
   font-size: 1rem;
@@ -106,7 +106,7 @@ button {
   cursor: pointer;
   font-size: 1rem;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
 }
 
 #login-form button,
@@ -406,7 +406,7 @@ button {
   background: var(--primary);
   color: var(--text-on-primary);
   padding: 0.85rem 1.75rem;
-  border-radius: 10px;
+  border-radius: var(--radius-cta);
   font-weight: 700;
   font-size: 1rem;
   white-space: nowrap;
@@ -559,7 +559,7 @@ button {
   background: transparent;
   color: var(--text-muted);
   border: 1px solid var(--surface-2);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   padding: 0.4rem 1rem;
   font-size: 0.9rem;
   cursor: pointer;
@@ -613,7 +613,7 @@ button {
 .stat-pill {
   background: var(--surface);
   border: 1px solid var(--surface-2);
-  border-radius: 10px;
+  border-radius: var(--radius-cta);
   padding: 0.75rem 1.25rem;
   display: flex;
   flex-direction: column;
@@ -741,7 +741,7 @@ button {
   color: var(--success);
   background: rgba(34, 197, 94, 0.12);
   padding: 0.2rem 0.55rem;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
 }
 
 .card-icon {
@@ -936,7 +936,7 @@ button {
 
 .fach-level-bar {
   background: var(--surface-2);
-  border-radius: 99px;
+  border-radius: var(--radius-full);
   height: 8px;
   overflow: hidden;
 }
@@ -944,7 +944,7 @@ button {
 #fach-level-fill {
   height: 100%;
   background: var(--primary);
-  border-radius: 99px;
+  border-radius: var(--radius-full);
   transition: width 0.4s ease;
 }
 
@@ -956,7 +956,7 @@ button {
 /* ---------- Dashboard: Fortschrittsbalken & Hinweis in Stat-Karte ---------- */
 .stat-progress-bar {
   background: var(--surface-2);
-  border-radius: 99px;
+  border-radius: var(--radius-full);
   height: 6px;
   overflow: hidden;
   margin-top: 0.5rem;
@@ -966,7 +966,7 @@ button {
 .stat-progress-fill {
   height: 100%;
   background: var(--primary);
-  border-radius: 99px;
+  border-radius: var(--radius-full);
   transition: width 0.4s ease;
 }
 
@@ -1087,7 +1087,7 @@ button {
 
 .leben-bar {
   background: var(--surface-2);
-  border-radius: 99px;
+  border-radius: var(--radius-full);
   height: 12px;
   overflow: hidden;
 }
@@ -1095,7 +1095,7 @@ button {
 #leben-fill {
   height: 100%;
   background: var(--success);
-  border-radius: 99px;
+  border-radius: var(--radius-full);
   transition: width 0.3s ease, background 0.3s ease;
 }
 
@@ -1318,7 +1318,7 @@ button {
 
 .static-hinweis {
   background: var(--surface-2);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   padding: 0.6rem 1rem;
   font-size: 0.85rem;
   color: var(--text-muted);
@@ -1427,14 +1427,14 @@ button {
 .profil-bar-wrap {
   height: 10px;
   background: var(--surface-2);
-  border-radius: 5px;
+  border-radius: var(--radius-full);
   overflow: hidden;
 }
 
 .profil-bar-fill {
   height: 100%;
   background: var(--primary);
-  border-radius: 5px;
+  border-radius: var(--radius-full);
   transition: width 0.4s ease;
 }
 
@@ -1506,14 +1506,14 @@ button {
 .profil-fach-bar-wrap {
   height: 6px;
   background: var(--surface-2);
-  border-radius: 3px;
+  border-radius: var(--radius-full);
   overflow: hidden;
 }
 
 .profil-fach-bar-fill {
   height: 100%;
   background: var(--primary);
-  border-radius: 3px;
+  border-radius: var(--radius-full);
   transition: width 0.4s ease;
 }
 
