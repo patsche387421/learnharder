@@ -141,7 +141,7 @@ const Layout = (() => {
       bar.innerHTML =
         topbarLogo() +
         '<div class="topbar-stats">' +
-          '<a href="/index.html" class="btn-ghost-sm">Anmelden</a>' +
+          '<a href="/index.html" class="btn btn--ghost-sm">Anmelden</a>' +
         '</div>';
       return;
     }
