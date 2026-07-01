@@ -1,5 +1,9 @@
 // Level-System-Modul: Energie, Trophäen, EP, Level und Tages-Quiz-Verwaltung.
 // Nutzt die Tabellen user_stats, subject_xp und daily_quiz_log (Migration 003).
+//
+// ══ DB-MIGRATION S3b (manuell in Supabase ausführen, vor Prestige-Feature) ══════
+// ALTER TABLE user_stats ADD COLUMN IF NOT EXISTS prestige INTEGER NOT NULL DEFAULT 0;
+// ════════════════════════════════════════════════════════════════════════════════
 const Level = (() => {
   const sb = SupabaseClient.client;
 
