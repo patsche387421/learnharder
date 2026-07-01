@@ -10,74 +10,6 @@ Erstellt: 2026-06-12 | Branch: `dev` | Commit: `76684f2`
 
 ---
 
-## Session 2026-06-27 (Session B) — Bereich 4: Dashboard-Bugs
-
-**Branch:** `fix/dashboard` (von `dev`). Ein Code-Commit; Merge nach `dev`
-(`--no-ff`); dieser Doku-Commit kommt **nach** dem Merge separat obendrauf
-(nicht in den Merge gefaltet). Kein push, kein `main`, kein Deploy.
-
-**Commits:**
-- `5d4e701` fix(dashboard): Zuletzt-gelernt mit echter Quiz-Historie füllen
-- `b8ca928` merge: Bereich 4 — Dashboard-Bugs (`--no-ff`)
-
-### Umgesetzt
-- **„Zuletzt gelernt" gefüllt:** neue `Stats.ladeLetzteAktivitaet(n=5)`
-  ([stats.js](../src/js/stats.js)) liest die letzten Themen-Quiz aus
-  `quiz_results` (sortiert nach **`erstellt_at`** desc, `limit n`), löst
-  `thema_id → Name` über `manifest.json` auf und gibt angereicherte Zeilen
-  `{name, score, erstelltAt}` zurück. Das Dashboard rendert daraus eine Liste
-  (Thema · Score % · relative Zeit via `Intl.RelativeTimeFormat('de')`);
-  Leerzustand bleibt nur bei wirklich keinen Daten.
-- **Energie-Karte → Aktion:** die 4. Stat-Karte „Energie heute" (Dublette zur
-  Topbar) ist jetzt eine klickbare **Trophäen-Tausch-Aktion** „Energie aufladen
-  — Trophäen tauschen", Link auf `tauschen.html` (vorher verwaiste Seite
-  sichtbar gemacht).
-- **„+5 morgen" entfernt** sowie die tote `stat-energie`-Referenz im
-  Inline-Script.
-- Stats-Reihe sonst unverändert (Themen · Quiz-Punkte · Lerntage in Folge).
-  Streak „–" bleibt BUG-013/014 (separat, nicht im Scope).
-
-### Verifizierte Annahmen (künftig nicht erneut prüfen)
-- `manifest.json` liegt unter **`src/assets/data/manifest.json`** und wird als
-  **`/assets/data/manifest.json`** gefetcht.
-- Manifest-Struktur: **`faecher[].themen[].id` / `.name`** (SSOT für Namen).
-- **`quiz_results.score` ist ein gerundeter Prozentwert (0–100)** → Anzeige
-  `{score} %` ist korrekt. (`richtig`/`gesamt` lägen für „4/5" ebenfalls vor.)
-- `quiz_results` enthält **nur Themen-Quiz**; die Herausforderung liegt in
-  `daily_quiz_log` (ohne `thema_id`) → „Zuletzt gelernt" zeigt nur Themen-Quiz.
-
-### Entscheidungen
-- **Mapping in `stats.js` (angereichert), nicht auf dem Dashboard:** `app.js`
-  ist auf `dashboard.html` nicht eingebunden; `ladeLetzteAktivitaet` fetcht das
-  Manifest selbst (modulinternes `manifestCache`) und hält das Inline-Script
-  dünn. Manifest bleibt Single Source of Truth für Themen-Namen.
-- **4. Karte → Aktions-Karte** (statt 3 Karten + separatem Banner): minimaler
-  Markup-Churn, Grid `repeat(4,1fr)` unverändert.
-
-### Verifikation
-- Live über statischen Server (`lernhub`, User `schueler1`), Console clean.
-- Netzwerk: `GET …/quiz_results?select=thema_id,score,erstellt_at&order=
-  erstellt_at.desc&limit=5 → 200`; `manifest.json → 200`.
-- „Zuletzt gelernt" zeigt echte Historie (Namen aus Manifest, Score %, rel.
-  Zeit), neueste zuerst. Aktions-Karte verlinkt auf `tauschen.html`; kein
-  „+5 morgen", keine `stat-energie`-Fehler.
-- Mobile (390px): `.db-stats` bricht 1-spaltig, Karten + Liste füllen die
-  Viewport-Breite (per `getBoundingClientRect` geprüft).
-
-### Offen — nächste Sessions (Reihenfolge-Vorschlag: 3 → 5 → 6)
-- **Bereich 3 — Header-Umbau:** Energie als **`X/5`-Pill in die Topbar**,
-  Total-XP-Pill raus, „Profil" als echter Nav-Link, vollständiges Mobile-Menü
-  (alle 6 Punkte), EP-Text in die Fortschrittsleiste.
-- **Abhängigkeit / wichtig:** Bereich 3 holt die Energie-Anzeige **final in die
-  Topbar** — das rechtfertigt rückwirkend den Wegfall der Energie-Karte aus
-  Bereich 4. **Bis Bereich 3 gemerged ist, existiert die Energie-Anzeige nur in
-  der bestehenden Topbar, nicht mehr auf dem Dashboard. Das ist so gewollt —
-  kein Regressionsbug.**
-- **Bereich 5 (Mobile-Politur)** und **Bereich 6 (Buttons/Icons,
-  `renderStatPill`-Icons via `Icons.render`)** hängen teils an Bereich 3.
-
----
-
 ## Session 2026-06-28 — Bereich 3: Header-Rebuild + Mobile-First-Richtlinie
 
 **Branch:** `fix/header-rebuild` (von `dev`). Zwei Commits; Merge nach `dev`
@@ -200,6 +132,82 @@ Eingeloggter Seiten-Sweep (Server `lernhub`, User `schueler1@lernhub.htl`), Kons
 - **`<button>`-Elemente laufen weiter in der System-Schrift** statt Space Grotesk
   (Form-Controls erben `font-family` nicht; im `.btn`-Kommentar dokumentiert) → Kandidat
   für eine spätere Font-Vereinheitlichung. S2 war bewusst „nur Radius".
+
+---
+
+## Session 2026-07-01 — S3: 0 % Emojis + Prestige-Level-System
+
+Zwei Feature-Branches von `dev`, je `--no-ff` gemergt; **kein Push, kein `main`**.
+Die Migration der `prestige`-Spalte wurde manuell in Supabase ausgeführt (Prod-Ref
+`gveqduphjcrogsnhxkbw`). Dieser Doku-Commit kommt separat nach den Merges.
+
+**Branch `feat/s3a-icons`** (Merge `3754e94`):
+- `1f2b229` feat(icons): sun/moon/smile/party/flame als farbige Icons final
+- `8551367` feat(ui): alle Emojis durch Icons.render() ersetzt, target differenziert
+
+**Branch `feat/s3b-prestige`** (Merge `af3db03`):
+- `ce22ec7` docs(db): Migrations-SQL für prestige-Spalte als Kommentar in level.js
+- `62a6868` feat(level): 100-Level-Kurve + Prestige-Logik in level.js
+- `bb7e9e8` fix(level): Kurven-Koeffizient auf 1.5×8 (Progression ausbalanciert)
+- `0e8519b` feat(topbar): Level-Badge als tier-abhängiges SVG + Prestige-Kreis
+- `5b3a009` fix(level): epText zeigt verbleibende EP bis nächstes Level
+- `d7d41b8` feat(profil): Rang-Tier + Prestige auf Profilseite anzeigen
+
+### S3a — Icons (0 % UI-Emojis)
+- **5 neue farbige Icons** in `icons.js` (alle `farbig:true`, viewBox `0 0 96 96`,
+  Gradient-IDs pro Instanz eindeutig): `party` (Konfetti-Stern), `flame` (Ergebnis <40 %),
+  `sun`/`moon` (Theme-Toggle), `smile` (Ergebnis 40–69 %).
+- **Emoji-Ersatz:** Theme-Toggle (profil.html) → `Icons.render('sun'|'moon')`;
+  Tagesquiz-Ergebnis → `party`/`smile`/`flame` je Score (≥70 / ≥40 / sonst).
+- **`target` differenziert:** Herausforderung (Dashboard-H2 + Tagesquiz-Start) behält
+  `target`; Quiz-Punkte-Karte → farbiges `star` (existierte bereits).
+- **0 echte UI-Emojis** verbleiben (nur icons.js-Doku-Kommentare). Ein 🔴 in einer
+  Log-Zeile von `pos/datenstrukturen.js` bewusst außerhalb des Scopes gelassen.
+
+### S3b — Prestige-Level-System
+- **DB:** neue Spalte `user_stats.prestige INTEGER NOT NULL DEFAULT 0` (Migration als
+  einzeiliger Kommentar oben in `level.js`, manuell ausgeführt).
+- **100-Level-Kurve:** `LEVEL_SCHWELLEN[n] = round(n^LEVEL_EXPONENT · LEVEL_KOEFFIZIENT)`
+  mit `LEVEL_EXPONENT=1.5` / `LEVEL_KOEFFIZIENT=8` (Modul-Scope, einzige Balance-Knöpfe)
+  → Level 100 = 8000 EP = ein Prestige-Zyklus (`EP_PRO_ZYKLUS`).
+- **`berechneFortschritt(gesamtEp, prestige=0)`** neu: EP per Modulo auf den Zyklus,
+  Level 1–100, `tier` (bronze <25 / silber <50 / gold <75 / platin), `prestige`
+  durchgereicht. `epText` zeigt „X EP bis Level N+1" bzw. „Prestige erreicht!" (L100).
+- **Prestige-Aufstieg:** `vergibBelohnungen` schreibt `prestige = floor(total_xp /
+  EP_PRO_ZYKLUS)` mit und liefert `prestigeUp` (analog `levelUp`); `getUserStats` liest
+  `prestige` mit.
+- **Topbar-Badge** (`renderLevelBadge` in layout.js): beveled Hexagon (viewBox 96) in
+  Tier-Farbe mit Rim/Face/Highlight/Shadow-Facetten, Glow-Halo für gold/platin,
+  zentrierte Level-Zahl, ab Prestige 1 oranger Kreis mit Prestige-Zahl. Ersetzt den alten
+  `.topbar-level-badge`-Span (CSS entsprechend reduziert).
+- **Profil-Rang:** Zeile „{Tier} · Level {n} · Prestige {p}" unter der Level-Anzeige,
+  Tier-Name je `data-tier` eingefärbt.
+
+### Bewusste Abweichungen / Entscheidungen (je begründet)
+- **Off-by-one in `berechneFortschritt` korrigiert:** Vorgabe-Pseudocode nutzte
+  `Math.max(1, level)` (= bestandene Schwellen), `epVon/epBis` gingen aber von
+  bestandene+1 aus → hätte „200 / 189 EP" und dauerhaft 100 % ergeben. Fix
+  `level = Math.min(100, bestanden + 1)`; über den ganzen Zyklus 0 Invarianten-Fehler.
+- **Prestige über den bestehenden Upsert persistiert** (statt separatem UPDATE): eine
+  Schreiboperation, idempotent, da `prestige` rein aus `total_xp` ableitbar + monoton.
+- **Kurve `1.5×8`** (Nachjustierung nach initial `1.8×3`) → runde 8000 EP pro Zyklus.
+- **`sun`/`moon`/`smile` in die farbige Icon-Sektion verschoben** (zunächst als
+  Linien-Icons gedraftet; finale Design-Vorgabe war farbig).
+
+### Verifikation (Prod-Session, User `schueler1`)
+- S3a: Dashboard (star/target/book/streak/energy korrekt), Profil-Theme-Toggle,
+  Tagesquiz-Ergebnis-Mapping (party/smile/flame), Konsole sauber.
+- S3b: `getUserStats` liest `prestige` fehlerfrei; Kurve numerisch geprüft (Node-Invarianten,
+  0 Fehler); Badge live (silber L44) + Prestige-Kreis (simuliert P2); Profil-Rang
+  („Silber · Level 44", #A0A0A0); `epText` band-konsistent; Konsole überall sauber.
+- **Screenshot-Tooling** in dieser Env instabil (Timeout) → Verifikation via berechnete
+  Stile / DOM-Inspektion + Render-Widgets.
+
+### Offen (nach IDEEN.md ausgelagert)
+- **Prestige-Up-Popup:** `prestigeUp` wird schon geliefert, aber noch nirgends angezeigt.
+- **Technische Schuld:** alte 10er-Kurve (`berechneLevel`/`LEVEL_THRESHOLDS`) läuft parallel
+  weiter (schreibt `user_stats.level` + `subject_xp.level` + `levelUp`-Toast) → gespeichertes
+  `level` ist vom angezeigten 100er-Level entkoppelt. Bewusst akzeptiert, eigene Session.
 
 ---
 
