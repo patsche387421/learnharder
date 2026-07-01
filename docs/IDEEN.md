@@ -70,11 +70,15 @@ im Profil. Setzt DSGVO Art. 17 (Recht auf Löschung) um. Sauber planen, kein Qui
 betrifft mehrere Tabellen und den Auth-Layer.
 Status: offen.
 
-## Level-Rang-Badge pro Band (Teil S3)
+## Level-Rang-Badge pro Band (Teil S3) — ✅ ERLEDIGT (S3b)
 Das Topbar-Level-Badge (Zahl) existiert bereits; zusätzlich ein Rang-Symbol pro
 Level-Band einführen. Reines client-seitiges Mapping aus
 `Level.berechneFortschritt().level` (1–10) auf ein Symbol — keine DB-Logik nötig.
-Status: offen.
+Erledigt in S3b: `berechneFortschritt().tier` (bronze/silber/gold/platin über die
+100er-Bänder) treibt das tier-abhängige Hexagon-Badge (Farbe/Glow) sowie die Rang-Zeile
+im Profil. Falls zusätzlich distinkte Symbole statt Farben pro Band gewünscht sind, neu
+aufmachen.
+Status: ✅ erledigt (via Tiers).
 
 ## Button-System zentralisieren (Teil S2)
 Es gibt keine zentrale `.btn`-Basis (stattdessen verstreute `.btn-*`-Klassen) und keine
@@ -82,8 +86,32 @@ Button-Token. S2 baut eine `.btn`-Basis + Modifier sowie `--btn-radius`/`--btn-b
 `--btn-shadow` in `tokens.css`.
 Status: offen.
 
-## Icon-Restarbeiten (Teil S3)
+## Icon-Restarbeiten (Teil S3) — ✅ ERLEDIGT (S3a)
 Quiz-Punkte und Herausforderung nutzen beide das `target`-Icon → differenzieren.
 Verbliebene UI-Emojis: ☀️/🌙 Theme-Toggle (sun/moon neu im Icon-Modul bauen) sowie
 🎉/😊/💪 im Tagesquiz-Ergebnis (Entscheid noch offen, ob ersetzen oder behalten).
+Erledigt in S3a: `target` differenziert (Quiz-Punkte → `star`, Herausforderung behält
+`target`); ☀️/🌙 → farbige `sun`/`moon`; 🎉/😊/💪 → `party`/`smile`/`flame`. 0 % echte
+UI-Emojis (nur noch Doku-Kommentare + ein bewusst ausgelassenes 🔴 in einer Tool-Log-Zeile).
+Status: ✅ erledigt.
+
+## Prestige-Up-Popup (eigene Session, Code) — S3-Nachlauf
+Beim Zyklus-Abschluss (Level 100 → Prestige +1) eine sichtbare Feier zeigen. Das Signal
+liegt bereits vor: `Level.vergibBelohnungen()` gibt `prestigeUp` (bool) zurück (analog
+`levelUp`), wird aber noch nirgends konsumiert. Diese Session: im Tagesquiz-Ergebnis
+(tagesquiz.html) bei `ergebnis.prestigeUp` einen Prestige-Screen/Toast einblenden (z. B.
+großer Prestige-Badge + „Prestige N erreicht!"). Kein DB-/Kurven-Eingriff nötig.
 Status: offen.
+
+## Level-System: alte 10er-Kurve entkoppeln (technische Schuld aus S3b)
+S3b führte die 100-Level-Kurve (`LEVEL_SCHWELLEN`, 1.5×8) als Anzeige-SSOT ein
+(Topbar-Badge, Profil, Fach-Seiten, epText, Tier, Prestige). Parallel läuft weiterhin die
+alte 10er-Kurve (`berechneLevel` + `LEVEL_THRESHOLDS`), die nur noch: die gespeicherte
+`user_stats.level`-Spalte schreibt, `subject_xp.level` schreibt und den `levelUp`-Toast
+auslöst. Folge: das gespeicherte `level` (10er) ist vom angezeigten Level (100er)
+entkoppelt (z. B. gespeichert 7, angezeigt 44) — kein User-sichtbarer Bug (Anzeige =
+100er-SSOT), aber ein Doppelsystem. Bewusst als Schuld akzeptiert (Patsche, S3b). Diese
+Session: `berechneLevel`/`LEVEL_THRESHOLDS` entfernen, `user_stats.level` + `levelUp` +
+`subject_xp.level` auf die 100er-Kurve umstellen (SSOT vereinheitlichen); Migration prüfen
+(bestehende `level`-Werte ggf. neu berechnen).
+Status: offen (technische Schuld, kein Blocker).
