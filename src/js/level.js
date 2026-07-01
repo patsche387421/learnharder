@@ -10,7 +10,16 @@ const Level = (() => {
   // EP-Schwellen pro Level-Stufe: Index = Level-Nummer (1–10)
   // LEVEL_THRESHOLDS[n] = Gesamt-EP, die zum Erreichen von Level n benötigt werden.
   // Level 10 ist Maximum → LEVEL_THRESHOLDS[10] = undefined (zeigt "–" im UI).
+  // (Weiterhin genutzt für die gespeicherte user_stats.level-Spalte + Level-Up-Toast.)
   const LEVEL_THRESHOLDS = [0, 100, 250, 500, 900, 1400, 2000, 2700, 3500, 4500];
+
+  // 100-Level-Kurve (S3b): SCHWELLEN[n] = EP-Summe im aktuellen Prestige-Zyklus, die
+  // zum Abschluss von Level n nötig ist. Exponent 1.8 → früh schnell, spät zäh.
+  const LEVEL_SCHWELLEN = [0, ...Array.from({ length: 100 },
+    (_, i) => Math.round((i + 1) ** 1.8 * 3))];
+  // [0, 3, 10, 22, 36, 54, 75, 100, 127, 157, 189, ...]
+  // Level 100 ≈ 11943 EP gesamt = ein Prestige-Zyklus
+  const EP_PRO_ZYKLUS = LEVEL_SCHWELLEN[100]; // ~11943
 
   // Berechnet Level aus Gesamt-EP (Level 1–10).
   function berechneLevel(totalXp) {
@@ -23,19 +32,27 @@ const Level = (() => {
   }
 
   // Reine SSOT-Funktion: Fortschritt im AKTUELLEN Level-Band aus Gesamt-EP.
-  // Nimmt nur EP entgegen → quelle-agnostisch (User-, Fach-, später Team-/Saison-EP).
-  // prozent ist auf 0–100 gekappt; bei Max-Level (10) immer 100 %, kein nächstes Band.
-  function berechneFortschritt(gesamtEp) {
-    const level       = berechneLevel(gesamtEp);
-    const istMax      = level === 10;
-    const untere      = LEVEL_THRESHOLDS[level - 1] ?? 0;
-    const obere       = LEVEL_THRESHOLDS[level];
-    const epImBand    = gesamtEp - untere;
-    const bandGroesse = istMax ? 0 : obere - untere;
-    const prozent     = istMax ? 100 : Math.min((gesamtEp - untere) / (obere - untere) * 100, 100);
-    const naechsteSchwelle = istMax ? null : obere;
-    const epText      = istMax ? `${gesamtEp} EP (Max)` : `${epImBand} / ${bandGroesse} EP`;
-    return { level, prozent, epImBand, bandGroesse, naechsteSchwelle, istMax, epText };
+  // Nimmt EP (+ optional prestige) entgegen → quelle-agnostisch (User-, Fach-,
+  // später Team-/Saison-EP). 100-Level-Kurve mit Prestige-Zyklus (S3b): die EP
+  // werden per Modulo auf den aktuellen Zyklus abgebildet, Level 1–100. Der
+  // prestige-Zähler kommt aus der DB (nicht hier berechnet) und wird nur
+  // durchgereicht, damit die UI Tier + Prestige aus einer Quelle bekommt.
+  function berechneFortschritt(gesamtEp, prestige = 0) {
+    const epImZyklus = gesamtEp % EP_PRO_ZYKLUS;
+    // Anzahl bestandener Schwellen zählen; Level ist 1-basiert (0 bestanden = Level 1,
+    // Schwelle SCHWELLEN[k] bestanden = Level k+1). Deckel bei 100.
+    let bestanden = 0;
+    while (bestanden < 100 && LEVEL_SCHWELLEN[bestanden + 1] <= epImZyklus) bestanden++;
+    const level   = Math.min(100, bestanden + 1);
+    const epVon   = LEVEL_SCHWELLEN[level - 1];
+    const epBis   = LEVEL_SCHWELLEN[level];
+    const prozent = Math.min(100, Math.round((epImZyklus - epVon) / (epBis - epVon) * 100));
+    const epText  = epImZyklus + ' / ' + epBis + ' EP';
+    const tier = level < 25 ? 'bronze'
+               : level < 50 ? 'silber'
+               : level < 75 ? 'gold'
+               : 'platin';
+    return { level, prozent, epText, tier, prestige };
   }
 
   // Füllt Energie automatisch auf: +1 je vergangenem UTC-Kalendertag seit
@@ -75,20 +92,21 @@ const Level = (() => {
   // Liefert Standardwerte wenn kein Datenbankeintrag vorhanden.
   async function getUserStats() {
     const user = Auth.currentUser();
-    if (!user) return { energy: 5, level: 1, trophies: 0, totalXp: 0 };
+    if (!user) return { energy: 5, level: 1, trophies: 0, totalXp: 0, prestige: 0 };
 
     const { data } = await sb
       .from('user_stats')
-      .select('total_xp, level, energy, trophies, energy_last_reset')
+      .select('total_xp, level, energy, trophies, energy_last_reset, prestige')
       .eq('user_id', user.id)
       .maybeSingle();
 
-    if (!data) return { energy: 5, level: 1, trophies: 0, totalXp: 0 };
+    if (!data) return { energy: 5, level: 1, trophies: 0, totalXp: 0, prestige: 0 };
     return {
       energy:   await rechargeEnergie(user, data),
       level:    data.level    ?? 1,
       trophies: data.trophies ?? 0,
-      totalXp:  data.total_xp ?? 0
+      totalXp:  data.total_xp ?? 0,
+      prestige: data.prestige ?? 0
     };
   }
 
@@ -182,10 +200,10 @@ const Level = (() => {
       }
     }
 
-    // user_stats aktualisieren (EP, Level, Trophäen)
+    // user_stats aktualisieren (EP, Level, Trophäen, Prestige)
     const { data: aktStats } = await sb
       .from('user_stats')
-      .select('total_xp, level, trophies')
+      .select('total_xp, level, trophies, prestige')
       .eq('user_id', user.id)
       .maybeSingle();
 
@@ -194,11 +212,18 @@ const Level = (() => {
     const neuesLevel  = berechneLevel(neueXp);
     const levelUp     = neuesLevel > (aktStats?.level ?? 1);
 
+    // Prestige = abgeschlossene 100-Level-Zyklen. Rein aus total_xp ableitbar und
+    // monoton steigend → wird bei jedem Upsert mitgeschrieben (kein Reset möglich).
+    const altePrestige = aktStats?.prestige ?? 0;
+    const neuePrestige = Math.floor(neueXp / EP_PRO_ZYKLUS);
+    const prestigeUp   = neuePrestige > altePrestige;
+
     const { error: statsErr } = await sb.from('user_stats').upsert({
       user_id:    user.id,
       total_xp:   neueXp,
       level:      neuesLevel,
       trophies:   neueTrophies,
+      prestige:   neuePrestige,
       updated_at: new Date().toISOString()
     }, { onConflict: 'user_id' });
     if (statsErr) console.error('[Level] user_stats upsert Fehler:', statsErr);
@@ -247,7 +272,7 @@ const Level = (() => {
       }
     }
 
-    return { ep, trophien, bonus, levelUp };
+    return { ep, trophien, bonus, levelUp, prestigeUp };
   }
 
   // Tauscht Trophäen gegen Energie (50 Trophäen = 1 Energydrink).
