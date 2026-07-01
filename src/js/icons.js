@@ -103,6 +103,109 @@ const Icons = (() => {
         `<circle cx="14" cy="17" r="3" fill="#FDE68A" opacity="0.6"/>`,
     },
 
+    // Konfetti-Stern (farbig) – ersetzt 🎉 (Ergebnis ab 70 %)
+    party: {
+      viewBox: '0 0 96 96',
+      farbig: true,
+      markup: (u) =>
+        `<defs>` +
+        `<linearGradient id="partyStar-${u}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FDE68A"/><stop offset="100%" stop-color="#F59E0B"/></linearGradient>` +
+        `<radialGradient id="partyGlow-${u}" cx="48" cy="48" r="34" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#F59E0B" stop-opacity="0.4"/><stop offset="100%" stop-color="#F59E0B" stop-opacity="0"/></radialGradient>` +
+        `</defs>` +
+        `<circle cx="48" cy="48" r="34" fill="url(#partyGlow-${u})"/>` +
+        `<g stroke="#FDE68A" stroke-width="2.4" stroke-linecap="round" opacity="0.75">` +
+        `<line x1="48" y1="10" x2="48" y2="18"/><line x1="48" y1="78" x2="48" y2="86"/>` +
+        `<line x1="10" y1="48" x2="18" y2="48"/><line x1="78" y1="48" x2="86" y2="48"/>` +
+        `<line x1="21" y1="21" x2="27" y2="27"/><line x1="69" y1="69" x2="75" y2="75"/>` +
+        `<line x1="75" y1="21" x2="69" y2="27"/><line x1="27" y1="69" x2="21" y2="75"/>` +
+        `</g>` +
+        `<path d="M48 22 L55 40 L74 41 L59 53 L64 71 L48 60 L32 71 L37 53 L22 41 L41 40 Z" fill="url(#partyStar-${u})" stroke="#EA580C" stroke-width="1.2" stroke-linejoin="round"/>` +
+        `<path d="M48 22 L55 40 L48 40 Z" fill="#FEF3C7" opacity="0.55"/>` +
+        `<circle cx="20" cy="30" r="3.2" fill="#A855F7"/>` +
+        `<circle cx="80" cy="34" r="2.6" fill="#06B6D4"/>` +
+        `<rect x="72" y="60" width="6" height="6" rx="1.5" fill="#A855F7" transform="rotate(20 75 63)"/>` +
+        `<rect x="17" y="58" width="6" height="6" rx="1.5" fill="#06B6D4" transform="rotate(-15 20 61)"/>` +
+        `<circle cx="34" cy="82" r="2.8" fill="#F59E0B"/>` +
+        `<circle cx="62" cy="84" r="2.4" fill="#A855F7"/>` +
+        `<path d="M84 50 l1.2 3 3 1.2 -3 1.2 -1.2 3 -1.2 -3 -3 -1.2 3 -1.2 Z" fill="#06B6D4"/>` +
+        `<circle cx="12" cy="46" r="2.4" fill="#F59E0B"/>`,
+    },
+
+    // Flamme (farbig) – Ergebnis-Icon unter 40 % im Tagesquiz
+    flame: {
+      viewBox: '0 0 96 96',
+      farbig: true,
+      markup: (u) =>
+        `<defs>` +
+        `<linearGradient id="flameBody-${u}" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#FDE68A"/><stop offset="40%" stop-color="#F97316"/><stop offset="100%" stop-color="#DC2626"/></linearGradient>` +
+        `<linearGradient id="flameInner-${u}" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#FEF3C7"/><stop offset="60%" stop-color="#FDE68A"/><stop offset="100%" stop-color="#F97316"/></linearGradient>` +
+        `<radialGradient id="flameGlow-${u}" cx="48" cy="72" r="30" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#F97316" stop-opacity="0.45"/><stop offset="100%" stop-color="#DC2626" stop-opacity="0"/></radialGradient>` +
+        `</defs>` +
+        `<ellipse cx="48" cy="74" rx="30" ry="16" fill="url(#flameGlow-${u})"/>` +
+        `<path d="M48 8 Q54 24 66 34 Q78 46 74 62 Q70 82 48 84 Q26 82 22 62 Q19 48 30 40 Q37 47 38 54 Q40 40 44 30 Q47 20 48 8 Z" fill="url(#flameBody-${u})"/>` +
+        `<path d="M50 34 Q56 44 58 54 Q60 68 48 74 Q37 70 37 60 Q37 52 44 48 Q47 42 50 34 Z" fill="url(#flameInner-${u})"/>` +
+        `<ellipse cx="48" cy="64" rx="5" ry="7" fill="#FEF3C7" opacity="0.85"/>`,
+    },
+
+    // Sonne (farbig) – ersetzt ☀️ (Light-Mode-Umschalter)
+    sun: {
+      viewBox: '0 0 96 96',
+      farbig: true,
+      markup: (u) =>
+        `<defs>` +
+        `<radialGradient id="sunCore-${u}" cx="48" cy="48" r="22" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#FDE68A"/><stop offset="55%" stop-color="#F59E0B"/><stop offset="100%" stop-color="#EA580C"/></radialGradient>` +
+        `<radialGradient id="sunHalo-${u}" cx="48" cy="48" r="46" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#F59E0B" stop-opacity="0.55"/><stop offset="45%" stop-color="#EA580C" stop-opacity="0.22"/><stop offset="100%" stop-color="#EA580C" stop-opacity="0"/></radialGradient>` +
+        `<linearGradient id="sunRay-${u}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FDE68A"/><stop offset="100%" stop-color="#F59E0B"/></linearGradient>` +
+        `</defs>` +
+        `<circle cx="48" cy="48" r="46" fill="url(#sunHalo-${u})"/>` +
+        `<g fill="url(#sunRay-${u})">` +
+        `<g><rect x="44.5" y="4" width="7" height="15" rx="3.5"/><rect x="44.5" y="77" width="7" height="15" rx="3.5"/><rect x="4" y="44.5" width="15" height="7" rx="3.5"/><rect x="77" y="44.5" width="15" height="7" rx="3.5"/></g>` +
+        `<g transform="rotate(45 48 48)"><rect x="44.5" y="4" width="7" height="15" rx="3.5"/><rect x="44.5" y="77" width="7" height="15" rx="3.5"/><rect x="4" y="44.5" width="15" height="7" rx="3.5"/><rect x="77" y="44.5" width="15" height="7" rx="3.5"/></g>` +
+        `</g>` +
+        `<circle cx="48" cy="48" r="22" fill="url(#sunCore-${u})"/>` +
+        `<ellipse cx="41" cy="41" rx="9" ry="7" fill="#FEF3C7" opacity="0.5"/>`,
+    },
+
+    // Mond (farbig) – ersetzt 🌙 (Dark-Mode-Umschalter)
+    moon: {
+      viewBox: '0 0 96 96',
+      farbig: true,
+      markup: (u) =>
+        `<defs>` +
+        `<linearGradient id="moonBody-${u}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#BAE6FD"/><stop offset="50%" stop-color="#60A5FA"/><stop offset="100%" stop-color="#4F46E5"/></linearGradient>` +
+        `<radialGradient id="moonHalo-${u}" cx="44" cy="48" r="42" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#60A5FA" stop-opacity="0.5"/><stop offset="50%" stop-color="#4F46E5" stop-opacity="0.18"/><stop offset="100%" stop-color="#4F46E5" stop-opacity="0"/></radialGradient>` +
+        `<linearGradient id="moonStar-${u}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#E0F2FE"/><stop offset="100%" stop-color="#93C5FD"/></linearGradient>` +
+        `</defs>` +
+        `<circle cx="44" cy="48" r="42" fill="url(#moonHalo-${u})"/>` +
+        `<path d="M64 16 A34 34 0 1 0 64 80 A27 27 0 1 1 64 16 Z" fill="url(#moonBody-${u})"/>` +
+        `<path d="M64 16 A34 34 0 0 0 30 50" fill="none" stroke="#E0F2FE" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>` +
+        `<path d="M74 26 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2 Z" fill="url(#moonStar-${u})"/>` +
+        `<path d="M78 52 l1.4 3.4 3.4 1.4 -3.4 1.4 -1.4 3.4 -1.4 -3.4 -3.4 -1.4 3.4 -1.4 Z" fill="url(#moonStar-${u})"/>` +
+        `<circle cx="66" cy="66" r="2" fill="#E0F2FE"/>`,
+    },
+
+    // Lächelndes Gesicht (farbig) – ersetzt 😊 (Ergebnis 40–69 %)
+    smile: {
+      viewBox: '0 0 96 96',
+      farbig: true,
+      markup: (u) =>
+        `<defs>` +
+        `<radialGradient id="smileFace-${u}" cx="44" cy="40" r="48" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#FDE68A"/><stop offset="55%" stop-color="#FBBF24"/><stop offset="100%" stop-color="#F59E0B"/></radialGradient>` +
+        `<radialGradient id="smileGlow-${u}" cx="48" cy="48" r="46" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#FBBF24" stop-opacity="0.35"/><stop offset="100%" stop-color="#F59E0B" stop-opacity="0"/></radialGradient>` +
+        `</defs>` +
+        `<circle cx="48" cy="48" r="46" fill="url(#smileGlow-${u})"/>` +
+        `<circle cx="48" cy="48" r="38" fill="url(#smileFace-${u})"/>` +
+        `<ellipse cx="38" cy="32" rx="16" ry="10" fill="#FEF3C7" opacity="0.45"/>` +
+        `<circle cx="30" cy="56" r="6" fill="#FB923C" opacity="0.45"/>` +
+        `<circle cx="66" cy="56" r="6" fill="#FB923C" opacity="0.45"/>` +
+        `<ellipse cx="36" cy="42" rx="4.5" ry="6.5" fill="#7C2D12"/>` +
+        `<ellipse cx="60" cy="42" rx="4.5" ry="6.5" fill="#7C2D12"/>` +
+        `<circle cx="37.5" cy="39.5" r="1.6" fill="#FEF3C7"/>` +
+        `<circle cx="61.5" cy="39.5" r="1.6" fill="#FEF3C7"/>` +
+        `<path d="M32 56 Q48 74 64 56 Q48 66 32 56 Z" fill="#7C2D12"/>` +
+        `<path d="M36 60 Q48 66 60 60" fill="#F472B6" opacity="0.8"/>`,
+    },
+
     // ----- Monochrome Linien-Icons (currentColor, Lucide-Stil) ---------------
 
     // Häkchen – ersetzt ✅ / ✓
