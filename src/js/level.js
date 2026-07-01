@@ -52,7 +52,9 @@ const Level = (() => {
     const epVon   = LEVEL_SCHWELLEN[level - 1];
     const epBis   = LEVEL_SCHWELLEN[level];
     const prozent = Math.min(100, Math.round((epImZyklus - epVon) / (epBis - epVon) * 100));
-    const epText  = epImZyklus + ' / ' + epBis + ' EP';
+    const epText = level < 100
+      ? (LEVEL_SCHWELLEN[level] - epImZyklus) + ' EP bis Level ' + (level + 1)
+      : 'Prestige erreicht!';
     const tier = level < 25 ? 'bronze'
                : level < 50 ? 'silber'
                : level < 75 ? 'gold'
