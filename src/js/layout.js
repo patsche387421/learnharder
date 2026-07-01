@@ -19,6 +19,10 @@ const Layout = (() => {
   // verdrahtet sind. renderTopbar kann mehrfach laufen → nur einmal anhängen.
   let globaleHamburgerListenerAktiv = false;
 
+  // Zähler für eindeutige Gradient-IDs pro Level-Badge (renderTopbar kann mehrfach
+  // laufen → sonst kollidieren gleichnamige <linearGradient>/<radialGradient>-IDs).
+  let badgeZaehler = 0;
+
   // Bestimmt anhand des Pfads den aktiven Nav-Eintrag (Active-State).
   // Fächerübersicht, alle Fach-Seiten und der Themen-Inhalt zählen zu "Fächer".
   function aktiverNav(pfad) {
@@ -123,6 +127,114 @@ const Layout = (() => {
     });
   }
 
+  // Baut den Level-Badge als eigenständiges Inline-SVG (bewusst NICHT über
+  // icons.js: der Inhalt ist dynamisch – Level-Zahl, Tier-Gradient, Facetten und
+  // optionaler Prestige-Kreis). Hexagon in Tier-Farbe mit zentrierter Level-Zahl;
+  // ab Prestige 1 zusätzlich ein oranger Kreis mit der Prestige-Zahl unten.
+  function renderLevelBadge(level, tier, prestige) {
+    const u = 'b' + (++badgeZaehler);
+    const hatPrestige = prestige > 0;
+    const fs = level >= 100 ? (hatPrestige ? 22 : 26) : (hatPrestige ? 34 : 38);
+    const ty = hatPrestige ? '53' : '60';
+
+    const rimPath  = hatPrestige
+      ? 'M48 2 L82 21 L82 65 L48 84 L14 65 L14 21 Z'
+      : 'M48 4 L84 24 L84 72 L48 92 L12 72 L12 24 Z';
+    const facePath = hatPrestige
+      ? 'M48 8 L77 24 L77 62 L48 78 L19 62 L19 24 Z'
+      : 'M48 10 L79 27 L79 69 L48 86 L17 69 L17 27 Z';
+    const hiPath   = hatPrestige
+      ? 'M48 8 L19 24 L19 62 L23 59 L23 27 L48 13 Z'
+      : 'M48 10 L17 27 L17 69 L21 66 L21 30 L48 15 Z';
+    const shPath   = hatPrestige
+      ? 'M48 8 L77 24 L72 27 L48 14 Z'
+      : 'M48 10 L79 27 L74 30 L48 16 Z';
+
+    let defs, halo = '', hiColor, shColor, hiOp, shOp, textAttr;
+
+    if (tier === 'bronze') {
+      defs =
+        `<linearGradient id="rim-${u}" x1="0" y1="0" x2="1" y2="1">` +
+          `<stop offset="0%" stop-color="#F5C77E"/><stop offset="100%" stop-color="#7A3B10"/>` +
+        `</linearGradient>` +
+        `<linearGradient id="hex-${u}" x1="0" y1="0" x2="1" y2="1">` +
+          `<stop offset="0%" stop-color="#E8A857"/><stop offset="50%" stop-color="#CD7F32"/>` +
+          `<stop offset="100%" stop-color="#8B4513"/>` +
+        `</linearGradient>`;
+      hiColor = '#FBDBA0'; shColor = '#FBDBA0'; hiOp = '0.5'; shOp = '0.35';
+      textAttr = `fill="#FFFFFF" stroke="#7A3B10" stroke-width="1" paint-order="stroke"`;
+
+    } else if (tier === 'silber') {
+      defs =
+        `<linearGradient id="rim-${u}" x1="0" y1="0" x2="1" y2="1">` +
+          `<stop offset="0%" stop-color="#FFFFFF"/><stop offset="100%" stop-color="#6B6B6B"/>` +
+        `</linearGradient>` +
+        `<linearGradient id="hex-${u}" x1="0" y1="0" x2="1" y2="1">` +
+          `<stop offset="0%" stop-color="#F0F0F0"/><stop offset="50%" stop-color="#C0C0C0"/>` +
+          `<stop offset="100%" stop-color="#808080"/>` +
+        `</linearGradient>`;
+      hiColor = '#FFFFFF'; shColor = '#FFFFFF'; hiOp = '0.55'; shOp = '0.4';
+      textAttr = `fill="#1a1a1a"`;
+
+    } else if (tier === 'gold') {
+      defs =
+        `<linearGradient id="rim-${u}" x1="0" y1="0" x2="1" y2="1">` +
+          `<stop offset="0%" stop-color="#FFF3B0"/><stop offset="100%" stop-color="#A66A00"/>` +
+        `</linearGradient>` +
+        `<linearGradient id="hex-${u}" x1="0" y1="0" x2="1" y2="1">` +
+          `<stop offset="0%" stop-color="#FFE566"/><stop offset="50%" stop-color="#FFD700"/>` +
+          `<stop offset="100%" stop-color="#CC8800"/>` +
+        `</linearGradient>` +
+        `<radialGradient id="glow-${u}" cx="48" cy="48" r="46" gradientUnits="userSpaceOnUse">` +
+          `<stop offset="0%" stop-color="#FFD700" stop-opacity="0.55"/>` +
+          `<stop offset="55%" stop-color="#FFB300" stop-opacity="0.22"/>` +
+          `<stop offset="100%" stop-color="#FFB300" stop-opacity="0"/>` +
+        `</radialGradient>`;
+      halo = `<circle cx="48" cy="48" r="46" fill="url(#glow-${u})"/>`;
+      hiColor = '#FFF3B0'; shColor = '#FFF9D6'; hiOp = '0.6'; shOp = '0.45';
+      textAttr = `fill="#3D1F00"`;
+
+    } else {
+      defs =
+        `<linearGradient id="rim-${u}" x1="0" y1="0" x2="1" y2="1">` +
+          `<stop offset="0%" stop-color="#DDF8FF"/><stop offset="100%" stop-color="#5A1E93"/>` +
+        `</linearGradient>` +
+        `<linearGradient id="hex-${u}" x1="0" y1="0" x2="1" y2="1">` +
+          `<stop offset="0%" stop-color="#A8EDFF"/><stop offset="50%" stop-color="#00BFFF"/>` +
+          `<stop offset="100%" stop-color="#7B2FBE"/>` +
+        `</linearGradient>` +
+        `<radialGradient id="glow-${u}" cx="48" cy="48" r="46" gradientUnits="userSpaceOnUse">` +
+          `<stop offset="0%" stop-color="#00BFFF" stop-opacity="0.55"/>` +
+          `<stop offset="50%" stop-color="#7B2FBE" stop-opacity="0.3"/>` +
+          `<stop offset="100%" stop-color="#7B2FBE" stop-opacity="0"/>` +
+        `</radialGradient>`;
+      halo = `<circle cx="48" cy="48" r="46" fill="url(#glow-${u})"/>`;
+      hiColor = '#DDF8FF'; shColor = '#FFFFFF'; hiOp = '0.55'; shOp = '0.4';
+      textAttr = `fill="#FFFFFF" stroke="#5A1E93" stroke-width="1" paint-order="stroke"`;
+    }
+
+    const prestigeBadge = hatPrestige
+      ? `<circle cx="48" cy="80" r="10" fill="#EA580C" stroke="#FFFFFF" stroke-width="2"/>` +
+        `<text x="48" y="84.5" font-family="'Space Grotesk',Arial,sans-serif"` +
+        ` font-weight="bold" font-size="12" fill="#FFFFFF" text-anchor="middle">${prestige}</text>`
+      : '';
+
+    return (
+      `<svg class="topbar-level-badge" width="36" height="36" viewBox="0 0 96 96"` +
+      ` xmlns="http://www.w3.org/2000/svg">` +
+      `<defs>${defs}</defs>` +
+      halo +
+      `<path d="${rimPath}" fill="url(#rim-${u})"/>` +
+      `<path d="${facePath}" fill="url(#hex-${u})"/>` +
+      `<path d="${hiPath}" fill="${hiColor}" opacity="${hiOp}"/>` +
+      `<path d="${shPath}" fill="${shColor}" opacity="${shOp}"/>` +
+      `<text x="48" y="${ty}" font-family="'Space Grotesk',Arial,sans-serif"` +
+      ` font-weight="bold" font-size="${fs}" ${textAttr} text-anchor="middle">${level}</text>` +
+      prestigeBadge +
+      `</svg>`
+    );
+  }
+
   // Erzeugt die komplette Topbar in <header id="topbar"></header>:
   //   Logo · Nav · Stats (Energie/Trophäen-Pills + Level-Badge) · EP-Leiste mit Zahl.
   // Prüft die Session intern — funktioniert auch auf öffentlichen Seiten ohne requireLogin().
@@ -150,13 +262,13 @@ const Layout = (() => {
 
     if (!stats) stats = await Level.getUserStats();
 
-    const f = Level.berechneFortschritt(stats.totalXp);
+    const f = Level.berechneFortschritt(stats.totalXp, stats.prestige);
 
     markup +=
       '<div class="topbar-stats">' +
         '<span class="topbar-pill topbar-pill--energy" title="Energie">' + Icons.render('energy', { size: 18 }) + '<span>' + stats.energy + '</span></span>' +
         '<span class="topbar-pill topbar-pill--trophies" title="Trophäen">' + Icons.render('trophy', { size: 18 }) + '<span>' + stats.trophies + '</span></span>' +
-        '<span class="topbar-level-badge" title="Level ' + f.level + '">' + f.level + '</span>' +
+        renderLevelBadge(f.level, f.tier, f.prestige) +
       '</div>' +
       '<div class="topbar-progress" title="' + f.epText + '">' +
         '<div class="topbar-progress-fill" style="width: ' + f.prozent + '%"></div>' +

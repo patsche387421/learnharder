@@ -280,17 +280,12 @@ button {
 .topbar-pill--energy   { color: var(--energy); }
 .topbar-pill--trophies { color: var(--gold); }
 
+/* Level-Badge: eigenständiges Inline-SVG (Hexagon in Tier-Farbe, ggf. Prestige-Kreis),
+   erzeugt in layout.js. Optik komplett aus dem SVG – hier nur Ausrichtung. */
 .topbar-level-badge {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: var(--radius-md);
-  background: var(--gradient-brand);
-  color: var(--text-on-primary);
-  font-size: var(--fs-caption);
-  font-weight: var(--fw-bold);
+  flex-shrink: 0;
 }
 
 /* EP-Progress-Bar am unteren Topbar-Rand: Füllung + lesbare EP-Zahl (volle Breite) */
