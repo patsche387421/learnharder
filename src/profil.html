@@ -35,6 +35,9 @@
           <span class="profil-level-badge">Level <span id="profil-level">–</span></span>
           <span class="profil-ep-text" id="profil-ep-text">– EP</span>
         </div>
+        <p class="profil-rang">
+          <span class="profil-rang-tier"></span>
+        </p>
         <div class="profil-bar-wrap">
           <div class="profil-bar-fill" id="profil-bar-fill" style="width: 0%"></div>
         </div>
@@ -167,7 +170,7 @@
         const userStats = await Level.getUserStats();
         await Layout.renderTopbar(userStats);
 
-        const f = Level.berechneFortschritt(userStats.totalXp);
+        const f = Level.berechneFortschritt(userStats.totalXp, userStats.prestige);
 
         document.getElementById('profil-level').textContent    = f.level;
         document.getElementById('profil-ep-text').textContent  = f.epText;
@@ -175,6 +178,18 @@
         document.getElementById('profil-total-xp').textContent = userStats.totalXp;
         document.getElementById('profil-trophies').textContent = userStats.trophies;
         document.getElementById('profil-energy').textContent   = userStats.energy;
+
+        // Rang-Zeile: Tier-Name (eingefärbt) · Level · ggf. Prestige
+        const tierNamen = { bronze: 'Bronze', silber: 'Silber', gold: 'Gold', platin: 'Platin' };
+        const rangTier = document.querySelector('.profil-rang-tier');
+        const rangEl   = document.querySelector('.profil-rang');
+        if (rangTier && rangEl) {
+          rangTier.textContent = tierNamen[f.tier] || f.tier;
+          rangTier.dataset.tier = f.tier;
+          rangEl.innerHTML = rangTier.outerHTML
+            + ' · Level ' + f.level
+            + (f.prestige > 0 ? ' · Prestige ' + f.prestige : '');
+        }
       } catch (err) {
         console.error('Stats-Ladefehler:', err);
         document.getElementById('profil-level').textContent    = '–';
