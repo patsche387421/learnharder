@@ -93,7 +93,7 @@
             <span class="profil-setting-label">Erscheinungsbild</span>
             <span class="profil-setting-sub">Dark oder Light Mode</span>
           </div>
-          <button id="theme-toggle" class="btn btn--ghost">☀️ Light Mode</button>
+          <button id="theme-toggle" class="btn btn--ghost"></button>
         </div>
         <p class="profil-setting-hinweis">Weitere Einstellungen folgen.</p>
       </div>
@@ -121,7 +121,8 @@
     function aktualisiereThemeButton(theme) {
       const btn = document.getElementById('theme-toggle');
       if (!btn) return;
-      btn.textContent = theme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+      btn.innerHTML = Icons.render(theme === 'dark' ? 'sun' : 'moon', { size: 18 })
+        + ' ' + (theme === 'dark' ? 'Light Mode' : 'Dark Mode');
     }
 
     function renderFachZeile(fach, fachStats) {
