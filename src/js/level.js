@@ -4,6 +4,11 @@
 // ══ DB-MIGRATION S3b (manuell in Supabase ausführen, vor Prestige-Feature) ══════
 // ALTER TABLE user_stats ADD COLUMN IF NOT EXISTS prestige INTEGER NOT NULL DEFAULT 0;
 // ════════════════════════════════════════════════════════════════════════════════
+
+// Kurven-Balance (S3b): einzige Stellschrauben der 100-Level-Progression.
+// Zum Nachjustieren NUR diese zwei Zahlen ändern → Level 100 = 100^EXPONENT · KOEFFIZIENT.
+const LEVEL_EXPONENT    = 1.5;
+const LEVEL_KOEFFIZIENT = 8;
 const Level = (() => {
   const sb = SupabaseClient.client;
 
@@ -14,12 +19,12 @@ const Level = (() => {
   const LEVEL_THRESHOLDS = [0, 100, 250, 500, 900, 1400, 2000, 2700, 3500, 4500];
 
   // 100-Level-Kurve (S3b): SCHWELLEN[n] = EP-Summe im aktuellen Prestige-Zyklus, die
-  // zum Abschluss von Level n nötig ist. Exponent 1.8 → früh schnell, spät zäh.
+  // zum Abschluss von Level n nötig ist. Kurve: (n)^LEVEL_EXPONENT · LEVEL_KOEFFIZIENT.
   const LEVEL_SCHWELLEN = [0, ...Array.from({ length: 100 },
-    (_, i) => Math.round((i + 1) ** 1.8 * 3))];
-  // [0, 3, 10, 22, 36, 54, 75, 100, 127, 157, 189, ...]
-  // Level 100 ≈ 11943 EP gesamt = ein Prestige-Zyklus
-  const EP_PRO_ZYKLUS = LEVEL_SCHWELLEN[100]; // ~11943
+    (_, i) => Math.round((i + 1) ** LEVEL_EXPONENT * LEVEL_KOEFFIZIENT))];
+  // [0, 8, 23, 42, 64, 89, 118, 148, 181, 216, 253, ...]
+  // Level 100 = 8000 EP gesamt = ein Prestige-Zyklus
+  const EP_PRO_ZYKLUS = LEVEL_SCHWELLEN[100]; // 8000
 
   // Berechnet Level aus Gesamt-EP (Level 1–10).
   function berechneLevel(totalXp) {
