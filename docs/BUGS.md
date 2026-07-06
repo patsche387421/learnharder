@@ -82,7 +82,10 @@ Legende: 🔴 Kritisch · 🟡 Wichtig · 🟢 Nice-to-have · ✅ Erledigt
   vergangenem UTC-Kalendertag, gedeckelt bei 5** — nicht +5, und nur unter dem Cap.
 - **Auswirkung:** Irreführend (verspricht das 5-fache, ignoriert Cap).
 - **Aktion:** Hinweis dynamisch aus den echten Stats ableiten oder entfernen.
-- **Status:** 🟢 Offen — reiner Anzeigefehler, kein Bug an level.js.
+- **Status:** ✅ Erledigt — der Hinweis war bereits mit dem Dashboard-Umbau entfernt
+  (Merge `b8ca928`, 2026-06-27: „+5 morgen"-Karte durch die „Energie aufladen"-Aktionskarte
+  ersetzt). Diese Session hat das per Commit-Historie + grep bestätigt und die verwaiste
+  `.stat-hint`-CSS-Regel entfernt (Commit `c91b312`). Kein Eingriff an `level.js`.
 
 ### BUG-014: Dashboard-Begrüßung zeigt E-Mail-Präfix + unpassende Copy
 - **Symptom:** Drei statische Stellen in `dashboard.html`:
@@ -92,7 +95,11 @@ Legende: 🔴 Kritisch · 🟡 Wichtig · 🟢 Nice-to-have · ✅ Erledigt
   kein echtes Anzeigename-Feld im Datenmodell. Begrüßungs-Copy ist statisch.
 - **Auswirkung:** Begrüßung wirkt unpersönlich/technisch (`Hey, schueler1!`).
 - **Aktion:** Anzeigename-Quelle klären (Profil-Feld o. Ä.) + Copy überarbeiten.
-- **Status:** 🟢 Offen — kosmetisch.
+- **Status:** ✅ Erledigt (Commit `ad10259`). Entscheidung: kein DB-Feld — `Auth.displayName()`
+  säubert den E-Mail-Präfix (erstes Namenssegment ≥ 2 Zeichen, Endziffern weg, Erstbuchstabe
+  groß: `max.mustermann`→`Max`, `schueler1`→`Schueler`). Neue Copy: Eyebrow „Schön, dass du da
+  bist", Headline „Hey, {Name}!" (Fallback „Hey!"), Sub „Dein nächstes Thema wartet." Belegt
+  über 7 Node-Invarianten.
 
 ### BUG-011: Trophäen-Tausch cappt Energie nicht bei 5
 - **Symptom:** `Level.tauscheTrophäen()` (`level.js`) setzt `energy = stats.energy +

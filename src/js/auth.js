@@ -33,10 +33,18 @@ const Auth = (() => {
     return _session?.user ?? null;
   }
 
-  // E-Mail-Präfix als Anzeigename: "test@lernhub.htl" → "test"
+  // Anzeigename aus dem E-Mail-Lokalteil ableiten und säubern:
+  // erstes „echtes" Namenssegment (getrennt durch . / _ / -, mind. 2 Zeichen),
+  // angehängte Ziffern entfernt, Erstbuchstabe groß.
+  // "max.mustermann@…" → "Max", "schueler1@…" → "Schueler", "j_doe@…" → "Doe".
   function displayName() {
-    const email = _session?.user?.email ?? "";
-    return email.split("@")[0] || email;
+    const email     = _session?.user?.email ?? "";
+    const lokalteil = email.split("@")[0];
+    // Segmente säubern (Endziffern weg), erstes mit ≥ 2 Zeichen als Name wählen
+    const segmente  = lokalteil.split(/[._-]/).map((teil) => teil.replace(/\d+$/, ""));
+    const name      = segmente.find((teil) => teil.length >= 2) || lokalteil;
+    if (!name) return email;
+    return name.charAt(0).toUpperCase() + name.slice(1);
   }
 
   // Schützt eine Seite: wartet auf Supabase-Session und leitet um wenn nicht eingeloggt

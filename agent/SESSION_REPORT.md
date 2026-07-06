@@ -10,82 +10,6 @@ Erstellt: 2026-06-12 | Branch: `dev` | Commit: `76684f2`
 
 ---
 
-## Session 2026-07-01 — S3: 0 % Emojis + Prestige-Level-System
-
-Zwei Feature-Branches von `dev`, je `--no-ff` gemergt; **kein Push, kein `main`**.
-Die Migration der `prestige`-Spalte wurde manuell in Supabase ausgeführt (Prod-Ref
-`gveqduphjcrogsnhxkbw`). Dieser Doku-Commit kommt separat nach den Merges.
-
-**Branch `feat/s3a-icons`** (Merge `3754e94`):
-- `1f2b229` feat(icons): sun/moon/smile/party/flame als farbige Icons final
-- `8551367` feat(ui): alle Emojis durch Icons.render() ersetzt, target differenziert
-
-**Branch `feat/s3b-prestige`** (Merge `af3db03`):
-- `ce22ec7` docs(db): Migrations-SQL für prestige-Spalte als Kommentar in level.js
-- `62a6868` feat(level): 100-Level-Kurve + Prestige-Logik in level.js
-- `bb7e9e8` fix(level): Kurven-Koeffizient auf 1.5×8 (Progression ausbalanciert)
-- `0e8519b` feat(topbar): Level-Badge als tier-abhängiges SVG + Prestige-Kreis
-- `5b3a009` fix(level): epText zeigt verbleibende EP bis nächstes Level
-- `d7d41b8` feat(profil): Rang-Tier + Prestige auf Profilseite anzeigen
-
-### S3a — Icons (0 % UI-Emojis)
-- **5 neue farbige Icons** in `icons.js` (alle `farbig:true`, viewBox `0 0 96 96`,
-  Gradient-IDs pro Instanz eindeutig): `party` (Konfetti-Stern), `flame` (Ergebnis <40 %),
-  `sun`/`moon` (Theme-Toggle), `smile` (Ergebnis 40–69 %).
-- **Emoji-Ersatz:** Theme-Toggle (profil.html) → `Icons.render('sun'|'moon')`;
-  Tagesquiz-Ergebnis → `party`/`smile`/`flame` je Score (≥70 / ≥40 / sonst).
-- **`target` differenziert:** Herausforderung (Dashboard-H2 + Tagesquiz-Start) behält
-  `target`; Quiz-Punkte-Karte → farbiges `star` (existierte bereits).
-- **0 echte UI-Emojis** verbleiben (nur icons.js-Doku-Kommentare). Ein 🔴 in einer
-  Log-Zeile von `pos/datenstrukturen.js` bewusst außerhalb des Scopes gelassen.
-
-### S3b — Prestige-Level-System
-- **DB:** neue Spalte `user_stats.prestige INTEGER NOT NULL DEFAULT 0` (Migration als
-  einzeiliger Kommentar oben in `level.js`, manuell ausgeführt).
-- **100-Level-Kurve:** `LEVEL_SCHWELLEN[n] = round(n^LEVEL_EXPONENT · LEVEL_KOEFFIZIENT)`
-  mit `LEVEL_EXPONENT=1.5` / `LEVEL_KOEFFIZIENT=8` (Modul-Scope, einzige Balance-Knöpfe)
-  → Level 100 = 8000 EP = ein Prestige-Zyklus (`EP_PRO_ZYKLUS`).
-- **`berechneFortschritt(gesamtEp, prestige=0)`** neu: EP per Modulo auf den Zyklus,
-  Level 1–100, `tier` (bronze <25 / silber <50 / gold <75 / platin), `prestige`
-  durchgereicht. `epText` zeigt „X EP bis Level N+1" bzw. „Prestige erreicht!" (L100).
-- **Prestige-Aufstieg:** `vergibBelohnungen` schreibt `prestige = floor(total_xp /
-  EP_PRO_ZYKLUS)` mit und liefert `prestigeUp` (analog `levelUp`); `getUserStats` liest
-  `prestige` mit.
-- **Topbar-Badge** (`renderLevelBadge` in layout.js): beveled Hexagon (viewBox 96) in
-  Tier-Farbe mit Rim/Face/Highlight/Shadow-Facetten, Glow-Halo für gold/platin,
-  zentrierte Level-Zahl, ab Prestige 1 oranger Kreis mit Prestige-Zahl. Ersetzt den alten
-  `.topbar-level-badge`-Span (CSS entsprechend reduziert).
-- **Profil-Rang:** Zeile „{Tier} · Level {n} · Prestige {p}" unter der Level-Anzeige,
-  Tier-Name je `data-tier` eingefärbt.
-
-### Bewusste Abweichungen / Entscheidungen (je begründet)
-- **Off-by-one in `berechneFortschritt` korrigiert:** Vorgabe-Pseudocode nutzte
-  `Math.max(1, level)` (= bestandene Schwellen), `epVon/epBis` gingen aber von
-  bestandene+1 aus → hätte „200 / 189 EP" und dauerhaft 100 % ergeben. Fix
-  `level = Math.min(100, bestanden + 1)`; über den ganzen Zyklus 0 Invarianten-Fehler.
-- **Prestige über den bestehenden Upsert persistiert** (statt separatem UPDATE): eine
-  Schreiboperation, idempotent, da `prestige` rein aus `total_xp` ableitbar + monoton.
-- **Kurve `1.5×8`** (Nachjustierung nach initial `1.8×3`) → runde 8000 EP pro Zyklus.
-- **`sun`/`moon`/`smile` in die farbige Icon-Sektion verschoben** (zunächst als
-  Linien-Icons gedraftet; finale Design-Vorgabe war farbig).
-
-### Verifikation (Prod-Session, User `schueler1`)
-- S3a: Dashboard (star/target/book/streak/energy korrekt), Profil-Theme-Toggle,
-  Tagesquiz-Ergebnis-Mapping (party/smile/flame), Konsole sauber.
-- S3b: `getUserStats` liest `prestige` fehlerfrei; Kurve numerisch geprüft (Node-Invarianten,
-  0 Fehler); Badge live (silber L44) + Prestige-Kreis (simuliert P2); Profil-Rang
-  („Silber · Level 44", #A0A0A0); `epText` band-konsistent; Konsole überall sauber.
-- **Screenshot-Tooling** in dieser Env instabil (Timeout) → Verifikation via berechnete
-  Stile / DOM-Inspektion + Render-Widgets.
-
-### Offen (nach IDEEN.md ausgelagert)
-- **Prestige-Up-Popup:** `prestigeUp` wird schon geliefert, aber noch nirgends angezeigt.
-- **Technische Schuld:** alte 10er-Kurve (`berechneLevel`/`LEVEL_THRESHOLDS`) läuft parallel
-  weiter (schreibt `user_stats.level` + `subject_xp.level` + `levelUp`-Toast) → gespeichertes
-  `level` ist vom angezeigten 100er-Level entkoppelt. Bewusst akzeptiert, eigene Session.
-
----
-
 ## Session 2026-07-06 — feat/prestige-popup: Prestige-Up-Feier im Ergebnis-Screen
 
 **Branch:** `feat/prestige-popup` (von `dev`), 3 Commits, via `--no-ff` nach `dev`
@@ -180,6 +104,53 @@ den Tag**: §12 zählt die Einheit Versuch/Zeile/`played_at` unkonditioniert; §
   Dashboard-Anzeigefehler (BUG-013/014), Trophy-Shop, Account-Löschung, Button-System-Rest.
 - Nebenbefund: IDEEN-Eintrag „Tagessperre entfernen" war bereits 2026-06-25 (BUG-012)
   umgesetzt → in dieser Session als ✅ nachgezogen.
+
+### Deploy (2026-07-06)
+dev → main gemergt (`dfa4fa7`), origin/main + origin/dev gepusht. Stale Branches
+`fix/header-rebuild` + `fix/dashboard` gelöscht. Netlify-Publish ist manueller Schritt
+(Auto-Build aus).
+
+---
+
+## Session 2026-07-06 — fix/dashboard-begruessung: Dashboard-Begrüßung & Anzeigename (BUG-014)
+
+**Branch:** `fix/dashboard-begruessung` (von `dev`), 1 Feature-Commit, via `--no-ff` nach
+`dev` gemergt (Merge `e260320`). Kein Push, kein `main`, kein Deploy, keine Migration.
+Der Dead-CSS-Cleanup und dieser Doku-Commit kommen separat auf `dev` obendrauf.
+
+**Commits:**
+- `ad10259` fix: Dashboard-Begrüßung personalisieren und Anzeigename säubern (BUG-014)
+- `c91b312` chore: verwaiste .stat-hint-CSS-Regel entfernen (Rest von BUG-013) — direkt auf `dev`
+
+### BUG-014 — Begrüßung & Anzeigename
+- **Design-Entscheidung (Patsche):** kein DB-/Profilfeld — der Anzeigename bleibt aus dem
+  E-Mail-Lokalteil, wird aber gesäubert. Scope blieb auf `dashboard.html` + `auth.js`.
+- **`Auth.displayName()` (auth.js):** wählt das erste Namenssegment (getrennt durch `.` / `_` /
+  `-`, mind. 2 Zeichen nach Ziffern-Strip), kappt angehängte Ziffern und macht den
+  Erstbuchstaben groß. `max.mustermann@…`→`Max`, `schueler1@…`→`Schueler`, `j_doe@…`→`Doe`.
+  Fallback: roher Lokalteil bzw. leere E-Mail → "". Einziger Konsument bleibt dashboard.html.
+- **Hero-Copy (dashboard.html):** Eyebrow „Willkommen zurück" → „Schön, dass du da bist";
+  Sub „Bereit weiterzulernen?" → „Dein nächstes Thema wartet." Headline-Fallback „Hey!" und der
+  Laufzeit-Override „Hey, {Name}!" (Z. 86) unverändert — mit gesäubertem Namen jetzt z. B.
+  „Hey, Schueler!".
+
+### BUG-013 — „+5 morgen" (bestätigt erledigt)
+- Der irreführende `stat-hint`-Hinweis war schon mit dem Dashboard-Umbau raus (Merge `b8ca928`,
+  2026-06-27: Energie-Statuskarte → „Energie aufladen"-Aktionskarte). Diese Session hat das per
+  Commit-Historie + grep bestätigt und die einzige Restspur — die verwaiste `.stat-hint`-Regel
+  in `style.css` — als separaten `chore`-Commit (`c91b312`) entfernt. Kein Eingriff an `level.js`.
+
+### Verifikation
+- **Node-Micro-Test** der reinen Säuberungslogik (byte-identische Kopie von `displayName`):
+  **7/7 grün** (u. a. Max / Schueler / Doe / Test / Anna-Lena→Anna / leer→"" / rein-numerisch).
+  `auth.js`: `node --check` sauber. `.stat-hint`-Entfernung: per grep verifiziert tot
+  (kein HTML nutzt die Klasse).
+- **Keine Live-/Browser-Verifikation:** Dashboard ist login-gated, Dev-Server zeigt auf Prod
+  (Memory). Korrektheit ruht auf Node-Invarianten + Diff-Gate + grep-Nachweis.
+
+### Offen (in IDEEN.md)
+- **Technische Schuld** (10er-Kurve entkoppeln) unverändert offen. Weitere Kandidaten:
+  Trophy-Shop, Account-Löschung, Button-System-Rest, Public-Page-Topbar.
 
 ---
 

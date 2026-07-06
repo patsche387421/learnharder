@@ -976,12 +976,6 @@ button {
   transition: width 0.4s ease;
 }
 
-.stat-hint {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  margin-top: 0.25rem;
-}
-
 /* ---------- Tages-Quiz Karte (Dashboard) ---------- */
 .tagesquiz-card {
   background: var(--surface);
