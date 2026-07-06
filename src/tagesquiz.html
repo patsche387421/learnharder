@@ -76,6 +76,14 @@
     <!-- Screen: Ergebnis -->
     <section id="screen-ergebnis" class="quiz-screen" hidden>
       <div class="quiz-screen-inner">
+        <!-- Prestige-Feier: nur bei Zyklus-Abschluss sichtbar (JS togglet hidden) -->
+        <div id="ergebnis-prestige" class="ergebnis-prestige" hidden>
+          <div class="prestige-badge">
+            <span class="prestige-badge-zahl" id="prestige-zahl"></span>
+            <span class="prestige-badge-label">Prestige</span>
+          </div>
+          <p class="prestige-titel" id="prestige-titel"></p>
+        </div>
         <span class="quiz-screen-icon" id="ergebnis-icon"></span>
         <h2>Quiz beendet!</h2>
         <p class="ergebnis-score" id="ergebnis-score"></p>
@@ -198,6 +206,11 @@
     async function zeigeErgebnis() {
       zeigeScreen("screen-ergebnis");
 
+      // Prestige-Feier zunächst verstecken: bei einem Nochmal-Versuch ohne
+      // Zyklus-Abschluss darf keine veraltete Feier stehen bleiben.
+      const prestigeBox = document.getElementById("ergebnis-prestige");
+      prestigeBox.hidden = true;
+
       const { fragen, richtig, leben } = quizZustand;
       const gesamt = fragen.length;
       const score  = gesamt > 0 ? Math.round(richtig / gesamt * 100) : 0;
@@ -239,6 +252,17 @@
       // Frische Stats nach dem Versuch: Energie wurde verbraucht (ggf. EP/Level
       // dazu) → Topbar und "Nochmal"-Button mit aktuellem Reststand aktualisieren.
       const stats = await Level.getUserStats();
+
+      // Zyklus-Abschluss (Level 100 → Prestige +1): sichtbare Feier mit der neuen
+      // Prestige-Zahl. N kommt aus den frischen Stats — vergibBelohnungen hat prestige
+      // bereits in die DB geschrieben; ergebnis.prestigeUp ist nur der Auslöser.
+      if (ergebnis.prestigeUp) {
+        document.getElementById("prestige-zahl").textContent = stats.prestige;
+        document.getElementById("prestige-titel").textContent =
+          "Prestige " + stats.prestige + " erreicht!";
+        prestigeBox.hidden = false;
+      }
+
       await Layout.renderTopbar(stats);
       aktualisiereNochmalButton(stats.energy);
 
