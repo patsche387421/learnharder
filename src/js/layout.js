@@ -214,7 +214,7 @@ const Layout = (() => {
     }
 
     const prestigeBadge = hatPrestige
-      ? `<circle cx="48" cy="80" r="10" fill="#EA580C" stroke="#FFFFFF" stroke-width="2"/>` +
+      ? `<circle cx="48" cy="80" r="10" fill="var(--prestige)" stroke="#FFFFFF" stroke-width="2"/>` +
         `<text x="48" y="84.5" font-family="'Space Grotesk',Arial,sans-serif"` +
         ` font-weight="bold" font-size="12" fill="#FFFFFF" text-anchor="middle">${prestige}</text>`
       : '';
