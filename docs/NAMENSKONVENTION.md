@@ -54,7 +54,9 @@ Code geschrieben wird.
 | Export | Signatur | Zweck | Art |
 |---|---|---|---|
 | `LEVEL_THRESHOLDS` | `number[]` = `[0,100,250,500,900,1400,2000,2700,3500,4500]` | EP-Schwellen, Index = Levelnummer | Daten-Konstante (rein) |
+| `berechneStreak` | `(zeitstempel, jetzt=new Date()) ⇒ number` | Streak = aufeinanderfolgende UTC-Lerntage (§12) aus `played_at`-Zeitstempeln | reine Berechnung |
 | `getUserStats` | `() ⇒ Promise<{energy, level, trophies, totalXp}>` | globale Gamification-Werte des Users | Seiteneffekt: DB-Lesen (`user_stats`) |
+| `getStreak` | `() ⇒ Promise<number>` | aktuelle Streak des Users (liest `played_at`, delegiert an `berechneStreak`) | Seiteneffekt: DB-Lesen (`daily_quiz_log`) |
 | `verbrauchEnergie` | `() ⇒ Promise<boolean>` | zieht 1 Energydrink ab (false bei 0) | Seiteneffekt: DB-Schreiben (`user_stats`) |
 | `hatHeuteTagesQuizGespielt` | `() ⇒ Promise<boolean>` | Tagessperre-Prüfung (UTC-Tag) | Seiteneffekt: DB-Lesen (`daily_quiz_log`) |
 | `vergibBelohnungen` | `({richtig, gesamt, fachId, istTagesQuiz=false, lebenProzent}) ⇒ Promise<{ep, trophien, bonus, levelUp}>` | berechnet **und** schreibt EP/Trophäen/Level + Tagesquiz-Log | Seiteneffekt: DB-Lesen+Schreiben (`user_stats`, `subject_xp`, `daily_quiz_log`) + `console.log` |

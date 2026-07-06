@@ -4,134 +4,9 @@ Erstellt: 2026-06-12 | Branch: `dev` | Commit: `76684f2`
 
 ---
 
-> **Archiv-Hinweis:** Ältere Sessions (2026-06-12 bis 2026-06-27) wurden nach
+> **Archiv-Hinweis:** Ältere Sessions (2026-06-12 bis 2026-06-28) wurden nach
 > [SESSION_REPORT_ARCHIVE.md](SESSION_REPORT_ARCHIVE.md) ausgelagert. Diese Datei
 > führt nur die **letzten 3 Sessions** und wird bei jedem Session-Start gelesen.
-
----
-
-## Session 2026-06-28 — Bereich 3: Header-Rebuild + Mobile-First-Richtlinie
-
-**Branch:** `fix/header-rebuild` (von `dev`). Zwei Commits; Merge nach `dev`
-(`--no-ff`, `d1ee4b8`); dieser Doku-Commit kommt **nach** dem Merge separat
-obendrauf (nicht in den Merge gefaltet). Kein Push, kein `main`, kein Deploy.
-
-**Commits:**
-- `beca6fa` docs(richtlinien): Mobile-First-Leitlinien als agent/MOBILE_FIRST.md
-- `79ca8dd` feat(header): XP-Pill entfernt, EP-Fortschritt in Leiste, Profil-Link, Auth-Zustand
-- `d1ee4b8` merge: Bereich 3 — Header-Rebuild + Mobile-First-Richtlinie (`--no-ff`)
-
-### Mobile-First-Richtlinie (eigener docs-Commit)
-- Neu `agent/MOBILE_FIRST.md`: verbindliche Leitlinie — mobile-first (Basis-Styles =
-  Mobile, Erweiterung per `min-width`), Breakpoints (<768 / ≥768 / ≥1024),
-  Touch-Targets ≥44×44px, `rem` statt fixer `px`, keine horizontalen Overflows.
-
-### Header-Rebuild (a–d, Code-Commit in `src/js/layout.js` + `src/css/style.css`)
-- **(a)** Gesamt-XP-Pill (`topbar-pill--xp`) aus dem Header entfernt, inkl. toter CSS-Regel.
-- **(b)** EP-Fortschritt sichtbar: `f.epText` aus `Level.berechneFortschritt` (SSOT in
-  `level.js`, Format „105 / 600 EP") als zentrierter Text; Leisten-Höhe via lokalem
-  `--progress-h` (1.125rem); Zahl `--text-on-primary` + dezentes `text-shadow`.
-- **(c)** „Profil" als echter Nav-Link (`/profil.html`, Active-State via `aktiverNav`);
-  Avatar-Icon + Helfer `topbarInitialen` entfernt.
-- **(d)** Auth-Zustand: abgemeldet NUR Logo + Branding + „Anmelden" (`topbarLogo()`
-  extrahiert); angemeldet voller Header. Bottom-Reserve der EP-Leiste nur via
-  `.topbar:has(.topbar-progress)` → abgemeldet kompakt (64px), kein Leerraum.
-
-### Entscheidungen
-- **Abgemeldet behält „Anmelden"** (statt strikt nur Logo): Login-Einstieg auf
-  öffentlichen Seiten bleibt sichtbar (Patsche-Entscheid).
-- **`:has()`-Tightening** statt JS-Klasse: Reserve folgt automatisch der EP-Leiste;
-  höhere Spezifität als die Mobile-`.topbar`-Regel → Padding greift auch mobil.
-- **Energie-`X/5`-Pill war NICHT Teil dieses Prompts** (nur a–d) — bewusst ausgelassen,
-  obwohl in Session A vorgemerkt. Bleibt offen.
-
-### Branch-Korrektur (zu Beginn)
-Der erste Doku-Commit (`beca6fa`) landete versehentlich direkt auf `dev`. Korrigiert:
-`fix/header-rebuild` an `beca6fa` angelegt, `dev` per `reset --hard` zurück auf `b2aaad3`,
-danach gesamte Session isoliert auf dem Feature-Branch. Verlustfrei (Tree sauber, Commit
-vorab auf dem Branch gesichert).
-
-### Verifikation
-Live über statischen Server (`lernhub`, User `schueler1`), Konsole überall sauber.
-- **Eingeloggt (dashboard):** keine XP-Pill; EP-Leiste „105 / 600 EP" lesbar, Füllung
-  17.5 % = 105/600 (SSOT-konsistent); 6 Nav-Punkte inkl. Profil (aktiv bei `/profil.html`,
-  via `pushState` geprüft, da `npx serve` `.html` strippt); Avatar weg.
-- **Abgemeldet (impressum):** nur Logo + Branding + „Anmelden"; sonst nichts; `.topbar`
-  kompakt (64px/0).
-- **Mobile 390px:** Hamburger öffnet Menü inkl. Profil; kein horizontaler Overflow;
-  Reserve (82px/18px) greift, kein Overlap (Logo y≤50, Leiste y=63).
-
-### Vorgemerkt → Bereich 5 (Mobile-Politur)
-- **Touch-Target 44px:** Mobile-Nav-Links sind 37px hoch (< 44px aus MOBILE_FIRST.md),
-  betrifft alle Links (Bestand). Fix (`min-height:44px` + Flex-Zentrierung auf
-  `.topbar-nav-link` in der Mobile-Media-Query) bewusst nach Bereich 5 vertagt.
-- Mobile-Menü zeigt Team/Rangliste weiter nicht (disabled-Platzhalter, auf <768px
-  ausgeblendet) — „alle 6 Punkte" gilt nur auf Desktop.
-
----
-
-## Session 2026-06-30 — S2: Token-Konsolidierung (Shadow-/Radius-/Button-Token)
-
-**Branch:** `chore/s2-token-konsolidierung` (von `dev`), 4 Commits. Merge nach `dev`
-(Fast-Forward, `46cc005`) und nach `main` (`--no-ff`, Merge `831d80c`); **beide gepusht**
-(`origin/dev`, `origin/main`). Branch nach Merge lokal gelöscht. Dieser Doku-Commit
-(Session-Report) kommt separat obendrauf — ohne Push.
-
-**Commits:**
-- `8d73575` chore(tokens): Shadow-/Button-Token (+10px-CTA-Radius) für S2 ergänzt
-- `e2d8d75` refactor(css): Schatten-/Radius-Hardcodes auf Token umgestellt
-- `a08c036` refactor(css): zentrale .btn-Basis + Button-Token eingeführt
-- `46cc005` refactor(ui): Button-Markup auf .btn-Basis + Modifier umgestellt
-
-### Umgesetzt (Leitprinzip: visuell ändert sich nichts ungewollt)
-- **C1 `tokens.css` (additiv, kein visueller Effekt):** neue Tokens `--shadow-xl`
-  (`0 20px 40px #0000004D`, Hex-Alpha-Stil wie `--shadow-sm/-lg`), `--radius-cta` (10px)
-  sowie Button-Tokens `--btn-radius` (= `--radius-md`) und `--btn-border`
-  (`1px solid var(--surface-2)`).
-- **C2 `style.css` Hardcodes → Token:** `.auth-card`-Schatten → `--shadow-xl`;
-  8px → `--radius-md` (Input, generischer `button`, `.btn-ghost-sm`, `.static-hinweis`);
-  10px → `--radius-cta` (`.btn-cta`, `.stat-pill`); alle Fortschrittsbalken (99px/5px/3px)
-  → `--radius-full`; 6px → `--radius-sm` (`code`, `.card-score`). `.topbar-progress-fill`
-  (`0 2px 2px 0`) und `.tab` (`0`) bewusst als Einzelwerte gelassen.
-- **C3a `.btn`-Basis + Modifier:** zentrale `.btn { cursor; border-radius: var(--btn-radius) }`
-  + `.btn--primary/-ghost/-cta/-ghost-sm/-lg`; Ghost-Border auf `--btn-border`;
-  `#login-form button` auf der Basis mitgezogen (Alt-Namen vorübergehend als Alias).
-- **C3b Markup:** 15 Aufrufstellen (`dashboard/fach/profil/tagesquiz/tauschen.html`,
-  `js/layout.js`) auf `class="btn btn--…"` umgestellt; CSS-Aliase entfernt. `.btn-arrow`
-  bleibt bewusst Deko-Kind (kein Button-Modifier).
-
-### Bewusste Abweichungen vom Plan (je begründet)
-- **`--radius-10` → `--radius-cta`:** der ursprüngliche Plan-Name `--radius-xl` war in
-  `tokens.css` bereits mit **16px** belegt (Kollision) → semantischer Name nach dem
-  Haupt-Konsument `.btn-cta` (`.stat-pill` als Mitnutzer im Kommentar vermerkt).
-- **E3-Korrektur — Profil-EP-Bars `5px`/`3px` → `--radius-full` statt `--radius-sm`:**
-  `.profil-bar-wrap/-fill` (Höhe 10px) und `.profil-fach-bar-wrap/-fill` (Höhe 6px) haben
-  Radius = halbe Höhe = **volle Pill-Kappen**; `--radius-sm` (4px) hätte sie abgeflacht.
-  `--radius-full` ist hier visuell-neutral (wie alle anderen Balken).
-- **`.btn`-Basis „Nur Radius" (ohne `font-family`):** bewusster Verzicht auf Font-Angleich;
-  einzige sichtbare Folge ist, dass die **3 vormals eckigen `a.btn--primary`** (Dashboard-
-  CTA-Link + 2× Tagesquiz) jetzt **8px rund** sind (der Radius des generischen `button{}`
-  griff bei `<a>` nicht).
-- **`--btn-shadow` und `--brand`-Alias weggelassen:** kein Konsument in S2 (Shadow gehört
-  zu S4, Brand-Alias zu S3).
-
-### Verifikation
-Eingeloggter Seiten-Sweep (Server `lernhub`, User `schueler1@lernhub.htl`), Konsole
-**überall sauber**, **keine mutierenden Klicks** (kein Quiz-Start, kein Tausch):
-- **Dashboard:** `a.btn--cta` 10px, `a.btn--primary` **8px** (vormals eckig → jetzt rund).
-- **Fach (dbi):** `button.btn--primary` „Auswerten" 8px.
-- **Tagesquiz:** 7 Buttons inkl. sichtbarem `btn--primary btn--lg` (Padding 32px /
-  Font 16.8px) + ghost-sm mit Border — alle korrekt.
-- **Profil:** 2× `btn--ghost` 8px; EP-Bars rendern als volle Pills (999px @ 10/6px Höhe);
-  `--btn-border` folgt dem Theme (dark `#1A1A2E` / light `#E2E8F0`); Abmelden-Rot intakt.
-- **Tauschen:** `button.btn--primary` (disabled) 8px.
-- Token-Auflösung + `.auth-card`-Schatten byte-identisch in Dark **und** Light; kein JS
-  hängt an den Button-Klassen.
-
-### Offen / bekannt (nicht S2-Scope)
-- **`<button>`-Elemente laufen weiter in der System-Schrift** statt Space Grotesk
-  (Form-Controls erben `font-family` nicht; im `.btn`-Kommentar dokumentiert) → Kandidat
-  für eine spätere Font-Vereinheitlichung. S2 war bewusst „nur Radius".
 
 ---
 
@@ -208,6 +83,103 @@ Die Migration der `prestige`-Spalte wurde manuell in Supabase ausgeführt (Prod-
 - **Technische Schuld:** alte 10er-Kurve (`berechneLevel`/`LEVEL_THRESHOLDS`) läuft parallel
   weiter (schreibt `user_stats.level` + `subject_xp.level` + `levelUp`-Toast) → gespeichertes
   `level` ist vom angezeigten 100er-Level entkoppelt. Bewusst akzeptiert, eigene Session.
+
+---
+
+## Session 2026-07-06 — feat/prestige-popup: Prestige-Up-Feier im Ergebnis-Screen
+
+**Branch:** `feat/prestige-popup` (von `dev`), 3 Commits, via `--no-ff` nach `dev`
+gemergt (Merge `d5adb97`). Kein Push, kein `main`, kein Deploy. Dieser Doku-Commit
+kommt separat nach dem Merge obendrauf.
+
+**Commits:**
+- `0a70fe7` refactor(tokens): Prestige-Token einführen
+- `160468c` feat: Prestige-Up-Feier im Ergebnis-Screen
+- `9f7a4ff` refactor: Prestige-Feier-Reset vor Screen-Wechsel ziehen
+
+### Umgesetzt
+- **Token (Commit 1):** neues semantisches `--prestige: #EA580C` in `tokens.css` (bei
+  `--warning`/`--gold`); der bislang hardcodierte Prestige-Kreis in `renderLevelBadge`
+  (`layout.js`) nutzt jetzt `var(--prestige)`.
+- **Feier (Commit 2):** bei `ergebnis.prestigeUp === true` (Zyklus-Abschluss L100 →
+  Prestige +1) blendet `zeigeErgebnis` (`tagesquiz.html`) eine Feier im bestehenden
+  `#screen-ergebnis` ein — runder Prestige-Badge (`--prestige`-Kreis + weiße Zahl, wie
+  der Topbar-Sub-Kreis) mit Gold-Ring/-Glow und Titel „Prestige N erreicht!". N kommt
+  aus dem ohnehin geladenen `stats.prestige` (kein Rückgabe-Umbau). Statisches
+  Container-Markup, per `hidden` getoggelt (kein 6. Screen). CSS in `style.css`
+  ausschließlich über Tokens (`--prestige`, `--gold`, `--glow-gold`, `--radius-full`,
+  `--space-*`, `--fs-*`, `--fw-*`, `--font-display`, `--text-on-primary`), kein
+  `!important`, dezente pop-Animation.
+- **Robustheit (Commit 3):** der `hidden = true`-Reset läuft jetzt VOR `zeigeScreen`,
+  damit die Kein-Aufblitzen-Garantie bei „Nochmal" nicht an der `await`-Freiheit
+  zwischen Screen-Wechsel und Reset hängt.
+
+### Datenfluss (bestätigt)
+- `Level.vergibBelohnungen` schreibt `prestige = floor(total_xp / EP_PRO_ZYKLUS)` bereits
+  per Upsert und liefert `prestigeUp` (bool, nur Auslöser). Zwischen Upsert und dem
+  frischen `getUserStats` in `zeigeErgebnis` liegt kein weiterer Schreibvorgang →
+  `stats.prestige` = N. Kein Eingriff an DB/Kurve/`levelUp`, keine Migration.
+- Re-Trigger der pop-Animation bei theoretischem zweiten Prestige-Up ist durch den
+  `display:none → flex`-Zyklus (Reset + echte `await`s dazwischen) automatisch gegeben —
+  praktisch irrelevant (2×8000 EP in einer Session).
+
+### Verifikation
+- Keine Live-Verifikation: Die Feier triggert nur bei echtem Zyklus-Abschluss (8000 EP);
+  einen Prestige-Up auf der Prod-DB auszulösen wäre mutierend und außerhalb des Scopes
+  (Dev-Server zeigt auf Prod, s. Memory). Korrektheit ruht auf Diff-Gate + der
+  bestätigten Datenfluss-Analyse.
+
+### Offen (in IDEEN.md)
+- **Technische Schuld** (10er-Kurve entkoppeln) unverändert offen; restliche Backlog-
+  Einträge (Tagessperre entfernen, Streak, Dashboard-Fixes, Trophy-Shop, Account-Löschung,
+  Button-System) unberührt.
+
+---
+
+## Session 2026-07-06 — feat/streak: Lerntage-in-Folge-Streak berechnen & anzeigen
+
+**Branch:** `feat/streak` (von `dev`), 1 Feature-Commit, via `--no-ff` nach `dev` gemergt
+(Merge `2587479`). Kein Push, kein `main`, kein Deploy, **keine Migration**. Dieser
+Doku-Commit kommt separat nach dem Merge obendrauf.
+
+**Commit:**
+- `be34a9e` feat: Lerntage-in-Folge-Streak berechnen und im Dashboard anzeigen
+
+### Umgesetzt (SSOT in level.js, LEVEL_SYSTEM §12)
+- **`berechneStreak(zeitstempel, jetzt = new Date())`** — reine Funktion (nur `Date`, keine
+  Seiteneffekte), platziert nach `berechneFortschritt`. Zählt rückwärts über die **distinct
+  UTC-Tage** der übergebenen `played_at`-Zeitstempel. Kulanz: heute (noch) leer, aber gestern
+  vorhanden → Streak läuft ab gestern weiter; gestern UND heute leer → 0. Mehrere Zeilen am
+  selben Tag zählen einmal (Set über UTC-Tage). `jetzt` injizierbar (Node-Test/Referenzzeit).
+- **`getStreak()`** — async DB-Reader analog `getUserStats`: liest `daily_quiz_log.played_at`
+  des Users (nur diese Spalte, **alle** Zeilen — **kein** Row-Limit, sonst könnten viele
+  Versuche eines Tages ältere Tage verdecken; **kein** `success`-Filter, s. u.), delegiert an
+  `berechneStreak`. 0 bei fehlendem Login / Fehler / ohne Zeilen.
+- Beide im **Modul-Export** ergänzt (`berechneStreak`, `getStreak`).
+- **`dashboard.html`:** `Level.getStreak()` ins bestehende `Promise.all`; `#stat-streak` wird
+  **immer** als Zahl gesetzt (`String(streak)`) — 0 zeigt „0" (abweichend von
+  `stat-themen`/`stat-quiz`, die bei 0 „–" zeigen).
+
+### §12-Randfall (gegen LEVEL_SYSTEM.md verifiziert): `success=false` zählt mit
+Startzeilen aus `starteTagesQuiz` und abgebrochene Versuche (`success=false`) **zählen für
+den Tag**: §12 zählt die Einheit Versuch/Zeile/`played_at` unkonditioniert; §6 definiert
+`success` nur als „ob Leben > 0" (Quiz-bestanden-Flag, orthogonal zum Tag-Zählen). Daher
+**kein** `success`-Filter in `getStreak`.
+
+### Verifikation
+- **Node-Invarianten** der reinen `berechneStreak` (byte-identische Kopie, feste
+  Referenzzeit): **8/8 grün** — leer→0, nur heute→1, nur gestern (Kulanz)→1, 3 Tage→3,
+  Lücke bricht→2, mehrere Zeilen/Tag→einmal (2), gestern+heute leer→0, heute leer +
+  gestern/vorgestern→2. `level.js`: `node --check` sauber.
+- **Keine Live-/Browser-Verifikation:** Dashboard ist login-gated und der Dev-Server zeigt
+  auf Prod (Memory: README-Creds ungültig, Screenshots in dieser Env instabil). Korrektheit
+  ruht auf Node-Invarianten + Diff-Gate + Datenfluss-Analyse.
+
+### Offen (in IDEEN.md)
+- **Technische Schuld** (10er-Kurve entkoppeln) unverändert offen. Weitere Kandidaten:
+  Dashboard-Anzeigefehler (BUG-013/014), Trophy-Shop, Account-Löschung, Button-System-Rest.
+- Nebenbefund: IDEEN-Eintrag „Tagessperre entfernen" war bereits 2026-06-25 (BUG-012)
+  umgesetzt → in dieser Session als ✅ nachgezogen.
 
 ---
 

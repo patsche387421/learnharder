@@ -46,6 +46,7 @@
   --error:     #EF4444;     /* Falsch / Fehler */
   --warning:   #F97316;     /* Timer / Achtung */
   --timer:     var(--warning);
+  --prestige:  #EA580C;     /* Prestige-Aufstieg (Zyklus-Abschluss) */
   --info:      #06B6D4;     /* Energie / Info */
   --energy:    var(--info);
   --indigo:    #4F46E5;     /* Sekundär-Akzent (Verläufe) */

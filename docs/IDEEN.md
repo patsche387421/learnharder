@@ -45,18 +45,27 @@ Label-Kürzung), eigener Commit.
 
 Status: offen, kein Blocker.
 
-## Tagessperre entfernen (eigene Session, Code)
+## Tagessperre entfernen (eigene Session, Code) — ✅ ERLEDIGT
 `#screen-gespielt` aus dem Block-Pfad in tagesquiz.html lösen; Herausforderung nur
 noch über Energie begrenzen (BUG-012). `hatHeuteTagesQuizGespielt()` bleibt, wird
 aber nur noch für die Streak-Berechnung genutzt.
-Status: offen.
+Erledigt in Session 2026-06-25 (`feat/tagessperre-entfernen`, BUG-012); der „Nochmal"-
+Flow in tagesquiz.html legt pro Versuch eine frische `daily_quiz_log`-Zeile an → mehrere
+Zeilen/UTC-Tag (Basis der Streak-Distinct-Rechnung). Dieser Eintrag war nur ein
+Doku-Nachtrag (Status hing noch auf „offen").
+Status: ✅ erledigt.
 
-## Streak implementieren (eigene Session, Code)
+## Streak implementieren (eigene Session, Code) — ✅ ERLEDIGT
 `berechneStreak()` in level.js als reine Funktion (rückwärts aus
 `daily_quiz_log.played_at`, Definition siehe LEVEL_SYSTEM §12). Anzeige in
 dashboard.html `#stat-streak`. Keine Migration. Abhängig von / sinnvoll nach
 "Tagessperre entfernen".
-Status: offen.
+Erledigt in feat/streak (2026-07-06): reine `berechneStreak(zeitstempel, jetzt)` (SSOT,
+distinct UTC-Tage, Kulanz für heute-leer/gestern-vorhanden, mehrere Zeilen/Tag = einmal,
+`success=false` zählt mit — §12) + async DB-Reader `getStreak()` (liest `played_at`, kein
+Row-Limit, kein success-Filter). `dashboard.html` füllt `#stat-streak` stets als Zahl
+(0 → „0"). Belegt über 8 Node-Invarianten. Keine Migration, keine neue Spalte.
+Status: ✅ erledigt.
 
 ## Dashboard-Anzeigefehler fixen (eigene Session, Code)
 "+5 morgen" dynamisch ableiten oder entfernen (BUG-013); Begrüßungs-Copy +
@@ -95,13 +104,18 @@ Erledigt in S3a: `target` differenziert (Quiz-Punkte → `star`, Herausforderung
 UI-Emojis (nur noch Doku-Kommentare + ein bewusst ausgelassenes 🔴 in einer Tool-Log-Zeile).
 Status: ✅ erledigt.
 
-## Prestige-Up-Popup (eigene Session, Code) — S3-Nachlauf
+## Prestige-Up-Popup (eigene Session, Code) — S3-Nachlauf — ✅ ERLEDIGT
 Beim Zyklus-Abschluss (Level 100 → Prestige +1) eine sichtbare Feier zeigen. Das Signal
 liegt bereits vor: `Level.vergibBelohnungen()` gibt `prestigeUp` (bool) zurück (analog
 `levelUp`), wird aber noch nirgends konsumiert. Diese Session: im Tagesquiz-Ergebnis
 (tagesquiz.html) bei `ergebnis.prestigeUp` einen Prestige-Screen/Toast einblenden (z. B.
 großer Prestige-Badge + „Prestige N erreicht!"). Kein DB-/Kurven-Eingriff nötig.
-Status: offen.
+Erledigt in feat/prestige-popup (2026-07-06): `zeigeErgebnis` blendet bei
+`ergebnis.prestigeUp` einen runden Prestige-Badge (`--prestige`-Kreis + weiße Zahl,
+Gold-Ring/-Glow) mit „Prestige N erreicht!" im bestehenden `#screen-ergebnis` ein
+(N = `stats.prestige`, kein 6. Screen, kein Rückgabe-Umbau). Neues Token `--prestige`
+in tokens.css; layout.js-Prestige-Kreis auf `var(--prestige)` umgestellt.
+Status: ✅ erledigt.
 
 ## Level-System: alte 10er-Kurve entkoppeln (technische Schuld aus S3b)
 S3b führte die 100-Level-Kurve (`LEVEL_SCHWELLEN`, 1.5×8) als Anzeige-SSOT ein
