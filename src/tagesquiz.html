@@ -76,7 +76,7 @@
     <!-- Screen: Ergebnis -->
     <section id="screen-ergebnis" class="quiz-screen" hidden>
       <div class="quiz-screen-inner">
-        <span class="quiz-screen-icon" id="ergebnis-icon">🎉</span>
+        <span class="quiz-screen-icon" id="ergebnis-icon"></span>
         <h2>Quiz beendet!</h2>
         <p class="ergebnis-score" id="ergebnis-score"></p>
         <div class="ergebnis-belohnungen" id="ergebnis-belohnungen"></div>
@@ -204,8 +204,8 @@
 
       document.getElementById("ergebnis-score").textContent =
         richtig + " von " + gesamt + " richtig (" + score + " %)";
-      document.getElementById("ergebnis-icon").textContent =
-        score >= 70 ? "🎉" : score >= 40 ? "😊" : "💪";
+      document.getElementById("ergebnis-icon").innerHTML =
+        Icons.render(score >= 70 ? "party" : score >= 40 ? "smile" : "flame", { size: 56 });
 
       const ergebnis = await Level.vergibBelohnungen({
         richtig,

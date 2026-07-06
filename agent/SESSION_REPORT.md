@@ -4,144 +4,9 @@ Erstellt: 2026-06-12 | Branch: `dev` | Commit: `76684f2`
 
 ---
 
-> **Archiv-Hinweis:** Ältere Sessions (2026-06-12 bis 2026-06-25) wurden nach
+> **Archiv-Hinweis:** Ältere Sessions (2026-06-12 bis 2026-06-27) wurden nach
 > [SESSION_REPORT_ARCHIVE.md](SESSION_REPORT_ARCHIVE.md) ausgelagert. Diese Datei
 > führt nur die **letzten 3 Sessions** und wird bei jedem Session-Start gelesen.
-
----
-
-## Session 2026-06-27 — Session A „Fundament": Doku-Struktur + globaler Header/Footer
-
-**Branch:** `feature/fundament` (von `dev`). Zwei Commits; Merge nach `dev` (`--no-ff`)
-im Anschluss an diesen Report-Commit. Kein push, kein `main`, kein Deploy.
-
-**Commits:**
-- `6eeeb1b` chore(docs): Doku-Struktur & Archiv einführen
-- `223c03e` refactor(layout): Header und Footer global per layout.js injizieren
-
-### Bereich 1 — Doku-Struktur & Archiv (Commit `6eeeb1b`)
-- `git mv` (Historie erhalten): `docs/KI_VORLAGE.md` + `data/import/MIGRATION_PROMPT.md`
-  → `agent/prompts/`; `docs/CLAUDE.md` → `agent/CLAUDE.md`;
-  `docs/DATENMIGRATION.md` → `docs/archive/` (abgelöst durch `DATA_MIGRATION_V2.md`).
-- Neu: `docs/README.md` (Wegweiser docs/ ↔ docs/archive/ ↔ agent/).
-- `README.md`: Link + Struktur-Prosa auf `agent/CLAUDE.md` angepasst (einziger harter
-  Verweis). Prosa-/Kommentar-Erwähnungen anderswo bewusst out of scope.
-- `agent/` bleibt getrackt (Entscheidung Patsche); `.gitignore` unverändert.
-
-### Bereich 2 — Globaler Header + Footer (Commit `223c03e`)
-- Neu `src/js/layout.js`: `renderTopbar` + Helfer (`topbarGrundgeruest`, `aktiverNav`,
-  `schliesseNav`, `verdrahteHamburger`, `topbarInitialen`) **1:1 aus `level.js`
-  verschoben** — nur die zwei Cross-Modul-Aufrufe auf `Level.getUserStats` /
-  `Level.berechneFortschritt` umgestellt; neu `Layout.renderFooter()`.
-- `level.js`: −158 (Topbar-Block + Modul-State + `renderTopbar`-Export entfernt;
-  Daten-/Logik-Funktionen byte-identisch unberührt).
-- 16 HTML-Seiten: inline `<footer>` → Platzhalter `<footer class="site-footer"
-  id="site-footer">`; `Level.→Layout.renderTopbar`; `<script src="/js/layout.js">`
-  nach `level.js` (auf `index.html` nach `auth.js`).
-
-### Entscheidungen
-- **Footer-Auto-Run statt Pro-Seite-Aufruf:** `renderFooter()` läuft per
-  `DOMContentLoaded` (Muster wie `icons.js`). Grund: auf allen Seiten steht `<footer>`
-  *nach* den Scripts → ein synchroner Aufruf liefe vor dem Parsen des Footer-Elements
-  ins Leere (auf `index.html` garantiert leer). Auto-Run ist robust + DRY; `renderFooter`
-  bleibt zusätzlich exportiert.
-- **`index.html`-Sonderfall:** Footer ja (Auto-Run), Topbar nein; `layout.js` nach
-  `auth.js` (also nach `supabase.js` → `SupabaseClient` definiert), **kein** `level.js`,
-  **kein** `renderTopbar`-Aufruf → kein `undefined`.
-- **Session-Split:** A = Fundament (dieser Branch), B = UI-Schliff (Bereich 3–6) —
-  damit `renderTopbar` nicht in derselben Session verschoben **und** umgebaut wird.
-
-### Verifikation
-- `node --check` für `layout.js` + `level.js` grün; grep: 0 zurückgelassene Topbar-
-  Referenzen in `level.js`, 0 verbliebene `Level.renderTopbar` in HTML, 16× Footer-
-  Platzhalter, 15× korrekte Script-Reihenfolge (index ausgenommen).
-- Live-Smoke-Test (Server `lernhub`, User `schueler1`), Console überall clean:
-  - **dashboard** — Topbar via `Layout.renderTopbar` (Cross-Modul `Level.*` +
-    `Icons.render`, 3 SVGs, Leiste 10 %) + Footer ✓.
-  - **pos.html** — Topbar + Footer + Fach-Inhalt (3 Stat-Pills, 11 Themen-Karten) ✓.
-  - **index.html** (logged-out) — Footer via Auto-Run **ohne** `level.js`,
-    `Level` undefined, **kein** Fehler ✓.
-
-### Offen — Session B (UI-Schliff, Bereich 3–6; eigene Session, neuer Branch auf `dev`)
-- **Bereich 3 Header-Umbau:** „Profil" als echter Nav-Link (Avatar-Initialen raus);
-  Mobile-Hamburger zeigt alle sechs Punkte (inkl. Team/Rangliste/Profil); Energie-Pill
-  „X/5"; Total-XP-Pill raus; Fortschritt (EP-Text) in die Leiste.
-- **Bereich 4 Dashboard:** „Zuletzt gelernt" aus `quiz_results` — Sortier-Spalte heißt
-  **`erstellt_at`** (NICHT `created_at`!), und `quiz_results` enthält **nur Themen-Quiz**
-  (Herausforderung liegt in `daily_quiz_log`, ohne `thema_id`). „+5 morgen" raus →
-  sichtbarer Trophäen-Tausch-Link (`tauschen.html` ist sonst verwaist, nur aus
-  `tagesquiz.html` verlinkt).
-- **Bereich 5 Mobile-First-Politur** + **Bereich 6 Buttons/Icons vereinheitlichen**
-  (Fach-Stat-Pills in `renderStatPill` brauchen Icons via `Icons.render`).
-- Baut komplett auf dem jetzt stabilen `layout.js` auf.
-
----
-
-## Session 2026-06-27 (Session B) — Bereich 4: Dashboard-Bugs
-
-**Branch:** `fix/dashboard` (von `dev`). Ein Code-Commit; Merge nach `dev`
-(`--no-ff`); dieser Doku-Commit kommt **nach** dem Merge separat obendrauf
-(nicht in den Merge gefaltet). Kein push, kein `main`, kein Deploy.
-
-**Commits:**
-- `5d4e701` fix(dashboard): Zuletzt-gelernt mit echter Quiz-Historie füllen
-- `b8ca928` merge: Bereich 4 — Dashboard-Bugs (`--no-ff`)
-
-### Umgesetzt
-- **„Zuletzt gelernt" gefüllt:** neue `Stats.ladeLetzteAktivitaet(n=5)`
-  ([stats.js](../src/js/stats.js)) liest die letzten Themen-Quiz aus
-  `quiz_results` (sortiert nach **`erstellt_at`** desc, `limit n`), löst
-  `thema_id → Name` über `manifest.json` auf und gibt angereicherte Zeilen
-  `{name, score, erstelltAt}` zurück. Das Dashboard rendert daraus eine Liste
-  (Thema · Score % · relative Zeit via `Intl.RelativeTimeFormat('de')`);
-  Leerzustand bleibt nur bei wirklich keinen Daten.
-- **Energie-Karte → Aktion:** die 4. Stat-Karte „Energie heute" (Dublette zur
-  Topbar) ist jetzt eine klickbare **Trophäen-Tausch-Aktion** „Energie aufladen
-  — Trophäen tauschen", Link auf `tauschen.html` (vorher verwaiste Seite
-  sichtbar gemacht).
-- **„+5 morgen" entfernt** sowie die tote `stat-energie`-Referenz im
-  Inline-Script.
-- Stats-Reihe sonst unverändert (Themen · Quiz-Punkte · Lerntage in Folge).
-  Streak „–" bleibt BUG-013/014 (separat, nicht im Scope).
-
-### Verifizierte Annahmen (künftig nicht erneut prüfen)
-- `manifest.json` liegt unter **`src/assets/data/manifest.json`** und wird als
-  **`/assets/data/manifest.json`** gefetcht.
-- Manifest-Struktur: **`faecher[].themen[].id` / `.name`** (SSOT für Namen).
-- **`quiz_results.score` ist ein gerundeter Prozentwert (0–100)** → Anzeige
-  `{score} %` ist korrekt. (`richtig`/`gesamt` lägen für „4/5" ebenfalls vor.)
-- `quiz_results` enthält **nur Themen-Quiz**; die Herausforderung liegt in
-  `daily_quiz_log` (ohne `thema_id`) → „Zuletzt gelernt" zeigt nur Themen-Quiz.
-
-### Entscheidungen
-- **Mapping in `stats.js` (angereichert), nicht auf dem Dashboard:** `app.js`
-  ist auf `dashboard.html` nicht eingebunden; `ladeLetzteAktivitaet` fetcht das
-  Manifest selbst (modulinternes `manifestCache`) und hält das Inline-Script
-  dünn. Manifest bleibt Single Source of Truth für Themen-Namen.
-- **4. Karte → Aktions-Karte** (statt 3 Karten + separatem Banner): minimaler
-  Markup-Churn, Grid `repeat(4,1fr)` unverändert.
-
-### Verifikation
-- Live über statischen Server (`lernhub`, User `schueler1`), Console clean.
-- Netzwerk: `GET …/quiz_results?select=thema_id,score,erstellt_at&order=
-  erstellt_at.desc&limit=5 → 200`; `manifest.json → 200`.
-- „Zuletzt gelernt" zeigt echte Historie (Namen aus Manifest, Score %, rel.
-  Zeit), neueste zuerst. Aktions-Karte verlinkt auf `tauschen.html`; kein
-  „+5 morgen", keine `stat-energie`-Fehler.
-- Mobile (390px): `.db-stats` bricht 1-spaltig, Karten + Liste füllen die
-  Viewport-Breite (per `getBoundingClientRect` geprüft).
-
-### Offen — nächste Sessions (Reihenfolge-Vorschlag: 3 → 5 → 6)
-- **Bereich 3 — Header-Umbau:** Energie als **`X/5`-Pill in die Topbar**,
-  Total-XP-Pill raus, „Profil" als echter Nav-Link, vollständiges Mobile-Menü
-  (alle 6 Punkte), EP-Text in die Fortschrittsleiste.
-- **Abhängigkeit / wichtig:** Bereich 3 holt die Energie-Anzeige **final in die
-  Topbar** — das rechtfertigt rückwirkend den Wegfall der Energie-Karte aus
-  Bereich 4. **Bis Bereich 3 gemerged ist, existiert die Energie-Anzeige nur in
-  der bestehenden Topbar, nicht mehr auf dem Dashboard. Das ist so gewollt —
-  kein Regressionsbug.**
-- **Bereich 5 (Mobile-Politur)** und **Bereich 6 (Buttons/Icons,
-  `renderStatPill`-Icons via `Icons.render`)** hängen teils an Bereich 3.
 
 ---
 
@@ -202,6 +67,147 @@ Live über statischen Server (`lernhub`, User `schueler1`), Konsole überall sau
   `.topbar-nav-link` in der Mobile-Media-Query) bewusst nach Bereich 5 vertagt.
 - Mobile-Menü zeigt Team/Rangliste weiter nicht (disabled-Platzhalter, auf <768px
   ausgeblendet) — „alle 6 Punkte" gilt nur auf Desktop.
+
+---
+
+## Session 2026-06-30 — S2: Token-Konsolidierung (Shadow-/Radius-/Button-Token)
+
+**Branch:** `chore/s2-token-konsolidierung` (von `dev`), 4 Commits. Merge nach `dev`
+(Fast-Forward, `46cc005`) und nach `main` (`--no-ff`, Merge `831d80c`); **beide gepusht**
+(`origin/dev`, `origin/main`). Branch nach Merge lokal gelöscht. Dieser Doku-Commit
+(Session-Report) kommt separat obendrauf — ohne Push.
+
+**Commits:**
+- `8d73575` chore(tokens): Shadow-/Button-Token (+10px-CTA-Radius) für S2 ergänzt
+- `e2d8d75` refactor(css): Schatten-/Radius-Hardcodes auf Token umgestellt
+- `a08c036` refactor(css): zentrale .btn-Basis + Button-Token eingeführt
+- `46cc005` refactor(ui): Button-Markup auf .btn-Basis + Modifier umgestellt
+
+### Umgesetzt (Leitprinzip: visuell ändert sich nichts ungewollt)
+- **C1 `tokens.css` (additiv, kein visueller Effekt):** neue Tokens `--shadow-xl`
+  (`0 20px 40px #0000004D`, Hex-Alpha-Stil wie `--shadow-sm/-lg`), `--radius-cta` (10px)
+  sowie Button-Tokens `--btn-radius` (= `--radius-md`) und `--btn-border`
+  (`1px solid var(--surface-2)`).
+- **C2 `style.css` Hardcodes → Token:** `.auth-card`-Schatten → `--shadow-xl`;
+  8px → `--radius-md` (Input, generischer `button`, `.btn-ghost-sm`, `.static-hinweis`);
+  10px → `--radius-cta` (`.btn-cta`, `.stat-pill`); alle Fortschrittsbalken (99px/5px/3px)
+  → `--radius-full`; 6px → `--radius-sm` (`code`, `.card-score`). `.topbar-progress-fill`
+  (`0 2px 2px 0`) und `.tab` (`0`) bewusst als Einzelwerte gelassen.
+- **C3a `.btn`-Basis + Modifier:** zentrale `.btn { cursor; border-radius: var(--btn-radius) }`
+  + `.btn--primary/-ghost/-cta/-ghost-sm/-lg`; Ghost-Border auf `--btn-border`;
+  `#login-form button` auf der Basis mitgezogen (Alt-Namen vorübergehend als Alias).
+- **C3b Markup:** 15 Aufrufstellen (`dashboard/fach/profil/tagesquiz/tauschen.html`,
+  `js/layout.js`) auf `class="btn btn--…"` umgestellt; CSS-Aliase entfernt. `.btn-arrow`
+  bleibt bewusst Deko-Kind (kein Button-Modifier).
+
+### Bewusste Abweichungen vom Plan (je begründet)
+- **`--radius-10` → `--radius-cta`:** der ursprüngliche Plan-Name `--radius-xl` war in
+  `tokens.css` bereits mit **16px** belegt (Kollision) → semantischer Name nach dem
+  Haupt-Konsument `.btn-cta` (`.stat-pill` als Mitnutzer im Kommentar vermerkt).
+- **E3-Korrektur — Profil-EP-Bars `5px`/`3px` → `--radius-full` statt `--radius-sm`:**
+  `.profil-bar-wrap/-fill` (Höhe 10px) und `.profil-fach-bar-wrap/-fill` (Höhe 6px) haben
+  Radius = halbe Höhe = **volle Pill-Kappen**; `--radius-sm` (4px) hätte sie abgeflacht.
+  `--radius-full` ist hier visuell-neutral (wie alle anderen Balken).
+- **`.btn`-Basis „Nur Radius" (ohne `font-family`):** bewusster Verzicht auf Font-Angleich;
+  einzige sichtbare Folge ist, dass die **3 vormals eckigen `a.btn--primary`** (Dashboard-
+  CTA-Link + 2× Tagesquiz) jetzt **8px rund** sind (der Radius des generischen `button{}`
+  griff bei `<a>` nicht).
+- **`--btn-shadow` und `--brand`-Alias weggelassen:** kein Konsument in S2 (Shadow gehört
+  zu S4, Brand-Alias zu S3).
+
+### Verifikation
+Eingeloggter Seiten-Sweep (Server `lernhub`, User `schueler1@lernhub.htl`), Konsole
+**überall sauber**, **keine mutierenden Klicks** (kein Quiz-Start, kein Tausch):
+- **Dashboard:** `a.btn--cta` 10px, `a.btn--primary` **8px** (vormals eckig → jetzt rund).
+- **Fach (dbi):** `button.btn--primary` „Auswerten" 8px.
+- **Tagesquiz:** 7 Buttons inkl. sichtbarem `btn--primary btn--lg` (Padding 32px /
+  Font 16.8px) + ghost-sm mit Border — alle korrekt.
+- **Profil:** 2× `btn--ghost` 8px; EP-Bars rendern als volle Pills (999px @ 10/6px Höhe);
+  `--btn-border` folgt dem Theme (dark `#1A1A2E` / light `#E2E8F0`); Abmelden-Rot intakt.
+- **Tauschen:** `button.btn--primary` (disabled) 8px.
+- Token-Auflösung + `.auth-card`-Schatten byte-identisch in Dark **und** Light; kein JS
+  hängt an den Button-Klassen.
+
+### Offen / bekannt (nicht S2-Scope)
+- **`<button>`-Elemente laufen weiter in der System-Schrift** statt Space Grotesk
+  (Form-Controls erben `font-family` nicht; im `.btn`-Kommentar dokumentiert) → Kandidat
+  für eine spätere Font-Vereinheitlichung. S2 war bewusst „nur Radius".
+
+---
+
+## Session 2026-07-01 — S3: 0 % Emojis + Prestige-Level-System
+
+Zwei Feature-Branches von `dev`, je `--no-ff` gemergt; **kein Push, kein `main`**.
+Die Migration der `prestige`-Spalte wurde manuell in Supabase ausgeführt (Prod-Ref
+`gveqduphjcrogsnhxkbw`). Dieser Doku-Commit kommt separat nach den Merges.
+
+**Branch `feat/s3a-icons`** (Merge `3754e94`):
+- `1f2b229` feat(icons): sun/moon/smile/party/flame als farbige Icons final
+- `8551367` feat(ui): alle Emojis durch Icons.render() ersetzt, target differenziert
+
+**Branch `feat/s3b-prestige`** (Merge `af3db03`):
+- `ce22ec7` docs(db): Migrations-SQL für prestige-Spalte als Kommentar in level.js
+- `62a6868` feat(level): 100-Level-Kurve + Prestige-Logik in level.js
+- `bb7e9e8` fix(level): Kurven-Koeffizient auf 1.5×8 (Progression ausbalanciert)
+- `0e8519b` feat(topbar): Level-Badge als tier-abhängiges SVG + Prestige-Kreis
+- `5b3a009` fix(level): epText zeigt verbleibende EP bis nächstes Level
+- `d7d41b8` feat(profil): Rang-Tier + Prestige auf Profilseite anzeigen
+
+### S3a — Icons (0 % UI-Emojis)
+- **5 neue farbige Icons** in `icons.js` (alle `farbig:true`, viewBox `0 0 96 96`,
+  Gradient-IDs pro Instanz eindeutig): `party` (Konfetti-Stern), `flame` (Ergebnis <40 %),
+  `sun`/`moon` (Theme-Toggle), `smile` (Ergebnis 40–69 %).
+- **Emoji-Ersatz:** Theme-Toggle (profil.html) → `Icons.render('sun'|'moon')`;
+  Tagesquiz-Ergebnis → `party`/`smile`/`flame` je Score (≥70 / ≥40 / sonst).
+- **`target` differenziert:** Herausforderung (Dashboard-H2 + Tagesquiz-Start) behält
+  `target`; Quiz-Punkte-Karte → farbiges `star` (existierte bereits).
+- **0 echte UI-Emojis** verbleiben (nur icons.js-Doku-Kommentare). Ein 🔴 in einer
+  Log-Zeile von `pos/datenstrukturen.js` bewusst außerhalb des Scopes gelassen.
+
+### S3b — Prestige-Level-System
+- **DB:** neue Spalte `user_stats.prestige INTEGER NOT NULL DEFAULT 0` (Migration als
+  einzeiliger Kommentar oben in `level.js`, manuell ausgeführt).
+- **100-Level-Kurve:** `LEVEL_SCHWELLEN[n] = round(n^LEVEL_EXPONENT · LEVEL_KOEFFIZIENT)`
+  mit `LEVEL_EXPONENT=1.5` / `LEVEL_KOEFFIZIENT=8` (Modul-Scope, einzige Balance-Knöpfe)
+  → Level 100 = 8000 EP = ein Prestige-Zyklus (`EP_PRO_ZYKLUS`).
+- **`berechneFortschritt(gesamtEp, prestige=0)`** neu: EP per Modulo auf den Zyklus,
+  Level 1–100, `tier` (bronze <25 / silber <50 / gold <75 / platin), `prestige`
+  durchgereicht. `epText` zeigt „X EP bis Level N+1" bzw. „Prestige erreicht!" (L100).
+- **Prestige-Aufstieg:** `vergibBelohnungen` schreibt `prestige = floor(total_xp /
+  EP_PRO_ZYKLUS)` mit und liefert `prestigeUp` (analog `levelUp`); `getUserStats` liest
+  `prestige` mit.
+- **Topbar-Badge** (`renderLevelBadge` in layout.js): beveled Hexagon (viewBox 96) in
+  Tier-Farbe mit Rim/Face/Highlight/Shadow-Facetten, Glow-Halo für gold/platin,
+  zentrierte Level-Zahl, ab Prestige 1 oranger Kreis mit Prestige-Zahl. Ersetzt den alten
+  `.topbar-level-badge`-Span (CSS entsprechend reduziert).
+- **Profil-Rang:** Zeile „{Tier} · Level {n} · Prestige {p}" unter der Level-Anzeige,
+  Tier-Name je `data-tier` eingefärbt.
+
+### Bewusste Abweichungen / Entscheidungen (je begründet)
+- **Off-by-one in `berechneFortschritt` korrigiert:** Vorgabe-Pseudocode nutzte
+  `Math.max(1, level)` (= bestandene Schwellen), `epVon/epBis` gingen aber von
+  bestandene+1 aus → hätte „200 / 189 EP" und dauerhaft 100 % ergeben. Fix
+  `level = Math.min(100, bestanden + 1)`; über den ganzen Zyklus 0 Invarianten-Fehler.
+- **Prestige über den bestehenden Upsert persistiert** (statt separatem UPDATE): eine
+  Schreiboperation, idempotent, da `prestige` rein aus `total_xp` ableitbar + monoton.
+- **Kurve `1.5×8`** (Nachjustierung nach initial `1.8×3`) → runde 8000 EP pro Zyklus.
+- **`sun`/`moon`/`smile` in die farbige Icon-Sektion verschoben** (zunächst als
+  Linien-Icons gedraftet; finale Design-Vorgabe war farbig).
+
+### Verifikation (Prod-Session, User `schueler1`)
+- S3a: Dashboard (star/target/book/streak/energy korrekt), Profil-Theme-Toggle,
+  Tagesquiz-Ergebnis-Mapping (party/smile/flame), Konsole sauber.
+- S3b: `getUserStats` liest `prestige` fehlerfrei; Kurve numerisch geprüft (Node-Invarianten,
+  0 Fehler); Badge live (silber L44) + Prestige-Kreis (simuliert P2); Profil-Rang
+  („Silber · Level 44", #A0A0A0); `epText` band-konsistent; Konsole überall sauber.
+- **Screenshot-Tooling** in dieser Env instabil (Timeout) → Verifikation via berechnete
+  Stile / DOM-Inspektion + Render-Widgets.
+
+### Offen (nach IDEEN.md ausgelagert)
+- **Prestige-Up-Popup:** `prestigeUp` wird schon geliefert, aber noch nirgends angezeigt.
+- **Technische Schuld:** alte 10er-Kurve (`berechneLevel`/`LEVEL_THRESHOLDS`) läuft parallel
+  weiter (schreibt `user_stats.level` + `subject_xp.level` + `levelUp`-Toast) → gespeichertes
+  `level` ist vom angezeigten 100er-Level entkoppelt. Bewusst akzeptiert, eigene Session.
 
 ---
 
