@@ -753,3 +753,79 @@ Eingeloggter Seiten-Sweep (Server `lernhub`, User `schueler1@lernhub.htl`), Kons
 - **`<button>`-Elemente laufen weiter in der System-Schrift** statt Space Grotesk
   (Form-Controls erben `font-family` nicht; im `.btn`-Kommentar dokumentiert) → Kandidat
   für eine spätere Font-Vereinheitlichung. S2 war bewusst „nur Radius".
+
+---
+
+## Session 2026-07-01 — S3: 0 % Emojis + Prestige-Level-System
+
+Zwei Feature-Branches von `dev`, je `--no-ff` gemergt; **kein Push, kein `main`**.
+Die Migration der `prestige`-Spalte wurde manuell in Supabase ausgeführt (Prod-Ref
+`gveqduphjcrogsnhxkbw`). Dieser Doku-Commit kommt separat nach den Merges.
+
+**Branch `feat/s3a-icons`** (Merge `3754e94`):
+- `1f2b229` feat(icons): sun/moon/smile/party/flame als farbige Icons final
+- `8551367` feat(ui): alle Emojis durch Icons.render() ersetzt, target differenziert
+
+**Branch `feat/s3b-prestige`** (Merge `af3db03`):
+- `ce22ec7` docs(db): Migrations-SQL für prestige-Spalte als Kommentar in level.js
+- `62a6868` feat(level): 100-Level-Kurve + Prestige-Logik in level.js
+- `bb7e9e8` fix(level): Kurven-Koeffizient auf 1.5×8 (Progression ausbalanciert)
+- `0e8519b` feat(topbar): Level-Badge als tier-abhängiges SVG + Prestige-Kreis
+- `5b3a009` fix(level): epText zeigt verbleibende EP bis nächstes Level
+- `d7d41b8` feat(profil): Rang-Tier + Prestige auf Profilseite anzeigen
+
+### S3a — Icons (0 % UI-Emojis)
+- **5 neue farbige Icons** in `icons.js` (alle `farbig:true`, viewBox `0 0 96 96`,
+  Gradient-IDs pro Instanz eindeutig): `party` (Konfetti-Stern), `flame` (Ergebnis <40 %),
+  `sun`/`moon` (Theme-Toggle), `smile` (Ergebnis 40–69 %).
+- **Emoji-Ersatz:** Theme-Toggle (profil.html) → `Icons.render('sun'|'moon')`;
+  Tagesquiz-Ergebnis → `party`/`smile`/`flame` je Score (≥70 / ≥40 / sonst).
+- **`target` differenziert:** Herausforderung (Dashboard-H2 + Tagesquiz-Start) behält
+  `target`; Quiz-Punkte-Karte → farbiges `star` (existierte bereits).
+- **0 echte UI-Emojis** verbleiben (nur icons.js-Doku-Kommentare). Ein 🔴 in einer
+  Log-Zeile von `pos/datenstrukturen.js` bewusst außerhalb des Scopes gelassen.
+
+### S3b — Prestige-Level-System
+- **DB:** neue Spalte `user_stats.prestige INTEGER NOT NULL DEFAULT 0` (Migration als
+  einzeiliger Kommentar oben in `level.js`, manuell ausgeführt).
+- **100-Level-Kurve:** `LEVEL_SCHWELLEN[n] = round(n^LEVEL_EXPONENT · LEVEL_KOEFFIZIENT)`
+  mit `LEVEL_EXPONENT=1.5` / `LEVEL_KOEFFIZIENT=8` (Modul-Scope, einzige Balance-Knöpfe)
+  → Level 100 = 8000 EP = ein Prestige-Zyklus (`EP_PRO_ZYKLUS`).
+- **`berechneFortschritt(gesamtEp, prestige=0)`** neu: EP per Modulo auf den Zyklus,
+  Level 1–100, `tier` (bronze <25 / silber <50 / gold <75 / platin), `prestige`
+  durchgereicht. `epText` zeigt „X EP bis Level N+1" bzw. „Prestige erreicht!" (L100).
+- **Prestige-Aufstieg:** `vergibBelohnungen` schreibt `prestige = floor(total_xp /
+  EP_PRO_ZYKLUS)` mit und liefert `prestigeUp` (analog `levelUp`); `getUserStats` liest
+  `prestige` mit.
+- **Topbar-Badge** (`renderLevelBadge` in layout.js): beveled Hexagon (viewBox 96) in
+  Tier-Farbe mit Rim/Face/Highlight/Shadow-Facetten, Glow-Halo für gold/platin,
+  zentrierte Level-Zahl, ab Prestige 1 oranger Kreis mit Prestige-Zahl. Ersetzt den alten
+  `.topbar-level-badge`-Span (CSS entsprechend reduziert).
+- **Profil-Rang:** Zeile „{Tier} · Level {n} · Prestige {p}" unter der Level-Anzeige,
+  Tier-Name je `data-tier` eingefärbt.
+
+### Bewusste Abweichungen / Entscheidungen (je begründet)
+- **Off-by-one in `berechneFortschritt` korrigiert:** Vorgabe-Pseudocode nutzte
+  `Math.max(1, level)` (= bestandene Schwellen), `epVon/epBis` gingen aber von
+  bestandene+1 aus → hätte „200 / 189 EP" und dauerhaft 100 % ergeben. Fix
+  `level = Math.min(100, bestanden + 1)`; über den ganzen Zyklus 0 Invarianten-Fehler.
+- **Prestige über den bestehenden Upsert persistiert** (statt separatem UPDATE): eine
+  Schreiboperation, idempotent, da `prestige` rein aus `total_xp` ableitbar + monoton.
+- **Kurve `1.5×8`** (Nachjustierung nach initial `1.8×3`) → runde 8000 EP pro Zyklus.
+- **`sun`/`moon`/`smile` in die farbige Icon-Sektion verschoben** (zunächst als
+  Linien-Icons gedraftet; finale Design-Vorgabe war farbig).
+
+### Verifikation (Prod-Session, User `schueler1`)
+- S3a: Dashboard (star/target/book/streak/energy korrekt), Profil-Theme-Toggle,
+  Tagesquiz-Ergebnis-Mapping (party/smile/flame), Konsole sauber.
+- S3b: `getUserStats` liest `prestige` fehlerfrei; Kurve numerisch geprüft (Node-Invarianten,
+  0 Fehler); Badge live (silber L44) + Prestige-Kreis (simuliert P2); Profil-Rang
+  („Silber · Level 44", #A0A0A0); `epText` band-konsistent; Konsole überall sauber.
+- **Screenshot-Tooling** in dieser Env instabil (Timeout) → Verifikation via berechnete
+  Stile / DOM-Inspektion + Render-Widgets.
+
+### Offen (nach IDEEN.md ausgelagert)
+- **Prestige-Up-Popup:** `prestigeUp` wird schon geliefert, aber noch nirgends angezeigt.
+- **Technische Schuld:** alte 10er-Kurve (`berechneLevel`/`LEVEL_THRESHOLDS`) läuft parallel
+  weiter (schreibt `user_stats.level` + `subject_xp.level` + `levelUp`-Toast) → gespeichertes
+  `level` ist vom angezeigten 100er-Level entkoppelt. Bewusst akzeptiert, eigene Session.

@@ -67,10 +67,14 @@ Row-Limit, kein success-Filter). `dashboard.html` füllt `#stat-streak` stets al
 (0 → „0"). Belegt über 8 Node-Invarianten. Keine Migration, keine neue Spalte.
 Status: ✅ erledigt.
 
-## Dashboard-Anzeigefehler fixen (eigene Session, Code)
+## Dashboard-Anzeigefehler fixen (eigene Session, Code) — ✅ ERLEDIGT
 "+5 morgen" dynamisch ableiten oder entfernen (BUG-013); Begrüßungs-Copy +
 Anzeigename überarbeiten (BUG-014).
-Status: offen.
+Erledigt in fix/dashboard-begruessung (2026-07-06): BUG-013 war bereits mit dem
+Dashboard-Umbau (Merge `b8ca928`, 2026-06-27) erledigt — bestätigt, verwaiste
+`.stat-hint`-CSS-Regel entfernt (`c91b312`). BUG-014: `Auth.displayName()` säubert den
+E-Mail-Präfix (kein DB-Feld) + neue Hero-Copy in dashboard.html (`ad10259`).
+Status: ✅ erledigt.
 
 ## Account-Löschung (eigene Session, DSGVO)
 User-Auth-Delete + alle zugehörigen Daten-Rows (`user_stats`, `quiz_results`,
