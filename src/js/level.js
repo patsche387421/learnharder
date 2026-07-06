@@ -62,6 +62,33 @@ const Level = (() => {
     return { level, prozent, epText, tier, prestige };
   }
 
+  // Reine SSOT-Funktion: Streak = aufeinanderfolgende UTC-Kalendertage mit jeweils
+  // ≥1 Herausforderungs-Versuch (LEVEL_SYSTEM §12). Nimmt die played_at-Zeitstempel
+  // aller daily_quiz_log-Zeilen entgegen (ohne success-Filter — §12 zählt Zeilen, nicht
+  // bestandene Quiz) und zählt rückwärts über DISTINCT UTC-Tage. Kulanz: ist heute (noch)
+  // leer, aber gestern vorhanden, läuft die Streak ab gestern weiter; sind gestern UND
+  // heute leer → 0. Mehrere Zeilen am selben Tag zählen einmal (Set über UTC-Tage).
+  // jetzt ist injizierbar (Test/Referenzzeit), Default = aktuelle Zeit.
+  function berechneStreak(zeitstempel, jetzt = new Date()) {
+    const tage = new Set((zeitstempel || [])
+      .map(ts => new Date(ts).toISOString().split('T')[0]));   // 'YYYY-MM-DD' (UTC)
+    if (tage.size === 0) return 0;
+
+    const MS_PRO_TAG = 86_400_000;
+    const heuteMs = Date.parse(jetzt.toISOString().split('T')[0]); // heute 00:00 UTC
+    const alsTag  = ms => new Date(ms).toISOString().split('T')[0];
+
+    // Startpunkt: heute, falls belegt; sonst gestern (Kulanz); sonst 0.
+    let cursorMs;
+    if      (tage.has(alsTag(heuteMs)))               cursorMs = heuteMs;
+    else if (tage.has(alsTag(heuteMs - MS_PRO_TAG)))  cursorMs = heuteMs - MS_PRO_TAG;
+    else return 0;
+
+    let streak = 0;
+    while (tage.has(alsTag(cursorMs))) { streak++; cursorMs -= MS_PRO_TAG; }
+    return streak;
+  }
+
   // Füllt Energie automatisch auf: +1 je vergangenem UTC-Kalendertag seit
   // energy_last_reset, gedeckelt bei 5. Reduziert NIE (Trophäen-Tausch kann
   // Energie > 5 erzeugen). Schreibt höchstens einmal pro UTC-Tag und User.
@@ -180,6 +207,27 @@ const Level = (() => {
       .maybeSingle();
 
     return !!data;
+  }
+
+  // Liest alle played_at-Zeitstempel des Users (nur diese Spalte, alle Zeilen — kein
+  // Row-Limit, sonst würden viele Versuche an einem Tag ältere Tage verdecken und die
+  // Streak abschneiden) und leitet daraus die aktuelle Streak ab. 0 bei fehlendem Login,
+  // Fehler oder ohne Zeilen. Delegiert die Rechnung an die reine berechneStreak (SSOT).
+  async function getStreak() {
+    const user = Auth.currentUser();
+    if (!user) return 0;
+
+    const { data, error } = await sb
+      .from('daily_quiz_log')
+      .select('played_at')
+      .eq('user_id', user.id)
+      .order('played_at', { ascending: false });
+
+    if (error || !data) {
+      console.error('[Level] Streak-Abfrage Fehler:', error);
+      return 0;
+    }
+    return berechneStreak(data.map(r => r.played_at));
   }
 
   // Vergibt die Belohnungen eines Quiz: EP, Trophäen, Level-Update.
@@ -308,7 +356,9 @@ const Level = (() => {
     LEVEL_THRESHOLDS,
     berechneLevel,
     berechneFortschritt,
+    berechneStreak,
     getUserStats,
+    getStreak,
     verbrauchEnergie,
     starteTagesQuiz,
     hatHeuteTagesQuizGespielt,
