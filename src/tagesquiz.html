@@ -204,12 +204,14 @@
     }
 
     async function zeigeErgebnis() {
-      zeigeScreen("screen-ergebnis");
-
-      // Prestige-Feier zunächst verstecken: bei einem Nochmal-Versuch ohne
-      // Zyklus-Abschluss darf keine veraltete Feier stehen bleiben.
+      // Prestige-Feier zurücksetzen, BEVOR der Ergebnis-Screen sichtbar wird: so
+      // kann bei einem schnellen Nochmal-Versuch ohne Zyklus-Abschluss keine
+      // veraltete Feier aufblitzen — unabhängig davon, ob später ein await
+      // zwischen Screen-Wechsel und Reset gerät.
       const prestigeBox = document.getElementById("ergebnis-prestige");
       prestigeBox.hidden = true;
+
+      zeigeScreen("screen-ergebnis");
 
       const { fragen, richtig, leben } = quizZustand;
       const gesamt = fragen.length;
