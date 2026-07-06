@@ -181,6 +181,11 @@ den Tag**: §12 zählt die Einheit Versuch/Zeile/`played_at` unkonditioniert; §
 - Nebenbefund: IDEEN-Eintrag „Tagessperre entfernen" war bereits 2026-06-25 (BUG-012)
   umgesetzt → in dieser Session als ✅ nachgezogen.
 
+### Deploy (2026-07-06)
+dev → main gemergt (`dfa4fa7`), origin/main + origin/dev gepusht. Stale Branches
+`fix/header-rebuild` + `fix/dashboard` gelöscht. Netlify-Publish ist manueller Schritt
+(Auto-Build aus).
+
 ---
 
 *Bericht auto-generiert am Ende der Session. Alle Pfade relativ zum Projekt-Root.*
