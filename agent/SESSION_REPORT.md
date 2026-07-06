@@ -4,69 +4,9 @@ Erstellt: 2026-06-12 | Branch: `dev` | Commit: `76684f2`
 
 ---
 
-> **Archiv-Hinweis:** Ältere Sessions (2026-06-12 bis 2026-06-27) wurden nach
+> **Archiv-Hinweis:** Ältere Sessions (2026-06-12 bis 2026-06-28) wurden nach
 > [SESSION_REPORT_ARCHIVE.md](SESSION_REPORT_ARCHIVE.md) ausgelagert. Diese Datei
 > führt nur die **letzten 3 Sessions** und wird bei jedem Session-Start gelesen.
-
----
-
-## Session 2026-06-28 — Bereich 3: Header-Rebuild + Mobile-First-Richtlinie
-
-**Branch:** `fix/header-rebuild` (von `dev`). Zwei Commits; Merge nach `dev`
-(`--no-ff`, `d1ee4b8`); dieser Doku-Commit kommt **nach** dem Merge separat
-obendrauf (nicht in den Merge gefaltet). Kein Push, kein `main`, kein Deploy.
-
-**Commits:**
-- `beca6fa` docs(richtlinien): Mobile-First-Leitlinien als agent/MOBILE_FIRST.md
-- `79ca8dd` feat(header): XP-Pill entfernt, EP-Fortschritt in Leiste, Profil-Link, Auth-Zustand
-- `d1ee4b8` merge: Bereich 3 — Header-Rebuild + Mobile-First-Richtlinie (`--no-ff`)
-
-### Mobile-First-Richtlinie (eigener docs-Commit)
-- Neu `agent/MOBILE_FIRST.md`: verbindliche Leitlinie — mobile-first (Basis-Styles =
-  Mobile, Erweiterung per `min-width`), Breakpoints (<768 / ≥768 / ≥1024),
-  Touch-Targets ≥44×44px, `rem` statt fixer `px`, keine horizontalen Overflows.
-
-### Header-Rebuild (a–d, Code-Commit in `src/js/layout.js` + `src/css/style.css`)
-- **(a)** Gesamt-XP-Pill (`topbar-pill--xp`) aus dem Header entfernt, inkl. toter CSS-Regel.
-- **(b)** EP-Fortschritt sichtbar: `f.epText` aus `Level.berechneFortschritt` (SSOT in
-  `level.js`, Format „105 / 600 EP") als zentrierter Text; Leisten-Höhe via lokalem
-  `--progress-h` (1.125rem); Zahl `--text-on-primary` + dezentes `text-shadow`.
-- **(c)** „Profil" als echter Nav-Link (`/profil.html`, Active-State via `aktiverNav`);
-  Avatar-Icon + Helfer `topbarInitialen` entfernt.
-- **(d)** Auth-Zustand: abgemeldet NUR Logo + Branding + „Anmelden" (`topbarLogo()`
-  extrahiert); angemeldet voller Header. Bottom-Reserve der EP-Leiste nur via
-  `.topbar:has(.topbar-progress)` → abgemeldet kompakt (64px), kein Leerraum.
-
-### Entscheidungen
-- **Abgemeldet behält „Anmelden"** (statt strikt nur Logo): Login-Einstieg auf
-  öffentlichen Seiten bleibt sichtbar (Patsche-Entscheid).
-- **`:has()`-Tightening** statt JS-Klasse: Reserve folgt automatisch der EP-Leiste;
-  höhere Spezifität als die Mobile-`.topbar`-Regel → Padding greift auch mobil.
-- **Energie-`X/5`-Pill war NICHT Teil dieses Prompts** (nur a–d) — bewusst ausgelassen,
-  obwohl in Session A vorgemerkt. Bleibt offen.
-
-### Branch-Korrektur (zu Beginn)
-Der erste Doku-Commit (`beca6fa`) landete versehentlich direkt auf `dev`. Korrigiert:
-`fix/header-rebuild` an `beca6fa` angelegt, `dev` per `reset --hard` zurück auf `b2aaad3`,
-danach gesamte Session isoliert auf dem Feature-Branch. Verlustfrei (Tree sauber, Commit
-vorab auf dem Branch gesichert).
-
-### Verifikation
-Live über statischen Server (`lernhub`, User `schueler1`), Konsole überall sauber.
-- **Eingeloggt (dashboard):** keine XP-Pill; EP-Leiste „105 / 600 EP" lesbar, Füllung
-  17.5 % = 105/600 (SSOT-konsistent); 6 Nav-Punkte inkl. Profil (aktiv bei `/profil.html`,
-  via `pushState` geprüft, da `npx serve` `.html` strippt); Avatar weg.
-- **Abgemeldet (impressum):** nur Logo + Branding + „Anmelden"; sonst nichts; `.topbar`
-  kompakt (64px/0).
-- **Mobile 390px:** Hamburger öffnet Menü inkl. Profil; kein horizontaler Overflow;
-  Reserve (82px/18px) greift, kein Overlap (Logo y≤50, Leiste y=63).
-
-### Vorgemerkt → Bereich 5 (Mobile-Politur)
-- **Touch-Target 44px:** Mobile-Nav-Links sind 37px hoch (< 44px aus MOBILE_FIRST.md),
-  betrifft alle Links (Bestand). Fix (`min-height:44px` + Flex-Zentrierung auf
-  `.topbar-nav-link` in der Mobile-Media-Query) bewusst nach Bereich 5 vertagt.
-- Mobile-Menü zeigt Team/Rangliste weiter nicht (disabled-Platzhalter, auf <768px
-  ausgeblendet) — „alle 6 Punkte" gilt nur auf Desktop.
 
 ---
 
@@ -208,6 +148,56 @@ Die Migration der `prestige`-Spalte wurde manuell in Supabase ausgeführt (Prod-
 - **Technische Schuld:** alte 10er-Kurve (`berechneLevel`/`LEVEL_THRESHOLDS`) läuft parallel
   weiter (schreibt `user_stats.level` + `subject_xp.level` + `levelUp`-Toast) → gespeichertes
   `level` ist vom angezeigten 100er-Level entkoppelt. Bewusst akzeptiert, eigene Session.
+
+---
+
+## Session 2026-07-06 — feat/prestige-popup: Prestige-Up-Feier im Ergebnis-Screen
+
+**Branch:** `feat/prestige-popup` (von `dev`), 3 Commits, via `--no-ff` nach `dev`
+gemergt (Merge `d5adb97`). Kein Push, kein `main`, kein Deploy. Dieser Doku-Commit
+kommt separat nach dem Merge obendrauf.
+
+**Commits:**
+- `0a70fe7` refactor(tokens): Prestige-Token einführen
+- `160468c` feat: Prestige-Up-Feier im Ergebnis-Screen
+- `9f7a4ff` refactor: Prestige-Feier-Reset vor Screen-Wechsel ziehen
+
+### Umgesetzt
+- **Token (Commit 1):** neues semantisches `--prestige: #EA580C` in `tokens.css` (bei
+  `--warning`/`--gold`); der bislang hardcodierte Prestige-Kreis in `renderLevelBadge`
+  (`layout.js`) nutzt jetzt `var(--prestige)`.
+- **Feier (Commit 2):** bei `ergebnis.prestigeUp === true` (Zyklus-Abschluss L100 →
+  Prestige +1) blendet `zeigeErgebnis` (`tagesquiz.html`) eine Feier im bestehenden
+  `#screen-ergebnis` ein — runder Prestige-Badge (`--prestige`-Kreis + weiße Zahl, wie
+  der Topbar-Sub-Kreis) mit Gold-Ring/-Glow und Titel „Prestige N erreicht!". N kommt
+  aus dem ohnehin geladenen `stats.prestige` (kein Rückgabe-Umbau). Statisches
+  Container-Markup, per `hidden` getoggelt (kein 6. Screen). CSS in `style.css`
+  ausschließlich über Tokens (`--prestige`, `--gold`, `--glow-gold`, `--radius-full`,
+  `--space-*`, `--fs-*`, `--fw-*`, `--font-display`, `--text-on-primary`), kein
+  `!important`, dezente pop-Animation.
+- **Robustheit (Commit 3):** der `hidden = true`-Reset läuft jetzt VOR `zeigeScreen`,
+  damit die Kein-Aufblitzen-Garantie bei „Nochmal" nicht an der `await`-Freiheit
+  zwischen Screen-Wechsel und Reset hängt.
+
+### Datenfluss (bestätigt)
+- `Level.vergibBelohnungen` schreibt `prestige = floor(total_xp / EP_PRO_ZYKLUS)` bereits
+  per Upsert und liefert `prestigeUp` (bool, nur Auslöser). Zwischen Upsert und dem
+  frischen `getUserStats` in `zeigeErgebnis` liegt kein weiterer Schreibvorgang →
+  `stats.prestige` = N. Kein Eingriff an DB/Kurve/`levelUp`, keine Migration.
+- Re-Trigger der pop-Animation bei theoretischem zweiten Prestige-Up ist durch den
+  `display:none → flex`-Zyklus (Reset + echte `await`s dazwischen) automatisch gegeben —
+  praktisch irrelevant (2×8000 EP in einer Session).
+
+### Verifikation
+- Keine Live-Verifikation: Die Feier triggert nur bei echtem Zyklus-Abschluss (8000 EP);
+  einen Prestige-Up auf der Prod-DB auszulösen wäre mutierend und außerhalb des Scopes
+  (Dev-Server zeigt auf Prod, s. Memory). Korrektheit ruht auf Diff-Gate + der
+  bestätigten Datenfluss-Analyse.
+
+### Offen (in IDEEN.md)
+- **Technische Schuld** (10er-Kurve entkoppeln) unverändert offen; restliche Backlog-
+  Einträge (Tagessperre entfernen, Streak, Dashboard-Fixes, Trophy-Shop, Account-Löschung,
+  Button-System) unberührt.
 
 ---
 

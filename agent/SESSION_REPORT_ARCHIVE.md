@@ -628,3 +628,63 @@ im Anschluss an diesen Report-Commit. Kein push, kein `main`, kein Deploy.
   kein Regressionsbug.**
 - **Bereich 5 (Mobile-Politur)** und **Bereich 6 (Buttons/Icons,
   `renderStatPill`-Icons via `Icons.render`)** hängen teils an Bereich 3.
+
+---
+
+## Session 2026-06-28 — Bereich 3: Header-Rebuild + Mobile-First-Richtlinie
+
+**Branch:** `fix/header-rebuild` (von `dev`). Zwei Commits; Merge nach `dev`
+(`--no-ff`, `d1ee4b8`); dieser Doku-Commit kommt **nach** dem Merge separat
+obendrauf (nicht in den Merge gefaltet). Kein Push, kein `main`, kein Deploy.
+
+**Commits:**
+- `beca6fa` docs(richtlinien): Mobile-First-Leitlinien als agent/MOBILE_FIRST.md
+- `79ca8dd` feat(header): XP-Pill entfernt, EP-Fortschritt in Leiste, Profil-Link, Auth-Zustand
+- `d1ee4b8` merge: Bereich 3 — Header-Rebuild + Mobile-First-Richtlinie (`--no-ff`)
+
+### Mobile-First-Richtlinie (eigener docs-Commit)
+- Neu `agent/MOBILE_FIRST.md`: verbindliche Leitlinie — mobile-first (Basis-Styles =
+  Mobile, Erweiterung per `min-width`), Breakpoints (<768 / ≥768 / ≥1024),
+  Touch-Targets ≥44×44px, `rem` statt fixer `px`, keine horizontalen Overflows.
+
+### Header-Rebuild (a–d, Code-Commit in `src/js/layout.js` + `src/css/style.css`)
+- **(a)** Gesamt-XP-Pill (`topbar-pill--xp`) aus dem Header entfernt, inkl. toter CSS-Regel.
+- **(b)** EP-Fortschritt sichtbar: `f.epText` aus `Level.berechneFortschritt` (SSOT in
+  `level.js`, Format „105 / 600 EP") als zentrierter Text; Leisten-Höhe via lokalem
+  `--progress-h` (1.125rem); Zahl `--text-on-primary` + dezentes `text-shadow`.
+- **(c)** „Profil" als echter Nav-Link (`/profil.html`, Active-State via `aktiverNav`);
+  Avatar-Icon + Helfer `topbarInitialen` entfernt.
+- **(d)** Auth-Zustand: abgemeldet NUR Logo + Branding + „Anmelden" (`topbarLogo()`
+  extrahiert); angemeldet voller Header. Bottom-Reserve der EP-Leiste nur via
+  `.topbar:has(.topbar-progress)` → abgemeldet kompakt (64px), kein Leerraum.
+
+### Entscheidungen
+- **Abgemeldet behält „Anmelden"** (statt strikt nur Logo): Login-Einstieg auf
+  öffentlichen Seiten bleibt sichtbar (Patsche-Entscheid).
+- **`:has()`-Tightening** statt JS-Klasse: Reserve folgt automatisch der EP-Leiste;
+  höhere Spezifität als die Mobile-`.topbar`-Regel → Padding greift auch mobil.
+- **Energie-`X/5`-Pill war NICHT Teil dieses Prompts** (nur a–d) — bewusst ausgelassen,
+  obwohl in Session A vorgemerkt. Bleibt offen.
+
+### Branch-Korrektur (zu Beginn)
+Der erste Doku-Commit (`beca6fa`) landete versehentlich direkt auf `dev`. Korrigiert:
+`fix/header-rebuild` an `beca6fa` angelegt, `dev` per `reset --hard` zurück auf `b2aaad3`,
+danach gesamte Session isoliert auf dem Feature-Branch. Verlustfrei (Tree sauber, Commit
+vorab auf dem Branch gesichert).
+
+### Verifikation
+Live über statischen Server (`lernhub`, User `schueler1`), Konsole überall sauber.
+- **Eingeloggt (dashboard):** keine XP-Pill; EP-Leiste „105 / 600 EP" lesbar, Füllung
+  17.5 % = 105/600 (SSOT-konsistent); 6 Nav-Punkte inkl. Profil (aktiv bei `/profil.html`,
+  via `pushState` geprüft, da `npx serve` `.html` strippt); Avatar weg.
+- **Abgemeldet (impressum):** nur Logo + Branding + „Anmelden"; sonst nichts; `.topbar`
+  kompakt (64px/0).
+- **Mobile 390px:** Hamburger öffnet Menü inkl. Profil; kein horizontaler Overflow;
+  Reserve (82px/18px) greift, kein Overlap (Logo y≤50, Leiste y=63).
+
+### Vorgemerkt → Bereich 5 (Mobile-Politur)
+- **Touch-Target 44px:** Mobile-Nav-Links sind 37px hoch (< 44px aus MOBILE_FIRST.md),
+  betrifft alle Links (Bestand). Fix (`min-height:44px` + Flex-Zentrierung auf
+  `.topbar-nav-link` in der Mobile-Media-Query) bewusst nach Bereich 5 vertagt.
+- Mobile-Menü zeigt Team/Rangliste weiter nicht (disabled-Platzhalter, auf <768px
+  ausgeblendet) — „alle 6 Punkte" gilt nur auf Desktop.

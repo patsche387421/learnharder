@@ -95,13 +95,18 @@ Erledigt in S3a: `target` differenziert (Quiz-Punkte → `star`, Herausforderung
 UI-Emojis (nur noch Doku-Kommentare + ein bewusst ausgelassenes 🔴 in einer Tool-Log-Zeile).
 Status: ✅ erledigt.
 
-## Prestige-Up-Popup (eigene Session, Code) — S3-Nachlauf
+## Prestige-Up-Popup (eigene Session, Code) — S3-Nachlauf — ✅ ERLEDIGT
 Beim Zyklus-Abschluss (Level 100 → Prestige +1) eine sichtbare Feier zeigen. Das Signal
 liegt bereits vor: `Level.vergibBelohnungen()` gibt `prestigeUp` (bool) zurück (analog
 `levelUp`), wird aber noch nirgends konsumiert. Diese Session: im Tagesquiz-Ergebnis
 (tagesquiz.html) bei `ergebnis.prestigeUp` einen Prestige-Screen/Toast einblenden (z. B.
 großer Prestige-Badge + „Prestige N erreicht!"). Kein DB-/Kurven-Eingriff nötig.
-Status: offen.
+Erledigt in feat/prestige-popup (2026-07-06): `zeigeErgebnis` blendet bei
+`ergebnis.prestigeUp` einen runden Prestige-Badge (`--prestige`-Kreis + weiße Zahl,
+Gold-Ring/-Glow) mit „Prestige N erreicht!" im bestehenden `#screen-ergebnis` ein
+(N = `stats.prestige`, kein 6. Screen, kein Rückgabe-Umbau). Neues Token `--prestige`
+in tokens.css; layout.js-Prestige-Kreis auf `var(--prestige)` umgestellt.
+Status: ✅ erledigt.
 
 ## Level-System: alte 10er-Kurve entkoppeln (technische Schuld aus S3b)
 S3b führte die 100-Level-Kurve (`LEVEL_SCHWELLEN`, 1.5×8) als Anzeige-SSOT ein
