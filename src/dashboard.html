@@ -85,10 +85,11 @@
 
       document.getElementById("db-greeting").textContent = "Hey, " + Auth.displayName() + "!";
 
-      // Topbar, Dashboard-Stats und letzte Aktivität parallel laden
-      const [dbStats, levelStats, letzteAktivitaet] = await Promise.all([
+      // Topbar, Dashboard-Stats, Streak und letzte Aktivität parallel laden
+      const [dbStats, levelStats, streak, letzteAktivitaet] = await Promise.all([
         Stats.ladeDashboardStats(),
         Level.getUserStats(),
+        Level.getStreak(),
         Stats.ladeLetzteAktivitaet()
       ]);
 
@@ -99,6 +100,8 @@
         dbStats.themenBearbeitet > 0 ? dbStats.themenBearbeitet : "–";
       document.getElementById("stat-quiz").textContent =
         dbStats.quizPunkte > 0 ? dbStats.quizPunkte : "–";
+      // Streak immer als Zahl anzeigen — 0 wird als „0" gerendert (nicht „–").
+      document.getElementById("stat-streak").textContent = String(streak);
 
       // "Zuletzt gelernt" mit echter Quiz-Historie befüllen
       rendereLetzteAktivitaet(letzteAktivitaet);
