@@ -688,3 +688,68 @@ Live über statischen Server (`lernhub`, User `schueler1`), Konsole überall sau
   `.topbar-nav-link` in der Mobile-Media-Query) bewusst nach Bereich 5 vertagt.
 - Mobile-Menü zeigt Team/Rangliste weiter nicht (disabled-Platzhalter, auf <768px
   ausgeblendet) — „alle 6 Punkte" gilt nur auf Desktop.
+
+---
+
+## Session 2026-06-30 — S2: Token-Konsolidierung (Shadow-/Radius-/Button-Token)
+
+**Branch:** `chore/s2-token-konsolidierung` (von `dev`), 4 Commits. Merge nach `dev`
+(Fast-Forward, `46cc005`) und nach `main` (`--no-ff`, Merge `831d80c`); **beide gepusht**
+(`origin/dev`, `origin/main`). Branch nach Merge lokal gelöscht. Dieser Doku-Commit
+(Session-Report) kommt separat obendrauf — ohne Push.
+
+**Commits:**
+- `8d73575` chore(tokens): Shadow-/Button-Token (+10px-CTA-Radius) für S2 ergänzt
+- `e2d8d75` refactor(css): Schatten-/Radius-Hardcodes auf Token umgestellt
+- `a08c036` refactor(css): zentrale .btn-Basis + Button-Token eingeführt
+- `46cc005` refactor(ui): Button-Markup auf .btn-Basis + Modifier umgestellt
+
+### Umgesetzt (Leitprinzip: visuell ändert sich nichts ungewollt)
+- **C1 `tokens.css` (additiv, kein visueller Effekt):** neue Tokens `--shadow-xl`
+  (`0 20px 40px #0000004D`, Hex-Alpha-Stil wie `--shadow-sm/-lg`), `--radius-cta` (10px)
+  sowie Button-Tokens `--btn-radius` (= `--radius-md`) und `--btn-border`
+  (`1px solid var(--surface-2)`).
+- **C2 `style.css` Hardcodes → Token:** `.auth-card`-Schatten → `--shadow-xl`;
+  8px → `--radius-md` (Input, generischer `button`, `.btn-ghost-sm`, `.static-hinweis`);
+  10px → `--radius-cta` (`.btn-cta`, `.stat-pill`); alle Fortschrittsbalken (99px/5px/3px)
+  → `--radius-full`; 6px → `--radius-sm` (`code`, `.card-score`). `.topbar-progress-fill`
+  (`0 2px 2px 0`) und `.tab` (`0`) bewusst als Einzelwerte gelassen.
+- **C3a `.btn`-Basis + Modifier:** zentrale `.btn { cursor; border-radius: var(--btn-radius) }`
+  + `.btn--primary/-ghost/-cta/-ghost-sm/-lg`; Ghost-Border auf `--btn-border`;
+  `#login-form button` auf der Basis mitgezogen (Alt-Namen vorübergehend als Alias).
+- **C3b Markup:** 15 Aufrufstellen (`dashboard/fach/profil/tagesquiz/tauschen.html`,
+  `js/layout.js`) auf `class="btn btn--…"` umgestellt; CSS-Aliase entfernt. `.btn-arrow`
+  bleibt bewusst Deko-Kind (kein Button-Modifier).
+
+### Bewusste Abweichungen vom Plan (je begründet)
+- **`--radius-10` → `--radius-cta`:** der ursprüngliche Plan-Name `--radius-xl` war in
+  `tokens.css` bereits mit **16px** belegt (Kollision) → semantischer Name nach dem
+  Haupt-Konsument `.btn-cta` (`.stat-pill` als Mitnutzer im Kommentar vermerkt).
+- **E3-Korrektur — Profil-EP-Bars `5px`/`3px` → `--radius-full` statt `--radius-sm`:**
+  `.profil-bar-wrap/-fill` (Höhe 10px) und `.profil-fach-bar-wrap/-fill` (Höhe 6px) haben
+  Radius = halbe Höhe = **volle Pill-Kappen**; `--radius-sm` (4px) hätte sie abgeflacht.
+  `--radius-full` ist hier visuell-neutral (wie alle anderen Balken).
+- **`.btn`-Basis „Nur Radius" (ohne `font-family`):** bewusster Verzicht auf Font-Angleich;
+  einzige sichtbare Folge ist, dass die **3 vormals eckigen `a.btn--primary`** (Dashboard-
+  CTA-Link + 2× Tagesquiz) jetzt **8px rund** sind (der Radius des generischen `button{}`
+  griff bei `<a>` nicht).
+- **`--btn-shadow` und `--brand`-Alias weggelassen:** kein Konsument in S2 (Shadow gehört
+  zu S4, Brand-Alias zu S3).
+
+### Verifikation
+Eingeloggter Seiten-Sweep (Server `lernhub`, User `schueler1@lernhub.htl`), Konsole
+**überall sauber**, **keine mutierenden Klicks** (kein Quiz-Start, kein Tausch):
+- **Dashboard:** `a.btn--cta` 10px, `a.btn--primary` **8px** (vormals eckig → jetzt rund).
+- **Fach (dbi):** `button.btn--primary` „Auswerten" 8px.
+- **Tagesquiz:** 7 Buttons inkl. sichtbarem `btn--primary btn--lg` (Padding 32px /
+  Font 16.8px) + ghost-sm mit Border — alle korrekt.
+- **Profil:** 2× `btn--ghost` 8px; EP-Bars rendern als volle Pills (999px @ 10/6px Höhe);
+  `--btn-border` folgt dem Theme (dark `#1A1A2E` / light `#E2E8F0`); Abmelden-Rot intakt.
+- **Tauschen:** `button.btn--primary` (disabled) 8px.
+- Token-Auflösung + `.auth-card`-Schatten byte-identisch in Dark **und** Light; kein JS
+  hängt an den Button-Klassen.
+
+### Offen / bekannt (nicht S2-Scope)
+- **`<button>`-Elemente laufen weiter in der System-Schrift** statt Space Grotesk
+  (Form-Controls erben `font-family` nicht; im `.btn`-Kommentar dokumentiert) → Kandidat
+  für eine spätere Font-Vereinheitlichung. S2 war bewusst „nur Radius".

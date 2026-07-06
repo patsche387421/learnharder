@@ -45,18 +45,27 @@ Label-Kürzung), eigener Commit.
 
 Status: offen, kein Blocker.
 
-## Tagessperre entfernen (eigene Session, Code)
+## Tagessperre entfernen (eigene Session, Code) — ✅ ERLEDIGT
 `#screen-gespielt` aus dem Block-Pfad in tagesquiz.html lösen; Herausforderung nur
 noch über Energie begrenzen (BUG-012). `hatHeuteTagesQuizGespielt()` bleibt, wird
 aber nur noch für die Streak-Berechnung genutzt.
-Status: offen.
+Erledigt in Session 2026-06-25 (`feat/tagessperre-entfernen`, BUG-012); der „Nochmal"-
+Flow in tagesquiz.html legt pro Versuch eine frische `daily_quiz_log`-Zeile an → mehrere
+Zeilen/UTC-Tag (Basis der Streak-Distinct-Rechnung). Dieser Eintrag war nur ein
+Doku-Nachtrag (Status hing noch auf „offen").
+Status: ✅ erledigt.
 
-## Streak implementieren (eigene Session, Code)
+## Streak implementieren (eigene Session, Code) — ✅ ERLEDIGT
 `berechneStreak()` in level.js als reine Funktion (rückwärts aus
 `daily_quiz_log.played_at`, Definition siehe LEVEL_SYSTEM §12). Anzeige in
 dashboard.html `#stat-streak`. Keine Migration. Abhängig von / sinnvoll nach
 "Tagessperre entfernen".
-Status: offen.
+Erledigt in feat/streak (2026-07-06): reine `berechneStreak(zeitstempel, jetzt)` (SSOT,
+distinct UTC-Tage, Kulanz für heute-leer/gestern-vorhanden, mehrere Zeilen/Tag = einmal,
+`success=false` zählt mit — §12) + async DB-Reader `getStreak()` (liest `played_at`, kein
+Row-Limit, kein success-Filter). `dashboard.html` füllt `#stat-streak` stets als Zahl
+(0 → „0"). Belegt über 8 Node-Invarianten. Keine Migration, keine neue Spalte.
+Status: ✅ erledigt.
 
 ## Dashboard-Anzeigefehler fixen (eigene Session, Code)
 "+5 morgen" dynamisch ableiten oder entfernen (BUG-013); Begrüßungs-Copy +

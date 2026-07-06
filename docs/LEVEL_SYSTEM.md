@@ -289,9 +289,11 @@ FOOTER (alle Seiten, fix unten)
 
 ---
 
-## 12. Streak (Lerntage in Folge) ⚠️ GEPLANT
+## 12. Streak (Lerntage in Folge) ✅ Implementiert (Juli 2026)
 
-> Produktentscheidung Juni 2026. Noch nicht im Code.
+> Produktentscheidung Juni 2026, umgesetzt Juli 2026 (`feat/streak`): reine
+> `berechneStreak(zeitstempel, jetzt)` + async DB-Reader `getStreak()` in `level.js`,
+> Anzeige in `dashboard.html` `#stat-streak`. Keine neue Spalte, keine Migration.
 
 - **Definition:** Streak = Anzahl aufeinanderfolgender **UTC-Kalendertage** mit
   jeweils **≥1 Herausforderungs-Versuch** (eine `daily_quiz_log`-Zeile am Tag genügt).
@@ -305,10 +307,16 @@ FOOTER (alle Seiten, fix unten)
 - **Warum berechnet statt Zähler-Spalte:** Es gibt keinen Server-Cron; ein
   hochgezählter Zähler könnte einen "vergessenen" Reset nicht zuverlässig auslösen.
   Rückwärtsberechnung ist immer korrekt und passt zum SSOT-Prinzip (level.js).
-- **Anzeige:** `dashboard.html` `#stat-streak` ("Lerntage in Folge") — existiert
-  bereits im Markup, wird aktuell nie befüllt.
+- **Anzeige:** `dashboard.html` `#stat-streak` ("Lerntage in Folge") — via
+  `Level.getStreak()` im `Promise.all` befüllt; **immer** als Zahl (`String(streak)`),
+  0 wird als „0" gerendert (nicht „–").
+- **Umsetzung (IST):** `berechneStreak(zeitstempel, jetzt = new Date())` ist rein
+  (nur `Date`, Node-testbar); `getStreak()` liest `daily_quiz_log.played_at` (alle Zeilen,
+  **kein** Row-Limit, **kein** `success`-Filter — §12 zählt Zeilen/Versuche, nicht
+  bestandene Quiz; `success` = „ob Leben > 0", s. §6) und delegiert an `berechneStreak`.
 - **Abgrenzung:** unabhängig von der geplanten `level_log`-Tabelle (BUG-006), die
   nur die Level-Verlaufsgrafik im Profil speist.
 
 ---
-*Erstellt: Juni 2026 | Aktualisiert: Juni 2026 | Status: Teilweise implementiert*
+*Erstellt: Juni 2026 | Aktualisiert: Juli 2026 | Status: Teilweise implementiert
+(Streak §12 seit Juli 2026 umgesetzt)*

@@ -10,71 +10,6 @@ Erstellt: 2026-06-12 | Branch: `dev` | Commit: `76684f2`
 
 ---
 
-## Session 2026-06-30 — S2: Token-Konsolidierung (Shadow-/Radius-/Button-Token)
-
-**Branch:** `chore/s2-token-konsolidierung` (von `dev`), 4 Commits. Merge nach `dev`
-(Fast-Forward, `46cc005`) und nach `main` (`--no-ff`, Merge `831d80c`); **beide gepusht**
-(`origin/dev`, `origin/main`). Branch nach Merge lokal gelöscht. Dieser Doku-Commit
-(Session-Report) kommt separat obendrauf — ohne Push.
-
-**Commits:**
-- `8d73575` chore(tokens): Shadow-/Button-Token (+10px-CTA-Radius) für S2 ergänzt
-- `e2d8d75` refactor(css): Schatten-/Radius-Hardcodes auf Token umgestellt
-- `a08c036` refactor(css): zentrale .btn-Basis + Button-Token eingeführt
-- `46cc005` refactor(ui): Button-Markup auf .btn-Basis + Modifier umgestellt
-
-### Umgesetzt (Leitprinzip: visuell ändert sich nichts ungewollt)
-- **C1 `tokens.css` (additiv, kein visueller Effekt):** neue Tokens `--shadow-xl`
-  (`0 20px 40px #0000004D`, Hex-Alpha-Stil wie `--shadow-sm/-lg`), `--radius-cta` (10px)
-  sowie Button-Tokens `--btn-radius` (= `--radius-md`) und `--btn-border`
-  (`1px solid var(--surface-2)`).
-- **C2 `style.css` Hardcodes → Token:** `.auth-card`-Schatten → `--shadow-xl`;
-  8px → `--radius-md` (Input, generischer `button`, `.btn-ghost-sm`, `.static-hinweis`);
-  10px → `--radius-cta` (`.btn-cta`, `.stat-pill`); alle Fortschrittsbalken (99px/5px/3px)
-  → `--radius-full`; 6px → `--radius-sm` (`code`, `.card-score`). `.topbar-progress-fill`
-  (`0 2px 2px 0`) und `.tab` (`0`) bewusst als Einzelwerte gelassen.
-- **C3a `.btn`-Basis + Modifier:** zentrale `.btn { cursor; border-radius: var(--btn-radius) }`
-  + `.btn--primary/-ghost/-cta/-ghost-sm/-lg`; Ghost-Border auf `--btn-border`;
-  `#login-form button` auf der Basis mitgezogen (Alt-Namen vorübergehend als Alias).
-- **C3b Markup:** 15 Aufrufstellen (`dashboard/fach/profil/tagesquiz/tauschen.html`,
-  `js/layout.js`) auf `class="btn btn--…"` umgestellt; CSS-Aliase entfernt. `.btn-arrow`
-  bleibt bewusst Deko-Kind (kein Button-Modifier).
-
-### Bewusste Abweichungen vom Plan (je begründet)
-- **`--radius-10` → `--radius-cta`:** der ursprüngliche Plan-Name `--radius-xl` war in
-  `tokens.css` bereits mit **16px** belegt (Kollision) → semantischer Name nach dem
-  Haupt-Konsument `.btn-cta` (`.stat-pill` als Mitnutzer im Kommentar vermerkt).
-- **E3-Korrektur — Profil-EP-Bars `5px`/`3px` → `--radius-full` statt `--radius-sm`:**
-  `.profil-bar-wrap/-fill` (Höhe 10px) und `.profil-fach-bar-wrap/-fill` (Höhe 6px) haben
-  Radius = halbe Höhe = **volle Pill-Kappen**; `--radius-sm` (4px) hätte sie abgeflacht.
-  `--radius-full` ist hier visuell-neutral (wie alle anderen Balken).
-- **`.btn`-Basis „Nur Radius" (ohne `font-family`):** bewusster Verzicht auf Font-Angleich;
-  einzige sichtbare Folge ist, dass die **3 vormals eckigen `a.btn--primary`** (Dashboard-
-  CTA-Link + 2× Tagesquiz) jetzt **8px rund** sind (der Radius des generischen `button{}`
-  griff bei `<a>` nicht).
-- **`--btn-shadow` und `--brand`-Alias weggelassen:** kein Konsument in S2 (Shadow gehört
-  zu S4, Brand-Alias zu S3).
-
-### Verifikation
-Eingeloggter Seiten-Sweep (Server `lernhub`, User `schueler1@lernhub.htl`), Konsole
-**überall sauber**, **keine mutierenden Klicks** (kein Quiz-Start, kein Tausch):
-- **Dashboard:** `a.btn--cta` 10px, `a.btn--primary` **8px** (vormals eckig → jetzt rund).
-- **Fach (dbi):** `button.btn--primary` „Auswerten" 8px.
-- **Tagesquiz:** 7 Buttons inkl. sichtbarem `btn--primary btn--lg` (Padding 32px /
-  Font 16.8px) + ghost-sm mit Border — alle korrekt.
-- **Profil:** 2× `btn--ghost` 8px; EP-Bars rendern als volle Pills (999px @ 10/6px Höhe);
-  `--btn-border` folgt dem Theme (dark `#1A1A2E` / light `#E2E8F0`); Abmelden-Rot intakt.
-- **Tauschen:** `button.btn--primary` (disabled) 8px.
-- Token-Auflösung + `.auth-card`-Schatten byte-identisch in Dark **und** Light; kein JS
-  hängt an den Button-Klassen.
-
-### Offen / bekannt (nicht S2-Scope)
-- **`<button>`-Elemente laufen weiter in der System-Schrift** statt Space Grotesk
-  (Form-Controls erben `font-family` nicht; im `.btn`-Kommentar dokumentiert) → Kandidat
-  für eine spätere Font-Vereinheitlichung. S2 war bewusst „nur Radius".
-
----
-
 ## Session 2026-07-01 — S3: 0 % Emojis + Prestige-Level-System
 
 Zwei Feature-Branches von `dev`, je `--no-ff` gemergt; **kein Push, kein `main`**.
@@ -198,6 +133,53 @@ kommt separat nach dem Merge obendrauf.
 - **Technische Schuld** (10er-Kurve entkoppeln) unverändert offen; restliche Backlog-
   Einträge (Tagessperre entfernen, Streak, Dashboard-Fixes, Trophy-Shop, Account-Löschung,
   Button-System) unberührt.
+
+---
+
+## Session 2026-07-06 — feat/streak: Lerntage-in-Folge-Streak berechnen & anzeigen
+
+**Branch:** `feat/streak` (von `dev`), 1 Feature-Commit, via `--no-ff` nach `dev` gemergt
+(Merge `2587479`). Kein Push, kein `main`, kein Deploy, **keine Migration**. Dieser
+Doku-Commit kommt separat nach dem Merge obendrauf.
+
+**Commit:**
+- `be34a9e` feat: Lerntage-in-Folge-Streak berechnen und im Dashboard anzeigen
+
+### Umgesetzt (SSOT in level.js, LEVEL_SYSTEM §12)
+- **`berechneStreak(zeitstempel, jetzt = new Date())`** — reine Funktion (nur `Date`, keine
+  Seiteneffekte), platziert nach `berechneFortschritt`. Zählt rückwärts über die **distinct
+  UTC-Tage** der übergebenen `played_at`-Zeitstempel. Kulanz: heute (noch) leer, aber gestern
+  vorhanden → Streak läuft ab gestern weiter; gestern UND heute leer → 0. Mehrere Zeilen am
+  selben Tag zählen einmal (Set über UTC-Tage). `jetzt` injizierbar (Node-Test/Referenzzeit).
+- **`getStreak()`** — async DB-Reader analog `getUserStats`: liest `daily_quiz_log.played_at`
+  des Users (nur diese Spalte, **alle** Zeilen — **kein** Row-Limit, sonst könnten viele
+  Versuche eines Tages ältere Tage verdecken; **kein** `success`-Filter, s. u.), delegiert an
+  `berechneStreak`. 0 bei fehlendem Login / Fehler / ohne Zeilen.
+- Beide im **Modul-Export** ergänzt (`berechneStreak`, `getStreak`).
+- **`dashboard.html`:** `Level.getStreak()` ins bestehende `Promise.all`; `#stat-streak` wird
+  **immer** als Zahl gesetzt (`String(streak)`) — 0 zeigt „0" (abweichend von
+  `stat-themen`/`stat-quiz`, die bei 0 „–" zeigen).
+
+### §12-Randfall (gegen LEVEL_SYSTEM.md verifiziert): `success=false` zählt mit
+Startzeilen aus `starteTagesQuiz` und abgebrochene Versuche (`success=false`) **zählen für
+den Tag**: §12 zählt die Einheit Versuch/Zeile/`played_at` unkonditioniert; §6 definiert
+`success` nur als „ob Leben > 0" (Quiz-bestanden-Flag, orthogonal zum Tag-Zählen). Daher
+**kein** `success`-Filter in `getStreak`.
+
+### Verifikation
+- **Node-Invarianten** der reinen `berechneStreak` (byte-identische Kopie, feste
+  Referenzzeit): **8/8 grün** — leer→0, nur heute→1, nur gestern (Kulanz)→1, 3 Tage→3,
+  Lücke bricht→2, mehrere Zeilen/Tag→einmal (2), gestern+heute leer→0, heute leer +
+  gestern/vorgestern→2. `level.js`: `node --check` sauber.
+- **Keine Live-/Browser-Verifikation:** Dashboard ist login-gated und der Dev-Server zeigt
+  auf Prod (Memory: README-Creds ungültig, Screenshots in dieser Env instabil). Korrektheit
+  ruht auf Node-Invarianten + Diff-Gate + Datenfluss-Analyse.
+
+### Offen (in IDEEN.md)
+- **Technische Schuld** (10er-Kurve entkoppeln) unverändert offen. Weitere Kandidaten:
+  Dashboard-Anzeigefehler (BUG-013/014), Trophy-Shop, Account-Löschung, Button-System-Rest.
+- Nebenbefund: IDEEN-Eintrag „Tagessperre entfernen" war bereits 2026-06-25 (BUG-012)
+  umgesetzt → in dieser Session als ✅ nachgezogen.
 
 ---
 
