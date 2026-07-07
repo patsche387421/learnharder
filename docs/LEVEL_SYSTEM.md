@@ -31,7 +31,8 @@ keinen Lebensbalken und verbraucht keine Energie.
 - Reset-Modus: **Kalendertag UTC** (entschieden, §11.2) — konsistent mit `played_at`
 - Umsetzung: `rechargeEnergie()` in `level.js`, ausgelöst von `getUserStats()`.
   Client-seitig als SSOT (kein Energy-Schreibzugriff außerhalb `level.js`).
-  Reduziert nie (Trophäen-Tausch kann Energie > 5 erzeugen, BUG-011).
+  Reduziert nie; seit BUG-011 (`fix/energie-cap`) cappt auch der Trophäen-Tausch bei 5,
+  der Deckel ist damit nicht mehr überschreitbar.
 
 ## 2. Lebensbalken ❤️
 

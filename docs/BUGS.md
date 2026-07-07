@@ -106,7 +106,12 @@ Legende: 🔴 Kritisch · 🟡 Wichtig · 🟢 Nice-to-have · ✅ Erledigt
   anzahlEnergie` ohne Obergrenze → Energie kann über 5 steigen.
 - **Auswirkung:** Gering. Der Recharge respektiert das (reduziert nie), aber der
   Cap von 5 ist über den Tausch umgehbar.
-- **Aktion:** Gehört zu `fix/trophy-shop` (Kauf-Flow). Dort `Math.min(5, …)` o. ä.
+- **Status:** ✅ Erledigt (Merge `4ccb4de`, Commit `a20e7bb`, 2026-07-07).
+  Produktentscheidung (a): `tauscheTrophäen` blockt bei `stats.energy >= 5` VOR dem
+  Trophäen-Abzug (`{erfolg:false, fehler:'Energie ist schon voll'}`) und cappt die
+  Gutschrift zusätzlich mit `Math.min(5, …)` (analog `rechargeEnergie`). `tauschen.html`
+  sperrt den Button bei voller Energie und zeigt `#tausch-hinweis`. Belegt über 12
+  Node-Invarianten (Guard/Cap + Button/Hinweis).
 
 ### BUG-009: LEVEL_SYSTEM.md §4 veraltet (EP-Unterschied fehlt)
 - **Status:** ✅ Erledigt — LEVEL_SYSTEM.md vollständig aktualisiert
@@ -139,8 +144,9 @@ Legende: 🔴 Kritisch · 🟡 Wichtig · 🟢 Nice-to-have · ✅ Erledigt
 - **Fix:** `rechargeEnergie()` in `level.js` (ausgelöst von `getUserStats`) füllt
   +1 Energie pro vergangenem **UTC-Kalendertag** auf, gedeckelt bei 5. Reset-Modus
   = Kalendertag UTC (§11.2 entschieden). Client-seitig als SSOT — kein Energy-
-  Schreibzugriff außerhalb `level.js`. Reduziert **nie** (Trophäen-Tausch kann
-  Energie > 5 erzeugen, siehe BUG-011).
+  Schreibzugriff außerhalb `level.js`. Reduziert **nie**; seit BUG-011
+  (`fix/energie-cap`) cappt auch der Trophäen-Tausch bei 5, der Deckel ist damit
+  nicht mehr überschreitbar.
 - **Auswirkung behoben:** Energie regeneriert sich automatisch; kein dauerhaftes 0 mehr.
 
 ### Tagessperre-Abbruch-Lücke: ✅ behoben (fix/daily-challenge)

@@ -19,11 +19,17 @@ Tagesquiz: Einmal-pro-Tag-Sperre und Energy-Recharge funktionierten nicht.
   pro UTC-Kalendertag, Cap 5, reduziert nie. Reset-Modus = Kalendertag UTC.
 - **Sperre:** `starteTagesQuiz()` legt die daily_quiz_log-Zeile schon beim Start an
   (Abbruch-Lücke geschlossen); `vergibBelohnungen({ logId })` trägt das Ergebnis nach.
-- Offen geblieben: Trophäen-Tausch ohne Energie-Cap → BUG-011 (gehört zu fix/trophy-shop).
+- Trophäen-Tausch ohne Energie-Cap (BUG-011) → in fix/energie-cap (2026-07-07) behoben. ✅
 
-## fix/trophy-shop (eigene Session)
+## fix/trophy-shop (eigene Session) — ✅ ERLEDIGT
 Trophy-Shop wieder erreichbar machen (Energydrink-Kauf: 50 Trophäen = 1 Drink). Scope
 auf Erreichbarkeit + Kauf-Flow begrenzt. Einlöse-Logik bleibt in level.js (SSOT).
+Befund fix/energie-cap (2026-07-07): Der Shop war längst fertig — erreichbar (dashboard.html
+Aktionskarte + tagesquiz.html Button + Topbar-Trophäen-Link → /tauschen.html) und der Kauf-Flow
+(tauscheTrophäen + UI) funktionsfähig. Der IDEEN-Eintrag war veraltet; einziger offener Rest war
+BUG-011 (Energie-Cap). Behoben in fix/energie-cap: Voll-Energie-Guard + Math.min(5,…)-Cap in
+level.js, Button-Guard + #tausch-hinweis in tauschen.html. Belegt über 12 Node-Invarianten.
+Status: ✅ erledigt.
 
 ## Public-Page-Topbar (eigene Session)
 Topbar-Darstellung für ausgeloggte Nutzer auf impressum.html / datenschutz.html.

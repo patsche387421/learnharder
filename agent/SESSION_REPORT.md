@@ -10,56 +10,6 @@ Erstellt: 2026-06-12 | Branch: `dev` | Commit: `76684f2`
 
 ---
 
-## Session 2026-07-06 — feat/prestige-popup: Prestige-Up-Feier im Ergebnis-Screen
-
-**Branch:** `feat/prestige-popup` (von `dev`), 3 Commits, via `--no-ff` nach `dev`
-gemergt (Merge `d5adb97`). Kein Push, kein `main`, kein Deploy. Dieser Doku-Commit
-kommt separat nach dem Merge obendrauf.
-
-**Commits:**
-- `0a70fe7` refactor(tokens): Prestige-Token einführen
-- `160468c` feat: Prestige-Up-Feier im Ergebnis-Screen
-- `9f7a4ff` refactor: Prestige-Feier-Reset vor Screen-Wechsel ziehen
-
-### Umgesetzt
-- **Token (Commit 1):** neues semantisches `--prestige: #EA580C` in `tokens.css` (bei
-  `--warning`/`--gold`); der bislang hardcodierte Prestige-Kreis in `renderLevelBadge`
-  (`layout.js`) nutzt jetzt `var(--prestige)`.
-- **Feier (Commit 2):** bei `ergebnis.prestigeUp === true` (Zyklus-Abschluss L100 →
-  Prestige +1) blendet `zeigeErgebnis` (`tagesquiz.html`) eine Feier im bestehenden
-  `#screen-ergebnis` ein — runder Prestige-Badge (`--prestige`-Kreis + weiße Zahl, wie
-  der Topbar-Sub-Kreis) mit Gold-Ring/-Glow und Titel „Prestige N erreicht!". N kommt
-  aus dem ohnehin geladenen `stats.prestige` (kein Rückgabe-Umbau). Statisches
-  Container-Markup, per `hidden` getoggelt (kein 6. Screen). CSS in `style.css`
-  ausschließlich über Tokens (`--prestige`, `--gold`, `--glow-gold`, `--radius-full`,
-  `--space-*`, `--fs-*`, `--fw-*`, `--font-display`, `--text-on-primary`), kein
-  `!important`, dezente pop-Animation.
-- **Robustheit (Commit 3):** der `hidden = true`-Reset läuft jetzt VOR `zeigeScreen`,
-  damit die Kein-Aufblitzen-Garantie bei „Nochmal" nicht an der `await`-Freiheit
-  zwischen Screen-Wechsel und Reset hängt.
-
-### Datenfluss (bestätigt)
-- `Level.vergibBelohnungen` schreibt `prestige = floor(total_xp / EP_PRO_ZYKLUS)` bereits
-  per Upsert und liefert `prestigeUp` (bool, nur Auslöser). Zwischen Upsert und dem
-  frischen `getUserStats` in `zeigeErgebnis` liegt kein weiterer Schreibvorgang →
-  `stats.prestige` = N. Kein Eingriff an DB/Kurve/`levelUp`, keine Migration.
-- Re-Trigger der pop-Animation bei theoretischem zweiten Prestige-Up ist durch den
-  `display:none → flex`-Zyklus (Reset + echte `await`s dazwischen) automatisch gegeben —
-  praktisch irrelevant (2×8000 EP in einer Session).
-
-### Verifikation
-- Keine Live-Verifikation: Die Feier triggert nur bei echtem Zyklus-Abschluss (8000 EP);
-  einen Prestige-Up auf der Prod-DB auszulösen wäre mutierend und außerhalb des Scopes
-  (Dev-Server zeigt auf Prod, s. Memory). Korrektheit ruht auf Diff-Gate + der
-  bestätigten Datenfluss-Analyse.
-
-### Offen (in IDEEN.md)
-- **Technische Schuld** (10er-Kurve entkoppeln) unverändert offen; restliche Backlog-
-  Einträge (Tagessperre entfernen, Streak, Dashboard-Fixes, Trophy-Shop, Account-Löschung,
-  Button-System) unberührt.
-
----
-
 ## Session 2026-07-06 — feat/streak: Lerntage-in-Folge-Streak berechnen & anzeigen
 
 **Branch:** `feat/streak` (von `dev`), 1 Feature-Commit, via `--no-ff` nach `dev` gemergt
@@ -151,6 +101,50 @@ Der Dead-CSS-Cleanup und dieser Doku-Commit kommen separat auf `dev` obendrauf.
 ### Offen (in IDEEN.md)
 - **Technische Schuld** (10er-Kurve entkoppeln) unverändert offen. Weitere Kandidaten:
   Trophy-Shop, Account-Löschung, Button-System-Rest, Public-Page-Topbar.
+
+---
+
+## Session 2026-07-07 — fix/energie-cap: BUG-011 Energie-Cap beim Trophäen-Tausch
+
+**Branch:** `fix/energie-cap` (von `dev`), 1 Feature-Commit, via `--no-ff` nach `dev`
+gemergt (Merge `4ccb4de`). Kein Push, kein `main`, kein Deploy, keine Migration. Dieser
+Doku-Commit kommt separat nach dem Merge obendrauf.
+
+**Commit:**
+- `a20e7bb` fix: Trophäen-Tausch cappt Energie bei 5 und blockt bei voller Energie (BUG-011)
+
+### Ausgangslage (gegen Code-Stand verifiziert)
+- Trophy-Shop war längst fertig: erreichbar (`dashboard.html` Aktionskarte + `tagesquiz.html`
+  Button + Topbar-Trophäen-Link → `/tauschen.html`), Kauf-Flow (`tauscheTrophäen` + UI)
+  funktionsfähig. Der IDEEN-Eintrag „fix/trophy-shop" war veraltet — nur BUG-011 war offen.
+- BUG-011 bestätigt: `tauscheTrophäen` setzte `energy = stats.energy + anzahlEnergie` ohne
+  Cap (`level.js:347`) → Energie über 5 möglich; und bei voller Energie wären 50 Trophäen
+  ohne Gegenwert verpufft.
+
+### Umgesetzt (SSOT in level.js; Produktentscheidung Patsche: Variante (a))
+- **`tauscheTrophäen` (level.js):** Voll-Energie-Guard VOR dem Trophäen-Abzug —
+  `stats.energy >= 5` → `{ erfolg:false, fehler:'Energie ist schon voll' }` (keine Abbuchung).
+  Zusätzlich Gutschrift `Math.min(5, stats.energy + anzahlEnergie)` als Sicherheitsnetz
+  (analog `rechargeEnergie`). Cap-Wert 5 aus LEVEL_SYSTEM §1.
+- **`tauschen.html`:** `aktualisiereAnzeige()` sperrt den Button jetzt auch bei voller
+  Energie (`stats.trophies < 50 || stats.energy >= 5`) und zeigt einen neuen
+  `#tausch-hinweis` („Deine Energie ist bereits voll (5 / 5) — kein Tausch nötig.").
+- **`style.css`:** neue `.tausch-hinweis`-Regel (nur Tokens: `--text-muted`, zentriert,
+  0.9rem; kein `!important`).
+
+### Verifikation
+- **Node-Invarianten** der reinen Entscheidungslogik (byte-treue Kopie von Guard/Cap +
+  Button/Hinweis): **12/12 grün** — u. a. voll+genug Trophäen→geblockt ohne Abbuchung,
+  Cap deckelt 4+1 und 4+2 auf 5, Voll-Guard gewinnt gegen Trophäen-Mangel (Reihenfolge),
+  Button/Hinweis schalten korrekt. `level.js`: `node --check` sauber. `--text-muted`-Token
+  vorhanden; `#tausch-hinweis` im statischen HTML-Quelltext belegt.
+- **Keine Live-/Browser-Verifikation:** Tausch-Seite ist login-gated, Dev-Server zeigt auf
+  Prod (Memory); ein echter Tausch wäre mutierend. Korrektheit ruht auf Node-Invarianten +
+  Diff-Gate + gerendertem Quelltext.
+
+### Offen (in IDEEN.md)
+- **Technische Schuld** (10er-Kurve entkoppeln) unverändert offen. Weitere Kandidaten:
+  Account-Löschung, Button-System-Rest (S2), Public-Page-Topbar, Doku-Index in CLAUDE.md.
 
 ---
 

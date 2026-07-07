@@ -829,3 +829,53 @@ Die Migration der `prestige`-Spalte wurde manuell in Supabase ausgeführt (Prod-
 - **Technische Schuld:** alte 10er-Kurve (`berechneLevel`/`LEVEL_THRESHOLDS`) läuft parallel
   weiter (schreibt `user_stats.level` + `subject_xp.level` + `levelUp`-Toast) → gespeichertes
   `level` ist vom angezeigten 100er-Level entkoppelt. Bewusst akzeptiert, eigene Session.
+
+---
+
+## Session 2026-07-06 — feat/prestige-popup: Prestige-Up-Feier im Ergebnis-Screen
+
+**Branch:** `feat/prestige-popup` (von `dev`), 3 Commits, via `--no-ff` nach `dev`
+gemergt (Merge `d5adb97`). Kein Push, kein `main`, kein Deploy. Dieser Doku-Commit
+kommt separat nach dem Merge obendrauf.
+
+**Commits:**
+- `0a70fe7` refactor(tokens): Prestige-Token einführen
+- `160468c` feat: Prestige-Up-Feier im Ergebnis-Screen
+- `9f7a4ff` refactor: Prestige-Feier-Reset vor Screen-Wechsel ziehen
+
+### Umgesetzt
+- **Token (Commit 1):** neues semantisches `--prestige: #EA580C` in `tokens.css` (bei
+  `--warning`/`--gold`); der bislang hardcodierte Prestige-Kreis in `renderLevelBadge`
+  (`layout.js`) nutzt jetzt `var(--prestige)`.
+- **Feier (Commit 2):** bei `ergebnis.prestigeUp === true` (Zyklus-Abschluss L100 →
+  Prestige +1) blendet `zeigeErgebnis` (`tagesquiz.html`) eine Feier im bestehenden
+  `#screen-ergebnis` ein — runder Prestige-Badge (`--prestige`-Kreis + weiße Zahl, wie
+  der Topbar-Sub-Kreis) mit Gold-Ring/-Glow und Titel „Prestige N erreicht!". N kommt
+  aus dem ohnehin geladenen `stats.prestige` (kein Rückgabe-Umbau). Statisches
+  Container-Markup, per `hidden` getoggelt (kein 6. Screen). CSS in `style.css`
+  ausschließlich über Tokens (`--prestige`, `--gold`, `--glow-gold`, `--radius-full`,
+  `--space-*`, `--fs-*`, `--fw-*`, `--font-display`, `--text-on-primary`), kein
+  `!important`, dezente pop-Animation.
+- **Robustheit (Commit 3):** der `hidden = true`-Reset läuft jetzt VOR `zeigeScreen`,
+  damit die Kein-Aufblitzen-Garantie bei „Nochmal" nicht an der `await`-Freiheit
+  zwischen Screen-Wechsel und Reset hängt.
+
+### Datenfluss (bestätigt)
+- `Level.vergibBelohnungen` schreibt `prestige = floor(total_xp / EP_PRO_ZYKLUS)` bereits
+  per Upsert und liefert `prestigeUp` (bool, nur Auslöser). Zwischen Upsert und dem
+  frischen `getUserStats` in `zeigeErgebnis` liegt kein weiterer Schreibvorgang →
+  `stats.prestige` = N. Kein Eingriff an DB/Kurve/`levelUp`, keine Migration.
+- Re-Trigger der pop-Animation bei theoretischem zweiten Prestige-Up ist durch den
+  `display:none → flex`-Zyklus (Reset + echte `await`s dazwischen) automatisch gegeben —
+  praktisch irrelevant (2×8000 EP in einer Session).
+
+### Verifikation
+- Keine Live-Verifikation: Die Feier triggert nur bei echtem Zyklus-Abschluss (8000 EP);
+  einen Prestige-Up auf der Prod-DB auszulösen wäre mutierend und außerhalb des Scopes
+  (Dev-Server zeigt auf Prod, s. Memory). Korrektheit ruht auf Diff-Gate + der
+  bestätigten Datenfluss-Analyse.
+
+### Offen (in IDEEN.md)
+- **Technische Schuld** (10er-Kurve entkoppeln) unverändert offen; restliche Backlog-
+  Einträge (Tagessperre entfernen, Streak, Dashboard-Fixes, Trophy-Shop, Account-Löschung,
+  Button-System) unberührt.
