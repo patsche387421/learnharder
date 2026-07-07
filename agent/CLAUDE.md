@@ -13,6 +13,7 @@ Bei Konflikten zwischen Nutzerwunsch und diesen Regeln: kurz nachfragen.
 | docs/LEVEL_SYSTEM.md | Gamification-Logik | Nur wenn level.js betroffen |
 | docs/NAMENSKONVENTION.md | Funktionsnamen, Glossar | Nur wenn neue Funktionen |
 | agent/MOBILE_FIRST.md | Mobile-Richtlinien | Nur wenn CSS/Layout betroffen |
+| docs/TESTING.md | Manuelle Testfälle (User-Checkliste) | Nur wenn Verifikation geplant |
 
 ## Projektbeschreibung
 

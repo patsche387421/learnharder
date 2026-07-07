@@ -31,7 +31,8 @@ keinen Lebensbalken und verbraucht keine Energie.
 - Reset-Modus: **Kalendertag UTC** (entschieden, §11.2) — konsistent mit `played_at`
 - Umsetzung: `rechargeEnergie()` in `level.js`, ausgelöst von `getUserStats()`.
   Client-seitig als SSOT (kein Energy-Schreibzugriff außerhalb `level.js`).
-  Reduziert nie (Trophäen-Tausch kann Energie > 5 erzeugen, BUG-011).
+  Reduziert nie; seit BUG-011 (`fix/energie-cap`) cappt auch der Trophäen-Tausch bei 5,
+  der Deckel ist damit nicht mehr überschreitbar.
 
 ## 2. Lebensbalken ❤️
 
@@ -97,20 +98,27 @@ keinen Lebensbalken und verbraucht keine Energie.
 - EP pro Fach → eigenes Fach-Level (`subject_xp.xp`)
 - `subject_xp` wird nur aktualisiert wenn `ep > 0` und `fachId` bekannt
 
-## 5. Level-Schwellen (steigend)
+## 5. Level-Kurve (100-Level-Zyklus)
 
-| Level | EP benötigt |
-|-------|-------------|
-| 1     | 0           |
-| 2     | 100         |
-| 3     | 250         |
-| 4     | 500         |
-| 5     | 900         |
-| 6     | 1.400       |
-| 7     | 2.000       |
-| 8     | 2.700       |
-| 9     | 3.500       |
-| 10    | 4.500       |
+Das Level wird aus den Gesamt-EP über eine **100-Level-Kurve** berechnet
+(`berechneFortschritt` in `level.js` — einzige Level-Quelle/SSOT):
+
+- `LEVEL_SCHWELLEN[n] = round(n^1.5 · 8)` — EP-Grenze im aktuellen Zyklus, ab der Level
+  *n+1* erreicht ist. Balance-Stellschrauben (nur diese zwei): `LEVEL_EXPONENT = 1.5`,
+  `LEVEL_KOEFFIZIENT = 8`.
+- `LEVEL_SCHWELLEN[100] = 8.000 EP = EP_PRO_ZYKLUS` — ein **Prestige-Zyklus**. Danach
+  beginnt der nächste Zyklus wieder bei Level 1, `prestige` steigt um 1 (siehe §4/§8).
+
+| n | `SCHWELLEN[n]` (EP) |   | n   | `SCHWELLEN[n]` (EP) |
+|---|--------------------|---|-----|--------------------|
+| 1 | 8                  |   | 50  | 2.828              |
+| 2 | 23                 |   | 75  | 5.196              |
+| 3 | 42                 |   | 100 | 8.000              |
+
+> Die frühere 10er-Kurve (`berechneLevel` / `LEVEL_THRESHOLDS`, Level 1–10) wurde in
+> `refactor/level-kurve-vereinheitlichen` (2026-07-07) entfernt — sie war nur noch ein vom
+> angezeigten 100er-Level entkoppelter Cache-Schreiber. Jetzt speist die 100er-Kurve auch
+> `user_stats.level` / `subject_xp.level` (§8).
 
 ## 6. Datenbank-Erweiterungen (aktiv)
 
@@ -193,6 +201,9 @@ Alle Level- und Fortschrittsanzeigen (Topbar, Fach-Seiten, Profil) werden zentra
 Gesamt-EP über `Level.berechneFortschritt(gesamtEp)` in `src/js/level.js` abgeleitet. Das
 angezeigte **Level wird IMMER aus den EP berechnet**, nicht aus einer gespeicherten DB-Spalte
 gelesen — `user_stats.level` und `subject_xp.level` gelten nur noch als denormalisierter Cache.
+Seit `refactor/level-kurve-vereinheitlichen` (2026-07-07) wird dieser Cache aus **derselben**
+100er-Kurve geschrieben (zuvor: alte 10er-Kurve → gespeichertes und angezeigtes Level waren
+entkoppelt). Gelesen wird der Cache weiterhin nirgends fürs Anzeigen.
 
 ---
 

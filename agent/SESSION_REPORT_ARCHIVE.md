@@ -829,3 +829,105 @@ Die Migration der `prestige`-Spalte wurde manuell in Supabase ausgeführt (Prod-
 - **Technische Schuld:** alte 10er-Kurve (`berechneLevel`/`LEVEL_THRESHOLDS`) läuft parallel
   weiter (schreibt `user_stats.level` + `subject_xp.level` + `levelUp`-Toast) → gespeichertes
   `level` ist vom angezeigten 100er-Level entkoppelt. Bewusst akzeptiert, eigene Session.
+
+---
+
+## Session 2026-07-06 — feat/prestige-popup: Prestige-Up-Feier im Ergebnis-Screen
+
+**Branch:** `feat/prestige-popup` (von `dev`), 3 Commits, via `--no-ff` nach `dev`
+gemergt (Merge `d5adb97`). Kein Push, kein `main`, kein Deploy. Dieser Doku-Commit
+kommt separat nach dem Merge obendrauf.
+
+**Commits:**
+- `0a70fe7` refactor(tokens): Prestige-Token einführen
+- `160468c` feat: Prestige-Up-Feier im Ergebnis-Screen
+- `9f7a4ff` refactor: Prestige-Feier-Reset vor Screen-Wechsel ziehen
+
+### Umgesetzt
+- **Token (Commit 1):** neues semantisches `--prestige: #EA580C` in `tokens.css` (bei
+  `--warning`/`--gold`); der bislang hardcodierte Prestige-Kreis in `renderLevelBadge`
+  (`layout.js`) nutzt jetzt `var(--prestige)`.
+- **Feier (Commit 2):** bei `ergebnis.prestigeUp === true` (Zyklus-Abschluss L100 →
+  Prestige +1) blendet `zeigeErgebnis` (`tagesquiz.html`) eine Feier im bestehenden
+  `#screen-ergebnis` ein — runder Prestige-Badge (`--prestige`-Kreis + weiße Zahl, wie
+  der Topbar-Sub-Kreis) mit Gold-Ring/-Glow und Titel „Prestige N erreicht!". N kommt
+  aus dem ohnehin geladenen `stats.prestige` (kein Rückgabe-Umbau). Statisches
+  Container-Markup, per `hidden` getoggelt (kein 6. Screen). CSS in `style.css`
+  ausschließlich über Tokens (`--prestige`, `--gold`, `--glow-gold`, `--radius-full`,
+  `--space-*`, `--fs-*`, `--fw-*`, `--font-display`, `--text-on-primary`), kein
+  `!important`, dezente pop-Animation.
+- **Robustheit (Commit 3):** der `hidden = true`-Reset läuft jetzt VOR `zeigeScreen`,
+  damit die Kein-Aufblitzen-Garantie bei „Nochmal" nicht an der `await`-Freiheit
+  zwischen Screen-Wechsel und Reset hängt.
+
+### Datenfluss (bestätigt)
+- `Level.vergibBelohnungen` schreibt `prestige = floor(total_xp / EP_PRO_ZYKLUS)` bereits
+  per Upsert und liefert `prestigeUp` (bool, nur Auslöser). Zwischen Upsert und dem
+  frischen `getUserStats` in `zeigeErgebnis` liegt kein weiterer Schreibvorgang →
+  `stats.prestige` = N. Kein Eingriff an DB/Kurve/`levelUp`, keine Migration.
+- Re-Trigger der pop-Animation bei theoretischem zweiten Prestige-Up ist durch den
+  `display:none → flex`-Zyklus (Reset + echte `await`s dazwischen) automatisch gegeben —
+  praktisch irrelevant (2×8000 EP in einer Session).
+
+### Verifikation
+- Keine Live-Verifikation: Die Feier triggert nur bei echtem Zyklus-Abschluss (8000 EP);
+  einen Prestige-Up auf der Prod-DB auszulösen wäre mutierend und außerhalb des Scopes
+  (Dev-Server zeigt auf Prod, s. Memory). Korrektheit ruht auf Diff-Gate + der
+  bestätigten Datenfluss-Analyse.
+
+### Offen (in IDEEN.md)
+- **Technische Schuld** (10er-Kurve entkoppeln) unverändert offen; restliche Backlog-
+  Einträge (Tagessperre entfernen, Streak, Dashboard-Fixes, Trophy-Shop, Account-Löschung,
+  Button-System) unberührt.
+
+---
+
+## Session 2026-07-06 — feat/streak: Lerntage-in-Folge-Streak berechnen & anzeigen
+
+**Branch:** `feat/streak` (von `dev`), 1 Feature-Commit, via `--no-ff` nach `dev` gemergt
+(Merge `2587479`). Kein Push, kein `main`, kein Deploy, **keine Migration**. Dieser
+Doku-Commit kommt separat nach dem Merge obendrauf.
+
+**Commit:**
+- `be34a9e` feat: Lerntage-in-Folge-Streak berechnen und im Dashboard anzeigen
+
+### Umgesetzt (SSOT in level.js, LEVEL_SYSTEM §12)
+- **`berechneStreak(zeitstempel, jetzt = new Date())`** — reine Funktion (nur `Date`, keine
+  Seiteneffekte), platziert nach `berechneFortschritt`. Zählt rückwärts über die **distinct
+  UTC-Tage** der übergebenen `played_at`-Zeitstempel. Kulanz: heute (noch) leer, aber gestern
+  vorhanden → Streak läuft ab gestern weiter; gestern UND heute leer → 0. Mehrere Zeilen am
+  selben Tag zählen einmal (Set über UTC-Tage). `jetzt` injizierbar (Node-Test/Referenzzeit).
+- **`getStreak()`** — async DB-Reader analog `getUserStats`: liest `daily_quiz_log.played_at`
+  des Users (nur diese Spalte, **alle** Zeilen — **kein** Row-Limit, sonst könnten viele
+  Versuche eines Tages ältere Tage verdecken; **kein** `success`-Filter, s. u.), delegiert an
+  `berechneStreak`. 0 bei fehlendem Login / Fehler / ohne Zeilen.
+- Beide im **Modul-Export** ergänzt (`berechneStreak`, `getStreak`).
+- **`dashboard.html`:** `Level.getStreak()` ins bestehende `Promise.all`; `#stat-streak` wird
+  **immer** als Zahl gesetzt (`String(streak)`) — 0 zeigt „0" (abweichend von
+  `stat-themen`/`stat-quiz`, die bei 0 „–" zeigen).
+
+### §12-Randfall (gegen LEVEL_SYSTEM.md verifiziert): `success=false` zählt mit
+Startzeilen aus `starteTagesQuiz` und abgebrochene Versuche (`success=false`) **zählen für
+den Tag**: §12 zählt die Einheit Versuch/Zeile/`played_at` unkonditioniert; §6 definiert
+`success` nur als „ob Leben > 0" (Quiz-bestanden-Flag, orthogonal zum Tag-Zählen). Daher
+**kein** `success`-Filter in `getStreak`.
+
+### Verifikation
+- **Node-Invarianten** der reinen `berechneStreak` (byte-identische Kopie, feste
+  Referenzzeit): **8/8 grün** — leer→0, nur heute→1, nur gestern (Kulanz)→1, 3 Tage→3,
+  Lücke bricht→2, mehrere Zeilen/Tag→einmal (2), gestern+heute leer→0, heute leer +
+  gestern/vorgestern→2. `level.js`: `node --check` sauber.
+- **Keine Live-/Browser-Verifikation:** Dashboard ist login-gated und der Dev-Server zeigt
+  auf Prod (Memory: README-Creds ungültig, Screenshots in dieser Env instabil). Korrektheit
+  ruht auf Node-Invarianten + Diff-Gate + Datenfluss-Analyse.
+
+### Offen (in IDEEN.md)
+- **Technische Schuld** (10er-Kurve entkoppeln) unverändert offen. Weitere Kandidaten:
+  Dashboard-Anzeigefehler (BUG-013/014), Trophy-Shop, Account-Löschung, Button-System-Rest.
+- Nebenbefund: IDEEN-Eintrag „Tagessperre entfernen" war bereits 2026-06-25 (BUG-012)
+  umgesetzt → in dieser Session als ✅ nachgezogen.
+
+### Deploy (2026-07-06)
+dev → main gemergt (`dfa4fa7`), origin/main + origin/dev gepusht. Stale Branches
+`fix/header-rebuild` + `fix/dashboard` gelöscht. Netlify-Publish ist manueller Schritt
+(Auto-Build aus).

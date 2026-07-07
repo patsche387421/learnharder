@@ -39,6 +39,7 @@
         50 <span data-icon="trophy" data-icon-size="18"></span> gegen 1 <span data-icon="energy" data-icon-size="18"></span> tauschen
       </button>
 
+      <p id="tausch-hinweis" class="tausch-hinweis" hidden></p>
       <p id="tausch-meldung" class="tausch-meldung" hidden></p>
     </div>
   </main>
@@ -61,8 +62,21 @@
       document.getElementById("tausch-trophies").textContent = stats.trophies;
       document.getElementById("tausch-energie").textContent  = stats.energy;
 
-      const btn = document.getElementById("btn-tauschen");
-      btn.disabled = stats.trophies < 50;
+      const btn         = document.getElementById("btn-tauschen");
+      const hinweis     = document.getElementById("tausch-hinweis");
+      const energieVoll = stats.energy >= 5;
+
+      // Tausch sperren, wenn noch keine 50 Trophäen da sind ODER die Energie
+      // schon voll ist (sonst würden 50 Trophäen für nichts verpuffen).
+      btn.disabled = stats.trophies < 50 || energieVoll;
+
+      if (energieVoll) {
+        hinweis.textContent = "Deine Energie ist bereits voll (5 / 5) — kein Tausch nötig.";
+        hinweis.hidden = false;
+      } else {
+        hinweis.textContent = "";
+        hinweis.hidden = true;
+      }
     }
 
     (async () => {
