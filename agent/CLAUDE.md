@@ -15,6 +15,39 @@ Bei Konflikten zwischen Nutzerwunsch und diesen Regeln: kurz nachfragen.
 | agent/MOBILE_FIRST.md | Mobile-Richtlinien | Nur wenn CSS/Layout betroffen |
 | docs/TESTING.md | Manuelle Testfälle (User-Checkliste) | Nur wenn Verifikation geplant |
 
+## Dokumenten-Index
+
+Vollständiger Katalog aller Doku-Dateien (Zweck + Status). Die **Lese-Priorität bei
+Session-Start** regelt die Tabelle „Kontext-Dateien" oben; dieser Index ist der
+Gesamtüberblick. Status: **aktuell** = gepflegter Ist-Stand · **nur-Konzept** = geplante
+Vision/kein Code · **tw. veraltet** = enthält überholte Stellen (Hinweis in Klammern).
+
+### `agent/` — Prozess- & Agent-Artefakte
+
+| Datei | Zweck | Status |
+|---|---|---|
+| CLAUDE.md | Verbindliche Projektregeln für den KI-Agenten (diese Datei) | aktuell |
+| MOBILE_FIRST.md | Verbindliche Mobile-First-Richtlinien für UI-Arbeit | aktuell |
+| SESSION_REPORT.md | Die letzten 3 Sessions + aktueller Stand | aktuell |
+| SESSION_REPORT_ARCHIVE.md | Ältere Session-Berichte (Archiv, ältester zuerst) | aktuell (Archiv) |
+
+### `docs/` — Produkt-, Design- & Planungs-Doku
+
+| Datei | Zweck | Status |
+|---|---|---|
+| README.md | Wegweiser: wo welche Doku liegt | aktuell |
+| ROADMAP.md | Reihenfolge/Priorität der anstehenden Arbeit (SSOT der Session-Abfolge) | aktuell |
+| BUGS.md | Bug- & Issue-Tracker | aktuell |
+| IDEEN.md | Backlog/Ideen-Queue für spätere Sessions | aktuell |
+| LEVEL_SYSTEM.md | Gamification-Logik (Energie, EP, 100er-Level-Kurve, Trophäen, Streak, Prestige) | aktuell |
+| NAMENSKONVENTION.md | Namens- & Begriffsregeln + Funktions-Registry (level.js/stats.js) | aktuell |
+| TESTING.md | Manuelle Testfälle (User-Checkliste) für die Live-Seite | aktuell |
+| DESIGN_GUIDELINES.md | Design-System-Fundament (Tokens, Theme, Reset) | ⚠️ tw. veraltet (BUG-007) |
+| DATA_MIGRATION_V2.md | Plan: Lerninhalte JSON → Supabase (`content_items`) | nur-Konzept (Planung) |
+| KONZEPT_REITER.md | Reiter-Struktur auf Themen-Seiten (fach.html) | nur-Konzept |
+| KONZEPT_TEAMS_SAISONS.md | Teams & Saisons: Gemeinschaftslevel mit XP-Ledger | nur-Konzept |
+| KONZEPT_MANDANTEN.md | Vision: mandantenfähiges, schulweites Lernsystem (Phase 2+) | nur-Konzept |
+
 ## Projektbeschreibung
 
 `lernhub-demo` ist eine **lokale Lernwebsite** für HTL-Schüler:innen. Login,

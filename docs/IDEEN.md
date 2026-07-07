@@ -5,13 +5,16 @@ Notizen für spätere, eigene Sessions. Kein aktiver Arbeitsstand — Bugs stehe
 
 ---
 
-## Doku-Index in CLAUDE.md ergänzen (eigene Session, kein Code)
+## Doku-Index in CLAUDE.md ergänzen (eigene Session, kein Code) — ✅ ERLEDIGT
 CLAUDE.md bleibt schlank und enthält nur Regeln (wie bisher). Neu: ein Abschnitt
 "Dokumenten-Index" — Tabelle aller `docs/*.md`-Dateien mit Zweck (ein Satz) und
 Status (aktuell / veraltet-ignorieren / nur Konzept). Ziel: jede neue Session sieht
 sofort, welche Detail-Datei relevant ist, ohne dass CLAUDE.md selbst die Inhalte aller
 Dokumente trägt. Trennung von Regeln (CLAUDE.md) und Stand/Plänen (einzelne
 `docs/*.md`) bleibt bestehen — nur die Übersicht wird zentralisiert.
+Erledigt 2026-07-07: Abschnitt „Dokumenten-Index" in agent/CLAUDE.md ergänzt (Katalog aller
+docs/*.md + agent/*.md mit Zweck + Status; agent/ und docs/ getrennt).
+Status: ✅ erledigt.
 
 ## fix/daily-challenge (eigene Session) — ✅ ERLEDIGT
 Tagesquiz: Einmal-pro-Tag-Sperre und Energy-Recharge funktionierten nicht.
@@ -31,11 +34,16 @@ BUG-011 (Energie-Cap). Behoben in fix/energie-cap: Voll-Energie-Guard + Math.min
 level.js, Button-Guard + #tausch-hinweis in tauschen.html. Belegt über 12 Node-Invarianten.
 Status: ✅ erledigt.
 
-## Public-Page-Topbar (eigene Session)
+## Public-Page-Topbar (eigene Session) — ✅ ERLEDIGT
 Topbar-Darstellung für ausgeloggte Nutzer auf impressum.html / datenschutz.html.
 Hinweis: Der Hamburger ist auf diesen Seiten bereits funktional (fix/topbar-behavior,
 beide renderTopbar-Zweige verdrahtet) — diese Session betrifft die übrige
 Topbar-Darstellung im ausgeloggten Zustand, nicht den Hamburger.
+Befund 2026-07-07 (gegen Code belegt): bereits umgesetzt — `renderTopbar` hat einen
+ausgeloggten Zweig (`layout.js:250-258`): nur Logo + Branding + „Anmelden"-Link, kein
+Hamburger/Nav/Stats. impressum.html + datenschutz.html rendern die Topbar
+(`<header id="topbar">` + `Layout.renderTopbar()`).
+Status: ✅ erledigt.
 
 ## nav.md-Doku aufräumen (klein, docs-only)
 In docs/design/components/nav.md sind die TODOs Z. 22-24 (zentrale JS-Injektion via
@@ -99,11 +107,16 @@ im Profil. Falls zusätzlich distinkte Symbole statt Farben pro Band gewünscht 
 aufmachen.
 Status: ✅ erledigt (via Tiers).
 
-## Button-System zentralisieren (Teil S2)
+## Button-System zentralisieren (Teil S2) — ✅ ERLEDIGT
 Es gibt keine zentrale `.btn`-Basis (stattdessen verstreute `.btn-*`-Klassen) und keine
 Button-Token. S2 baut eine `.btn`-Basis + Modifier sowie `--btn-radius`/`--btn-border`/
 `--btn-shadow` in `tokens.css`.
-Status: offen.
+Befund 2026-07-07 (gegen Code belegt): bereits umgesetzt — zentrale `.btn`-Basis
+(`style.css:117`) + Modifier (`.btn--primary`/`--ghost`/`--cta`/`--ghost-sm`/`--lg`) und
+Tokens `--btn-radius`/`--btn-border` (`tokens.css:135-136`). Einzige Abweichung:
+`--btn-shadow` wurde nicht eingeführt (Buttons nutzen keinen eigenen Shadow-Token) — kein
+offener Rest.
+Status: ✅ erledigt.
 
 ## Icon-Restarbeiten (Teil S3) — ✅ ERLEDIGT (S3a)
 Quiz-Punkte und Herausforderung nutzen beide das `target`-Icon → differenzieren.
