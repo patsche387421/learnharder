@@ -5,13 +5,16 @@ Notizen für spätere, eigene Sessions. Kein aktiver Arbeitsstand — Bugs stehe
 
 ---
 
-## Doku-Index in CLAUDE.md ergänzen (eigene Session, kein Code)
+## Doku-Index in CLAUDE.md ergänzen (eigene Session, kein Code) — ✅ ERLEDIGT
 CLAUDE.md bleibt schlank und enthält nur Regeln (wie bisher). Neu: ein Abschnitt
 "Dokumenten-Index" — Tabelle aller `docs/*.md`-Dateien mit Zweck (ein Satz) und
 Status (aktuell / veraltet-ignorieren / nur Konzept). Ziel: jede neue Session sieht
 sofort, welche Detail-Datei relevant ist, ohne dass CLAUDE.md selbst die Inhalte aller
 Dokumente trägt. Trennung von Regeln (CLAUDE.md) und Stand/Plänen (einzelne
 `docs/*.md`) bleibt bestehen — nur die Übersicht wird zentralisiert.
+Erledigt 2026-07-07: Abschnitt „Dokumenten-Index" in agent/CLAUDE.md ergänzt (Katalog aller
+docs/*.md + agent/*.md mit Zweck + Status; agent/ und docs/ getrennt).
+Status: ✅ erledigt.
 
 ## fix/daily-challenge (eigene Session) — ✅ ERLEDIGT
 Tagesquiz: Einmal-pro-Tag-Sperre und Energy-Recharge funktionierten nicht.
