@@ -331,6 +331,9 @@ const Level = (() => {
   }
 
   // Tauscht Trophäen gegen Energie (50 Trophäen = 1 Energydrink).
+  // Blockt VOR dem Trophäen-Abzug, wenn die Energie schon am Deckel (5) ist —
+  // sonst würden die Trophäen verpuffen. Die Gutschrift wird zusätzlich bei 5
+  // gecappt (Math.min), analog zu rechargeEnergie.
   async function tauscheTrophäen(anzahlEnergie) {
     const user = Auth.currentUser();
     if (!user) return { erfolg: false, fehler: 'Nicht eingeloggt' };
@@ -338,13 +341,17 @@ const Level = (() => {
     const kostet = anzahlEnergie * 50;
     const stats  = await getUserStats();
 
+    if (stats.energy >= 5) {
+      return { erfolg: false, fehler: 'Energie ist schon voll' };
+    }
+
     if (stats.trophies < kostet) {
       return { erfolg: false, fehler: `Nicht genug Trophäen (${kostet} benötigt, du hast ${stats.trophies})` };
     }
 
     const { error } = await sb.from('user_stats').update({
       trophies:   stats.trophies - kostet,
-      energy:     stats.energy   + anzahlEnergie,
+      energy:     Math.min(5, stats.energy + anzahlEnergie),
       updated_at: new Date().toISOString()
     }).eq('user_id', user.id);
 

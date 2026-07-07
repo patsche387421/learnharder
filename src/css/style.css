@@ -1347,6 +1347,12 @@ button {
   color: var(--error);
 }
 
+.tausch-hinweis {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
 /* ---------- Statische Seiten (Impressum, Datenschutz) ---------- */
 .static-content {
   background: var(--surface);
