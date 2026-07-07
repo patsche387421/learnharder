@@ -127,7 +127,7 @@ Gold-Ring/-Glow) mit „Prestige N erreicht!" im bestehenden `#screen-ergebnis` 
 in tokens.css; layout.js-Prestige-Kreis auf `var(--prestige)` umgestellt.
 Status: ✅ erledigt.
 
-## Level-System: alte 10er-Kurve entkoppeln (technische Schuld aus S3b)
+## Level-System: alte 10er-Kurve entkoppeln (technische Schuld aus S3b) — ✅ ERLEDIGT
 S3b führte die 100-Level-Kurve (`LEVEL_SCHWELLEN`, 1.5×8) als Anzeige-SSOT ein
 (Topbar-Badge, Profil, Fach-Seiten, epText, Tier, Prestige). Parallel läuft weiterhin die
 alte 10er-Kurve (`berechneLevel` + `LEVEL_THRESHOLDS`), die nur noch: die gespeicherte
@@ -138,4 +138,9 @@ entkoppelt (z. B. gespeichert 7, angezeigt 44) — kein User-sichtbarer Bug (Anz
 Session: `berechneLevel`/`LEVEL_THRESHOLDS` entfernen, `user_stats.level` + `levelUp` +
 `subject_xp.level` auf die 100er-Kurve umstellen (SSOT vereinheitlichen); Migration prüfen
 (bestehende `level`-Werte ggf. neu berechnen).
-Status: offen (technische Schuld, kein Blocker).
+Erledigt in refactor/level-kurve-vereinheitlichen (2026-07-07): `berechneLevel` +
+`LEVEL_THRESHOLDS` entfernt; `neuesLevel`/`neuesFachLevel`/`levelUp` in `vergibBelohnungen`
+kommen aus `berechneFortschritt().level` (100er). Entscheidung: levelUp-Toast behalten
+(auf 100er, kein Toast am Prestige-Übergang); KEINE SQL-Migration (Cache nirgends sichtbar,
+korrigiert sich selbst). Belegt über 12 Node-Invarianten (inkl. Prestige-Grenzfall).
+Status: ✅ erledigt.

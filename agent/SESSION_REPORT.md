@@ -10,58 +10,6 @@ Erstellt: 2026-06-12 | Branch: `dev` | Commit: `76684f2`
 
 ---
 
-## Session 2026-07-06 — feat/streak: Lerntage-in-Folge-Streak berechnen & anzeigen
-
-**Branch:** `feat/streak` (von `dev`), 1 Feature-Commit, via `--no-ff` nach `dev` gemergt
-(Merge `2587479`). Kein Push, kein `main`, kein Deploy, **keine Migration**. Dieser
-Doku-Commit kommt separat nach dem Merge obendrauf.
-
-**Commit:**
-- `be34a9e` feat: Lerntage-in-Folge-Streak berechnen und im Dashboard anzeigen
-
-### Umgesetzt (SSOT in level.js, LEVEL_SYSTEM §12)
-- **`berechneStreak(zeitstempel, jetzt = new Date())`** — reine Funktion (nur `Date`, keine
-  Seiteneffekte), platziert nach `berechneFortschritt`. Zählt rückwärts über die **distinct
-  UTC-Tage** der übergebenen `played_at`-Zeitstempel. Kulanz: heute (noch) leer, aber gestern
-  vorhanden → Streak läuft ab gestern weiter; gestern UND heute leer → 0. Mehrere Zeilen am
-  selben Tag zählen einmal (Set über UTC-Tage). `jetzt` injizierbar (Node-Test/Referenzzeit).
-- **`getStreak()`** — async DB-Reader analog `getUserStats`: liest `daily_quiz_log.played_at`
-  des Users (nur diese Spalte, **alle** Zeilen — **kein** Row-Limit, sonst könnten viele
-  Versuche eines Tages ältere Tage verdecken; **kein** `success`-Filter, s. u.), delegiert an
-  `berechneStreak`. 0 bei fehlendem Login / Fehler / ohne Zeilen.
-- Beide im **Modul-Export** ergänzt (`berechneStreak`, `getStreak`).
-- **`dashboard.html`:** `Level.getStreak()` ins bestehende `Promise.all`; `#stat-streak` wird
-  **immer** als Zahl gesetzt (`String(streak)`) — 0 zeigt „0" (abweichend von
-  `stat-themen`/`stat-quiz`, die bei 0 „–" zeigen).
-
-### §12-Randfall (gegen LEVEL_SYSTEM.md verifiziert): `success=false` zählt mit
-Startzeilen aus `starteTagesQuiz` und abgebrochene Versuche (`success=false`) **zählen für
-den Tag**: §12 zählt die Einheit Versuch/Zeile/`played_at` unkonditioniert; §6 definiert
-`success` nur als „ob Leben > 0" (Quiz-bestanden-Flag, orthogonal zum Tag-Zählen). Daher
-**kein** `success`-Filter in `getStreak`.
-
-### Verifikation
-- **Node-Invarianten** der reinen `berechneStreak` (byte-identische Kopie, feste
-  Referenzzeit): **8/8 grün** — leer→0, nur heute→1, nur gestern (Kulanz)→1, 3 Tage→3,
-  Lücke bricht→2, mehrere Zeilen/Tag→einmal (2), gestern+heute leer→0, heute leer +
-  gestern/vorgestern→2. `level.js`: `node --check` sauber.
-- **Keine Live-/Browser-Verifikation:** Dashboard ist login-gated und der Dev-Server zeigt
-  auf Prod (Memory: README-Creds ungültig, Screenshots in dieser Env instabil). Korrektheit
-  ruht auf Node-Invarianten + Diff-Gate + Datenfluss-Analyse.
-
-### Offen (in IDEEN.md)
-- **Technische Schuld** (10er-Kurve entkoppeln) unverändert offen. Weitere Kandidaten:
-  Dashboard-Anzeigefehler (BUG-013/014), Trophy-Shop, Account-Löschung, Button-System-Rest.
-- Nebenbefund: IDEEN-Eintrag „Tagessperre entfernen" war bereits 2026-06-25 (BUG-012)
-  umgesetzt → in dieser Session als ✅ nachgezogen.
-
-### Deploy (2026-07-06)
-dev → main gemergt (`dfa4fa7`), origin/main + origin/dev gepusht. Stale Branches
-`fix/header-rebuild` + `fix/dashboard` gelöscht. Netlify-Publish ist manueller Schritt
-(Auto-Build aus).
-
----
-
 ## Session 2026-07-06 — fix/dashboard-begruessung: Dashboard-Begrüßung & Anzeigename (BUG-014)
 
 **Branch:** `fix/dashboard-begruessung` (von `dev`), 1 Feature-Commit, via `--no-ff` nach
@@ -145,6 +93,60 @@ Doku-Commit kommt separat nach dem Merge obendrauf.
 ### Offen (in IDEEN.md)
 - **Technische Schuld** (10er-Kurve entkoppeln) unverändert offen. Weitere Kandidaten:
   Account-Löschung, Button-System-Rest (S2), Public-Page-Topbar, Doku-Index in CLAUDE.md.
+
+---
+
+## Session 2026-07-07 — refactor/level-kurve-vereinheitlichen: alte 10er-Kurve entkoppeln
+
+**Branch:** `refactor/level-kurve-vereinheitlichen` (von `dev`), 2 Commits, via `--no-ff`
+nach `dev` gemergt (Merge `a70b471`). Kein Push, kein `main`, kein Deploy, **keine Migration**.
+Dieser Doku-Commit kommt separat nach dem Merge obendrauf.
+
+**Commits:**
+- `d654b44` refactor: Level-Cache und levelUp aus 100er-Kurve statt 10er-berechneLevel
+- `672ed13` refactor: tote 10er-Level-Kurve entfernen (berechneLevel, LEVEL_THRESHOLDS)
+
+### Ausgangslage (technische Schuld aus S3b, gegen Code verifiziert)
+- Doppel-System in level.js: die 100er-Kurve (`LEVEL_SCHWELLEN`/`berechneFortschritt`) war
+  bereits die Anzeige-SSOT (Topbar, Profil, alle 7 Fach-Seiten rechnen aus EP), während die
+  alte 10er-Kurve (`berechneLevel`/`LEVEL_THRESHOLDS`) nur noch die Cache-Spalten
+  `user_stats.level`/`subject_xp.level` schrieb und den levelUp-Toast speiste.
+- Scan-Befund: KEINE nutzer-sichtbare Anzeige liest die gespeicherte `level`-Spalte
+  (`getUserStats().level` + `ladeFachStatsKomplett().fachLevel` werden zurückgegeben, aber
+  nirgends angezeigt). Einziger echter Verbraucher war der levelUp-Selbstvergleich.
+
+### Umgesetzt (SSOT vereinheitlicht)
+- **Commit 1 (rewire):** `neuesLevel`, `neuesFachLevel` und der `levelUp`-Toast in
+  `vergibBelohnungen` kommen jetzt aus `berechneFortschritt().level` (100er) statt
+  `berechneLevel()`. `levelUp` vergleicht bewusst gegen das aus den **EP vor dem Quiz**
+  gerechnete Level (nicht gegen den gespeicherten Cache) → kein falscher „Level Up" durch
+  die noch vorhandenen alten 10er-Cache-Werte.
+- **Commit 2 (Löschung):** `berechneLevel` + `LEVEL_THRESHOLDS` samt Exporten entfernt
+  (keine Restreferenzen in `src/`). Nur noch eine Level-Kurve im Code.
+
+### Produktentscheidungen (Patsche)
+- **A — levelUp-Toast behalten, auf 100er umstellen.** Feuert pro 100er-Stufe; am
+  Zyklus-Übergang 100→1 kein Toast (Prestige-Feier übernimmt, keine Doppel-Feier).
+- **B — keine SQL-Migration.** Die Cache-Spalte ist nirgends sichtbar; sie korrigiert sich
+  beim nächsten Quiz aus der 100er-Kurve. Spalten bleiben (kein Schema-Eingriff).
+
+### Verifikation
+- **Node-Invarianten** der Level-/levelUp-Rechnung (byte-treue Kopie): **12/12 grün** —
+  Kurve unverändert (8000 EP/Zyklus), `levelAus` an Grenzen (0→1, 8→2, 7999→100, 8000→1),
+  normale Anstiege inkl. Mehrfachsprung, und v. a. **Prestige-Übergang 100→1 → kein levelUp**
+  (P1/P2), danach normal weiter (P3). `level.js`: `node --check` sauber.
+- **Keine Live-/Browser-Verifikation:** Dev-Server zeigt auf Prod (Memory); ein echtes Quiz
+  wäre mutierend. Korrektheit ruht auf Node-Invarianten + Diff-Gate + Scan-Analyse.
+
+### Docs
+- LEVEL_SYSTEM §5 (10er-Tabelle → 100er-Kurve) + §8 (Cache aus derselben Kurve).
+- NAMENSKONVENTION §2 (Level/Schwelle) + §3.1 (Registry: `berechneLevel`/`LEVEL_THRESHOLDS`
+  raus, `berechneFortschritt` rein).
+
+### Offen (in IDEEN.md)
+- Account-Löschung (DSGVO), Button-System-Rest (S2), Public-Page-Topbar (ausgeloggter Zweig
+  bereits implementiert — nur gegenprüfen), Doku-Index in CLAUDE.md. Die 10er-Kurven-Schuld
+  ist mit dieser Session erledigt.
 
 ---
 

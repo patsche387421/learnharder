@@ -36,10 +36,10 @@ Code geschrieben wird.
 | Begriff | Bedeutung | JS-Identifier | DB-Spalte |
 |---|---|---|---|
 | **EP / Erfahrungspunkte** | Punkte fürs richtige Beantworten (Themen-Quiz 1/Antwort, Tagesquiz 5/Antwort + Bonus) | `ep`, `totalXp`, `fachXp`, `gesamtEp` | `user_stats.total_xp`, `subject_xp.xp` |
-| **Level** | aus EP **abgeleitete** Stufe 1–10 (EP ist die Wahrheit, Level ist berechnet) | `level`, `berechneLevel()` | `user_stats.level`, `subject_xp.level` *(denormalisierter Cache)* |
+| **Level** | aus EP **abgeleitete** Stufe 1–100 im Prestige-Zyklus (EP ist die Wahrheit, Level ist berechnet) | `level`, `berechneFortschritt()` | `user_stats.level`, `subject_xp.level` *(denormalisierter Cache, aus der 100er-Kurve geschrieben)* |
 | **Trophäen** | +1 pro richtige Antwort, immer vergeben, eintauschbar (50 = 1 Energie) | `trophien`, `trophies` | `user_stats.trophies`, `daily_quiz_log.trophies_earned` |
 | **Energie** | Energydrinks; Tagesquiz kostet 1 beim Start | `energy` | `user_stats.energy` |
-| **Schwelle** | EP-Grenze, ab der ein Level erreicht ist | `LEVEL_THRESHOLDS`, `naechsteSchwelle` | — *(Code-Konstante)* |
+| **Schwelle** | EP-Grenze im Zyklus, ab der ein Level erreicht ist | `LEVEL_SCHWELLEN` | — *(Code-Konstante)* |
 | **Band** | EP-Spanne **innerhalb** eines Levels (untere→obere Schwelle) | `epImBand`, `bandGroesse` *(Schritt A)* | — *(berechnet)* |
 | **Saison** | resetbarer Zeitraum (geplant: Kalendermonat) fürs Team-/Gemeinschaftslevel | — *(noch keiner)* | *(geplant: `xp_events.created_at` / `season_id`)* |
 
@@ -53,7 +53,7 @@ Code geschrieben wird.
 
 | Export | Signatur | Zweck | Art |
 |---|---|---|---|
-| `LEVEL_THRESHOLDS` | `number[]` = `[0,100,250,500,900,1400,2000,2700,3500,4500]` | EP-Schwellen, Index = Levelnummer | Daten-Konstante (rein) |
+| `berechneFortschritt` | `(gesamtEp, prestige=0) ⇒ {level, prozent, epText, tier, prestige}` | Level (1–100) + Band-Fortschritt aus EP — **die** Level-SSOT | reine Berechnung |
 | `berechneStreak` | `(zeitstempel, jetzt=new Date()) ⇒ number` | Streak = aufeinanderfolgende UTC-Lerntage (§12) aus `played_at`-Zeitstempeln | reine Berechnung |
 | `getUserStats` | `() ⇒ Promise<{energy, level, trophies, totalXp}>` | globale Gamification-Werte des Users | Seiteneffekt: DB-Lesen (`user_stats`) |
 | `getStreak` | `() ⇒ Promise<number>` | aktuelle Streak des Users (liest `played_at`, delegiert an `berechneStreak`) | Seiteneffekt: DB-Lesen (`daily_quiz_log`) |
@@ -63,9 +63,10 @@ Code geschrieben wird.
 | `tauscheTrophäen` | `(anzahlEnergie) ⇒ Promise<{erfolg, fehler?}>` | tauscht 50 Trophäen → 1 Energie | Seiteneffekt: DB-Lesen+Schreiben (`user_stats`) |
 | `renderTopbar` | `(stats?) ⇒ Promise<void>` | rendert die Topbar in `#topbar` | Seiteneffekt: DOM-Schreiben + ggf. DB-Lesen (Session, `getUserStats`) |
 
-**Privater Helfer (nicht exportiert, IST):** `berechneLevel(totalXp) ⇒ number (1–10)` — **rein**
-(nur Mathe). Zentrale Funktion für die SSOT; wird in **Schritt A** exportiert. Ebenfalls
-privat: `topbarInitialen`, `aktiverNav`, `topbarGrundgeruest` (UI-Helfer, keine Domänenlogik).
+**Entfernt (2026-07-07, `refactor/level-kurve-vereinheitlichen`):** die alte 10er-Kurve
+`berechneLevel` + `LEVEL_THRESHOLDS`. Das Level kommt jetzt ausschließlich aus
+`berechneFortschritt` (100er-Kurve); modul-privat bleiben `LEVEL_SCHWELLEN`, `EP_PRO_ZYKLUS`
+und `rechargeEnergie` (nicht exportiert).
 
 ### 3.2 Modul `Stats` — `src/js/stats.js`
 
