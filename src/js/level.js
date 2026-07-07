@@ -264,8 +264,10 @@ const Level = (() => {
 
     const neueXp      = (aktStats?.total_xp  ?? 0) + ep;
     const neueTrophies = (aktStats?.trophies  ?? 0) + trophien;
-    const neuesLevel  = berechneLevel(neueXp);
-    const levelUp     = neuesLevel > (aktStats?.level ?? 1);
+    const neuesLevel  = berechneFortschritt(neueXp).level;
+    // levelUp aus der 100er-Kurve: neues vs. altes Level (aus den EP VOR diesem Quiz),
+    // unabhängig vom gespeicherten Cache-Wert (der noch alte 10er-Zahlen enthalten kann).
+    const levelUp     = neuesLevel > berechneFortschritt(aktStats?.total_xp ?? 0).level;
 
     // Prestige = abgeschlossene 100-Level-Zyklen. Rein aus total_xp ableitbar und
     // monoton steigend → wird bei jedem Upsert mitgeschrieben (kein Reset möglich).
@@ -293,7 +295,7 @@ const Level = (() => {
         .maybeSingle();
 
       const neueFachXp     = (fachXp?.xp              ?? 0) + ep;
-      const neuesFachLevel = berechneLevel(neueFachXp);
+      const neuesFachLevel = berechneFortschritt(neueFachXp).level;
       const neueCorrectAns = (fachXp?.correct_answers  ?? 0) + richtig;
 
       const { error: fachErr } = await sb.from('subject_xp').upsert({
