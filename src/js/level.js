@@ -12,12 +12,6 @@ const LEVEL_KOEFFIZIENT = 8;
 const Level = (() => {
   const sb = SupabaseClient.client;
 
-  // EP-Schwellen pro Level-Stufe: Index = Level-Nummer (1–10)
-  // LEVEL_THRESHOLDS[n] = Gesamt-EP, die zum Erreichen von Level n benötigt werden.
-  // Level 10 ist Maximum → LEVEL_THRESHOLDS[10] = undefined (zeigt "–" im UI).
-  // (Weiterhin genutzt für die gespeicherte user_stats.level-Spalte + Level-Up-Toast.)
-  const LEVEL_THRESHOLDS = [0, 100, 250, 500, 900, 1400, 2000, 2700, 3500, 4500];
-
   // 100-Level-Kurve (S3b): SCHWELLEN[n] = EP-Summe im aktuellen Prestige-Zyklus, die
   // zum Abschluss von Level n nötig ist. Kurve: (n)^LEVEL_EXPONENT · LEVEL_KOEFFIZIENT.
   const LEVEL_SCHWELLEN = [0, ...Array.from({ length: 100 },
@@ -25,16 +19,6 @@ const Level = (() => {
   // [0, 8, 23, 42, 64, 89, 118, 148, 181, 216, 253, ...]
   // Level 100 = 8000 EP gesamt = ein Prestige-Zyklus
   const EP_PRO_ZYKLUS = LEVEL_SCHWELLEN[100]; // 8000
-
-  // Berechnet Level aus Gesamt-EP (Level 1–10).
-  function berechneLevel(totalXp) {
-    let level = 1;
-    for (let i = 1; i < LEVEL_THRESHOLDS.length; i++) {
-      if (totalXp >= LEVEL_THRESHOLDS[i]) level = i + 1;
-      else break;
-    }
-    return Math.min(level, 10);
-  }
 
   // Reine SSOT-Funktion: Fortschritt im AKTUELLEN Level-Band aus Gesamt-EP.
   // Nimmt EP (+ optional prestige) entgegen → quelle-agnostisch (User-, Fach-,
@@ -264,8 +248,10 @@ const Level = (() => {
 
     const neueXp      = (aktStats?.total_xp  ?? 0) + ep;
     const neueTrophies = (aktStats?.trophies  ?? 0) + trophien;
-    const neuesLevel  = berechneLevel(neueXp);
-    const levelUp     = neuesLevel > (aktStats?.level ?? 1);
+    const neuesLevel  = berechneFortschritt(neueXp).level;
+    // levelUp aus der 100er-Kurve: neues vs. altes Level (aus den EP VOR diesem Quiz),
+    // unabhängig vom gespeicherten Cache-Wert (der noch alte 10er-Zahlen enthalten kann).
+    const levelUp     = neuesLevel > berechneFortschritt(aktStats?.total_xp ?? 0).level;
 
     // Prestige = abgeschlossene 100-Level-Zyklen. Rein aus total_xp ableitbar und
     // monoton steigend → wird bei jedem Upsert mitgeschrieben (kein Reset möglich).
@@ -293,7 +279,7 @@ const Level = (() => {
         .maybeSingle();
 
       const neueFachXp     = (fachXp?.xp              ?? 0) + ep;
-      const neuesFachLevel = berechneLevel(neueFachXp);
+      const neuesFachLevel = berechneFortschritt(neueFachXp).level;
       const neueCorrectAns = (fachXp?.correct_answers  ?? 0) + richtig;
 
       const { error: fachErr } = await sb.from('subject_xp').upsert({
@@ -360,8 +346,6 @@ const Level = (() => {
   }
 
   return {
-    LEVEL_THRESHOLDS,
-    berechneLevel,
     berechneFortschritt,
     berechneStreak,
     getUserStats,
