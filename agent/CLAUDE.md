@@ -256,12 +256,14 @@ Erlaubte Typen:
 | `style`    | Formatierung/CSS ohne Logikänderung              |
 | `refactor` | Umbau ohne Verhaltensänderung                    |
 | `chore`    | Wartung, Konfiguration, Aufräumarbeiten          |
+| `test`     | Testfälle, Testläufe, Testinfrastruktur          |
 
 Beispiele:
 
 - `feat: POS-Datenstrukturen-Tool hinzugefügt`
 - `fix: Fallback-Bug in renderFach behoben`
 - `docs: KI-Vorlage aktualisiert`
+- `test: Testlauf 2026-07-08 T-001–T-005 angelegt`
 
 ## Branch-Strategie
 
