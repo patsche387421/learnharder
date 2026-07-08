@@ -7,7 +7,7 @@ echte Klick-Tests im Browser.
 **Login:** `schueler1@lernhub.htl` / `lernhub123`
 
 **Vorgehen:** Testfälle der Reihe nach durchspielen, Status eintragen, Abweichungen im
-Abschnitt „Befund" unten notieren.
+Testlauf-Ergebnis notieren (siehe „Hinweis" unten).
 
 **Status-Legende:** ✅ OK · ❌ Fehler · ⚠️ Abweichung · — offen (noch nicht getestet)
 
@@ -30,11 +30,6 @@ Abschnitt „Befund" unten notieren.
 | T-009 | `/dashboard.html` | Dashboard nach Login öffnen, Begrüßung lesen. | „Hey, Schueler!" — der Anzeigename ist gesäubert: kein roher E-Mail-Präfix („schueler1"), keine angehängten Ziffern, Erstbuchstabe groß. | — |
 | T-010 | Topbar (Herausforderung → Dashboard/andere Seite) | Nach einer Herausforderung auf eine andere Seite wechseln, Energie-Pill vergleichen. | Energie-Anzeige in der Topbar ist überall konsistent und zeigt den aktuellen Wert nach Abzug. | — |
 
-## Befund
+## Hinweis
 
-**Stand:** — (noch nicht durchlaufen)
-**Datum:** —
-**Getestet:** —
-**Offen / Abweichungen:** —
-
-_(Nach dem ersten Durchlauf ausfüllen: Datum, welche IDs ✅/❌/⚠️, offene Punkte und Abweichungen.)_
+Befunde und Ergebnisse werden pro Testlauf in `tests/runs/<datum>/ergebnis.md` dokumentiert.

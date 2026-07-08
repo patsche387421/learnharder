@@ -13,7 +13,7 @@ Bei Konflikten zwischen Nutzerwunsch und diesen Regeln: kurz nachfragen.
 | docs/LEVEL_SYSTEM.md | Gamification-Logik | Nur wenn level.js betroffen |
 | docs/NAMENSKONVENTION.md | Funktionsnamen, Glossar | Nur wenn neue Funktionen |
 | agent/MOBILE_FIRST.md | Mobile-Richtlinien | Nur wenn CSS/Layout betroffen |
-| docs/TESTING.md | Manuelle Testfälle (User-Checkliste) | Nur wenn Verifikation geplant |
+| tests/TESTING.md | Manuelle Testfälle (User-Checkliste) | Nur wenn Verifikation geplant |
 
 ## Dokumenten-Index
 
@@ -41,12 +41,17 @@ Vision/kein Code · **tw. veraltet** = enthält überholte Stellen (Hinweis in K
 | IDEEN.md | Backlog/Ideen-Queue für spätere Sessions | aktuell |
 | LEVEL_SYSTEM.md | Gamification-Logik (Energie, EP, 100er-Level-Kurve, Trophäen, Streak, Prestige) | aktuell |
 | NAMENSKONVENTION.md | Namens- & Begriffsregeln + Funktions-Registry (level.js/stats.js) | aktuell |
-| TESTING.md | Manuelle Testfälle (User-Checkliste) für die Live-Seite | aktuell |
 | DESIGN_GUIDELINES.md | Design-System-Fundament (Tokens, Theme, Reset) | ⚠️ tw. veraltet (BUG-007) |
 | DATA_MIGRATION_V2.md | Plan: Lerninhalte JSON → Supabase (`content_items`) | nur-Konzept (Planung) |
 | KONZEPT_REITER.md | Reiter-Struktur auf Themen-Seiten (fach.html) | nur-Konzept |
 | KONZEPT_TEAMS_SAISONS.md | Teams & Saisons: Gemeinschaftslevel mit XP-Ledger | nur-Konzept |
 | KONZEPT_MANDANTEN.md | Vision: mandantenfähiges, schulweites Lernsystem (Phase 2+) | nur-Konzept |
+
+### `tests/` — Testinfrastruktur
+
+| Datei | Zweck | Status |
+|---|---|---|
+| TESTING.md | Manuelle Testfälle + Testlauf-Ergebnisse | aktuell |
 
 ## Projektbeschreibung
 
