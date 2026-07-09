@@ -119,6 +119,15 @@ button {
   border-radius: var(--btn-radius);
 }
 
+/* Deaktivierte Buttons sichtbar dimmen + nicht-klickbaren Cursor zeigen.
+   Greift für jede .btn-Variante; aktuell je deaktiviert sind nur .btn--primary
+   (btn-tauschen, btn-start, btn-nochmal). .antwort-btn hat eine eigene
+   :disabled-Regel und ist von dieser nicht betroffen. */
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 #login-form button,
 .btn--primary {
   background: var(--primary);
@@ -128,8 +137,8 @@ button {
   transition: background 0.15s;
 }
 
-#login-form button:hover,
-.btn--primary:hover {
+#login-form button:hover:not(:disabled),
+.btn--primary:hover:not(:disabled) {
   background: var(--primary-hover);
 }
 
