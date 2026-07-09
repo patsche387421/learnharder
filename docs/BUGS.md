@@ -78,7 +78,10 @@ Legende: 🔴 Kritisch · 🟡 Wichtig · 🟢 Nice-to-have · ✅ Erledigt
 - **Aktion:** `.btn:disabled` (bzw. `.btn--primary:disabled`) in `style.css` ergänzen
   (ausgegraut/gedimmt, `cursor: not-allowed`).
 - **Priorität:** mittel (kosmetisch, keine Fehlfunktion).
-- **Status:** Offen — belegt im Testlauf 2026-07-09 (T-004), Screenshot
+- **Status:** ✅ Erledigt (`fix/btn-disabled-styling`) — `.btn:disabled` mit
+  `opacity: 0.5` + `cursor: not-allowed` in `style.css` ergänzt und
+  `.btn--primary:hover` per `:not(:disabled)` geschützt (kein Aufhellen im
+  Deaktiviert-Zustand). Belegt im Testlauf 2026-07-09 (T-004), Screenshot
   `tests/runs/2026-07-09_T01-T05/screenshots/T-004_sperr-screen.png`.
 
 ### BUG-007: DESIGN_GUIDELINES.md veraltet
