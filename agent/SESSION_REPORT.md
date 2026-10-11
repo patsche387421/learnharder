@@ -148,6 +148,11 @@ Dieser Doku-Commit kommt separat nach dem Merge obendrauf.
   bereits implementiert — nur gegenprüfen), Doku-Index in CLAUDE.md. Die 10er-Kurven-Schuld
   ist mit dieser Session erledigt.
 
+### Retro
+**Gut:** —
+**Stockte:** —
+**Nächstes Mal:** —
+
 ---
 
 *Bericht auto-generiert am Ende der Session. Alle Pfade relativ zum Projekt-Root.*

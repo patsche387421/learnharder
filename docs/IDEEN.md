@@ -3,7 +3,63 @@
 Notizen für spätere, eigene Sessions. Kein aktiver Arbeitsstand — Bugs stehen in
 `docs/BUGS.md`, ausgearbeitete Pläne in den einzelnen `docs/KONZEPT_*.md`.
 
+**Aufbau:** Offene Einträge stehen oben, erledigte gesammelt unter [Erledigt](#erledigt)
+am Dateiende. Die Reihenfolge der Abarbeitung regelt `docs/ROADMAP.md`, nicht diese Datei.
+
 ---
+
+## Energie-Pill `X/5` (Rest aus S3)
+Die Topbar-Energie-Pill zeigt nur den nackten Wert: `layout.js:269` rendert
+`Icons.render('energy')` + `stats.energy`, ohne den Bezug zum Maximum. Geplant war
+`X/5` — der Cap von 5 steht in LEVEL_SYSTEM §1. Ohne den Nenner ist „3" nicht als
+„3 von 5" lesbar, und ein voller Balken (5) sieht aus wie ein beliebiger Wert.
+Scope: Topbar-Pill in `layout.js` + ggf. das `title`-Attribut. Kein DB-Eingriff,
+keine Migration, keine neue Spalte. Cap nicht hartkodieren, sondern aus derselben
+Quelle ziehen wie `rechargeEnergie()`/`tauscheTrophäen()` (SSOT in `level.js`).
+
+Status: offen. Wird als **S6** in `docs/ROADMAP.md` geführt.
+
+## Testlauf T-001–T-005 durchführen
+`tests/runs/2026-07-08_T01-T05/ergebnis.md` existiert, ist aber ein **leeres Template** —
+alle fünf Status stehen auf `—`, „Offene Punkte" ist leer. Die Testfälle selbst sind in
+`tests/TESTING.md` ausformuliert. Diese Session: live gegen Prod als `schueler1@lernhub.htl`
+durchspielen, Status-Spalte füllen, Abweichungen notieren. Kein Code.
+Hinweis: T-002/T-003 verbrauchen Energie, T-005 setzt volle Energie (5/5) voraus —
+Reihenfolge entsprechend planen (T-005 zuerst, solange die Energie noch voll ist).
+Die Nav-Breiten-Prüfung („Herausforderung", siehe unten) kann hier mitlaufen.
+
+Status: offen. Wird als **S5** in `docs/ROADMAP.md` geführt.
+
+## nav.md-Doku aufräumen (klein, docs-only)
+In docs/design/components/nav.md sind die TODOs Z. 22-24 (zentrale JS-Injektion via
+renderTopbar + URL-basierter Active-State via aktiverNav) durch fix/topbar-behavior
+faktisch erledigt → als erledigt markieren oder entfernen. Reiner docs-Commit, kein Code.
+Nachtrag 2026-07-08: Der dritte TODO (Z. 25-26, Theme-Toggle an `data-theme`) ist **nicht**
+erledigt im Sinne der Nav — der Toggle existiert, sitzt aber in `profil.html:151`, nicht in
+der Topbar. Diesen Punkt also stehen lassen (oder bewusst als Abweichung notieren).
+
+## Nav-Breite 'Herausforderung' prüfen
+Nach UI-Rename ist das Nav-Label 'Herausforderung' (15 Z.) deutlich länger als
+vorher 'Tagesquiz' (9 Z.). Beim nächsten echten Deploy (config.js + Login) auf
+Desktop-Breite prüfen, ob im Topbar-Nav neben Dashboard/Fächer/Team/Rangliste
+nichts umbricht. Falls doch: separater CSS-/Wording-Folge-Fix (Nav-Spacing oder
+Label-Kürzung), eigener Commit.
+
+Status: offen, kein Blocker.
+
+## Account-Löschung (eigene Session, DSGVO)
+User-Auth-Delete + alle zugehörigen Daten-Rows (`user_stats`, `quiz_results`,
+`daily_quiz_log`, `subject_xp`/`fach_stats`, `thema_progress`) plus Bestätigungs-Flow
+im Profil. Setzt DSGVO Art. 17 (Recht auf Löschung) um. Sauber planen, kein Quick-Fix —
+betrifft mehrere Tabellen und den Auth-Layer.
+Status: offen.
+
+---
+
+## Erledigt
+
+Historie. Wortlaut unverändert; nur ans Dateiende verschoben, damit oben ausschließlich
+Offenes steht.
 
 ## Doku-Index in CLAUDE.md ergänzen (eigene Session, kein Code) — ✅ ERLEDIGT
 CLAUDE.md bleibt schlank und enthält nur Regeln (wie bisher). Neu: ein Abschnitt
@@ -45,20 +101,6 @@ Hamburger/Nav/Stats. impressum.html + datenschutz.html rendern die Topbar
 (`<header id="topbar">` + `Layout.renderTopbar()`).
 Status: ✅ erledigt.
 
-## nav.md-Doku aufräumen (klein, docs-only)
-In docs/design/components/nav.md sind die TODOs Z. 22-24 (zentrale JS-Injektion via
-renderTopbar + URL-basierter Active-State via aktiverNav) durch fix/topbar-behavior
-faktisch erledigt → als erledigt markieren oder entfernen. Reiner docs-Commit, kein Code.
-
-## Nav-Breite 'Herausforderung' prüfen
-Nach UI-Rename ist das Nav-Label 'Herausforderung' (15 Z.) deutlich länger als
-vorher 'Tagesquiz' (9 Z.). Beim nächsten echten Deploy (config.js + Login) auf
-Desktop-Breite prüfen, ob im Topbar-Nav neben Dashboard/Fächer/Team/Rangliste
-nichts umbricht. Falls doch: separater CSS-/Wording-Folge-Fix (Nav-Spacing oder
-Label-Kürzung), eigener Commit.
-
-Status: offen, kein Blocker.
-
 ## Tagessperre entfernen (eigene Session, Code) — ✅ ERLEDIGT
 `#screen-gespielt` aus dem Block-Pfad in tagesquiz.html lösen; Herausforderung nur
 noch über Energie begrenzen (BUG-012). `hatHeuteTagesQuizGespielt()` bleibt, wird
@@ -89,13 +131,6 @@ Dashboard-Umbau (Merge `b8ca928`, 2026-06-27) erledigt — bestätigt, verwaiste
 `.stat-hint`-CSS-Regel entfernt (`c91b312`). BUG-014: `Auth.displayName()` säubert den
 E-Mail-Präfix (kein DB-Feld) + neue Hero-Copy in dashboard.html (`ad10259`).
 Status: ✅ erledigt.
-
-## Account-Löschung (eigene Session, DSGVO)
-User-Auth-Delete + alle zugehörigen Daten-Rows (`user_stats`, `quiz_results`,
-`daily_quiz_log`, `subject_xp`/`fach_stats`, `thema_progress`) plus Bestätigungs-Flow
-im Profil. Setzt DSGVO Art. 17 (Recht auf Löschung) um. Sauber planen, kein Quick-Fix —
-betrifft mehrere Tabellen und den Auth-Layer.
-Status: offen.
 
 ## Level-Rang-Badge pro Band (Teil S3) — ✅ ERLEDIGT (S3b)
 Das Topbar-Level-Badge (Zahl) existiert bereits; zusätzlich ein Rang-Symbol pro

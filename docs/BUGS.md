@@ -63,6 +63,27 @@ Legende: 🔴 Kritisch · 🟡 Wichtig · 🟢 Nice-to-have · ✅ Erledigt
 
 ## 🟢 Nice-to-have
 
+### BUG-015: „Nochmal"-Button bei Energie 0 ohne sichtbaren Deaktiviert-Zustand
+- **Seite:** `/tagesquiz.html` (Ergebnis-Screen)
+- **Symptom:** Nach dem letzten Versuch (Energie → 0) wird der „Nochmal"-Button per
+  `disabled` inaktiv geschaltet und der Hinweis „Keine Energie mehr — morgen wieder."
+  eingeblendet (`tagesquiz.html:294`) — der Button behält jedoch das volle
+  `.btn--primary`-Styling (voll lila, `cursor: pointer`) und sieht klickbar aus.
+- **Ursache:** In `style.css` gibt es `.antwort-btn:disabled`, aber keine Regel für
+  `.btn:disabled` / `.btn--primary:disabled`.
+- **Auswirkung:** Kosmetisch/UX — keine Fehlfunktion (der Klick tut korrekt nichts),
+  aber der inaktive Zustand ist visuell nicht erkennbar.
+- **Kontext:** `#screen-gesperrt` erscheint nur beim Seiten-Load bei Energie 0
+  (`tagesquiz.html:372`), nicht im Nochmal-Pfad — das ist so gewollt.
+- **Aktion:** `.btn:disabled` (bzw. `.btn--primary:disabled`) in `style.css` ergänzen
+  (ausgegraut/gedimmt, `cursor: not-allowed`).
+- **Priorität:** mittel (kosmetisch, keine Fehlfunktion).
+- **Status:** ✅ Erledigt (`fix/btn-disabled-styling`) — `.btn:disabled` mit
+  `opacity: 0.5` + `cursor: not-allowed` in `style.css` ergänzt und
+  `.btn--primary:hover` per `:not(:disabled)` geschützt (kein Aufhellen im
+  Deaktiviert-Zustand). Belegt im Testlauf 2026-07-09 (T-004), Screenshot
+  `tests/runs/2026-07-09_T01-T05/screenshots/T-004_sperr-screen.png`.
+
 ### BUG-007: DESIGN_GUIDELINES.md veraltet
 - **Symptom:** Beschreibt altes --color-* CSS-System
 - **Aktion:** Auf aktuelles tokens.css System aktualisieren

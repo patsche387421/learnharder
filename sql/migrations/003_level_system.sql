@@ -41,20 +41,25 @@ CREATE POLICY "User sieht nur eigene Stats"
   WITH CHECK (auth.uid() = user_id);
 
 -- Auto-Insert einer user_stats-Zeile bei jedem neuen auth.users-Eintrag.
--- SECURITY DEFINER, damit der Insert die RLS umgeht (läuft mit Owner-Rechten).
-CREATE OR REPLACE FUNCTION create_user_stats()
-RETURNS TRIGGER AS $$
+-- SECURITY DEFINER mit explizitem search_path, damit der Insert im Schema public zuverlässig läuft.
+CREATE OR REPLACE FUNCTION public.create_user_stats()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
 BEGIN
-  INSERT INTO user_stats (user_id)
+  INSERT INTO public.user_stats (user_id)
   VALUES (NEW.id)
   ON CONFLICT (user_id) DO NOTHING;
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$;
 
-CREATE OR REPLACE TRIGGER on_auth_user_created
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
-  FOR EACH ROW EXECUTE FUNCTION create_user_stats();
+  FOR EACH ROW EXECUTE FUNCTION public.create_user_stats();
 
 -- ── subject_xp ───────────────────────────────────────────────
 -- EP/Level pro User und Fach (eine Zeile je User+Fach).
