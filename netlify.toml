@@ -1,3 +1,7 @@
 [build]
-  command = "node scripts/gen-config.js"
-  publish = "src"
+  publish = "public"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
