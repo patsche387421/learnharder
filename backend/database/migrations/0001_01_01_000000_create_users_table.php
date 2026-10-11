@@ -15,6 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('gamer_tag')->nullable()->unique();
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->integer('brainpower_current')->default(100);
+            $table->integer('brainpower_max')->default(100);
+            $table->integer('current_streak')->default(0);
+            $table->timestamp('last_active_at')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
