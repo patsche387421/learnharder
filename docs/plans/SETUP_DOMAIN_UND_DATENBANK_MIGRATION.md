@@ -1,8 +1,8 @@
-# Setup-, Domain- & Datenbank-Migrationsplan (v0.1.0 ➔ v0.2.0)
+# Setup-, Domain- & Datenbank-Migrationsplan (V2 Transformation)
 
 > **Status:** Verbindlicher Migrationsleitfaden  
-> **Basis-Tag:** `v0.1.0` (Aktueller Code- und Planungsstand)  
-> **Ziel-Tag:** `v0.2.0` (Vollständig migriertes Laravel-Backend, migrierte Daten & Vue 3 Setup)  
+> **Basis-Tag:** `v2.0.0-plan` (Aktueller Code- und Planungsstand, schließt an v1.0.0/v1.1.0 an)  
+> **Ziel-Tag:** `v2.0.0-alpha.1` (Vollständig migriertes Laravel-Backend, migrierte Daten & Vue 3 Setup)  
 > **Verantwortlich:** Lead DevOps & Backend Architecture
 
 ---
@@ -11,21 +11,21 @@
 
 Wir folgen striktem Semantic Versioning (SemVer) für den Umschwung:
 
-* **`v0.1.0` (IST-Zustand):**
+* **`v2.0.0-plan` (IST-Zustand):**
   * Vanilla JS (IIFE) Webapp, Prototyp mit 17 HTML-Dateien.
   * Statische Lerninhalte in `src/assets/data/*.json`.
   * Supabase Auth & relationale Schemas (`sql/migrations/001-003`).
   * Vollständige V2-Architekturpläne, PSP, Risikomatrix und Ökonomiemodell.
-* **`v0.2.0` (Meilenstein nach Abschluss der Migration):**
+* **`v2.0.0-alpha.1` (Meilenstein nach Abschluss der Migration):**
   * Frisches Headless-Laravel-11-Setup mit Filament Admin/CMS auf Hetzner VPS.
   * Vollständig importierte Fächer, Themen und Fragen aus JSON in die relationale DB.
   * Migrierte Nutzer- und Statistikdaten aus Supabase.
   * Neues Vue-3-PWA-Frontend mit implementierten Design-Tokens aus dem Claude-Designsystem.
   * Live-Domain auf dem neuen Server mit SSL.
-* **`v0.2.x`:**
-  * Kontinuierliche Minor- und Patch-Releases (z. B. `v0.2.1` für Tester-Feedback, `v0.2.2` für zusätzliche Fragentypen).
-* **`v1.0.0`:**
-  * Go-Live des Schulbetriebs (Lehrkraft-Dashboard, Klassen-Verbünde, monatliche Ranglisten).
+* **`v2.0.0-beta.x`:**
+  * Kontinuierliche Minor- und Patch-Releases für Staging-Tester und Schul-Feedback.
+* **`v2.0.0` (Final):**
+  * Go-Live des regulären Schulbetriebs (Lehrkraft-Dashboard, Klassen-Verbünde, monatliche Ranglisten).
 
 ---
 
