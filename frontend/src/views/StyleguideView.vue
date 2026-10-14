@@ -121,6 +121,9 @@ function check() {
       <LhCard to="/" featured eyebrow="in 3 Tagen" title="DBI-Test" text="2 Themen sind noch schwach.">
         <template #icon><LhArt name="subject-dbi" :size="40" /></template>
       </LhCard>
+      <LhCard button title="Als Button" text="Löst etwas aus, statt zu verlinken">
+        <template #icon><LhArt name="icon-campaign" :size="40" /></template>
+      </LhCard>
     </section>
 
     <section class="sg__section">
@@ -181,6 +184,7 @@ function check() {
       <div class="sg__row">
         <LhCurrencyChip icon="icon-brainpower" :value="5" label="Brainpower" large />
         <LhCurrencyChip icon="icon-trophy" :value="50" label="Trophäen" large />
+        <LhCurrencyChip icon="icon-trophy" :value="50" label="Trophäen" to="/" />
       </div>
     </section>
 

@@ -1,5 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
+import { testRouter } from '../../test/router.js'
 import LhCurrencyChip from './LhCurrencyChip.vue'
 
 const chip = (value, extra = {}) => mount(LhCurrencyChip, { props: { icon: 'icon-xp', label: 'EP', value, ...extra } })
@@ -25,5 +26,25 @@ describe('LhCurrencyChip', () => {
     const w = chip(5, { large: true })
     expect(w.classes()).toContain('lh-chip--lg')
     expect(w.find('img').attributes('width')).toBe('32')
+  })
+
+  it('ist ohne Link kein antippbares Element', () => {
+    const w = chip(5)
+    expect(w.element.tagName).toBe('SPAN')
+    expect(w.classes()).not.toContain('lh-chip--link')
+  })
+
+  it('ist mit to ein Link mit voller Tap-Fläche und Wert als Name', async () => {
+    const router = testRouter()
+    const w = mount(LhCurrencyChip, {
+      props: { icon: 'icon-trophy', label: 'Trophäen', value: 50, to: '/trophies' },
+      global: { plugins: [router] },
+    })
+    await router.isReady()
+    expect(w.element.tagName).toBe('A')
+    expect(w.attributes('href')).toBe('/trophies')
+    expect(w.classes()).toContain('lh-chip--link')
+    expect(w.attributes('role')).toBeUndefined()
+    expect(w.attributes('aria-label')).toBe('50 Trophäen')
   })
 })

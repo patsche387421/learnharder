@@ -29,6 +29,17 @@ describe('LhCard', () => {
     expect(w.find('.lh-icon').attributes('style')).toContain(icons['ui-next'])
   })
 
+  it('ist mit button ein Button, der etwas auslöst, statt zu verlinken', async () => {
+    let clicks = 0
+    const w = mount(LhCard, { props: { button: true, title: 'Prüfung eintragen', onClick: () => clicks++ } })
+    expect(w.element.tagName).toBe('BUTTON')
+    expect(w.attributes('type')).toBe('button')
+    expect(w.classes()).toContain('lh-card--link')
+    expect(w.find('.lh-card__title').text()).toBe('Prüfung eintragen')
+    await w.trigger('click')
+    expect(clicks).toBe(1)
+  })
+
   it('markiert die hervorgehobene Karte', () => {
     const w = mount(LhCard, { props: { featured: true } })
     expect(w.classes()).toContain('lh-card--featured')

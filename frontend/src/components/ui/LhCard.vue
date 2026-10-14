@@ -1,6 +1,8 @@
 <script setup>
-// Karte. Ohne to/href: reiner Inhalt (Slot). Mit to/href: als Ganzes antippbar, mit Icon-Slot, Titel, Text und Pfeil.
+// Karte. Ohne to/href/button: reiner Inhalt (Slot). Mit to/href: als Ganzes antippbarer Link, mit Icon-Slot, Titel,
+// Text und Pfeil. Mit button: gleich aufgebaut, aber ein Button, der etwas auslöst (@click), statt zu einer Seite zu führen.
 // featured: 2px-Rahmen für das eine wichtigste Element am Screen.
+import { computed } from 'vue'
 import { linkProps, useLink } from './link.js'
 import LhIcon from './LhIcon.vue'
 
@@ -9,17 +11,19 @@ const props = defineProps({
   text: String,
   eyebrow: String,
   featured: Boolean,
+  button: Boolean,
   ...linkProps,
 })
 
 const link = useLink(props)
+const tappable = computed(() => link.value ?? (props.button ? { tag: 'button', attrs: { type: 'button' } } : null))
 </script>
 
 <template>
   <component
-    :is="link.tag"
-    v-if="link"
-    v-bind="link.attrs"
+    :is="tappable.tag"
+    v-if="tappable"
+    v-bind="tappable.attrs"
     class="lh-card lh-card--link"
     :class="{ 'lh-card--featured': featured }"
   >

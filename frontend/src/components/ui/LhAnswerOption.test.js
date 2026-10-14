@@ -22,12 +22,12 @@ describe('LhAnswerOption', () => {
     const right = answer({ selected: true, result: 'correct' })
     expect(right.classes()).toContain('lh-answer--correct')
     expect(right.attributes('aria-pressed')).toBe('false')
-    expect(right.text()).toContain('Richtig')
+    expect(right.find('.lh-answer__result').text()).toBe('Richtig')
     expect(right.find('.lh-icon').attributes('style')).toContain(icons['ui-correct'])
 
     const wrong = answer({ result: 'wrong' })
     expect(wrong.classes()).toContain('lh-answer--wrong')
-    expect(wrong.text()).toContain('Falsch')
+    expect(wrong.find('.lh-answer__result').text()).toBe('Falsch')
     expect(wrong.find('.lh-icon').attributes('style')).toContain(icons['ui-wrong'])
   })
 
