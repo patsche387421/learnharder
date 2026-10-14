@@ -12,6 +12,7 @@ Vue 3 (`<script setup>`), Vite, Pinia. Geplant: Vue Router, vue-i18n, PWA-Plugin
 npm --prefix frontend install
 npm --prefix frontend run dev      # http://localhost:5173
 npm --prefix frontend run build
+npm --prefix frontend run check:tokens   # tokens.css gegen tokens.json prüfen
 ```
 
 ## Struktur (Ziel)

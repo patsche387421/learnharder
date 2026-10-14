@@ -20,7 +20,7 @@ Regeln und Komponenten-Anleitungen: `docs/design/`. Icons: `src/assets/icons/`.
 - Neue Komponenten-Klassen bekommen das `lh-`-Präfix und eine BEM-artige Struktur (`lh-block__element--modifier`).
 - Kein `!important`, keine externen Fonts oder CDNs.
 - Kontrast mindestens WCAG AA. Fokus immer sichtbar (`:focus-visible`).
-- Wenn sich das Artefakt ändert: `tokens.json`, `bundle.css`, `docs/design/` und Icons hier ersetzen, den Diff prüfen und Änderungen an Token-Namen in Komponenten nachziehen. Das `@import` von Google Fonts in der `bundle.css` des Artefakts wird dabei nicht übernommen.
+- Wenn sich das Artefakt ändert: `tokens.json`, `bundle.css`, `docs/design/` und Icons hier ersetzen, den Diff prüfen und Änderungen an Token-Namen in Komponenten nachziehen. Das `@import` von Google Fonts in der `bundle.css` des Artefakts wird dabei nicht übernommen. Danach `npm run check:tokens`: prüft, ob `tokens.css` zu `tokens.json` passt.
 
 ## Offen
 
