@@ -9,6 +9,8 @@
 /* UI-Icon: einfarbig über Maske, übernimmt currentColor. --icon: url(...) setzen. */
 .lh-icon { display: inline-block; width: 24px; height: 24px; flex-shrink: 0; background: currentColor;
   -webkit-mask: var(--icon) center / contain no-repeat; mask: var(--icon) center / contain no-repeat; }
+/* Klein: in Textzeilen, z. B. im Sperr-Hinweis der Fach-Karte */
+.lh-icon--sm { width: 20px; height: 20px; }
 .lh-art { display: block; flex-shrink: 0; }
 
 /* ---------- Button ---------- */
@@ -70,6 +72,7 @@
 .lh-answer__key { flex-shrink: 0; width: 28px; height: 28px; border-radius: var(--radius-sm); display: grid; place-items: center;
   background: var(--surface-sunken); font: 700 13px/1 var(--font-mono); color: var(--ink-muted); }
 .lh-answer__text { flex: 1; }
+.lh-answer__result { flex-shrink: 0; font: 700 14px/20px var(--font-text); }
 .lh-answer:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 .lh-answer[aria-pressed="true"] { box-shadow: inset 0 0 0 2.5px var(--ink); }
 .lh-answer[aria-pressed="true"] .lh-answer__key { background: var(--ink); color: var(--ink-inverse); }
@@ -120,6 +123,10 @@
   border-radius: var(--radius-full); background: var(--surface-raised); box-shadow: inset 0 0 0 1px var(--line);
   font: 700 14px/1 var(--font-mono); color: var(--ink); }
 .lh-chip img { width: 24px; height: 24px; }
+/* Als Link: Tap-Fläche nach oben und unten auf tap-target erweitert, die Optik bleibt gleich */
+.lh-chip--link { position: relative; text-decoration: none; cursor: pointer; }
+.lh-chip--link::after { content: ""; position: absolute; inset: calc((100% - var(--tap-target)) / 2) 0; }
+.lh-chip--link:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 
 /* Karte (allgemein) */
 .lh-card { padding: var(--space-4); border-radius: var(--radius-lg); background: var(--surface-raised); box-shadow: inset 0 0 0 1px var(--line); }
@@ -180,6 +187,11 @@
 .lh-note { padding: var(--space-4); border-radius: var(--radius-lg); background: var(--surface-sunken); display: grid; gap: var(--space-2); }
 .lh-note__label { font: 700 13px/16px var(--font-mono); color: var(--ink-muted); }
 
+/* Code im Fließtext von Frage, Feedback und Merke-Box (Text-Stil code) */
+.question code, .lh-feedback__text code, .lh-note code { font: 400 15px/22px var(--font-mono); padding: 1px 6px;
+  border-radius: var(--radius-sm); background: var(--surface-sunken); }
+.lh-note code { background: var(--surface); }
+
 /* Prüfungs-Karte im Hub */
 .lh-exam { display: grid; gap: var(--space-3); padding: var(--space-4); border-radius: var(--radius-lg);
   background: var(--surface-raised); box-shadow: inset 0 0 0 2px var(--ink); }
@@ -207,7 +219,8 @@
 .lh-empty__text { margin: 0; max-width: 32ch; font: 400 16px/24px var(--font-text); color: var(--ink-muted); }
 
 /* ---------- Karte: Varianten ---------- */
-.lh-card--link { display: flex; align-items: center; gap: var(--space-3); color: var(--ink); text-decoration: none; min-height: 64px; }
+.lh-card--link { display: flex; align-items: center; gap: var(--space-3); color: var(--ink); text-decoration: none; min-height: 64px;
+  width: 100%; border: 0; text-align: left; font: 400 16px/24px var(--font-text); cursor: pointer; }
 .lh-card--link:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 .lh-card--link:active { transform: translateY(1px); }
 .lh-card__body { flex: 1; display: grid; gap: 2px; }
@@ -243,9 +256,12 @@
     min-height: var(--tap-target); padding: 0 var(--space-3); font-size: 16px; }
   .lh-app > .lh-tabbar .lh-tab[aria-current="page"] { background: var(--surface-sunken); }
 }
+/* Fokus-Modus (Lerneinheit, Quiz, Theorie): ohne Navigation, also auch ohne Spalte für Rail und Seitenleiste */
+.lh-app--focus { grid-template-columns: 1fr; }
+.lh-app--focus .lh-app__main { grid-column: 1; }
 /* Hover nur bei Maus/Trackpad */
 @media (hover: hover) {
-  .lh-card--link:hover, .lh-subject:hover, .lh-topic:not(:disabled):hover { box-shadow: inset 0 0 0 1.5px var(--line-strong); }
+  .lh-card--link:hover, .lh-subject:hover, .lh-topic:not(:disabled):hover, .lh-chip--link:hover { box-shadow: inset 0 0 0 1.5px var(--line-strong); }
   .lh-answer:not(:disabled):hover { box-shadow: inset 0 0 0 2px var(--ink-muted); }
   .lh-tab:hover { color: var(--ink); }
 }

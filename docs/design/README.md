@@ -1,6 +1,6 @@
 # learnharder.app – Design System
 
-Die Quelle der Wahrheit für jede Oberfläche von learnharder.app: heute Vanilla HTML/CSS/JS, später PHP-Templates und eine eigene Engine (React oder anderes). Wer hier baut, Mensch oder KI-Agent, soll ohne Designer im Raum dieselben Entscheidungen treffen können.
+Die Quelle der Wahrheit für jede Oberfläche von learnharder.app. Die App ist eine Vue-3-PWA: Ihre `Lh*`-Komponenten in `frontend/src/components/ui/` bauen auf den `lh-`-Klassen aus `bundle.css` auf (`LhButton` passt zu `lh-btn`). Wer hier baut, Mensch oder KI-Agent, soll ohne Designer im Raum dieselben Entscheidungen treffen können.
 
 ## So verwendest du das System
 
