@@ -4,12 +4,17 @@
 import { ref, watch } from 'vue'
 import tokens from '../styles/tokens.json'
 import { icons } from '../components/ui/icons.js'
+import LhAnswerOption from '../components/ui/LhAnswerOption.vue'
 import LhArt from '../components/ui/LhArt.vue'
 import LhButton from '../components/ui/LhButton.vue'
 import LhCard from '../components/ui/LhCard.vue'
+import LhCurrencyChip from '../components/ui/LhCurrencyChip.vue'
 import LhEmptyState from '../components/ui/LhEmptyState.vue'
 import LhIcon from '../components/ui/LhIcon.vue'
+import LhLevelBadge from '../components/ui/LhLevelBadge.vue'
+import LhSubjectCard from '../components/ui/LhSubjectCard.vue'
 import LhTextField from '../components/ui/LhTextField.vue'
+import LhXpBar from '../components/ui/LhXpBar.vue'
 
 const theme = ref('system')
 watch(theme, (t) => {
@@ -26,6 +31,22 @@ const email = ref('')
 const emailError = ref('')
 const tag = ref('patsche')
 const schoolClass = ref('3AHIF')
+
+const xp = ref(154)
+
+// Mini-Quiz für LhAnswerOption: antippen, prüfen, nochmal
+const answers = [
+  { letter: 'A', text: '9-mal' },
+  { letter: 'B', text: '10-mal', ok: true },
+  { letter: 'C', text: '11-mal' },
+]
+const picked = ref(null)
+const checked = ref(false)
+const resultFor = (a) => (!checked.value ? null : a.ok ? 'correct' : a.letter === picked.value ? 'wrong' : null)
+function check() {
+  if (checked.value) picked.value = null
+  checked.value = !checked.value
+}
 </script>
 
 <template>
@@ -123,6 +144,68 @@ const schoolClass = ref('3AHIF')
       <LhTextField label="Gamer-Tag" v-model="tag" hint="Den sehen alle in der Liga." />
       <LhTextField label="Klasse" v-model="schoolClass" hint="Legt die Lehrkraft fest." disabled />
     </section>
+
+    <section class="sg__section">
+      <h2 class="h2">LhLevelBadge</h2>
+      <div class="sg__row sg__row--center">
+        <LhLevelBadge :level="7" rank="bronze" />
+        <LhLevelBadge :level="34" rank="silver" />
+        <LhLevelBadge :level="61" rank="gold" />
+        <LhLevelBadge :level="93" rank="platin" />
+        <LhLevelBadge :level="4" :prestige="2" />
+        <LhLevelBadge :level="58" rank="gold" :prestige="1" large />
+      </div>
+    </section>
+
+    <section class="sg__section">
+      <h2 class="h2">LhXpBar</h2>
+      <LhXpBar :value="xp" :max="200">
+        <template #top><span><b>Level 21</b> · Bronze</span><span>{{ xp }} / 200 EP</span></template>
+        <template #bottom><span>{{ xp >= 200 ? 'Level 22!' : `${200 - xp} EP bis Level 22` }}</span></template>
+      </LhXpBar>
+      <div class="sg__row">
+        <LhButton variant="secondary" @click="xp = Math.min(200, xp + 20)">+20 EP</LhButton>
+        <LhButton variant="ghost" @click="xp = 154">Zurücksetzen</LhButton>
+      </div>
+    </section>
+
+    <section class="sg__section">
+      <h2 class="h2">LhCurrencyChip</h2>
+      <div class="sg__row">
+        <LhCurrencyChip icon="icon-brainpower" :value="5" label="Brainpower" />
+        <LhCurrencyChip icon="icon-trophy" :value="50" label="Trophäen" />
+        <LhCurrencyChip icon="icon-streak" :value="7" label="Tage Streak" />
+        <LhCurrencyChip icon="icon-xp" :value="12400" label="EP" />
+      </div>
+      <div class="sg__row">
+        <LhCurrencyChip icon="icon-brainpower" :value="5" label="Brainpower" large />
+        <LhCurrencyChip icon="icon-trophy" :value="50" label="Trophäen" large />
+      </div>
+    </section>
+
+    <section class="sg__section">
+      <h2 class="h2">LhSubjectCard</h2>
+      <LhSubjectCard to="/" code="POS" name="Programmieren und Software-Engineering" :level="4" :done="12" :total="19" />
+      <LhSubjectCard to="/" code="DBI" name="Datenbanken und Informationssysteme" :total="14" />
+      <LhSubjectCard code="SYP" name="Systemplanung und Projektentwicklung" locked lockedText="Wird nach „Schleifen“ freigeschaltet." />
+    </section>
+
+    <section class="sg__section">
+      <h2 class="h2">LhAnswerOption</h2>
+      <p class="question sg__type">Wie oft läuft <code>for (int i = 0; i &lt; n; i++)</code> durch, wenn n = 10?</p>
+      <LhAnswerOption
+        v-for="a in answers"
+        :key="a.letter"
+        :letter="a.letter"
+        :selected="picked === a.letter"
+        :result="resultFor(a)"
+        :disabled="checked"
+        @click="picked = a.letter"
+      >
+        {{ a.text }}
+      </LhAnswerOption>
+      <LhButton block :disabled="!picked" @click="check">{{ checked ? 'Nochmal' : 'Prüfen' }}</LhButton>
+    </section>
   </main>
 </template>
 
@@ -132,6 +215,7 @@ const schoolClass = ref('3AHIF')
 .sg__section { display: grid; gap: var(--space-3); }
 .sg__section h2, .sg__head h1, .sg__type { margin: 0; }
 .sg__row { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.sg__row--center { align-items: center; gap: var(--space-6); }
 .sg__swatches { display: grid; gap: var(--space-3); }
 .sg__swatch { display: grid; grid-template-columns: 48px 1fr; gap: 0 var(--space-3); align-items: center; }
 .sg__chip { grid-row: span 2; width: 48px; height: 48px; border-radius: var(--radius-md); box-shadow: inset 0 0 0 1px var(--line); }
