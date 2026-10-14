@@ -1,9 +1,13 @@
 .env
-src/js/config.js
 node_modules/
 .DS_Store
 Thumbs.db
-.claude/
+
+# Claude Code: nur Agents, Skills und launch.json versionieren
+.claude/*
+!.claude/agents/
+!.claude/skills/
+!.claude/launch.json
 
 # Local Netlify folder
 .netlify
