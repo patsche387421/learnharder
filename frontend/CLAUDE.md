@@ -19,6 +19,7 @@ npm --prefix frontend run build
 ```
 src/
   styles/       Design-System (Wahrheit) → styles/CLAUDE.md
+  assets/icons/ subjects/, game/ (illustriert, als <img>), ui/ (einfarbig, currentColor). Regeln im README.md je Ordner
   components/   wiederverwendbare UI-Bausteine (nutzen lh-Klassen)
   views/        Seiten (eine pro Route)
   stores/       Pinia-Stores (auth, user, quiz)
