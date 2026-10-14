@@ -1,0 +1,31 @@
+/* =====================================================================
+   fonts.css – Selbst gehostete Schriften (keine externen CDNs)
+   Dateien unter /assets/fonts/ ablegen:
+   - AtkinsonHyperlegibleNext-Variable.woff2  (Text, Gewichte 200–800)
+   - SpaceMono-Regular.woff2, SpaceMono-Bold.woff2 (hast du schon)
+   Einbinden IMMER als erstes <link>, vor tokens.css.
+   ===================================================================== */
+
+@font-face {
+  font-family: 'Atkinson Hyperlegible Next';
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url('/assets/fonts/AtkinsonHyperlegibleNext-Variable.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Space Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/SpaceMono-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Space Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/assets/fonts/SpaceMono-Bold.woff2') format('woff2');
+}
