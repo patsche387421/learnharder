@@ -1,7 +1,6 @@
 # CLAUDE.md — backend/ (Rolle: Backend-Entwickler:in)
 
 Laravel-API und Filament-CMS für learnharder.app. Allgemeine Regeln: siehe `../CLAUDE.md`.
-Hinweise zu Laravel Boost (Agent-Setup): siehe `AGENTS.md`.
 
 ## Stack (laut composer.lock)
 
