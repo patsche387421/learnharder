@@ -4,7 +4,8 @@ Vue-3-PWA für Schüler:innen und Lehrkräfte. Allgemeine Regeln: `../CLAUDE.md`
 
 ## Stack
 
-Vue 3 (`<script setup>`), Vite, Pinia. Geplant: Vue Router, vue-i18n, PWA-Plugin, Vitest, Playwright.
+Vue 3 (`<script setup>`), Vite, Pinia, Vue Router, Vitest. Geplant: vue-i18n, PWA-Plugin, Playwright.
+Node 20 reicht. Vitest 5 und jsdom 30 brauchen Node 22, deshalb vorerst Vitest 4 und jsdom 29.
 
 ## Start
 
@@ -12,6 +13,7 @@ Vue 3 (`<script setup>`), Vite, Pinia. Geplant: Vue Router, vue-i18n, PWA-Plugin
 npm --prefix frontend install
 npm --prefix frontend run dev      # http://localhost:5173
 npm --prefix frontend run build
+npm --prefix frontend run test           # Komponenten-Tests (Vitest), einmal durchlaufen
 npm --prefix frontend run check:tokens   # tokens.css gegen tokens.json prüfen
 ```
 
@@ -32,6 +34,8 @@ public/assets/fonts/   selbst gehostete Schriften (keine CDNs)
 ## Regeln
 
 - Styling nur über Tokens und `lh-`-Klassen aus `src/styles/`. Keine Hex-Werte in Komponenten. Komponentenspezifisches CSS als `<style scoped>`.
+- `Lh`/`lh-` steht für learnharder: Namensraum für das Design-System, damit nichts mit Filament, Browser-Standards oder Bibliotheken kollidiert. `LhButton` passt 1:1 zu `lh-btn`.
+- Jede `Lh`-Komponente in `src/components/ui/` hat eine `Lh*.test.js` daneben. `npm run build` prüft nur, was eine echte Route nutzt, die Tests prüfen alle Bausteine. Icons in Tests über `icons['name']` vergleichen, nicht über den Dateinamen (kleine SVGs werden als Data-URL eingebettet).
 - Mobile first: Basis ist das Handy, Erweiterungen per `min-width`. Tap-Ziele mindestens `var(--tap-target)` (48px).
 - Der Client vergibt nie selbst XP, Brainpower oder Streaks. Er zeigt an, was die API liefert.
 - Quiz starten und abschließen nur online. Theorie darf offline aus dem Cache kommen.
