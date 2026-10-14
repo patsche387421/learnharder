@@ -21,6 +21,7 @@ backend/storage/framework/views/*
 backend/storage/logs/*
 backend/database/*.sqlite
 backend/database/*.sqlite-journal
+backend/laravel
 backend/.phpunit.result.cache
 
 # Frontend (Vue / Node)

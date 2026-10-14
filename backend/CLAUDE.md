@@ -28,8 +28,7 @@ Hinweise zu Laravel Boost (Agent-Setup): siehe `AGENTS.md`.
 
 ## Bekannte Baustellen (Stand 2026-10-14)
 
-1. `backend/laravel` ist eine eingecheckte SQLite-Datenbank → aus Git entfernen und ignorieren.
-2. `DatabaseSeeder` legt `admin@learnharder.app` mit einem bekannten Passwort an → in Produktion verhindern.
-3. Keine Policies: jede Rolle mit Panel-Zugang kann alles löschen.
-4. `ImportLegacyContent`: Standardpfad zeigt noch auf `../src/assets/data` (liegt jetzt unter `../_archiv/legacy/assets/data`). Fehlende Lösung → Option 0 wird stillschweigend als richtig markiert.
-5. `APP_LOCALE=en`, aber alle Inhalte sind nur auf Deutsch vorhanden.
+1. `DatabaseSeeder` legt `admin@learnharder.app` mit einem bekannten Passwort an → in Produktion verhindern.
+2. Keine Policies: jede Rolle mit Panel-Zugang kann alles löschen.
+3. `ImportLegacyContent`: Standardpfad zeigt noch auf `../src/assets/data` (liegt jetzt unter `../_archiv/legacy/assets/data`). Fehlende Lösung → Option 0 wird stillschweigend als richtig markiert.
+4. `APP_LOCALE=en`, aber alle Inhalte sind nur auf Deutsch vorhanden.
