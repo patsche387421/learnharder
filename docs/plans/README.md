@@ -43,7 +43,7 @@ Der kritische Pfad zum ersten echten Nutzer ist kürzer:
 
 | M | Ziel | Fertig, wenn … |
 |---|---|---|
-| **M0** | Aufräumen | Struktur steht, Archiv entschieden, Baustellen aus `backend/CLAUDE.md` 1–2 behoben |
+| **M0** | Aufräumen | Struktur steht, Archiv entschieden, `backend/laravel` entfernt, Seeder abgesichert |
 | **M1** | Backend-Fundament | DB entschieden, `routes/api.php` + Sanctum-Login, Policies, erste Feature-Tests, CI (Pint + Tests) |
 | **M2** | Inhalte pflegbar | CMS mit Antwortoptionen, Wertelisten, de/en; Import mit Prüfung statt stillem Fallback |
 | **M3** | Lernen funktioniert | Login → Fächer → Thema → Theorie → Quiz → Ergebnis mit serverseitigen XP/Level, Vue mit `lh-`-Komponenten |

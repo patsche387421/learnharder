@@ -23,12 +23,25 @@ frontend/    Vue 3 + Vite PWA                          → frontend/CLAUDE.md
 infra/       Hetzner-Server, Docker, Caddy, Backups    → infra/CLAUDE.md
 docs/        Pläne, Entscheidungen                     → docs/CLAUDE.md
 agent/       Arbeitsbereich des KI-Agenten             → agent/CLAUDE.md
+.claude/     agents/ + skills/ (versioniert), launch.json; Rest lokal
 public/      Wartungsseite (live über Netlify, bis Hetzner steht). Hier KEINE CLAUDE.md, sonst wird sie öffentlich ausgeliefert.
 _archiv/     V1-Prototyp und V1-Material für den Umzug. Nur lesen. → _archiv/CLAUDE.md
 ```
 
 Jede `CLAUDE.md` in einem Unterordner beschreibt eine **Rolle**. Daraus werden später Subagents
 (siehe `agent/CLAUDE.md` → „Subagent-Roster“).
+
+## Lokal entwickeln (WSL2)
+
+Das Repo liegt im Ubuntu-WSL2-Dateisystem, nicht unter `C:\`. Auf dem Windows-Dateisystem ist Laravel im
+Container extrem langsam (~20 s pro Request) und `tempnam()` schlägt fehl. Einrichtung: `README.md`.
+
+| Checkout | Branch | Zweck |
+|---|---|---|
+| `~/learnharder.app` | `dev`, `feat/…` | Entwicklung |
+| `~/learnharder.app-main` | `main` | Git-Worktree: Prod-Stand bauen und prüfen. Dort nur mergen, nicht entwickeln |
+
+Befehle: `backend/CLAUDE.md` und `frontend/CLAUDE.md`. Auf dem Host gibt es kein PHP, alles läuft über Sail.
 
 ## Arbeitsregeln (verbindlich)
 

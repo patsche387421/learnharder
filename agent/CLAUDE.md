@@ -19,10 +19,17 @@ Das V1-Protokoll und die V1-Prompts liegen unter `_archiv/agent/`.
 3. In kleinen Schritten arbeiten. Jeder Schritt: Ankündigung → Änderung → roher Diff → OK → Commit.
 4. Am Ende: Eintrag in `SESSION_REPORT.md` (Datum, Branch, Commits, Ergebnis, offene Punkte).
 
-## Subagent-Roster (geplant)
+## Subagent-Roster
 
-Jede Rolle entspricht einer CLAUDE.md. Ein Subagent bekommt genau diese Datei plus die Root-CLAUDE.md als Kontext
-und darf nur in seinem Ordner schreiben.
+Subagents liegen in `.claude/agents/`, ihre Skills in `.claude/skills/` (beide versioniert).
+Jede Rolle entspricht einer CLAUDE.md. Ein Subagent bekommt diese Datei plus die Root-CLAUDE.md als Kontext,
+darf nur in seinem Bereich schreiben und committet nie selbst (Diff-Gate bleibt beim Hauptagenten).
+
+| Subagent | Modell | Kontext | Darf schreiben in | Typische Aufgabe |
+|---|---|---|---|---|
+| `doku` ✅ | haiku | Skill `doku-pflegen` | CLAUDE.md-Dateien, `docs/`, `agent/SESSION_REPORT.md`, `README.md` | Doku mit Code abgleichen, Session-Report |
+
+Geplant (Datei entsteht, wenn die Rolle gebraucht wird):
 
 | Subagent | Kontext | Darf schreiben in | Typische Aufgabe |
 |---|---|---|---|
@@ -34,6 +41,3 @@ und darf nur in seinem Ordner schreiben.
 | `devops` | `infra/CLAUDE.md` | `infra/` | Docker, Caddy, Backups, Runbooks |
 | `pm` | `docs/CLAUDE.md` | `docs/` | Plan-Abgleich, Entscheidungslog, Meilensteine |
 | `reviewer` | alle CLAUDE.md | nichts (nur lesen) | Diff-Review vor jedem Merge nach `dev` |
-
-**Technischer Hinweis:** Claude-Code-Subagents liegen in `.claude/agents/*.md`. `.claude/` ist aktuell
-komplett in `.gitignore`. Damit die Subagents versioniert werden, muss `.claude/agents/` dort ausgenommen werden.

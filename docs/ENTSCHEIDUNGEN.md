@@ -22,6 +22,11 @@ Jede Entscheidung: Nummer, Datum, was, warum, Folgen. Offene Fragen stehen unten
 ### E-004 — Branch-Regel (2026-10-14)
 - **Entscheidung:** Arbeit auf `dev`. Große Features auf `feat/<name>`, danach Merge nach `dev`.
 
+### E-005 — Lokale Entwicklung in WSL2, `main` als Worktree (2026-10-14)
+- **Entscheidung:** Das Repo liegt in Ubuntu-WSL2 (`~/learnharder.app`), `main` als Git-Worktree daneben (`~/learnharder.app-main`).
+- **Warum:** Unter `C:\` laufen Requests im Sail-Container ~20 s, `tempnam()` schlägt fehl, Port 8000 ist von Windows gesperrt und das Sail-Skript läuft nicht in Git Bash.
+- **Folgen:** Einrichtung siehe `README.md`. Der alte Checkout `C:\v\learnharder.app` bleibt bis zur Nutzer-Migration liegen (Root-`.env`, Backup-Zips), wird aber nicht mehr entwickelt.
+
 ## Offen
 
 | Nr. | Frage | Empfehlung | Warum offen |
