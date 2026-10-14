@@ -8,7 +8,22 @@ Laravel-API und Filament-CMS für learnharder.app. Allgemeine Regeln: siehe `../
 - Filament 3.3 (CMS unter `/admin`), Livewire 3
 - Sanctum (Token-Auth für das Vue-Frontend, **noch nicht eingerichtet**)
 - Spatie Permission (Rollen: admin, autor, tester, teacher, student), Spatie Translatable (de/en in JSON-Spalten)
-- Lokal: Sail (`compose.yaml`) mit Postgres 18 und Redis. `.env.example` steht noch auf SQLite.
+- Lokal: Sail (`compose.yaml`, PHP 8.5) mit Postgres 18 und Redis
+
+## Befehle (in WSL2, aus `backend/`)
+
+```bash
+cp .env.example .env                  # nur beim ersten Mal
+./vendor/bin/sail up -d               # http://localhost, Filament: /admin
+./vendor/bin/sail artisan key:generate   # nur beim ersten Mal
+./vendor/bin/sail artisan migrate --seed
+./vendor/bin/sail artisan learnharder:import-legacy-content --path=/var/www/legacy-data
+./vendor/bin/sail artisan test
+./vendor/bin/sail pint
+```
+
+`/var/www/legacy-data` ist `_archiv/legacy/assets/data`, read-only gemountet (`compose.yaml`).
+Fehlt `vendor/`: einmalig `docker run --rm -v "$(pwd)":/app -w /app composer install`.
 
 ## Zuständigkeit
 
@@ -22,8 +37,8 @@ Laravel-API und Filament-CMS für learnharder.app. Allgemeine Regeln: siehe `../
 - Quiz-Abschlüsse brauchen einen Idempotency-Key, damit doppelte Requests nicht doppelt XP geben.
 - API-Routen kommen nach `routes/api.php` (existiert noch nicht), versioniert unter `/api/v1/…`.
 - Zugriffsrechte über Policies, nicht über `if`-Abfragen im Controller.
-- Jede neue Logik bekommt einen Feature-Test (`tests/Feature`). Ausführen: `php artisan test`.
-- Code-Stil: `vendor/bin/pint` vor jedem Commit.
+- Jede neue Logik bekommt einen Feature-Test (`tests/Feature`), Tests vor jedem Commit grün.
+- Code-Stil: `sail pint` vor jedem Commit.
 
 ## Bekannte Baustellen (Stand 2026-10-14)
 
