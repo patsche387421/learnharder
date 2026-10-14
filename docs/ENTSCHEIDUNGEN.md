@@ -18,6 +18,7 @@ Jede Entscheidung: Nummer, Datum, was, warum, Folgen. Offene Fragen stehen unten
 - **Entscheidung:** `frontend/src/styles/{fonts,tokens,bundle}.css` sind die Design-Wahrheit (warm-neutral, Atkinson Hyperlegible Next + Space Mono, `lh-`-Komponenten, hell als Standard).
 - **Warum:** Lesbarkeit, Barrierefreiheit, ein einheitliches System für alle V2-Oberflächen.
 - **Folgen:** Das lila Space-Grotesk-System aus V1 ist abgelöst.
+- **Präzisierung:** Seit E-006 ist das Design-System-Artefakt die Quelle. Die Dateien hier sind die Kopie.
 
 ### E-004 — Branch-Regel (2026-10-14)
 - **Entscheidung:** Arbeit auf `dev`. Große Features auf `feat/<name>`, danach Merge nach `dev`.
@@ -26,6 +27,11 @@ Jede Entscheidung: Nummer, Datum, was, warum, Folgen. Offene Fragen stehen unten
 - **Entscheidung:** Das Repo liegt in Ubuntu-WSL2 (`~/learnharder.app`), `main` als Git-Worktree daneben (`~/learnharder.app-main`).
 - **Warum:** Unter `C:\` laufen Requests im Sail-Container ~20 s, `tempnam()` schlägt fehl, Port 8000 ist von Windows gesperrt und das Sail-Skript läuft nicht in Git Bash.
 - **Folgen:** Einrichtung siehe `README.md`. Der alte Checkout `C:\v\learnharder.app` bleibt bis zur Nutzer-Migration liegen (Root-`.env`, Backup-Zips), wird aber nicht mehr entwickelt.
+
+### E-006 — Design-System-Artefakt ist die Quelle, das Repo hält eine Kopie (2026-10-14)
+- **Entscheidung:** Das Design-System-Artefakt (https://claude.ai/artifact/89Tg8wEdFdFDMUNBWG2YNb) ist die Quelle. Das Repo hält eine Kopie: `frontend/src/styles/tokens.json`, `bundle.css`, `docs/design/` und die Icons. Designänderungen passieren zuerst im Artefakt. Danach wird die Kopie ersetzt und `npm --prefix frontend run check:tokens` läuft.
+- **Warum:** Ein Ort für Designänderungen, damit Repo und Design nicht auseinanderlaufen. Das Google-Fonts-`@import` des Artefakts würde beim Laden externe Server kontaktieren. Das verbietet die Datenschutz-Regel in `CLAUDE.md` (keine externen CDNs oder Fonts).
+- **Folgen:** Das `@import` wird nie übernommen. Schriften liegen selbst gehostet unter `frontend/public/assets/fonts/`. Stand 2026-10-14 entspricht die Kopie dem Artefakt (Version 25) bis auf dieses `@import`. Geänderte Token-Namen werden in den Komponenten nachgezogen. Regeln: `frontend/src/styles/CLAUDE.md`.
 
 ## Offen
 

@@ -5,7 +5,7 @@ Vue-3-PWA für Schüler:innen und Lehrkräfte. Allgemeine Regeln: `../CLAUDE.md`
 ## Stack
 
 Vue 3 (`<script setup>`), Vite, Pinia, Vue Router, Vitest. Geplant: vue-i18n, PWA-Plugin, Playwright.
-Node 20 reicht. Vitest 5 und jsdom 30 brauchen Node 22, deshalb vorerst Vitest 4 und jsdom 29.
+Node ≥ 20.19 reicht (Vite 8 verlangt das laut `package-lock.json`). Vitest 5 und jsdom 30 brauchen Node 22, deshalb vorerst Vitest 4 und jsdom 29.
 
 ## Start
 

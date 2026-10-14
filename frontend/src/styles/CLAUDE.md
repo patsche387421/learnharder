@@ -18,7 +18,7 @@ Regeln und Komponenten-Anleitungen: `docs/design/`. Icons: `src/assets/icons/`.
 
 - Neue Farben, Abstände und Radien zuerst als Token im Artefakt anlegen, dann `tokens.json` und `tokens.css` hier nachziehen, dann verwenden.
 - Theme: Hell ist Standard. Dunkel über `<html data-theme="dark">` oder die Systemeinstellung. Jede neue Farbe braucht einen Wert für beide Themes.
-- Neue Komponenten-Klassen bekommen das `lh-`-Präfix und eine BEM-artige Struktur (`lh-block__element--modifier`).
+- Neue Komponenten-Klassen bekommen das `lh-`-Präfix und eine BEM-artige Struktur (`lh-block__element--modifier`). Ausnahme: die Text-Stil-Klassen aus `tokens.css` (`.display`, `.h1` … `.question`, `.code`) heißen bewusst wie die Text-Stile in `tokens.json`.
 - Kein `!important`, keine externen Fonts oder CDNs.
 - Kontrast mindestens WCAG AA. Fokus immer sichtbar (`:focus-visible`).
 - Wenn sich das Artefakt ändert: `tokens.json`, `bundle.css`, `docs/design/` und Icons hier ersetzen, den Diff prüfen und Änderungen an Token-Namen in Komponenten nachziehen. Das `@import` von Google Fonts in der `bundle.css` des Artefakts wird dabei nicht übernommen. Danach `npm run check:tokens`: prüft, ob `tokens.css` zu `tokens.json` passt.

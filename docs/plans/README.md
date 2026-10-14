@@ -13,12 +13,12 @@
 
 | PSP | Inhalt | Stand |
 |---|---|---|
-| 1.4 | Design-System | ✅ Tokens und Komponenten da (Font und `tokens.json` fehlen) |
-| 2.1 | Laravel-Setup | 🟡 läuft lokal, DB nicht entschieden, keine API, keine Tests |
+| 1.4 | Design-System | ✅ Tokens, `tokens.json` und Komponenten da (Atkinson-Font fehlt) |
+| 2.1 | Laravel-Setup | 🟡 läuft lokal, DB nicht entschieden, keine API, nur die Laravel-Beispieltests |
 | 2.2 | Rollen | 🟡 Rollen da, keine Policies |
 | 2.3 | CMS | 🟡 generiert, noch nicht redaktionstauglich |
 | 2.4–2.7 | Spiellogik, Klassen, API, Echtzeit | ⬜ nur Tabellen |
-| 3.x | Vue-Frontend | ⬜ Gerüst |
+| 3.x | Vue-Frontend | 🟡 Gerüst mit App-Rahmen, 13 `Lh`-Bausteinen (mit Tests) und Platzhalter-Routen. Noch keine echten Screens |
 | 5.x | Tests, CI, Hetzner | ⬜ |
 | — | Content-Import aus V1 | ✅ 7 Fächer, 32 Themen, 158 Theorieblöcke, 158 Fragen (lokal) |
 | — | Nutzer-Migration aus Supabase | ⬜ |
@@ -26,7 +26,7 @@
 ## Widersprüche in den Plänen
 
 1. **Laravel 11** steht in beiden Plänen. Installiert ist **Laravel 13.35**.
-2. **Datenbank:** „PostgreSQL / MariaDB“. Sail nutzt Postgres, `.env.example` SQLite. → `ENTSCHEIDUNGEN.md` O-001
+2. **Datenbank:** „PostgreSQL / MariaDB“. Sail und `.env.example` nutzen Postgres (`pgsql`). Die Pläne nennen noch beides. → `ENTSCHEIDUNGEN.md` O-001
 3. **Versionen:** Der Setup-Plan nennt `v2.0.0-alpha.1` als Ziel, §4 nennt `v0.1.0`/`v0.2.0`. Beide Tags `v0.1.0` und `v2.0.0-plan` existieren mit derselben Beschreibung. Vorschlag: nur noch `v2.0.0-alpha.N` weiterführen.
 4. **Ökonomie-Modell §2:** Die Formel `round(n^1.5 × 8)` passt zu Level 5/10/25/50/100, aber nicht zu Level 1 (Formel ergibt 8, Tabelle sagt 0) und Level 2 (Formel 23, Tabelle 8). Die Spalte „XP zum nächsten Level“ ist dadurch auch falsch. Vor der Umsetzung festlegen, ob die Schwelle für Level n `(n−1)` oder `n` verwendet.
 5. **Schritt 1 des Plans** („Abstimmung mit Professoren/Lehrkräften“) ist nirgends als erledigt vermerkt.

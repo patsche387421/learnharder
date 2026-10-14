@@ -54,3 +54,16 @@ V1-Protokoll: `_archiv/agent/SESSION_REPORT.md` und `SESSION_REPORT_ARCHIVE.md`.
   - Repo nach WSL2 umziehen (vorher Branch pushen). Mit Node 22 dort auf Vitest 5 gehen.
   - User-Store für Level, Rang und Prestige statt fester Werte in `App.vue`.
   - Eintrag in `docs/ENTSCHEIDUNGEN.md` prüfen: „Artefakt ist Quelle, Repo ist Kopie“ als E-006.
+
+## 2026-10-14 — Design-System-Lücken, Artefakt v25, Merge nach dev
+
+- **Branch:** `dev` (Merges aus `feat/design-system` und `feat/design-system-luecken`). Beide Branches, der App-Branch `claude/quizzical-keller-ac54c3` und der Worktree der Sub-Session sind gelöscht.
+- **Commits:** `30d1940` (Lücken in `bundle.css`), `98043a4` (`Lh`-Bausteine nutzen die neuen Klassen), `93a02e5` (Merge `feat/design-system`), `d24de4f` (Merge `feat/design-system-luecken`), dazu dieser Doku-Commit
+- **Ergebnis:**
+  - 7 Lücken in `bundle.css` geschlossen, u. a. `.lh-card--link` als Button und `.lh-app--focus` (vorher Patch in `style.css`, jetzt in `bundle.css`). `LhCard` hat `button`, `LhCurrencyChip` `to`/`href`.
+  - Artefakt Version 25 veröffentlicht und mit dem Repo verglichen: identisch bis auf das Google-Fonts-`@import`.
+  - Entscheidung E-006 in `docs/ENTSCHEIDUNGEN.md`: Artefakt ist Quelle, Repo hält die Kopie.
+  - `dev` bis `93a02e5` gepusht. `d24de4f` ist noch nicht gepusht.
+  - Sub-Session archiviert, verwaister Vite-Server gestoppt.
+- **Geprüft:** Nach dem Merge auf `dev`: `npm run test` (47 Tests in 13 Dateien), `npm run build` und `npm run check:tokens` grün. `bundle.css` und `docs/design/README.md` mit Artefakt v25 verglichen: identisch bis auf das Google-Fonts-`@import`. `lh-app--focus` steht nur noch in `bundle.css`. Nicht geprüft: echtes Handy, Screenreader.
+- **Offen:** Atkinson-Font beschaffen (`frontend/public/assets/fonts/`). Repo nach WSL2 umziehen, dort mit Node 22 auf Vitest 5 und jsdom 30. User-Store für Level, Rang und Prestige statt fester Werte in `App.vue`.
