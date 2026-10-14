@@ -13,6 +13,7 @@ import LhEmptyState from '../components/ui/LhEmptyState.vue'
 import LhIcon from '../components/ui/LhIcon.vue'
 import LhLevelBadge from '../components/ui/LhLevelBadge.vue'
 import LhSubjectCard from '../components/ui/LhSubjectCard.vue'
+import LhTabBar from '../components/ui/LhTabBar.vue'
 import LhTextField from '../components/ui/LhTextField.vue'
 import LhXpBar from '../components/ui/LhXpBar.vue'
 
@@ -205,6 +206,12 @@ function check() {
         {{ a.text }}
       </LhAnswerOption>
       <LhButton block :disabled="!picked" @click="check">{{ checked ? 'Nochmal' : 'Prüfen' }}</LhButton>
+    </section>
+
+    <section class="sg__section">
+      <h2 class="h2">LhTabBar</h2>
+      <p class="small sg__type">Handy-Form. Rail und Seitenleiste ab 768px bzw. 1200px zeigt der echte Rahmen (LhAppLayout) unter <RouterLink to="/">/</RouterLink>.</p>
+      <LhTabBar :level="21" :prestige="1" />
     </section>
   </main>
 </template>

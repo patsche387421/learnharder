@@ -11,4 +11,5 @@ import router from './router'
 const app = createApp(App)
 app.use(createPinia())
 app.use(router)
-app.mount('#app')
+// Erst nach der ersten Navigation mounten, damit route.meta (Rahmen ja/nein) von Anfang an stimmt.
+router.isReady().then(() => app.mount('#app'))
