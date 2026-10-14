@@ -33,7 +33,7 @@ const art = computed(() => `subject-${props.code.toLowerCase()}`)
     <LhArt class="lh-subject__art" :name="art" />
     <span class="lh-subject__title">{{ code }}</span>
     <span class="lh-subject__name">{{ name }}</span>
-    <span v-if="locked" class="lh-subject__lock"><LhIcon name="ui-locked" />{{ lockedText }}</span>
+    <span v-if="locked" class="lh-subject__lock"><LhIcon class="lh-icon--sm" name="ui-locked" />{{ lockedText }}</span>
     <LhXpBar v-else class="lh-subject__progress" :value="done" :max="total" :label="`Fortschritt ${code}`">
       <template #bottom>
         <span v-if="done > 0 && level"><b>Fach-Level {{ level }}</b></span>

@@ -35,5 +35,6 @@ describe('LhSubjectCard', () => {
     expect(w.attributes('aria-disabled')).toBe('true')
     expect(w.find('.lh-xp').exists()).toBe(false)
     expect(w.find('.lh-subject__lock').text()).toBe('Wird nach „Schleifen“ freigeschaltet.')
+    expect(w.find('.lh-subject__lock .lh-icon').classes()).toContain('lh-icon--sm')
   })
 })

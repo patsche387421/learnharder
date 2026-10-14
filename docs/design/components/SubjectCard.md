@@ -6,7 +6,7 @@ Ein Fach in der Liste unter „Lernen“: illustriertes Fach-Icon, Kürzel, voll
 
 - Der Fortschritt verwendet die `XpBar`-Leiste in `accent`, mit Fach-Level und erledigten Themen in Space Mono.
 - Ein noch nicht begonnenes Fach zeigt „Noch nicht begonnen“ statt „–“ oder „0 %“.
-- Gesperrt (`.lh-subject--locked`, kein Link): das Icon entsättigt, `ui-locked` und ein Satz, warum es gesperrt ist.
+- Gesperrt (`.lh-subject--locked`, kein Link): das Icon entsättigt, darunter `.lh-subject__lock` mit `ui-locked` als `.lh-icon.lh-icon--sm` (20px) und einem Satz, warum es gesperrt ist.
 - Am Handy eine Spalte. Ab Tablet ein Raster mit `minmax(280px, 1fr)`.
 - Die Karte ist als Ganzes antippbar.
 

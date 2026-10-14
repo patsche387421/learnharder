@@ -9,4 +9,5 @@ Einfarbige UI-Icons für Navigation und Aktionen. viewBox 24×24, 2px Strich, `s
 Regeln:
 - Inline einbinden (oder als Sprite), damit `currentColor` greift. Als `<img>` bleibt das Icon schwarz.
 - Die Trefffläche ist immer mindestens `tap-target` (48px), auch wenn das Icon 24px groß ist.
+- `.lh-icon` ist 24px groß. In Textzeilen (z. B. Sperr-Hinweis) `.lh-icon--sm` mit 20px, kleiner nie.
 - `ui-correct` und `ui-wrong` stehen immer zusammen mit `correct`/`wrong`-Farbe und Text.

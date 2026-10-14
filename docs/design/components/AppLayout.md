@@ -4,7 +4,7 @@ Der Rahmen jeder Seite: mobile first. Auf dem Handy liegt die Tab-Leiste unten, 
 
 **Warum so:** learnharder wird meistens am Handy genutzt, am Laptop in Pausen im Unterricht und zuhause am PC. Der Laptop bekommt deshalb **dieselbe App mit mehr Rand**, kein eigenes Layout. Wer am Handy lernt, findet sich am PC sofort zurecht.
 
-**Aufbau:** `div.lh-app` > `main.lh-app__main` (in Lerneinheit, Quiz und Theorie zusätzlich `.lh-app__main--lesson`) · `nav.lh-tabbar`.
+**Aufbau:** `div.lh-app` > `main.lh-app__main` · `nav.lh-tabbar`. Im Fokus-Modus (Lerneinheit, Quiz, Theorie): `div.lh-app.lh-app--focus` > `main.lh-app__main.lh-app__main--lesson`, ohne `nav` und ohne Navigationsspalte.
 
 | Breite | Navigation | Inhalt |
 |---|---|---|

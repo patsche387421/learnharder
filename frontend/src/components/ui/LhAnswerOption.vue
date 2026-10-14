@@ -22,7 +22,7 @@ defineProps({
     <span class="lh-answer__key">{{ letter }}</span>
     <span class="lh-answer__text"><slot /></span>
     <template v-if="result">
-      <span>{{ result === 'correct' ? 'Richtig' : 'Falsch' }}</span>
+      <span class="lh-answer__result">{{ result === 'correct' ? 'Richtig' : 'Falsch' }}</span>
       <LhIcon :name="result === 'correct' ? 'ui-correct' : 'ui-wrong'" />
     </template>
   </button>
