@@ -1,36 +1,27 @@
-# LernHub Demo
+# learnharder.app
 
-Lokale Lernwebsite für HTL-Schüler:innen. Fächerübersicht, Themen-Detailseiten mit Theorie und Quiz, interaktive Tool-Module.
+Lern- und Gamification-Plattform für HTL-Schüler:innen: Theorie, Quizze, XP, Level und Brainpower.
+Gerade läuft der Neubau (V2). Bis dahin zeigt die Domain eine Wartungsseite.
 
-## Starten
+## Aufbau
+
+| Ordner | Inhalt |
+|---|---|
+| `backend/` | Laravel 13 + Filament-CMS (`/admin`), lokal mit Sail |
+| `frontend/` | Vue 3 + Vite PWA, Design-System in `src/styles/` |
+| `infra/` | Hetzner-Server (Docker, Caddy, Backups), in Vorbereitung |
+| `docs/` | Pläne und Entscheidungen, Einstieg: `docs/plans/README.md` |
+| `public/` | Wartungsseite (Netlify, bis zum Umzug) |
+| `_archiv/` | V1-Prototyp und V1-Material für den Umzug, nur lesen |
+
+## Lokal starten
 
 ```bash
-npx serve src
+# Backend
+cd backend && ./vendor/bin/sail up -d && ./vendor/bin/sail artisan migrate --seed
+
+# Frontend
+npm --prefix frontend install && npm --prefix frontend run dev
 ```
 
-Dann `http://localhost:3000` öffnen. Login: `test@lernhub.htl` / `lernhub123`
-
-> `fetch()` auf JSON-Dateien erfordert einen HTTP-Server – nicht per `file://` öffnen.
-
-## Stack
-
-Vanilla HTML, CSS, JavaScript – kein Framework, kein Build-Step.
-
-## Struktur
-
-```
-src/          Alle Web-Dateien (Publish-Root)
-├── css/      Styles (tokens.css → style.css, Fach-Unterordner für Tool-CSS)
-├── js/       Logik-Module (auth, stats, app; Fach-Unterordner für Tool-JS)
-└── assets/
-    └── data/ Lerninhalte (manifest.json, Fach-Unterordner mit Theorie/Fragen/Antworten)
-
-docs/         Produkt-/Design-Doku (DESIGN_GUIDELINES.md, …), archive/ = Überholtes
-agent/        Agent-/Prozess-Artefakte: CLAUDE.md (Projektregeln), prompts/, SESSION_REPORT.md
-```
-
-## Hosting
-
-Kompatibel mit jedem statischen Host (Apache, Nginx, Netlify). Publish-Verzeichnis: `src/`.
-
-Weitere Details: [agent/CLAUDE.md](agent/CLAUDE.md)
+Regeln für die Mitarbeit (Branches, Commits, Diff-Gates): siehe `CLAUDE.md`.

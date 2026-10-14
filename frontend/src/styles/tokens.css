@@ -1,0 +1,175 @@
+/* =====================================================================
+   tokens.css – learnharder.app Design System (generiert aus tokens.json)
+   ---------------------------------------------------------------------
+   Enthält AUSSCHLIESSLICH CSS Custom Properties.
+   Einbinden: fonts.css → tokens.css → bundle.css (Komponenten) → style.css
+
+   Theme: Hell ist Standard. Dunkel über <html data-theme="dark">.
+   Ohne data-theme folgt die App der Systemeinstellung des Geräts.
+   ===================================================================== */
+
+/* ===== 1. Farben – Hell (Standard) ================================= */
+:root,
+[data-theme="light"] {
+  --surface: #f6f3ee;
+  --surface-raised: #ffffff;
+  --surface-sunken: #ece6dc;
+  --line: #e2dbcf;
+  --line-strong: #8a8377;
+  --ink: #1b1916;
+  --ink-muted: #5f5a52;
+  --ink-inverse: #f6f3ee;
+  --rank-bronze: #9a5a24;
+  --rank-silver: #636a71;
+  --rank-gold: #85610a;
+  --rank-platin: #2f7385;
+  --rank-prestige: #127065;
+  --accent: var(--rank-bronze);
+  --correct: #1d7a3e;
+  --wrong: #b3261e;
+  --subject-pos: #7837e7;
+  --subject-dbi: #0281c3;
+  --subject-nsvs: #059065;
+  --subject-tinf: #b7185a;
+  --subject-wir: #d17107;
+  --subject-medt: #e5550c;
+  --subject-syp: #ef4444;
+}
+
+/* ===== 2. Farben – Dunkel ========================================== */
+[data-theme="dark"] {
+  --surface: #14120f;
+  --surface-raised: #1e1b17;
+  --surface-sunken: #0e0d0b;
+  --line: #2e2a25;
+  --line-strong: #6e685e;
+  --ink: #f2ede4;
+  --ink-muted: #a8a196;
+  --ink-inverse: #14120f;
+  --rank-bronze: #d4915a;
+  --rank-silver: #b9c1c8;
+  --rank-gold: #e8b545;
+  --rank-platin: #8fd3e0;
+  --rank-prestige: #3fbfab;
+  --accent: var(--rank-bronze);
+  --correct: #4cc47a;
+  --wrong: #ff7a6b;
+  --subject-pos: #7837e7;
+  --subject-dbi: #0281c3;
+  --subject-nsvs: #059065;
+  --subject-tinf: #b7185a;
+  --subject-wir: #d17107;
+  --subject-medt: #e5550c;
+  --subject-syp: #ef4444;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --surface: #14120f;
+    --surface-raised: #1e1b17;
+    --surface-sunken: #0e0d0b;
+    --line: #2e2a25;
+    --line-strong: #6e685e;
+    --ink: #f2ede4;
+    --ink-muted: #a8a196;
+    --ink-inverse: #14120f;
+    --rank-bronze: #d4915a;
+    --rank-silver: #b9c1c8;
+    --rank-gold: #e8b545;
+    --rank-platin: #8fd3e0;
+    --rank-prestige: #3fbfab;
+    --accent: var(--rank-bronze);
+    --correct: #4cc47a;
+    --wrong: #ff7a6b;
+    --subject-pos: #7837e7;
+    --subject-dbi: #0281c3;
+    --subject-nsvs: #059065;
+    --subject-tinf: #b7185a;
+    --subject-wir: #d17107;
+    --subject-medt: #e5550c;
+    --subject-syp: #ef4444;
+  }
+}
+
+/* ===== 3. Schrift, Abstand, Radius, Layout ========================= */
+:root {
+  --font-text: "Atkinson Hyperlegible Next", system-ui, -apple-system, sans-serif;
+  --font-mono: "Space Mono", ui-monospace, "SFMono-Regular", monospace;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --tap-target: 48px;
+
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-full: 999px;
+
+  --bp-tablet: 768px;
+  --bp-desktop: 1200px;
+  --content-max: 640px;
+  --lesson-max: 560px;
+  --rail-w: 88px;
+  --sidebar-w: 240px;
+}
+
+/* ===== 4. Text-Stile als Klassen =================================== */
+.display { font: 800 32px/38px var(--font-text); }
+.h1 { font: 700 26px/32px var(--font-text); }
+.h2 { font: 700 21px/28px var(--font-text); }
+.h3 { font: 600 18px/24px var(--font-text); }
+.question { font: 400 18px/27px var(--font-text); }
+.body { font: 400 16px/24px var(--font-text); }
+.button { font: 700 17px/24px var(--font-text); }
+.small { font: 400 14px/20px var(--font-text); }
+.stat-lg { font: 700 28px/32px var(--font-mono); }
+.stat { font: 700 16px/20px var(--font-mono); }
+.meta { font: 400 13px/16px var(--font-mono); }
+.code { font: 400 15px/22px var(--font-mono); }
+
+/* ===== 5. Übergang: alte Namen → neue Tokens =======================
+   Hält das bestehende style.css lauffähig, während du umbaust.
+   Wenn keine alte Variable mehr verwendet wird, diesen Block löschen. */
+:root {
+  --bg: var(--surface);
+  --bg-base: var(--surface);
+  --surface-2: var(--surface-sunken);
+  --border: var(--line);
+  --text: var(--ink);
+  --text-muted: var(--ink-muted);
+  --text-subtle: var(--ink-muted);
+  --text-on-primary: var(--ink-inverse);
+  --primary: var(--ink);
+  --primary-hover: var(--ink);
+  --brand-muted: var(--surface-sunken);
+  --success: var(--correct);
+  --error: var(--wrong);
+  --warning: var(--rank-bronze);
+  --gold: var(--rank-gold);
+  --xp: var(--accent);
+  --prestige: var(--rank-prestige);
+  --font-display: var(--font-text);
+  --fach-pos: var(--subject-pos);
+  --fach-dbi: var(--subject-dbi);
+  --fach-nsvs: var(--subject-nsvs);
+  --fach-tinf: var(--subject-tinf);
+  --fach-wir: var(--subject-wir);
+  --fach-medt: var(--subject-medt);
+  --fach-syp: var(--subject-syp);
+  --space-xs: var(--space-1);
+  --space-sm: var(--space-2);
+  --space-md: var(--space-3);
+  --space-base: var(--space-4);
+  --space-lg: var(--space-6);
+  --space-xl: var(--space-8);
+  --space-2xl: var(--space-12);
+  --radius: var(--radius-lg);
+  --radius-cta: var(--radius-md);
+  --btn-radius: var(--radius-md);
+  --gradient-brand: var(--accent);
+}
