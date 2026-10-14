@@ -12,7 +12,7 @@ Der alte Vanilla-JS/Supabase-Prototyp liegt nur noch im Archiv.
 | Hosting, Domains, Datenmigration, Versionen | `docs/plans/SETUP_DOMAIN_UND_DATENBANK_MIGRATION.md` |
 | XP, Level, Brainpower, Streaks | `docs/plans/GAMIFICATION_OEKONOMIE_MODELL.md` |
 | Getroffene und offene Entscheidungen | `docs/ENTSCHEIDUNGEN.md` |
-| Design (Tokens, Komponenten) | `frontend/src/styles/` |
+| Design (Tokens, Komponenten) | `frontend/src/styles/`, Regeln und Sprache in `docs/design/` |
 | Code | Git. Doku kann veralten, Code nicht. |
 
 ## Ordner

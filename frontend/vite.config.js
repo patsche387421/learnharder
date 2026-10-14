@@ -4,4 +4,8 @@ import { defineConfig } from 'vite'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [vue()],
+  // Vitest: Komponenten-Tests im simulierten Browser (jsdom)
+  test: {
+    environment: 'jsdom',
+  },
 })

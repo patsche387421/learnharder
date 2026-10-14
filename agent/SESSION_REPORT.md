@@ -36,3 +36,21 @@ V1-Protokoll: `_archiv/agent/SESSION_REPORT.md` und `SESSION_REPORT_ARCHIVE.md`.
   - Seeder absichern.
   - `ImportLegacyContent`-Standardpfad korrigieren (zeigt noch auf `../src/assets/data`, siehe `backend/CLAUDE.md`).
   - Atkinson-Font beschaffen.
+
+## 2026-10-14 — Design-System übernehmen, Vue-Bausteine, Tests
+
+- **Branch:** `feat/design-system` (von `dev`), noch nicht gemerged, nicht gepusht.
+- **Commits:** `1f4f21f` (`tokens.json`), `92fde6c` (Brand Book, Sprache, Komponenten-Anleitungen nach `docs/design/`), `3269803` (43 Icons nach `frontend/src/assets/icons/`), `f6dc3af` (`npm run check:tokens`), `f2d52ed` (Batch 1: `LhIcon`, `LhArt`, `LhButton`, `LhCard`, `LhEmptyState`, `LhTextField`, Router, `/styleguide`), `c32b89c` (`style.css`: Seitenrand, Hintergrund, `color-scheme`), `529abfb` (Batch 2: `LhLevelBadge`, `LhXpBar`, `LhCurrencyChip`, `LhSubjectCard`, `LhAnswerOption`), `55fc944` (Vitest 4 mit Tests für alle Bausteine), `6aea9b2` (Batch 3: `LhTabBar`, `LhAppLayout`, Platzhalter-Routen, Fokus-Modus), dazu dieser Doku-Commit.
+- **Ergebnis:**
+  - Das Design-System-Artefakt (https://claude.ai/artifact/89Tg8wEdFdFDMUNBWG2YNb) ist die Quelle. Das Repo hält eine Kopie: `tokens.json`, `bundle.css`, `docs/design/`, Icons. Tokens und `bundle.css` stimmten schon überein (nur das Google-Fonts-`@import` bleibt bewusst weg).
+  - 13 dünne `Lh`-Bausteine ohne eigenes Styling, nur `lh-`-Klassen. `App.vue` legt `LhAppLayout` um alle Seiten (`meta.layout`, `meta.focus`).
+  - `style.css` ergänzt `lh-app--focus`, weil `bundle.css` im Fokus-Modus ab 768px die leere Navigationsspalte stehen lässt.
+  - Vitest 4 und jsdom 29, weil Vitest 5 und jsdom 30 Node 22 brauchen (hier Node 20).
+- **Geprüft:** 44 Tests, `npm run build` und `npm run check:tokens` grün, `/styleguide` nicht im Build. Vorschau bei 375, 768 und 1280px in Hell und Dunkel, Fokus-Modus per DOM simuliert. Die Tests fangen den Kompilierfehler aus Batch 2 ab, den `npm run build` nicht sah. Nicht geprüft: echter Fokus-Screen (gibt es noch nicht), echtes Handy, Screenreader.
+- **Offen:**
+  - `feat/design-system` nach `dev` mergen.
+  - Lücken in `bundle.css` im Artefakt schließen (Karte als Button, Ergebnis-Wort in der Antwort, kleines Icon, Chip als Link, `<code>` in Fragen, Fokus-Modus, README-Einleitung). Läuft als eigene Session.
+  - Atkinson-Font beschaffen.
+  - Repo nach WSL2 umziehen (vorher Branch pushen). Mit Node 22 dort auf Vitest 5 gehen.
+  - User-Store für Level, Rang und Prestige statt fester Werte in `App.vue`.
+  - Eintrag in `docs/ENTSCHEIDUNGEN.md` prüfen: „Artefakt ist Quelle, Repo ist Kopie“ als E-006.

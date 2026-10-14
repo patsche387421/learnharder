@@ -1,14 +1,18 @@
 <script setup>
-// Platzhalter-Shell, bis Router und erste Screens stehen.
+import { useRoute } from 'vue-router'
+import LhAppLayout from './components/ui/LhAppLayout.vue'
+
+const route = useRoute()
+
+// Platzhalter, bis ein User-Store Level, Rang und Prestige von der API liefert.
+const player = { level: 1, rank: 'bronze', prestige: 0 }
 </script>
 
 <template>
-  <div class="lh-root lh-app">
-    <main class="lh-screen">
-      <div class="lh-empty">
-        <p class="lh-empty__title">learnharder.app V2</p>
-        <p class="lh-empty__text">Im Aufbau.</p>
-      </div>
-    </main>
+  <div class="lh-root">
+    <RouterView v-if="route.meta.layout === false" />
+    <LhAppLayout v-else v-bind="player" :focus="!!route.meta.focus">
+      <RouterView />
+    </LhAppLayout>
   </div>
 </template>

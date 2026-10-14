@@ -11,6 +11,7 @@ Pläne, Entscheidungen und Produktkonzepte für V2. Allgemeine Regeln: `../CLAUD
 | `plans/SETUP_DOMAIN_UND_DATENBANK_MIGRATION.md` | Hetzner, Domains, Datenmigration, Versionen |
 | `plans/GAMIFICATION_OEKONOMIE_MODELL.md` | XP-, Level- und Brainpower-Formeln |
 | `ENTSCHEIDUNGEN.md` | Entscheidungslog: was entschieden ist, was offen ist |
+| `design/` | Brand Book, Sprache & Glossar, Komponenten-Anleitungen. Kopie aus dem Design-System-Artefakt, Änderungen dort machen (siehe `frontend/src/styles/CLAUDE.md`) |
 
 ## Regeln
 
