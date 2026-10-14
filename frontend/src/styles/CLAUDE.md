@@ -10,8 +10,9 @@ Regeln und Komponenten-Anleitungen: `docs/design/`. Icons: `src/assets/icons/`.
 | `fonts.css` | `@font-face` für Atkinson Hyperlegible Next (Text) und Space Mono (Zahlen/Code) |
 | `tokens.css` | Nur CSS-Variablen: Farben hell/dunkel, Schrift, Abstände, Radien, Layout, Text-Klassen, Übergangs-Aliase |
 | `bundle.css` | Komponenten mit `lh-`-Präfix (Button, Badge, Karte, Antwort, Feedback, Tabbar, Themen, Level-up …) |
+| `style.css` | Eigene Basis-Stile der App (Seitenrand, Seitenhintergrund, `color-scheme`). Nicht aus dem Artefakt, nur hier gepflegt |
 
-**Reihenfolge beim Einbinden ist Pflicht:** fonts → tokens → bundle (siehe `src/main.js`).
+**Reihenfolge beim Einbinden ist Pflicht:** fonts → tokens → bundle → style (siehe `src/main.js`).
 
 ## Regeln
 
