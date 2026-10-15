@@ -35,7 +35,8 @@ class ImportLegacyContent extends Command
         if ($rawPath) {
             $baseDataPath = Str::startsWith($rawPath, ['/', '\\']) ? $rawPath : base_path($rawPath);
         } else {
-            $baseDataPath = base_path('../src/assets/data');
+            // Mount von _archiv/legacy/assets/data im Sail-Container (compose.yaml)
+            $baseDataPath = '/var/www/legacy-data';
         }
 
         if (!file_exists($baseDataPath . '/manifest.json')) {
@@ -57,6 +58,7 @@ class ImportLegacyContent extends Command
         $totalTopics = 0;
         $totalTheory = 0;
         $totalQuestions = 0;
+        $totalSkipped = 0;
 
         \Illuminate\Support\Facades\DB::transaction(function () use (
             $manifest, 
@@ -64,7 +66,8 @@ class ImportLegacyContent extends Command
             &$totalSubjects, 
             &$totalTopics, 
             &$totalTheory, 
-            &$totalQuestions
+            &$totalQuestions,
+            &$totalSkipped
         ) {
             foreach ($manifest['faecher'] as $fIndex => $fachData) {
             $slug = strtolower($fachData['id']);
@@ -146,7 +149,15 @@ class ImportLegacyContent extends Command
                         if (isset($fragenJson['fragen']) && is_array($fragenJson['fragen'])) {
                             Question::where('topic_id', $topic->id)->delete();
                             foreach ($fragenJson['fragen'] as $qIndex => $qData) {
-                                $correctIdx = $loesungen[$qIndex] ?? 0;
+                                // Ohne gültige Lösung wird die Frage übersprungen, statt Option 0 als richtig zu raten
+                                $correctIdx = $loesungen[$qIndex] ?? null;
+                                $optionCount = is_array($qData['optionen'] ?? null) ? count($qData['optionen']) : 0;
+                                if (! is_int($correctIdx) || $correctIdx < 0 || $correctIdx >= $optionCount) {
+                                    $this->warn("Übersprungen: {$slug}/{$topicSlug} Frage ".($qIndex + 1).' hat keine gültige Lösung.');
+                                    $totalSkipped++;
+
+                                    continue;
+                                }
 
                                 $question = Question::create([
                                     'topic_id' => $topic->id,
@@ -187,6 +198,7 @@ class ImportLegacyContent extends Command
                 ['Themen (Topics)', $totalTopics],
                 ['Theorieblöcke (Theory Sections)', $totalTheory],
                 ['Fragen (Questions)', $totalQuestions],
+                ['Übersprungene Fragen (ohne Lösung)', $totalSkipped],
             ]
         );
 
