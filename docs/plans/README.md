@@ -15,7 +15,7 @@
 |---|---|---|
 | 1.4 | Design-System | ✅ Tokens, `tokens.json`, Komponenten und beide Schriften da |
 | 2.1 | Laravel-Setup | 🟡 läuft lokal in WSL2, Postgres (E-007), Login-API (`/api/v1/login`, `logout`, `me`), 13 Tests |
-| 2.2 | Rollen | 🟡 Rollen da, keine Policies |
+| 2.2 | Rollen | 🟡 Policies für Fach, Thema, Frage (autor ohne Löschen, tester nur lesen). Veröffentlichen erst in M2 |
 | 2.3 | CMS | 🟡 generiert, noch nicht redaktionstauglich |
 | 2.4–2.7 | Spiellogik, Klassen, API, Echtzeit | ⬜ nur Tabellen |
 | 3.x | Vue-Frontend | 🟡 Gerüst mit App-Rahmen, 13 `Lh`-Bausteinen (mit Tests) und Platzhalter-Routen. Noch keine echten Screens |
