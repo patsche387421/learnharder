@@ -37,19 +37,25 @@ class SubjectResource extends Resource
         return $schema
             ->components([
                 TextInput::make('slug')
+                    ->label('URL-Kürzel')
                     ->required(),
                 Textarea::make('name')
+                    ->label('Name')
                     ->required()
                     ->columnSpanFull(),
                 Textarea::make('description')
+                    ->label('Beschreibung')
                     ->columnSpanFull(),
                 TextInput::make('icon_name')
+                    ->label('Icon')
                     ->required(),
                 TextInput::make('order_index')
+                    ->label('Reihenfolge')
                     ->required()
                     ->numeric()
                     ->default(0),
                 Toggle::make('is_active')
+                    ->label('Aktiv')
                     ->required(),
             ]);
     }
@@ -62,19 +68,25 @@ class SubjectResource extends Resource
                     ->label('ID')
                     ->searchable(),
                 TextColumn::make('slug')
+                    ->label('URL-Kürzel')
                     ->searchable(),
                 TextColumn::make('icon_name')
+                    ->label('Icon')
                     ->searchable(),
                 TextColumn::make('order_index')
+                    ->label('Reihenfolge')
                     ->numeric()
                     ->sortable(),
                 IconColumn::make('is_active')
+                    ->label('Aktiv')
                     ->boolean(),
                 TextColumn::make('created_at')
+                    ->label('Erstellt')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
+                    ->label('Geändert')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

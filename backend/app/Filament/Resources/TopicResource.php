@@ -38,26 +38,33 @@ class TopicResource extends Resource
         return $schema
             ->components([
                 Select::make('subject_id')
+                    ->label('Fach')
                     // Postgres kann nicht nach JSON sortieren, Namen zeigt das CMS auf Deutsch (E-012)
                     ->relationship('subject', 'slug', fn (Builder $query) => $query->orderBy('order_index'))
                     ->getOptionLabelFromRecordUsing(fn (Subject $record): string => $record->getTranslation('name', 'de'))
                     ->required(),
                 TextInput::make('slug')
+                    ->label('URL-Kürzel')
                     ->required(),
                 Textarea::make('title')
+                    ->label('Titel')
                     ->required()
                     ->columnSpanFull(),
                 Textarea::make('description')
+                    ->label('Beschreibung')
                     ->columnSpanFull(),
                 TextInput::make('level_required')
+                    ->label('Ab Level')
                     ->required()
                     ->numeric()
                     ->default(1),
                 TextInput::make('order_index')
+                    ->label('Reihenfolge')
                     ->required()
                     ->numeric()
                     ->default(0),
                 TextInput::make('status')
+                    ->label('Status')
                     ->required(),
             ]);
     }
@@ -70,23 +77,30 @@ class TopicResource extends Resource
                     ->label('ID')
                     ->searchable(),
                 TextColumn::make('subject.name')
+                    ->label('Fach')
                     ->state(fn (Topic $record): string => $record->subject->getTranslation('name', 'de'))
                     ->searchable(),
                 TextColumn::make('slug')
+                    ->label('URL-Kürzel')
                     ->searchable(),
                 TextColumn::make('level_required')
+                    ->label('Ab Level')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('order_index')
+                    ->label('Reihenfolge')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('status')
+                    ->label('Status')
                     ->searchable(),
                 TextColumn::make('created_at')
+                    ->label('Erstellt')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
+                    ->label('Geändert')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

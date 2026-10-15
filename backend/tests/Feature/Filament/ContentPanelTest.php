@@ -48,6 +48,23 @@ class ContentPanelTest extends TestCase
         }
     }
 
+    public function test_inhaltsseiten_zeigen_deutsche_feldnamen(): void
+    {
+        $this->actingAs($this->userWithRole('admin'));
+
+        $this->get("/admin/subjects/{$this->subject->id}/edit")
+            ->assertSeeTextInOrder(['URL-Kürzel', 'Name', 'Beschreibung', 'Icon', 'Reihenfolge', 'Aktiv', 'Speichern']);
+        $this->get('/admin/topics')
+            ->assertSeeTextInOrder(['Fach', 'URL-Kürzel', 'Ab Level', 'Reihenfolge', 'Status']);
+        $this->get("/admin/topics/{$this->topic->id}/edit")
+            ->assertSeeTextInOrder(['Fach', 'URL-Kürzel', 'Titel', 'Beschreibung', 'Ab Level', 'Reihenfolge', 'Status']);
+        $this->get('/admin/questions')
+            ->assertSeeTextInOrder(['Thema', 'Typ', 'EP', 'Schwierigkeit', 'Status', 'Reihenfolge']);
+        $this->get("/admin/questions/{$this->question->id}/edit")
+            ->assertSeeTextInOrder(['Thema', 'Typ', 'Frage', 'Erklärung', 'EP', 'Schwierigkeit', 'Status', 'Reihenfolge'])
+            ->assertDontSeeText(['Slug', 'Order index', 'Question text', 'Xp reward', 'Difficulty', 'Save changes', 'Cancel']);
+    }
+
     public function test_fach_und_thema_erscheinen_deutsch_auch_bei_englischer_locale(): void
     {
         config(['app.fallback_locale' => 'en']);
