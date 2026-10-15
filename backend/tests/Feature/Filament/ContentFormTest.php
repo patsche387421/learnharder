@@ -4,6 +4,7 @@ namespace Tests\Feature\Filament;
 
 use App\Filament\Resources\QuestionResource\Pages\CreateQuestion;
 use App\Filament\Resources\QuestionResource\Pages\EditQuestion;
+use App\Filament\Resources\TopicResource\Pages\CreateTopic;
 use App\Models\Subject;
 use App\Models\Topic;
 use App\Models\User;
@@ -13,7 +14,7 @@ use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 /**
- * Bedienung der Inhaltsformulare: Fach vor Thema.
+ * Bedienung der Inhaltsformulare: Fach vor Thema, Fehlermeldungen.
  */
 class ContentFormTest extends TestCase
 {
@@ -72,5 +73,13 @@ class ContentFormTest extends TestCase
 
         Livewire::test(EditQuestion::class, ['record' => $question->getRouteKey()])
             ->assertSchemaStateSet(['subject_id' => $this->pos->id, 'topic_id' => $this->loops->id]);
+    }
+
+    public function test_fehlermeldung_schreibt_das_feld_gross(): void
+    {
+        Livewire::test(CreateTopic::class)
+            ->fillForm(['subject_id' => $this->pos->id, 'slug' => 'neu', 'title.de' => ''])
+            ->call('create')
+            ->assertHasFormErrors(['title.de' => 'Das Feld Titel ist ein Pflichtfeld.']);
     }
 }
