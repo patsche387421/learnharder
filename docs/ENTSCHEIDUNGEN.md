@@ -48,6 +48,11 @@ Jede Entscheidung: Nummer, Datum, was, warum, Folgen. Offene Fragen stehen unten
 - **Warum:** Die Prod-Daten lagen nur in Supabase, ein Free-Projekt ohne Traffic kann pausiert werden.
 - **Folgen:** Dumps kommen nie ins Repo, in keine Cloud und in keinen Chat (Daten von Minderjährigen). Der Import nach V2 bekommt einen eigenen Branch. Verbindung nur über den Session-Pooler (Port 5432), den manche Netze sperren. Schließt O-004.
 
+### E-010 — Level-Kurve, Prestige und XP-Booster (2026-10-15)
+- **Entscheidung:** Level n beginnt bei `round((n−1)^1.5 × 8)` XP im Zyklus (Level 2 bei 8, Level 100 bei 7.880). Ein Prestige-Zyklus hat immer 8.000 XP, der Prestige-Rang ist `floor(Gesamt-XP / 8000)`. XP-Booster für Brainpower: 1,5× 30 Min (20 BP), 2× 30 Min (40 BP), 2× 60 Min (70 BP).
+- **Warum:** Der erste Level-Aufstieg kommt nach 4 richtigen Antworten, Level 100 ist ein echtes Band vor dem Prestige. Gleiche XP pro Zyklus bestrafen fleißige Lernende nicht, und der Prestige-Rang ist ohne eigenen Zähler aus den Gesamt-XP berechenbar. V2 startet ohne alte Fortschritte, deshalb zählte V1-Kompatibilität nicht.
+- **Folgen:** Tabelle in `GAMIFICATION_OEKONOMIE_MODELL.md` §2 korrigiert, Widerspruch 4 erledigt. Booster: nur serverseitig, höchstens einer gleichzeitig, kein Kauf während einer läuft, Zeit läuft in Echtzeit, Multiplikator nur auf richtige Antworten. Mit 158 Fragen (316 XP pro Durchlauf) braucht ein Zyklus viele Wiederholungen. Mehr Inhalte oder weniger XP für wiederholte Antworten klären vor M3.
+
 ## Offen
 
 | Nr. | Frage | Empfehlung | Warum offen |

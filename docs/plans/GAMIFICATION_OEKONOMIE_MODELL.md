@@ -21,12 +21,13 @@ Die Ökonomie von LearnHarder V2 basiert auf drei didaktisch-psychologischen Gru
 ### 2.1 Mathematische Formel
 Das Level eines Nutzers berechnet sich aus seinen Gesamt-Erfahrungspunkten (XP) im aktuellen Prestige-Zyklus:
 
-$$\text{Schwellenwert}(n) = \text{round}(n^{1.5} \times 8)$$
+$$\text{Schwellenwert}(n) = \text{round}((n-1)^{1.5} \times 8)$$
 
-* $n$ = Ziel-Level (1 bis 100)
+* $n$ = Level (1 bis 100). Der Schwellenwert ist die XP-Zahl im Zyklus, ab der Level $n$ beginnt (E-010).
 * $\text{Exponent} = 1.5$ (progressive Progression: Einstieg schnell, Endgame anspruchsvoll)
 * $\text{Koeffizient} = 8$ (Skalierungsfaktor)
-* Maximal-XP für Level 100: **8.000 XP** pro Prestige-Zyklus.
+* Ein Prestige-Zyklus umfasst **8.000 XP** ($\text{round}(100^{1.5} \times 8)$), für jeden Prestige-Rang gleich. Level 100 beginnt bei 7.880 XP.
+* Prestige-Rang $= \lfloor \text{Gesamt-XP} / 8000 \rfloor$, XP im Zyklus $= \text{Gesamt-XP} \bmod 8000$.
 
 ### 2.2 Referenz-Schwellenwerte
 
@@ -34,12 +35,12 @@ $$\text{Schwellenwert}(n) = \text{round}(n^{1.5} \times 8)$$
 | :---: | :---: | :---: | :--- |
 | **1** | **0 XP** | 8 XP | Tutorial / Registrierung abgeschlossen |
 | **2** | **8 XP** | 15 XP | Erste Theorielektion absolviert |
-| **5** | **89 XP** | 35 XP | Erste Themenreihe gemeistert (ca. Tag 2) |
-| **10** | **253 XP** | 68 XP | Solides Grundwissen; erstes Fach-Abzeichen |
-| **25** | **1.000 XP** | 170 XP | Fortgeschrittener Schüler (ca. Woche 3–4) |
-| **50** | **2.828 XP** | 295 XP | Halber Weg; Klassen-Top-Performer |
-| **75** | **5.196 XP** | 430 XP | Experten-Status; Mentoren-Reife |
-| **100** | **8.000 XP** | — | **Prestige-Meister** (Prestige-Rang steigt um +1, Reset auf Lvl 1 mit permanentem Meister-Badge) |
+| **5** | **64 XP** | 25 XP | Erste Themenreihe gemeistert (ca. Tag 2) |
+| **10** | **216 XP** | 37 XP | Solides Grundwissen; erstes Fach-Abzeichen |
+| **25** | **941 XP** | 59 XP | Fortgeschrittener Schüler (ca. Woche 3–4) |
+| **50** | **2.744 XP** | 84 XP | Halber Weg; Klassen-Top-Performer |
+| **75** | **5.093 XP** | 103 XP | Experten-Status; Mentoren-Reife |
+| **100** | **7.880 XP** | 120 XP bis Prestige | **Prestige-Meister.** Bei 8.000 XP steigt der Prestige-Rang um +1, Reset auf Lvl 1 mit permanentem Meister-Badge |
 
 ---
 
@@ -78,8 +79,12 @@ $$\text{Tägliche Regeneration} = \text{Basis (50 BP)} + \min(\text{Streak-Tage}
 | :--- | :---: | :--- | :--- |
 | **Theorie lesen & Basisaufgaben** | **0 BP** | $2\text{ XP}$ pro richtiger Antwort | Hürdenfreies Lernen |
 | **Prüfungs-Challenge (Schwer)** | **25 BP** | $5\text{ XP}$/Frage + bis zu $+50\text{ XP}$ Bonus + Trophäen | Klausurvorbereitung |
-| **2x XP Booster (30 Min)** | **40 BP** | $2\times$ XP auf alle Aufgaben für 30 Minuten | Gezielte Lern-Sessions |
+| **XP-Booster 1,5× (30 Min)** | **20 BP** | $1{,}5\times$ XP auf richtige Antworten für 30 Minuten | Kurze Session zwischendurch |
+| **XP-Booster 2× (30 Min)** | **40 BP** | $2\times$ XP auf richtige Antworten für 30 Minuten | Gezielte Lern-Sessions |
+| **XP-Booster 2× (60 Min)** | **70 BP** | $2\times$ XP auf richtige Antworten für 60 Minuten | Prüfungsvorbereitung |
 | **1v1 Duell (Phase 2)** | **15 BP** | Sieger: $+30\text{ XP}$ + Ranglistenpunkte; Verlierer: $+10\text{ XP}$ | Synchroner Wettbewerb |
+
+Booster-Regeln (E-010): Der Server rechnet, der Client zeigt nur die Restzeit. Höchstens ein Booster gleichzeitig, solange einer läuft, ist kein Kauf möglich. Die Zeit läuft in Echtzeit weiter, auch bei geschlossener App.
 
 ---
 
