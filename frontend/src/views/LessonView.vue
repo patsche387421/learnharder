@@ -164,7 +164,7 @@ const levelBar = computed(() => {
 
       <template v-else-if="phase === 'question' || phase === 'feedback'">
         <p v-if="current.repeat" class="lesson__muted">Noch einmal</p>
-        <p class="question lesson__question">{{ current.question.text }}</p>
+        <p class="question lesson__question lesson__pre">{{ current.question.text }}</p>
         <p v-if="isMultiple" class="lesson__muted">Mehrere richtig</p>
         <div class="lesson__options">
           <LhAnswerOption
@@ -175,7 +175,7 @@ const levelBar = computed(() => {
             :result="optionResult(option.id)"
             :disabled="phase === 'feedback' || busy"
             @click="toggle(option.id)"
-          >{{ option.text }}</LhAnswerOption>
+          ><span class="lesson__pre">{{ option.text }}</span></LhAnswerOption>
         </div>
       </template>
 
@@ -207,7 +207,7 @@ const levelBar = computed(() => {
         <template v-if="feedback.correct">Richtig!<span v-if="feedbackXp" class="lesson__xp">{{ feedbackXp }}</span></template>
         <template v-else>Nicht ganz. Richtig ist {{ correctLetters }}.</template>
       </p>
-      <p v-if="feedback.explanation" class="lh-feedback__text">{{ feedback.explanation }}</p>
+      <p v-if="feedback.explanation" class="lh-feedback__text lesson__pre">{{ feedback.explanation }}</p>
       <p v-if="!feedback.correct && !current.repeat" class="lh-feedback__text lesson__muted">Kommt am Ende noch einmal.</p>
       <p v-if="actionError" class="lesson__error" role="alert">{{ actionError }}</p>
       <LhButton block :disabled="busy" @click="next">{{ isLast ? 'Ergebnis ansehen' : 'Weiter' }}</LhButton>
@@ -230,6 +230,8 @@ const levelBar = computed(() => {
 .lesson { min-height: calc(100dvh - 2 * var(--space-4)); }
 .lesson__question { margin: 0; font: 400 18px/27px var(--font-text); color: var(--ink); }
 .lesson__options { display: grid; gap: var(--space-3); }
+/* Fragen mit Code kommen mehrzeilig aus dem CMS, ohne Markdown: Zeilenumbrüche behalten */
+.lesson__pre { white-space: pre-line; }
 .lesson__muted { margin: 0; font: 400 14px/20px var(--font-text); color: var(--ink-muted); }
 .lesson__xp { margin-left: auto; font: 700 16px/24px var(--font-mono); }
 .lesson__error { margin: 0 0 var(--space-3); font: 400 14px/20px var(--font-text); color: var(--wrong); }
