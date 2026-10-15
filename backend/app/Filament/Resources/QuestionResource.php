@@ -2,6 +2,9 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\ContentStatus;
+use App\Enums\Difficulty;
+use App\Enums\QuestionType;
 use App\Filament\Resources\QuestionResource\Pages\CreateQuestion;
 use App\Filament\Resources\QuestionResource\Pages\EditQuestion;
 use App\Filament\Resources\QuestionResource\Pages\ListQuestions;
@@ -17,6 +20,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -47,8 +51,10 @@ class QuestionResource extends Resource
                         ->orderBy('order_index'))
                     ->getOptionLabelFromRecordUsing(fn (Topic $record): string => $record->subject->getTranslation('name', 'de').' – '.$record->getTranslation('title', 'de'))
                     ->required(),
-                TextInput::make('type')
+                Select::make('type')
                     ->label('Typ')
+                    ->options(QuestionType::class)
+                    ->default(QuestionType::SingleChoice)
                     ->required(),
                 // Nur Deutsch, direkt in den Eintrag der JSON-Spalte (E-012)
                 Textarea::make('question_text.de')
@@ -63,13 +69,15 @@ class QuestionResource extends Resource
                     ->required()
                     ->numeric()
                     ->default(2),
-                TextInput::make('difficulty')
+                Select::make('difficulty')
                     ->label('Schwierigkeit')
-                    ->required()
-                    ->numeric()
-                    ->default(1),
-                TextInput::make('status')
+                    ->options(Difficulty::class)
+                    ->default(Difficulty::VeryEasy)
+                    ->required(),
+                Select::make('status')
                     ->label('Status')
+                    ->options(ContentStatus::class)
+                    ->default(ContentStatus::Draft)
                     ->required(),
                 TextInput::make('order_index')
                     ->label('Reihenfolge')
@@ -91,19 +99,17 @@ class QuestionResource extends Resource
                     ->state(fn (Question $record): string => $record->topic->getTranslation('title', 'de'))
                     ->searchable(),
                 TextColumn::make('type')
-                    ->label('Typ')
-                    ->searchable(),
+                    ->label('Typ'),
                 TextColumn::make('xp_reward')
                     ->label('EP')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('difficulty')
                     ->label('Schwierigkeit')
-                    ->numeric()
                     ->sortable(),
                 TextColumn::make('status')
                     ->label('Status')
-                    ->searchable(),
+                    ->badge(),
                 TextColumn::make('order_index')
                     ->label('Reihenfolge')
                     ->numeric()
@@ -120,7 +126,15 @@ class QuestionResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('status')
+                    ->label('Status')
+                    ->options(ContentStatus::class),
+                SelectFilter::make('type')
+                    ->label('Typ')
+                    ->options(QuestionType::class),
+                SelectFilter::make('difficulty')
+                    ->label('Schwierigkeit')
+                    ->options(Difficulty::class),
             ])
             ->recordActions([
                 EditAction::make(),

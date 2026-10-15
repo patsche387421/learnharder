@@ -2,6 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Enums\ContentStatus;
+use App\Enums\Difficulty;
+use App\Enums\QuestionType;
 use App\Models\Question;
 use App\Models\QuestionOption;
 use App\Models\Subject;
@@ -112,7 +115,7 @@ class ImportLegacyContent extends Command
                                 'description' => ['de' => $themaData['beschreibung'] ?? ''],
                                 'order_index' => $tIndex + 1,
                                 'level_required' => 1,
-                                'status' => 'published',
+                                'status' => ContentStatus::Published,
                             ]
                         );
 
@@ -164,11 +167,11 @@ class ImportLegacyContent extends Command
 
                                     $question = Question::create([
                                         'topic_id' => $topic->id,
-                                        'type' => 'single_choice',
+                                        'type' => QuestionType::SingleChoice,
                                         'question_text' => ['de' => $qData['frage']],
                                         'xp_reward' => 2,
-                                        'difficulty' => 1,
-                                        'status' => 'published',
+                                        'difficulty' => Difficulty::VeryEasy,
+                                        'status' => ContentStatus::Published,
                                         'order_index' => $qIndex + 1,
                                     ]);
 

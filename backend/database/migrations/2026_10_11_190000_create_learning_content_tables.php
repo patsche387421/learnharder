@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -33,11 +34,12 @@ return new class extends Migration
             $table->json('description')->nullable();
             $table->integer('level_required')->default(1);
             $table->integer('order_index')->default(0);
-            $table->string('status')->default('published'); // draft, review, published
+            $table->string('status')->default('draft'); // App\Enums\ContentStatus
             $table->timestamps();
 
             $table->unique(['subject_id', 'slug']);
         });
+        DB::statement("ALTER TABLE topics ADD CONSTRAINT topics_status_check CHECK (status IN ('draft', 'review', 'published'))");
 
         // 3. Theorie-Abschnitte (Theory Sections)
         Schema::create('theory_sections', function (Blueprint $table) {
@@ -53,15 +55,18 @@ return new class extends Migration
         Schema::create('questions', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('topic_id')->constrained('topics')->cascadeOnDelete();
-            $table->string('type')->default('single_choice'); // single_choice, multiple_choice, fill_blank
+            $table->string('type')->default('single_choice'); // App\Enums\QuestionType
             $table->json('question_text');
             $table->json('explanation')->nullable();
             $table->integer('xp_reward')->default(2);
-            $table->integer('difficulty')->default(1); // 1-5
-            $table->string('status')->default('published'); // draft, review, published
+            $table->integer('difficulty')->default(1); // App\Enums\Difficulty
+            $table->string('status')->default('draft'); // App\Enums\ContentStatus
             $table->integer('order_index')->default(0);
             $table->timestamps();
         });
+        DB::statement("ALTER TABLE questions ADD CONSTRAINT questions_type_check CHECK (type IN ('single_choice', 'multiple_choice'))");
+        DB::statement('ALTER TABLE questions ADD CONSTRAINT questions_difficulty_check CHECK (difficulty BETWEEN 1 AND 5)');
+        DB::statement("ALTER TABLE questions ADD CONSTRAINT questions_status_check CHECK (status IN ('draft', 'review', 'published'))");
 
         // 5. Antwortoptionen (Question Options)
         Schema::create('question_options', function (Blueprint $table) {

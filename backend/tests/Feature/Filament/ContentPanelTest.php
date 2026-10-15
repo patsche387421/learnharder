@@ -2,6 +2,9 @@
 
 namespace Tests\Feature\Filament;
 
+use App\Enums\ContentStatus;
+use App\Enums\Difficulty;
+use App\Enums\QuestionType;
 use App\Filament\Resources\QuestionResource\Pages\CreateQuestion;
 use App\Filament\Resources\QuestionResource\Pages\ListQuestions;
 use App\Filament\Resources\SubjectResource\Pages\EditSubject;
@@ -93,6 +96,40 @@ class ContentPanelTest extends TestCase
 
         $topic = Topic::where('slug', 'prozent')->firstOrFail();
         $this->assertSame(['de' => 'Prozentrechnung'], $topic->getTranslations('title'));
+    }
+
+    public function test_wertelisten_erscheinen_deutsch_und_filtern(): void
+    {
+        $this->actingAs($this->userWithRole('admin'));
+
+        $this->get('/admin/questions')
+            ->assertSeeText(['Entwurf', 'Eine richtige Antwort', '1 – sehr leicht'])
+            ->assertDontSeeText(['single_choice', 'draft']);
+
+        Livewire::test(ListQuestions::class)
+            ->filterTable('status', ContentStatus::Published->value)
+            ->assertCanNotSeeTableRecords([$this->question])
+            ->filterTable('status', ContentStatus::Draft->value)
+            ->assertCanSeeTableRecords([$this->question]);
+    }
+
+    public function test_neue_frage_speichert_die_gewaehlten_werte(): void
+    {
+        $this->actingAs($this->userWithRole('admin'));
+
+        Livewire::test(CreateQuestion::class)
+            ->assertSchemaStateSet(['type' => QuestionType::SingleChoice, 'difficulty' => Difficulty::VeryEasy, 'status' => ContentStatus::Draft])
+            ->fillForm([
+                'topic_id' => $this->topic->id, 'question_text.de' => 'Welche sind Primzahlen?',
+                'type' => QuestionType::MultipleChoice->value, 'difficulty' => Difficulty::Medium->value, 'status' => ContentStatus::Review->value,
+            ])
+            ->call('create')
+            ->assertHasNoFormErrors();
+
+        $question = Question::where('question_text->de', 'Welche sind Primzahlen?')->firstOrFail();
+        $this->assertSame(QuestionType::MultipleChoice, $question->type);
+        $this->assertSame(Difficulty::Medium, $question->difficulty);
+        $this->assertSame(ContentStatus::Review, $question->status);
     }
 
     public function test_fach_und_thema_erscheinen_deutsch_auch_bei_englischer_locale(): void

@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Enums\ContentStatus;
+use App\Enums\Difficulty;
+use App\Enums\QuestionType;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -28,8 +31,10 @@ class Question extends Model
 
     protected $casts = [
         'xp_reward' => 'integer',
-        'difficulty' => 'integer',
         'order_index' => 'integer',
+        'type' => QuestionType::class,
+        'difficulty' => Difficulty::class,
+        'status' => ContentStatus::class,
     ];
 
     public function topic(): BelongsTo
