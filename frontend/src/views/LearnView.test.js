@@ -11,8 +11,8 @@ describe('LearnView', () => {
 
   it('zeigt jedes Fach mit erledigten Themen und Link', async () => {
     mockFetch({ status: 200, body: { data: [
-      { code: 'pos', name: 'Programmieren', topics_count: 11, topics_done: 3 },
-      { code: 'dbi', name: 'Datenbanken', topics_count: 21, topics_done: 0 },
+      { code: 'pos', name: 'Programmieren', topics_count: 11, topics_done: 3, level: 4 },
+      { code: 'dbi', name: 'Datenbanken', topics_count: 21, topics_done: 0, level: 1 },
     ] } })
     const { wrapper } = await show()
     await flushPromises()
@@ -22,6 +22,7 @@ describe('LearnView', () => {
     expect(cards[0].find('.lh-subject__title').text()).toBe('POS')
     expect(cards[0].attributes('href')).toBe('/learn/pos')
     expect(cards[0].text()).toContain('3 / 11 Themen')
+    expect(cards[0].text()).toContain('Fach-Level 4')
     expect(cards[1].text()).toContain('Noch nicht begonnen')
   })
 

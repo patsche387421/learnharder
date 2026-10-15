@@ -1,5 +1,5 @@
 <script setup>
-// „Lernen“: alle Fächer mit Fortschritt (erledigte Themen). Sichtbar ist, was der Server liefert (E-017).
+// „Lernen“: alle Fächer mit Fortschritt (Fach-Level nach E-018, erledigte Themen). Sichtbar ist, was der Server liefert (E-017).
 import { onMounted } from 'vue'
 import LoadError from '../components/LoadError.vue'
 import LhEmptyState from '../components/ui/LhEmptyState.vue'
@@ -27,6 +27,7 @@ onMounted(load)
         :key="subject.code"
         :code="subject.code.toUpperCase()"
         :name="subject.name"
+        :level="subject.level"
         :done="subject.topics_done"
         :total="subject.topics_count"
         :to="`/learn/${subject.code}`"

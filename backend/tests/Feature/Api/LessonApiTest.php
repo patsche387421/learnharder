@@ -346,6 +346,31 @@ class LessonApiTest extends TestCase
             ->assertJsonPath('data.topics.1.done', false);
     }
 
+    public function test_fach_level_waechst_mit_den_ep_im_fach(): void
+    {
+        $dbi = Subject::create(['slug' => 'dbi', 'name' => ['de' => 'DBI'], 'order_index' => 2]);
+        $sql = $dbi->topics()->create(['slug' => 'sql', 'title' => ['de' => 'SQL'], 'status' => ContentStatus::Published]);
+        $this->question($sql, ['ja' => true]);
+
+        $this->playPerfect();
+        $this->travelTo(CarbonImmutable::parse('2026-10-17 10:00', 'Europe/Vienna'));
+        $this->playPerfect();
+
+        // 8 EP in POS = Fach-Level 2, DBI ohne EP bleibt bei 1
+        $this->getJson('/api/v1/subjects')
+            ->assertJsonPath('data.0.code', 'pos')
+            ->assertJsonPath('data.0.xp', 8)
+            ->assertJsonPath('data.0.level', 2)
+            ->assertJsonPath('data.1.code', 'dbi')
+            ->assertJsonPath('data.1.xp', 0)
+            ->assertJsonPath('data.1.level', 1);
+        $this->getJson('/api/v1/subjects/pos')->assertJsonPath('data.level', 2);
+
+        // Andere Personen zählen nicht mit
+        $this->flushSession();
+        $this->actingAs(User::factory()->create())->getJson('/api/v1/subjects')->assertJsonPath('data.0.xp', 0);
+    }
+
     public function test_loeschen_einer_person_loescht_ihre_antworten(): void
     {
         $this->playPerfect();
