@@ -76,6 +76,21 @@ Jede Entscheidung: Nummer, Datum, was, warum, Folgen. Offene Fragen stehen unten
 - **Warum:** Die Inhalte lernen Minderjährige. Eine falsche Antwort soll nicht ungeprüft live gehen, auch nicht durch eine kleine Korrektur.
 - **Folgen:** Der Inhalt verschwindet bis zur erneuten Freigabe aus der App. Admins geben mit der Mehrfachaktion „Veröffentlichen“ gesammelt frei. Die App (M3) zeigt nur `published`.
 
+### E-015 — EP pro Frage höchstens einmal pro Tag (2026-10-15)
+- **Entscheidung:** Eine richtige Antwort bringt die EP der Frage nur, wenn die Person für diese Frage am selben Kalendertag noch keine EP bekommen hat. Danach gibt es für diese Frage bis Mitternacht 0 EP, üben geht trotzdem weiter. Der Tag gilt in `Europe/Vienna`.
+- **Warum:** Mit 158 Fragen (316 EP pro Durchlauf) und 8.000 EP pro Zyklus würde sich Durchklicken auswendig gelernter Fragen lohnen. Einmal pro Tag belohnt tägliches Wiederholen und macht Farming im selben Thema sinnlos. Wien statt UTC, damit „heute“ für Schüler:innen um Mitternacht endet und nicht um 1 oder 2 Uhr.
+- **Folgen:** Der Server merkt sich pro Antwort die vergebenen EP und den Tag. Verbindlich vergibt erst der Abschluss der Lerneinheit die EP. Schließt den offenen Punkt aus E-010.
+
+### E-016 — Rang-Grenzen (2026-10-15)
+- **Entscheidung:** Bronze ab Level 1, Silber ab 25, Gold ab 50, Platin ab 75. Nach einem Prestige beginnt der Rang wieder bei Bronze.
+- **Warum:** Gleichmäßige Viertel sind leicht zu merken. Silber kommt nach 941 EP, laut Ökonomie-Modell in Woche 3–4.
+- **Folgen:** Der Server liefert den Rang, die App färbt nur. Tabelle in `GAMIFICATION_OEKONOMIE_MODELL.md` §2.3.
+
+### E-017 — M3 ohne Klassenfilter (2026-10-15)
+- **Entscheidung:** In M3 sieht jede eingeloggte Person alle veröffentlichten Fächer und Themen. Der Filter nach Einschreibung (Plan Schule §8 Schritte 2–3) kommt als eigener Meilenstein vor M5.
+- **Warum:** M3 soll nur den Lernablauf liefern. Klassen und Einschreibungen in Filament würden M3 etwa verdoppeln.
+- **Folgen:** Die Fächer-API filtert in M3 nur nach Status und `is_active`. Mit dem Klassenfilter kommt die Einschreibung dazu, die Routen bleiben gleich.
+
 ## Offen
 
 | Nr. | Frage | Empfehlung | Warum offen |

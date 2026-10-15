@@ -42,6 +42,17 @@ $$\text{Schwellenwert}(n) = \text{round}((n-1)^{1.5} \times 8)$$
 | **75** | **5.093 XP** | 103 XP | Experten-Status; Mentoren-Reife |
 | **100** | **7.880 XP** | 120 XP bis Prestige | **Prestige-Meister.** Bei 8.000 XP steigt der Prestige-Rang um +1, Reset auf Lvl 1 mit permanentem Meister-Badge |
 
+### 2.3 Ränge (E-016)
+
+| Rang | Level | Ab XP im Zyklus |
+| :--- | :---: | :---: |
+| Bronze | 1–24 | 0 |
+| Silber | 25–49 | 941 |
+| Gold | 50–74 | 2.744 |
+| Platin | 75–100 | 5.093 |
+
+Nach einem Prestige beginnt der Rang wieder bei Bronze.
+
 ---
 
 ## 3. Brainpower (BP) System-Balancierung
@@ -77,7 +88,7 @@ $$\text{Tägliche Regeneration} = \text{Basis (50 BP)} + \min(\text{Streak-Tage}
 
 | Aktion / Aktivität | BP-Kosten | Belohnung / Ertrag | Didaktischer Nutzen |
 | :--- | :---: | :--- | :--- |
-| **Theorie lesen & Basisaufgaben** | **0 BP** | $2\text{ XP}$ pro richtiger Antwort | Hürdenfreies Lernen |
+| **Theorie lesen & Basisaufgaben** | **0 BP** | $2\text{ XP}$ pro richtiger Antwort, je Frage einmal pro Tag (E-015) | Hürdenfreies Lernen |
 | **Prüfungs-Challenge (Schwer)** | **25 BP** | $5\text{ XP}$/Frage + bis zu $+50\text{ XP}$ Bonus + Trophäen | Klausurvorbereitung |
 | **XP-Booster 1,5× (30 Min)** | **20 BP** | $1{,}5\times$ XP auf richtige Antworten für 30 Minuten | Kurze Session zwischendurch |
 | **XP-Booster 2× (30 Min)** | **40 BP** | $2\times$ XP auf richtige Antworten für 30 Minuten | Gezielte Lern-Sessions |
