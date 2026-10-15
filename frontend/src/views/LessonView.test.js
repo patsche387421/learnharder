@@ -146,12 +146,25 @@ describe('LessonView', () => {
     expect(wrapper.find('.lh-feedback--correct').exists()).toBe(true)
   })
 
-  it('ein gesperrtes Thema zeigt den Fehler statt einer Frage', async () => {
-    mockFetch(ok(topic), { status: 403, body: { message: 'This action is unauthorized.' } })
+  it('ein gesperrtes Thema startet keine Lerneinheit und nennt das Level', async () => {
+    const fetch = mockFetch(ok({ ...topic, locked: true, level_required: 5, theory: [{ title: 'Grundlagen', html: '<p>…</p>' }] }))
+    const { wrapper } = await mountRoute(mount, LessonView, '/learn/:subject/:topic/lesson', '/learn/pos/schleifen/lesson')
+    await flushPromises()
+
+    expect(fetch).toHaveBeenCalledTimes(1)
+    expect(wrapper.find('.lh-empty').text()).toContain('Noch gesperrt.')
+    expect(wrapper.find('.lh-empty').text()).toContain('Fragen gibt es ab Level 5. Die Theorie kannst du schon lesen.')
+    expect(wrapper.find('.lh-empty .lh-btn').attributes('href')).toBe('/learn/pos/schleifen/theory')
+  })
+
+  it('sagt der Server 403, ist das Thema gesperrt statt ein Fehler', async () => {
+    mockFetch(ok({ ...topic, level_required: 5 }), { status: 403, body: { message: 'This action is unauthorized.' } })
     const { wrapper } = await mountRoute(mount, LessonView, '/learn/:subject/:topic/lesson', '/learn/pos/schleifen/lesson')
     await flushPromises()
 
     expect(wrapper.find('.lh-answer').exists()).toBe(false)
-    expect(wrapper.find('.lh-empty').text()).toContain('Das hat nicht geklappt.')
+    expect(wrapper.find('.lh-empty').text()).toContain('Noch gesperrt.')
+    expect(wrapper.find('.lh-empty').text()).not.toContain('Theorie')
+    expect(wrapper.find('.lh-empty .lh-btn').attributes('href')).toBe('/learn/pos/schleifen')
   })
 })
