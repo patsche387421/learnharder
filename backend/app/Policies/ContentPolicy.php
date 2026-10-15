@@ -49,6 +49,13 @@ abstract class ContentPolicy
         return $user->hasAnyRole(self::EDITORS);
     }
 
+    // Veröffentlichen nur für Admin: erst dann sehen Schüler:innen den Inhalt. Ohne Datensatz für neue Einträge.
+
+    public function publish(User $user, ?Model $record = null): bool
+    {
+        return false;
+    }
+
     // Löschen nur für Admin: am Inhalt hängt der Lernverlauf der Schüler:innen.
 
     public function delete(User $user, Model $record): bool

@@ -71,6 +71,11 @@ Jede Entscheidung: Nummer, Datum, was, warum, Folgen. Offene Fragen stehen unten
 - **Folgen:** `classes` wird zu `school_classes`, `schools.domain` zu `school_email_domains`. Die Kaskade über `classes.teacher_id` entfällt. Löschregeln richten sich nach der Richtung (Personendaten `CASCADE`, Inhalte und Struktur `RESTRICT`). Offene Punkte stehen im Plan §7.
 - **Präzisierung:** Die bestehenden Migrationen wurden geändert, statt neue anzulegen, weil noch keine auf einem Server lief.
 
+### E-014 — Veröffentlichen nur durch Admins, Autor-Änderungen gehen zurück in Prüfung (2026-10-15)
+- **Entscheidung:** Themen und Fragen veröffentlichen nur Admins. Speichert jemand ohne dieses Recht einen veröffentlichten Inhalt, geht er zurück auf „In Prüfung“. Neue Inhalte starten als Entwurf.
+- **Warum:** Die Inhalte lernen Minderjährige. Eine falsche Antwort soll nicht ungeprüft live gehen, auch nicht durch eine kleine Korrektur.
+- **Folgen:** Der Inhalt verschwindet bis zur erneuten Freigabe aus der App. Admins geben mit der Mehrfachaktion „Veröffentlichen“ gesammelt frei. Die App (M3) zeigt nur `published`.
+
 ## Offen
 
 | Nr. | Frage | Empfehlung | Warum offen |
