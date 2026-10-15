@@ -35,7 +35,7 @@ Jede `CLAUDE.md` in einem Unterordner beschreibt eine **Rolle**. Daraus werden s
 ## Lokal entwickeln (WSL2)
 
 Das Repo liegt im Ubuntu-WSL2-Dateisystem (E-005, Umzug abgeschlossen Stand 2026-10-15). Einrichtung: `README.md`.
-`C:\v\learnharder.app` ist nur noch Archiv bis zur Nutzer-Migration: dort nichts lesen, nichts ändern, keinen Sail-Stack starten.
+`C:\v\learnharder.app` ist nur noch Archiv, bis V1 abgeschaltet ist (E-011): dort nichts lesen, nichts ändern, keinen Sail-Stack starten.
 
 | Checkout | Branch | Zweck |
 |---|---|---|

@@ -28,4 +28,4 @@ Schema, Migrationen, Seeder und Factories. Allgemeine Regeln: `../../CLAUDE.md`,
 ## Datenmigration aus V1
 
 - Inhalte: Artisan-Command `learnharder:import-legacy-content` (Quelle `_archiv/legacy/assets/data`).
-- Nutzer und Fortschritt: kommen aus Supabase (Schema in `_archiv/sql/migrations/`). Ein Import-Command fehlt noch. Supabase speichert bcrypt-Hashes, die Laravel prüfen kann.
+- Nutzer und Fortschritt: werden nicht übernommen, alle registrieren sich in V2 neu (E-011).

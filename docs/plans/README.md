@@ -5,8 +5,8 @@
 | Plan | Status |
 |---|---|
 | `LEARNHARDER_V2_PROJEKTPLAN_PSP_RISIKEN.md` | **gültig**: Zielbild, PSP, Releases, Risiken |
-| `SETUP_DOMAIN_UND_DATENBANK_MIGRATION.md` | **gültig**: Hetzner, Domains, Datenmigration |
-| `GAMIFICATION_OEKONOMIE_MODELL.md` | **gültig, mit Fehlern** (siehe unten) |
+| `SETUP_DOMAIN_UND_DATENBANK_MIGRATION.md` | **gültig**: Hetzner, Domains. §2 Datenmigration entfällt (E-011) |
+| `GAMIFICATION_OEKONOMIE_MODELL.md` | **gültig**: Level-Tabelle seit E-010 korrigiert |
 | World4You-/Plain-PHP-Pläne | überholt und gelöscht (Tag `v1.1.0-w4y-plans-and-review`) |
 
 ## Ist-Stand gegen den Plan
@@ -21,7 +21,7 @@
 | 3.x | Vue-Frontend | 🟡 Gerüst mit App-Rahmen, 13 `Lh`-Bausteinen (mit Tests) und Platzhalter-Routen. Noch keine echten Screens |
 | 5.x | Tests, CI, Hetzner | 🟡 CI bei jedem Push (Pint, Backend-Tests gegen Postgres, Frontend-Tests und Build). Hetzner offen |
 | — | Content-Import aus V1 | ✅ 7 Fächer, 32 Themen, 158 Theorieblöcke, 158 Fragen (lokal) |
-| — | Nutzer-Migration aus Supabase | ⬜ |
+| — | Nutzer-Migration aus Supabase | entfällt, alle registrieren sich neu (E-011) |
 
 ## Widersprüche in den Plänen
 
@@ -30,6 +30,7 @@
 3. **Versionen:** Der Setup-Plan nennt `v2.0.0-alpha.1` als Ziel, §4 nennt `v0.1.0`/`v0.2.0`. Beide Tags `v0.1.0` und `v2.0.0-plan` existieren mit derselben Beschreibung. Vorschlag: nur noch `v2.0.0-alpha.N` weiterführen.
 4. **Ökonomie-Modell §2:** Die Formel `round(n^1.5 × 8)` passt zu Level 5/10/25/50/100, aber nicht zu Level 1 (Formel ergibt 8, Tabelle sagt 0) und Level 2 (Formel 23, Tabelle 8). Die Spalte „XP zum nächsten Level“ ist dadurch auch falsch. Vor der Umsetzung festlegen, ob die Schwelle für Level n `(n−1)` oder `n` verwendet. → entschieden: `(n−1)` wie in V1, Tabelle korrigiert (`ENTSCHEIDUNGEN.md` E-010)
 5. **Schritt 1 des Plans** („Abstimmung mit Professoren/Lehrkräften“) ist nirgends als erledigt vermerkt.
+6. **Setup-Plan §2:** beschreibt die Übernahme der Supabase-Nutzer samt bcrypt-Hashes. → entfällt, alle registrieren sich neu (`ENTSCHEIDUNGEN.md` E-011)
 
 ## Einschätzung (Projektleitung)
 
@@ -48,11 +49,11 @@ Der kritische Pfad zum ersten echten Nutzer ist kürzer:
 | **M2** | Inhalte pflegbar | CMS mit Antwortoptionen, Wertelisten, de/en; Import mit Prüfung statt stillem Fallback |
 | **M3** | Lernen funktioniert | Login → Fächer → Thema → Theorie → Quiz → Ergebnis mit serverseitigen XP/Level, Vue mit `lh-`-Komponenten |
 | **M4** | Hetzner läuft | Prod-Stack in `infra/`, TLS, tägliche Backups, Staging |
-| **M5** | Umzug | Supabase-Export importiert, 10 Accounts geprüft, DNS umgestellt → Tag `v2.0.0-alpha.1` |
+| **M5** | Start | DNS umgestellt, Registrierung offen, Neuregistrierung angekündigt, V1-Supabase abgeschaltet → Tag `v2.0.0-alpha.1` |
 | danach | | Brainpower-Einsatz, Streaks, Trophäen → Lehrkräfte/Klassen → Englisch + KI-Übersetzung → Landing Page → Reverb |
 
 ### Größte Risiken jetzt
 
-1. **Prod-Daten aus Supabase.** Seit 2026-10-15 gesichert (E-009). Offen bleibt der Import nach V2 (M5).
+1. **Prod-Daten aus Supabase.** Seit 2026-10-15 gesichert (E-009). Kein Import, V2 startet ohne V1-Nutzer (E-011).
 2. **Umfang.** Ohne gekürztes MVP (R4 im Plan) gibt es keinen Go-Live.
 3. **Framework-Versionen.** Entschieden: Filament 5 (E-008). Das Translatable-Plugin für v5 ist ein Community-Fork, vor M2 prüfen.
