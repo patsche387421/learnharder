@@ -140,3 +140,18 @@ V1-Protokoll: `_archiv/agent/SESSION_REPORT.md` und `SESSION_REPORT_ARCHIVE.md`.
   - `feat/supabase-import`: vorher Gamer-Tags, Umfang (XP/Streak oder auch Fortschritt und Quiz-Verlauf) und Level-Formel (Widerspruch 4) entscheiden.
   - M2: Translatable-Plugin testen, `APP_LOCALE=de`, Enums, Antwortoptionen, Relations-Labels (Spalten Fach/Thema sind leer), Name und Farben im Panel.
   - Vitest 5 und jsdom 30.
+
+## 2026-10-15 — Level-Kurve, Booster, Start ohne V1-Nutzer
+
+- **Branch:** `dev`
+- **Commits:** `e1f826b` (E-010), `40af4aa` (E-011), dazu dieser Doku-Commit
+- **Ergebnis:**
+  - E-010: Level n beginnt bei `round((n−1)^1.5 × 8)` XP (wie V1, Level 2 bei 8, Level 100 bei 7.880). Prestige-Zyklus immer 8.000 XP, Rang = `floor(Gesamt-XP / 8000)`. XP-Booster 1,5× 30 Min (20 BP), 2× 30 Min (40 BP), 2× 60 Min (70 BP), nur einer gleichzeitig, kein Kauf während einer läuft. Tabelle im Ökonomie-Modell korrigiert, Widerspruch 4 erledigt.
+  - E-011: V2 startet ohne V1-Accounts und -Fortschritte, alle registrieren sich neu. Kein `feat/supabase-import`. M5 heißt jetzt „Start“ (DNS, Registrierung, V1-Supabase abschalten). Dump wird 3 Monate nach V2-Start gelöscht.
+  - Setup-Plan §2 (Datenmigration) als Widerspruch 6 vermerkt, Plan selbst nicht geändert.
+- **Geprüft:** Alle Schwellenwerte der Level-Tabelle per Formel nachgerechnet. Nur Doku, kein Code geändert.
+- **Offen:**
+  - M2: Translatable-Plugin `lara-zeus/spatie-translatable` testen, `APP_LOCALE=de` und Relations-Labels (gegen leere Fach-/Thema-Spalten), Enums, Antwortoptionen, Name und Farben im Panel.
+  - Vor M3: mehr Fragen oder weniger XP für wiederholte Antworten (158 Fragen = 316 XP pro Durchlauf, ein Zyklus hat 8.000).
+  - Registrierung in V2 mit sauberer Einwilligung, auch für unter 14-Jährige.
+  - Verschlüsselte Zweitkopie des Dumps (Patsche). Vitest 5 und jsdom 30.
