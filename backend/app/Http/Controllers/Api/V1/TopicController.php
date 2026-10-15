@@ -21,6 +21,7 @@ class TopicController extends Controller
             ->published()
             ->where('slug', $topic)
             ->withCount(['questions' => fn (Builder $questions) => $questions->published()])
+            ->withSum(['questions as xp_total' => fn (Builder $questions) => $questions->published()], 'xp_reward')
             ->with('theorySections')
             ->firstOrFail();
 

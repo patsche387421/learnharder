@@ -37,7 +37,7 @@ const art = computed(() => `subject-${props.code.toLowerCase()}`)
     <LhXpBar v-else class="lh-subject__progress" :value="done" :max="total" :label="`Fortschritt ${code}`">
       <template #bottom>
         <span v-if="done > 0 && level"><b>Fach-Level {{ level }}</b></span>
-        <span v-else>Noch nicht begonnen</span>
+        <span v-else-if="done === 0">Noch nicht begonnen</span>
         <span>{{ done }} / {{ total }} Themen</span>
       </template>
     </LhXpBar>
