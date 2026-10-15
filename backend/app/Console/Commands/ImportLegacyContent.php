@@ -65,6 +65,7 @@ class ImportLegacyContent extends Command
         $totalTheory = 0;
         $totalQuestions = 0;
         $totalSkipped = 0;
+        $totalKeptTopics = 0;
 
         DB::transaction(function () use (
             $manifest,
@@ -73,7 +74,8 @@ class ImportLegacyContent extends Command
             &$totalTopics,
             &$totalTheory,
             &$totalQuestions,
-            &$totalSkipped
+            &$totalSkipped,
+            &$totalKeptTopics
         ) {
             foreach ($manifest['faecher'] as $fIndex => $fachData) {
                 $slug = strtolower($fachData['id']);
@@ -121,12 +123,19 @@ class ImportLegacyContent extends Command
 
                         $totalTopics++;
 
+                        // Gepflegte Inhalte nie überschreiben: Theorie und Fragen nur in leere Themen importieren
+                        if ($topic->theorySections()->exists() || $topic->questions()->exists()) {
+                            $this->warn("Übersprungen: {$slug}/{$topicSlug} hat schon Theorie oder Fragen, nichts überschrieben.");
+                            $totalKeptTopics++;
+
+                            continue;
+                        }
+
                         // 1. Theorie importieren
                         $theorieFile = $fachFolder.'/'.$topicSlug.'_theorie.json';
                         if (file_exists($theorieFile)) {
                             $theorieJson = json_decode(file_get_contents($theorieFile), true);
                             if (isset($theorieJson['themen']) && is_array($theorieJson['themen'])) {
-                                TheorySection::where('topic_id', $topic->id)->delete();
                                 foreach ($theorieJson['themen'] as $secIndex => $sec) {
                                     TheorySection::create([
                                         'topic_id' => $topic->id,
@@ -153,7 +162,6 @@ class ImportLegacyContent extends Command
                             }
 
                             if (isset($fragenJson['fragen']) && is_array($fragenJson['fragen'])) {
-                                Question::where('topic_id', $topic->id)->delete();
                                 foreach ($fragenJson['fragen'] as $qIndex => $qData) {
                                     // Ohne gültige Lösung wird die Frage übersprungen, statt Option 0 als richtig zu raten
                                     $correctIdx = $loesungen[$qIndex] ?? null;
@@ -205,6 +213,7 @@ class ImportLegacyContent extends Command
                 ['Theorieblöcke (Theory Sections)', $totalTheory],
                 ['Fragen (Questions)', $totalQuestions],
                 ['Übersprungene Fragen (ohne Lösung)', $totalSkipped],
+                ['Übersprungene Themen (schon mit Inhalt)', $totalKeptTopics],
             ]
         );
 

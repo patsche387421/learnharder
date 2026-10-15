@@ -62,6 +62,20 @@ class ImportLegacyContentTest extends TestCase
         $this->assertSame(2, Question::count());
     }
 
+    public function test_zweiter_import_ueberschreibt_gepflegte_inhalte_nicht(): void
+    {
+        $this->artisan('learnharder:import-legacy-content', ['--path' => $this->dataPath])->assertSuccessful();
+        $question = Question::where('order_index', 1)->sole();
+        $question->update(['question_text' => ['de' => 'Im CMS korrigiert']]);
+
+        $this->artisan('learnharder:import-legacy-content', ['--path' => $this->dataPath])
+            ->expectsOutputToContain('Übersprungen: pos/schleifen hat schon Theorie oder Fragen, nichts überschrieben.')
+            ->assertSuccessful();
+
+        $this->assertModelExists($question);
+        $this->assertSame('Im CMS korrigiert', $question->fresh()->getTranslation('question_text', 'de'));
+    }
+
     public function test_bricht_ab_wenn_manifest_fehlt(): void
     {
         $this->artisan('learnharder:import-legacy-content', ['--path' => $this->dataPath.'/gibt-es-nicht'])
