@@ -48,7 +48,8 @@ Der kritische Pfad zum ersten echten Nutzer ist kürzer:
 | **M0** ✅ | Aufräumen | Struktur steht, Archiv entschieden, `backend/laravel` entfernt, Seeder abgesichert |
 | **M1** ✅ | Backend-Fundament | DB entschieden, `routes/api.php` + Sanctum-Login, Policies, erste Feature-Tests, CI (Pint + Tests) |
 | **M2** ✅ | Inhalte pflegbar | CMS mit Antwortoptionen, Wertelisten, Deutsch (E-012); Import mit Prüfung statt stillem Fallback |
-| **M3** | Lernen funktioniert | Login → Fächer → Thema → Theorie → Quiz → Ergebnis mit serverseitigen XP/Level, Vue mit `lh-`-Komponenten |
+| **M3** | Lernen funktioniert | Login → Fächer → Thema → Theorie → Quiz → Ergebnis mit serverseitigen XP/Level, Vue mit `lh-`-Komponenten. EP je Frage einmal pro Tag (E-015), Ränge (E-016), ohne Klassenfilter (E-017) |
+| **M3b** | Klassen und Sichtbarkeit | Klassen und Einschreibungen in Filament, App zeigt nur Fächer der eigenen Klasse (Plan Schule §8 Schritte 2–3) |
 | **M4** | Hetzner läuft | Prod-Stack in `infra/`, TLS, tägliche Backups, Staging |
 | **M5** | Start | DNS umgestellt, Registrierung offen, Neuregistrierung angekündigt, V1-Supabase abgeschaltet → Tag `v2.0.0-alpha.1` |
 | danach | | Brainpower-Einsatz, Streaks, Trophäen → Lehrkräfte/Klassen → Englisch + KI-Übersetzung → Landing Page → Reverb |
