@@ -178,3 +178,22 @@ V1-Protokoll: `_archiv/agent/SESSION_REPORT.md` und `SESSION_REPORT_ARCHIVE.md`.
   - Lehrkraft-Testlauf verworfen.
   - `docs/plans/README.md` „Ist-Stand“ veraltet (u. a. „13 Tests“).
   - Weiter offen: verschlüsselte Zweitkopie des Dumps, mehr Fragen oder weniger XP vor M3, Vitest 5 und jsdom 30.
+
+## 2026-10-15 — Schulstruktur gemerged, CMS auf Deutsch
+
+- **Branch:** `feat/schulstruktur-models` (nach `dev` gemerged als `6b30da6`, `--no-ff`, gelöscht), `feat/filament-deutsch` (nach `dev` gemerged als `099865c`, `--no-ff`, gelöscht)
+- **Commits:** `dfaf8d4` (Locale `de`), `968e971` (Validierungsmeldungen), `2dbd816` (Login-, Passwort-, Blättermeldungen), `c16c7f8` (Fix Fach-/Themenauswahl), `929d356` (deutsche Feldnamen), `2656aae` (Fix Sprachfelder `.de`), `637f17a` (Doku), dazu dieser Eintrag
+- **Ergebnis:**
+  - `APP_LOCALE` und `APP_FALLBACK_LOCALE` in `.env.example` und lokal auf `de`. Die CI baut ihre `.env` aus der Vorlage.
+  - Laravel-Texte in eigenen Dateien `backend/lang/de/` (validation, auth, passwords, pagination), du-Form nach `docs/design/Sprache.md`. `laravel-lang` verworfen: `laravel-lang/publisher` 16.8 unterstützt nur bis Laravel 12, für 13 gibt es nur `17.x-dev`. `GermanTranslationTest` prüft, dass gegenüber Laravel kein Schlüssel fehlt.
+  - Fehler gefunden: Anlegen/Bearbeiten von Themen und Fragen gab 500, weil die Auswahlfelder nach einer `json`-Spalte sortierten (Postgres hat dafür keinen Sortier-Operator). Jetzt `relationship(…, 'slug')` mit `getOptionLabelFromRecordUsing` und `getTranslation(…, 'de')`.
+  - Fehler gefunden: Sprachfelder banden die ganze JSON-Spalte ans Formular (Wert war ein Array). Jetzt `name.de`, `title.de`, `description.de`, `question_text.de`, `explanation.de` (E-012). Ein vorhandener `en`-Eintrag bleibt beim Speichern erhalten.
+  - Fach- und Thema-Spalten lesen fest aus `de`, alle Felder und Spalten in Fächer, Themen und Fragen haben deutsche Labels.
+- **Geprüft:** Tests 56 → 66 grün, Pint sauber, beides auf jedem Zwischen-Commit. Gegenprobe: ohne den Auswahl-Fix schlagen 2 Tests fehl. CI auf `dev` grün (Runs `38765669854`, `38770637866`). CMS nicht im Browser angesehen, nur per Test und gerendertem HTML.
+- **Offen:**
+  - Leere Sprachfelder speichert das CMS als `{"de":null}` statt `NULL` (`backend/CLAUDE.md`, Baustelle 1).
+  - Browser-Titel zeigt „Laravel“ (`APP_NAME`). Filaments eigene Texte siezen („Wählen Sie eine Option“).
+  - M2-Rest: Enums für `status`/`type`/`difficulty` (Werte erscheinen noch als `published`, `single_choice`), Antwortoptionen im Fragenformular, Panel-Theme aus `tokens.css` (Tailwind 4), Veröffentlichen in `ContentPolicy`.
+  - Plan Schule §8 Schritte 2–4 und §7.
+  - `docs/plans/README.md` „Ist-Stand“ veraltet (u. a. „13 Tests“).
+  - Weiter offen: Hetzner (M4a) und Backup-Bausteine dokumentieren, verschlüsselte Zweitkopie des Dumps, mehr Fragen oder weniger XP vor M3, Vitest 5 und jsdom 30.
