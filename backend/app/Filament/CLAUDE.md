@@ -16,8 +16,11 @@ auf Deutsch zuerst, Englisch optional. Workflow: `draft` → `review` → `publi
 - Relationen auf JSON-Spalten (z. B. `topic.title`) über `getOptionLabelFromRecordUsing` anzeigen, nicht über die Rohspalte.
 - Löschen und Veröffentlichen sind nur über Policies erlaubt (autor: kein Löschen und kein Veröffentlichen, tester: nur lesen und kommentieren).
 - Panel-Farben und Schrift an das Design-System anlehnen (`frontend/src/styles/tokens.css`), nicht `Color::Amber`.
+- Was Postgres ablehnt (Eindeutigkeit, auch ohne Groß-/Kleinschreibung), prüft auch das Formular. Löschen nur anbieten, wenn kein `RESTRICT` greift, sonst gibt es einen Serverfehler.
 
-## Stand (2026-10-14)
+## Stand (2026-10-15)
 
 Die Ressourcen `SubjectResource`, `TopicResource` und `QuestionResource` sind automatisch generiert und noch nicht redaktionstauglich:
 Antwortoptionen fehlen, Wertelisten sind Freitext, und die Sprachfelder sind nicht getrennt.
+
+Schulstruktur (Gruppe „Schule“, nur Admin über `SchoolStructurePolicy`): `SchoolResource` mit Mail-Domains, Abteilungen und Schuljahren als Relation Manager, `ProgramResource` mit dem Lehrplan.

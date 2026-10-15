@@ -2,7 +2,7 @@
 
 Wer sieht welche Inhalte, wer unterrichtet was, und wie kommen Schüler:innen in die App.
 Vorlage ist die HTL Mödling. Entscheidung: E-013 in `../ENTSCHEIDUNGEN.md`.
-Umgesetzt (Stand 2026-10-15): Tabellen und Datenbankregeln aus §3, Models für die Schulstruktur (Schritt 1). Offen: Models für Klassen, Filament, Sichtbarkeit, Registrierung.
+Umgesetzt (Stand 2026-10-15): Tabellen und Datenbankregeln aus §3, Schritt 1 aus §8 (Models und Filament für die Schulstruktur). Offen: Schritte 2–4.
 
 ## 1. Begriffe
 
