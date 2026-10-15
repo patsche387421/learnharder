@@ -125,3 +125,18 @@ V1-Protokoll: `_archiv/agent/SESSION_REPORT.md` und `SESSION_REPORT_ARCHIVE.md`.
   - M2: CMS redaktionstauglich (Antwortoptionen, Wertelisten als Enum, de/en), `publish` in `ContentPolicy`. Vorher Filament 3 oder 4 entscheiden (O-002).
   - Vitest 5 und jsdom 30, jetzt mit CI als Netz.
   - Supabase-Dump (O-004), Level-Formel (Widerspruch 4).
+
+## 2026-10-15 — Filament 5 und Supabase-Sicherung
+
+- **Branch:** `chore/filament-5` (von `dev`), nach `dev` gemerged als `11452eb` (`--no-ff`), Branch gelöscht. Danach `dev`.
+- **Commits:** `de34cff` (Filament 3 auf 4), `903120b` (Filament 4 auf 5 mit Livewire 4), `5a6e7a8` (E-008), `f40d91e` (E-009), dazu dieser Doku-Commit
+- **Ergebnis:**
+  - Filament 3.3.56 → 5.10.2, Livewire 3 → 4.4.7, Laravel 13.35 → 13.36 (E-008, schließt O-002). Upgrade-Skripte `filament-v4` und `filament-v5`, danach Pint. Composer nur für Filament und Abhängigkeiten aktualisiert, `filament/upgrade` wieder entfernt. Der v5-Schritt brauchte keine Code-Änderung.
+  - Recherche: Filament 3 bekommt seit 2026-08-01 keine Bugfixes mehr, Filament 4 nur bis 2027-01-15. Translatable-Plugin für v5 ist der Community-Fork `lara-zeus/spatie-translatable` (noch nicht installiert).
+  - Supabase-Dump (`public` und `auth`) von Patsche gezogen, liegt außerhalb des Repos (E-009, schließt O-004). Das WLAN sperrt Port 5432, der Dump lief über einen Handy-Hotspot.
+- **Geprüft:** Nach jedem Schritt 23/23 Tests und `pint --test` grün. Gegenprobe „`deleteAny` fehlt“ schlägt in v4 und v5 im Filament-Test an. `/admin/login` lädt nichts Externes. Klicktest von Patsche im Browser mit admin, autor und tester wie erwartet. CI auf `dev` (Run `38715630054`) grün. Dump enthält alle 6 V1-Tabellen und `auth.users` (`pg_restore --list`).
+- **Offen:**
+  - Verschlüsselte Zweitkopie des Dumps (Patsche).
+  - `feat/supabase-import`: vorher Gamer-Tags, Umfang (XP/Streak oder auch Fortschritt und Quiz-Verlauf) und Level-Formel (Widerspruch 4) entscheiden.
+  - M2: Translatable-Plugin testen, `APP_LOCALE=de`, Enums, Antwortoptionen, Relations-Labels (Spalten Fach/Thema sind leer), Name und Farben im Panel.
+  - Vitest 5 und jsdom 30.
