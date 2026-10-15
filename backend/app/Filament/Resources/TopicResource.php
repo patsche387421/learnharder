@@ -7,6 +7,7 @@ use App\Filament\Resources\Concerns\HasContentStatus;
 use App\Filament\Resources\TopicResource\Pages\CreateTopic;
 use App\Filament\Resources\TopicResource\Pages\EditTopic;
 use App\Filament\Resources\TopicResource\Pages\ListTopics;
+use App\Filament\Resources\TopicResource\RelationManagers\TheorySectionsRelationManager;
 use App\Models\Subject;
 use App\Models\Topic;
 use Filament\Actions\BulkActionGroup;
@@ -135,7 +136,7 @@ class TopicResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            TheorySectionsRelationManager::class,
         ];
     }
 

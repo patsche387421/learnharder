@@ -4,6 +4,7 @@ namespace Tests\Feature\Policies;
 
 use App\Models\Question;
 use App\Models\Subject;
+use App\Models\TheorySection;
 use App\Models\Topic;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
@@ -38,7 +39,7 @@ class ContentPolicyTest extends TestCase
     }
 
     #[DataProvider('roles')]
-    public function test_rechte_je_rolle_auf_fach_thema_und_frage(string $role): void
+    public function test_rechte_je_rolle_auf_fach_thema_frage_und_theorie(string $role): void
     {
         $user = User::factory()->create();
         $user->assignRole(Role::create(['name' => $role]));
@@ -68,13 +69,15 @@ class ContentPolicyTest extends TestCase
         $this->assertSame($expected, $user->can($ability, $target), "$role → $ability auf ".class_basename($target));
     }
 
-    /** @return array{0: Subject, 1: Topic, 2: Question} */
+    /** @return array{0: Subject, 1: Topic, 2: Question, 3: TheorySection} */
     private function contentRecords(): array
     {
         $subject = Subject::create(['slug' => 'mathe', 'name' => ['de' => 'Mathematik']]);
         $topic = Topic::create(['subject_id' => $subject->id, 'slug' => 'brueche', 'title' => ['de' => 'Brüche']]);
         $question = Question::create(['topic_id' => $topic->id, 'question_text' => ['de' => 'Was ist 1/2 + 1/4?']]);
 
-        return [$subject, $topic, $question];
+        $section = TheorySection::create(['topic_id' => $topic->id, 'title' => ['de' => 'Kürzen'], 'content' => ['de' => 'Zähler und Nenner teilen.']]);
+
+        return [$subject, $topic, $question, $section];
     }
 }
