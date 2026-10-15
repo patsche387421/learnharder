@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasTranslationsWithoutEmpty;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -32,5 +34,13 @@ class Subject extends Model
     public function topics(): HasMany
     {
         return $this->hasMany(Topic::class)->orderBy('order_index');
+    }
+
+    /** Was die App zeigt: aktive Fächer mit mindestens einem veröffentlichten Thema (E-017: noch ohne Klassenfilter). */
+    #[Scope]
+    protected function visible(Builder $query): void
+    {
+        $query->where('is_active', true)
+            ->whereHas('topics', fn (Builder $topics) => $topics->published());
     }
 }

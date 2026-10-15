@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\Progression;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
@@ -62,6 +63,12 @@ class User extends Authenticatable implements FilamentUser
     public function stats(): HasOne
     {
         return $this->hasOne(UserStat::class);
+    }
+
+    /** Level, Rang und Prestige aus den Gesamt-EP. */
+    public function progression(): Progression
+    {
+        return Progression::fromTotalXp($this->stats->total_xp ?? 0);
     }
 
     /**
