@@ -44,8 +44,9 @@ Fehlt `vendor/`: einmalig `docker run --rm -v "$(pwd)":/app -w /app composer ins
 - Zugriffsrechte über Policies, nicht über `if`-Abfragen im Controller. Admin darf alles (`Gate::before` im `AppServiceProvider`), Inhalte erben von `app/Policies/ContentPolicy.php`.
 - Filament erlaubt eine Aktion, wenn die Policy-Methode fehlt. Neue Policies deshalb mit allen Filament-Aktionen anlegen, auch wenn sie nur `false` liefern.
 - Jede neue Logik bekommt einen Feature-Test (`tests/Feature`), Tests vor jedem Commit grün.
+- Oberfläche und Meldungen nur auf Deutsch (`APP_LOCALE=de`, E-012). Laravels Texte liegen in `lang/de/`, ein Test prüft, dass gegenüber Laravel kein Schlüssel fehlt.
 - Code-Stil: `sail pint` vor jedem Commit. CI (`.github/workflows/ci.yml`) prüft `pint --test` und die Tests bei jedem Push.
 
 ## Bekannte Baustellen (Stand 2026-10-15)
 
-1. `APP_LOCALE=en`, aber alle Inhalte sind nur auf Deutsch vorhanden.
+1. Leere Sprachfelder (z. B. Beschreibung) speichert das CMS als `{"de":null}` statt `NULL`.
