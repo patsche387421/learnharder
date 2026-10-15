@@ -3,16 +3,16 @@
 namespace App\Models;
 
 use App\Enums\ContentStatus;
+use App\Models\Concerns\HasTranslationsWithoutEmpty;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Spatie\Translatable\HasTranslations;
 
 class Topic extends Model
 {
-    use HasFactory, HasTranslations, HasUuids;
+    use HasFactory, HasTranslationsWithoutEmpty, HasUuids;
 
     protected $fillable = [
         'subject_id',
