@@ -49,4 +49,3 @@ Fehlt `vendor/`: einmalig `docker run --rm -v "$(pwd)":/app -w /app composer ins
 1. Keine Policies: jede Rolle mit Panel-Zugang kann alles löschen.
 2. `APP_LOCALE=en`, aber alle Inhalte sind nur auf Deutsch vorhanden.
 3. `ImportLegacyContent.php` besteht `pint --test` nicht (alte Formatierung).
-4. Die lokale `.env` stammt aus dem alten `C:\`-Checkout und enthält noch dessen Notlösungen (`APP_PORT=8080`, `VITE_PORT=5174`, `VIEW_COMPILED_PATH` und Caches nach `/tmp`). Bis zum Aufräumen läuft die App unter http://localhost:8080.
