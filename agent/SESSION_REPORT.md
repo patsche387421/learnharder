@@ -110,3 +110,18 @@ V1-Protokoll: `_archiv/agent/SESSION_REPORT.md` und `SESSION_REPORT_ARCHIVE.md`.
   - M2: `publish` in `ContentPolicy`. Policies für `TheorySection` und `QuestionOption`, sobald es Ressourcen oder API dafür gibt.
   - M3: Schüler:innen brauchen `view` auf veröffentlichte Inhalte, sobald die Lern-API kommt.
   - Vitest 5 und jsdom 30, Supabase-Dump (O-004), Level-Formel (Widerspruch 4), Filament 3 oder 4 (O-002).
+
+## 2026-10-15 — M1 CI
+
+- **Branch:** `chore/ci` (von `dev`), auf GitHub geprüft, nach `dev` gemerged als `44f72e2` (`--no-ff`), Branch lokal und auf GitHub gelöscht.
+- **Commits:** `a740f13` (Pint auf das ganze Backend), `0bacf52` (CI-Workflow), `78e58a6` (Doku), dazu dieser Doku-Commit
+- **Ergebnis:**
+  - `.github/workflows/ci.yml` läuft bei jedem Push und per Hand. Backend: PHP 8.5, Postgres 18 als Service (Datenbank `testing`), `pint --test`, `php artisan test`. Frontend: Node 22, `npm ci`, `check:tokens`, `test`, `build`.
+  - `shivammathur/setup-php` ist die einzige Drittanbieter-Action und auf den Commit von 2.40.0 festgelegt. `checkout` und `setup-node` laufen auf `@v7`.
+  - Pint auf 8 Dateien angewendet (`ImportLegacyContent.php`, 6 generierte Filament-Dateien, `bootstrap/providers.php`). Ohne Leerraum nur gekürzte Imports und einfache Anführungszeichen, kein geändertes Verhalten.
+  - M1 ist damit abgeschlossen: Postgres, Sanctum-Login, Policies, Feature-Tests, CI.
+- **Geprüft:** `actionlint` ohne Befund. Beide Jobs lokal aus sauberem Stand nachgestellt (frische Kopie ohne `vendor/` und `.env`, frisches Postgres 18, `npm ci`): grün. Erster Lauf auf GitHub (Run `38709057726`): backend 34 s, frontend 23 s, beide grün. Nach dem Merge auf `dev` Tests und `pint --test` grün.
+- **Offen:**
+  - M2: CMS redaktionstauglich (Antwortoptionen, Wertelisten als Enum, de/en), `publish` in `ContentPolicy`. Vorher Filament 3 oder 4 entscheiden (O-002).
+  - Vitest 5 und jsdom 30, jetzt mit CI als Netz.
+  - Supabase-Dump (O-004), Level-Formel (Widerspruch 4).
