@@ -38,7 +38,11 @@ class SubjectResource extends Resource
             ->components([
                 TextInput::make('slug')
                     ->label('URL-Kürzel')
-                    ->required(),
+                    ->helperText('Kurzer Name für die Adresse, z. B. pos. Nur Kleinbuchstaben, Ziffern und Bindestriche.')
+                    ->required()
+                    ->regex('/^[a-z0-9]+(-[a-z0-9]+)*$/')
+                    ->validationMessages(['regex' => 'Nur Kleinbuchstaben, Ziffern und Bindestriche, z. B. schleifen-2.'])
+                    ->unique(ignoreRecord: true),
                 // Nur Deutsch, direkt in den Eintrag der JSON-Spalte (E-012)
                 TextInput::make('name.de')
                     ->label('Name')
@@ -49,14 +53,17 @@ class SubjectResource extends Resource
                     ->columnSpanFull(),
                 TextInput::make('icon_name')
                     ->label('Icon')
+                    ->helperText('Name des Icons aus dem Design-System, z. B. code.')
                     ->required(),
                 TextInput::make('order_index')
                     ->label('Reihenfolge')
+                    ->helperText('Position in der Fächerliste. Kleinere Zahlen kommen zuerst.')
                     ->required()
                     ->numeric()
                     ->default(0),
                 Toggle::make('is_active')
                     ->label('Aktiv')
+                    ->helperText('Inaktive Fächer erscheinen nicht in der App.')
                     ->required(),
             ]);
     }

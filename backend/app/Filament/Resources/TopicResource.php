@@ -15,6 +15,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -47,7 +48,11 @@ class TopicResource extends Resource
                     ->required(),
                 TextInput::make('slug')
                     ->label('URL-Kürzel')
-                    ->required(),
+                    ->helperText('Kurzer Name für die Adresse, z. B. schleifen. Nur Kleinbuchstaben, Ziffern und Bindestriche.')
+                    ->required()
+                    ->regex('/^[a-z0-9]+(-[a-z0-9]+)*$/')
+                    ->validationMessages(['regex' => 'Nur Kleinbuchstaben, Ziffern und Bindestriche, z. B. schleifen-2.'])
+                    ->scopedUnique(ignoreRecord: true, modifyQueryUsing: fn (Builder $query, Get $get) => $query->where('subject_id', $get('subject_id'))),
                 // Nur Deutsch, direkt in den Eintrag der JSON-Spalte (E-012)
                 TextInput::make('title.de')
                     ->label('Titel')
@@ -58,16 +63,19 @@ class TopicResource extends Resource
                     ->columnSpanFull(),
                 TextInput::make('level_required')
                     ->label('Ab Level')
+                    ->helperText('Ab diesem Level ist das Thema freigeschaltet.')
                     ->required()
                     ->numeric()
                     ->default(1),
                 TextInput::make('order_index')
                     ->label('Reihenfolge')
+                    ->helperText('Position im Fach. Kleinere Zahlen kommen zuerst.')
                     ->required()
                     ->numeric()
                     ->default(0),
                 Select::make('status')
                     ->label('Status')
+                    ->helperText('Nur veröffentlichte Themen erscheinen in der App.')
                     ->options(ContentStatus::class)
                     ->default(ContentStatus::Draft)
                     ->required(),
