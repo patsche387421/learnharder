@@ -7,7 +7,7 @@
 | `LEARNHARDER_V2_PROJEKTPLAN_PSP_RISIKEN.md` | **gültig**: Zielbild, PSP, Releases, Risiken |
 | `SETUP_DOMAIN_UND_DATENBANK_MIGRATION.md` | **gültig**: Hetzner, Domains. §2 Datenmigration entfällt (E-011) |
 | `GAMIFICATION_OEKONOMIE_MODELL.md` | **gültig**: Level-Tabelle seit E-010 korrigiert |
-| `DATENMODELL_SCHULE.md` | **gültig**: Abteilungen, Ausbildungsgänge, Klassen, Lehrkräfte, Registrierung (E-013). Schema umgesetzt, Models, CMS und Registrierung offen |
+| `DATENMODELL_SCHULE.md` | **gültig**: Abteilungen, Ausbildungsgänge, Klassen, Lehrkräfte, Registrierung (E-013). Schema, Models und CMS umgesetzt, Klassen, Sichtbarkeit und Registrierung offen (§8 Schritte 2–4) |
 | World4You-/Plain-PHP-Pläne | überholt und gelöscht (Tag `v1.1.0-w4y-plans-and-review`) |
 
 ## Ist-Stand gegen den Plan
@@ -15,13 +15,13 @@
 | PSP | Inhalt | Stand |
 |---|---|---|
 | 1.4 | Design-System | ✅ Tokens, `tokens.json`, Komponenten und beide Schriften da |
-| 2.1 | Laravel-Setup | 🟡 läuft lokal in WSL2, Postgres (E-007), Login-API (`/api/v1/login`, `logout`, `me`), 13 Tests |
-| 2.2 | Rollen | 🟡 Policies für Fach, Thema, Frage (autor ohne Löschen, tester nur lesen). Veröffentlichen erst in M2 |
-| 2.3 | CMS | 🟡 generiert, noch nicht redaktionstauglich |
+| 2.1 | Laravel-Setup | 🟡 läuft lokal in WSL2, Postgres (E-007), Login-API (`/api/v1/login`, `logout`, `me`), 108 Backend-Tests |
+| 2.2 | Rollen | ✅ Policies für Fach, Thema, Theorie, Frage (autor ohne Löschen, tester nur lesen). Veröffentlichen nur Admin (E-014) |
+| 2.3 | CMS | ✅ redaktionstauglich auf Deutsch (E-012): Wertelisten, Antworten, Theorie, Veröffentlichen, Design-System. KI-Übersetzung offen (nach M5) |
 | 2.4–2.7 | Spiellogik, Klassen, API, Echtzeit | ⬜ nur Tabellen |
 | 3.x | Vue-Frontend | 🟡 Gerüst mit App-Rahmen, 13 `Lh`-Bausteinen (mit Tests) und Platzhalter-Routen. Noch keine echten Screens |
 | 5.x | Tests, CI, Hetzner | 🟡 CI bei jedem Push (Pint, Backend-Tests gegen Postgres, Frontend-Tests und Build). Hetzner offen |
-| — | Content-Import aus V1 | ✅ 7 Fächer, 32 Themen, 158 Theorieblöcke, 158 Fragen (lokal) |
+| — | Content-Import aus V1 | ✅ 7 Fächer, 32 Themen, 158 Theorieblöcke, 158 Fragen (lokal). Überschreibt keine gepflegten Themen |
 | — | Nutzer-Migration aus Supabase | entfällt, alle registrieren sich neu (E-011) |
 
 ## Widersprüche in den Plänen
@@ -45,9 +45,9 @@ Der kritische Pfad zum ersten echten Nutzer ist kürzer:
 
 | M | Ziel | Fertig, wenn … |
 |---|---|---|
-| **M0** | Aufräumen | Struktur steht, Archiv entschieden, `backend/laravel` entfernt, Seeder abgesichert |
-| **M1** | Backend-Fundament | DB entschieden, `routes/api.php` + Sanctum-Login, Policies, erste Feature-Tests, CI (Pint + Tests) |
-| **M2** | Inhalte pflegbar | CMS mit Antwortoptionen, Wertelisten, Deutsch (E-012); Import mit Prüfung statt stillem Fallback |
+| **M0** ✅ | Aufräumen | Struktur steht, Archiv entschieden, `backend/laravel` entfernt, Seeder abgesichert |
+| **M1** ✅ | Backend-Fundament | DB entschieden, `routes/api.php` + Sanctum-Login, Policies, erste Feature-Tests, CI (Pint + Tests) |
+| **M2** ✅ | Inhalte pflegbar | CMS mit Antwortoptionen, Wertelisten, Deutsch (E-012); Import mit Prüfung statt stillem Fallback |
 | **M3** | Lernen funktioniert | Login → Fächer → Thema → Theorie → Quiz → Ergebnis mit serverseitigen XP/Level, Vue mit `lh-`-Komponenten |
 | **M4** | Hetzner läuft | Prod-Stack in `infra/`, TLS, tägliche Backups, Staging |
 | **M5** | Start | DNS umgestellt, Registrierung offen, Neuregistrierung angekündigt, V1-Supabase abgeschaltet → Tag `v2.0.0-alpha.1` |
