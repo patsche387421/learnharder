@@ -15,7 +15,6 @@ class UserStat extends Model
         'user_id',
         'total_xp',
         'trophies',
-        'prestige_level',
         'current_streak',
         'longest_streak',
         'last_study_date',
@@ -24,7 +23,6 @@ class UserStat extends Model
     protected $casts = [
         'total_xp' => 'integer',
         'trophies' => 'integer',
-        'prestige_level' => 'integer',
         'current_streak' => 'integer',
         'longest_streak' => 'integer',
         'last_study_date' => 'datetime',
