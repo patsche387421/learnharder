@@ -7,6 +7,7 @@ use App\Filament\Resources\QuestionResource\Pages\ListQuestions;
 use App\Filament\Resources\SubjectResource\Pages\EditSubject;
 use App\Filament\Resources\SubjectResource\Pages\ListSubjects;
 use App\Filament\Resources\TopicResource\Pages\CreateTopic;
+use App\Filament\Resources\TopicResource\Pages\EditTopic;
 use App\Filament\Resources\TopicResource\Pages\ListTopics;
 use App\Models\Question;
 use App\Models\Subject;
@@ -63,6 +64,35 @@ class ContentPanelTest extends TestCase
         $this->get("/admin/questions/{$this->question->id}/edit")
             ->assertSeeTextInOrder(['Thema', 'Typ', 'Frage', 'Erklärung', 'EP', 'Schwierigkeit', 'Status', 'Reihenfolge'])
             ->assertDontSeeText(['Slug', 'Order index', 'Question text', 'Xp reward', 'Difficulty', 'Save changes', 'Cancel']);
+    }
+
+    public function test_formular_bearbeitet_nur_den_deutschen_eintrag(): void
+    {
+        $this->topic->setTranslation('title', 'en', 'Fractions')->save();
+        $this->actingAs($this->userWithRole('admin'));
+
+        Livewire::test(EditTopic::class, ['record' => $this->topic->getRouteKey()])
+            ->assertSchemaStateSet(['title.de' => 'Brüche'])
+            ->fillForm(['title.de' => 'Bruchrechnen'])
+            ->call('save')
+            ->assertHasNoFormErrors();
+
+        $this->topic->refresh();
+        $this->assertSame('Bruchrechnen', $this->topic->getTranslation('title', 'de'));
+        $this->assertSame('Fractions', $this->topic->getTranslation('title', 'en'));
+    }
+
+    public function test_neues_thema_speichert_titel_auf_deutsch(): void
+    {
+        $this->actingAs($this->userWithRole('admin'));
+
+        Livewire::test(CreateTopic::class)
+            ->fillForm(['subject_id' => $this->subject->id, 'slug' => 'prozent', 'title.de' => 'Prozentrechnung', 'status' => 'draft'])
+            ->call('create')
+            ->assertHasNoFormErrors();
+
+        $topic = Topic::where('slug', 'prozent')->firstOrFail();
+        $this->assertSame(['de' => 'Prozentrechnung'], $topic->getTranslations('title'));
     }
 
     public function test_fach_und_thema_erscheinen_deutsch_auch_bei_englischer_locale(): void

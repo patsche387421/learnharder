@@ -46,11 +46,12 @@ class TopicResource extends Resource
                 TextInput::make('slug')
                     ->label('URL-Kürzel')
                     ->required(),
-                Textarea::make('title')
+                // Nur Deutsch, direkt in den Eintrag der JSON-Spalte (E-012)
+                TextInput::make('title.de')
                     ->label('Titel')
                     ->required()
                     ->columnSpanFull(),
-                Textarea::make('description')
+                Textarea::make('description.de')
                     ->label('Beschreibung')
                     ->columnSpanFull(),
                 TextInput::make('level_required')

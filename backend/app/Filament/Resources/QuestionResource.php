@@ -50,11 +50,12 @@ class QuestionResource extends Resource
                 TextInput::make('type')
                     ->label('Typ')
                     ->required(),
-                Textarea::make('question_text')
+                // Nur Deutsch, direkt in den Eintrag der JSON-Spalte (E-012)
+                Textarea::make('question_text.de')
                     ->label('Frage')
                     ->required()
                     ->columnSpanFull(),
-                Textarea::make('explanation')
+                Textarea::make('explanation.de')
                     ->label('Erklärung')
                     ->columnSpanFull(),
                 TextInput::make('xp_reward')

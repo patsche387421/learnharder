@@ -39,11 +39,12 @@ class SubjectResource extends Resource
                 TextInput::make('slug')
                     ->label('URL-Kürzel')
                     ->required(),
-                Textarea::make('name')
+                // Nur Deutsch, direkt in den Eintrag der JSON-Spalte (E-012)
+                TextInput::make('name.de')
                     ->label('Name')
                     ->required()
                     ->columnSpanFull(),
-                Textarea::make('description')
+                Textarea::make('description.de')
                     ->label('Beschreibung')
                     ->columnSpanFull(),
                 TextInput::make('icon_name')
