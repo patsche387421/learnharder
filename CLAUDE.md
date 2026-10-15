@@ -33,8 +33,8 @@ Jede `CLAUDE.md` in einem Unterordner beschreibt eine **Rolle**. Daraus werden s
 
 ## Lokal entwickeln (WSL2)
 
-Das Repo liegt im Ubuntu-WSL2-Dateisystem, nicht unter `C:\`. Auf dem Windows-Dateisystem ist Laravel im
-Container extrem langsam (~20 s pro Request) und `tempnam()` schlägt fehl. Einrichtung: `README.md`.
+Das Repo liegt im Ubuntu-WSL2-Dateisystem (E-005, Umzug abgeschlossen Stand 2026-10-15). Einrichtung: `README.md`.
+`C:\v\learnharder.app` ist nur noch Archiv bis zur Nutzer-Migration: dort nichts lesen, nichts ändern, keinen Sail-Stack starten.
 
 | Checkout | Branch | Zweck |
 |---|---|---|

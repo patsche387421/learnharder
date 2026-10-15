@@ -17,7 +17,7 @@ Gerade läuft der Neubau (V2). Bis dahin zeigt die Domain eine Wartungsseite.
 ## Lokal starten (Windows → WSL2)
 
 Das Repo gehört ins Linux-Dateisystem von Ubuntu-WSL2, nicht nach `C:\` (sonst ist Laravel im Container sehr langsam).
-Voraussetzungen: Docker Desktop mit aktivierter WSL-Integration für Ubuntu, Node ≥ 20.19 in WSL (z. B. über nvm).
+Voraussetzungen: Docker Desktop mit aktivierter WSL-Integration für Ubuntu, Node 22 in WSL (über nvm).
 
 ```bash
 git clone https://github.com/patsche387421/learnharder.git ~/learnharder.app

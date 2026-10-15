@@ -5,7 +5,7 @@ Vue-3-PWA für Schüler:innen und Lehrkräfte. Allgemeine Regeln: `../CLAUDE.md`
 ## Stack
 
 Vue 3 (`<script setup>`), Vite, Pinia, Vue Router, Vitest. Geplant: vue-i18n, PWA-Plugin, Playwright.
-Node ≥ 20.19 reicht (Vite 8 verlangt das laut `package-lock.json`). Vitest 5 und jsdom 30 brauchen Node 22, deshalb vorerst Vitest 4 und jsdom 29.
+Lokal läuft Node 22 (nvm in WSL2). Vite 8 verlangt mindestens Node 20.19 (`package-lock.json`). Noch auf Vitest 4 und jsdom 29, das Upgrade auf Vitest 5 und jsdom 30 ist offen.
 
 ## Start
 
@@ -44,4 +44,4 @@ public/assets/fonts/   selbst gehostete Schriften (keine CDNs)
 
 ## Stand (2026-10-15)
 
-13 `Lh`-Bausteine in `src/components/ui/`, jeder mit Test. `App.vue` legt den Rahmen (`LhAppLayout`) um alle Seiten, die fünf Hauptziele sind noch `PlaceholderView`. Level, Rang und Prestige im Rahmen sind fest eingetragen, bis ein User-Store sie von der API holt. `/styleguide` zeigt alle Tokens, Icons und Bausteine (nur in der Entwicklung). Beide Schriften liegen selbst gehostet in `public/assets/fonts/`.
+13 `Lh`-Bausteine in `src/components/ui/`, jeder mit Test. `App.vue` legt den Rahmen (`LhAppLayout`) um alle Seiten, die fünf Hauptziele sind noch `PlaceholderView`. Level, Rang und Prestige im Rahmen sind fest eingetragen, bis ein User-Store sie von der API holt. `/styleguide` zeigt alle Tokens, Icons und Bausteine (nur in der Entwicklung). Beide Schriften liegen selbst gehostet in `public/assets/fonts/`. In WSL2 sind 47 Tests, `build` und `check:tokens` grün.

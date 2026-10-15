@@ -1,4 +1,4 @@
-# Pläne — Stand und Einordnung (2026-10-14)
+# Pläne — Stand und Einordnung (2026-10-15)
 
 ## Welcher Plan gilt
 
@@ -14,7 +14,7 @@
 | PSP | Inhalt | Stand |
 |---|---|---|
 | 1.4 | Design-System | ✅ Tokens, `tokens.json`, Komponenten und beide Schriften da |
-| 2.1 | Laravel-Setup | 🟡 läuft lokal, DB nicht entschieden, keine API, nur die Laravel-Beispieltests |
+| 2.1 | Laravel-Setup | 🟡 läuft lokal in WSL2, Postgres (E-007), Login-API (`/api/v1/login`, `logout`, `me`), 13 Tests |
 | 2.2 | Rollen | 🟡 Rollen da, keine Policies |
 | 2.3 | CMS | 🟡 generiert, noch nicht redaktionstauglich |
 | 2.4–2.7 | Spiellogik, Klassen, API, Echtzeit | ⬜ nur Tabellen |

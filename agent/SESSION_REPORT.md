@@ -67,3 +67,19 @@ V1-Protokoll: `_archiv/agent/SESSION_REPORT.md` und `SESSION_REPORT_ARCHIVE.md`.
   - Sub-Session archiviert, verwaister Vite-Server gestoppt.
 - **Geprüft:** Nach dem Merge auf `dev`: `npm run test` (47 Tests in 13 Dateien), `npm run build` und `npm run check:tokens` grün. `bundle.css` und `docs/design/README.md` mit Artefakt v25 verglichen: identisch bis auf das Google-Fonts-`@import`. `lh-app--focus` steht nur noch in `bundle.css`. Nicht geprüft: echtes Handy, Screenreader.
 - **Offen:** Atkinson-Font beschaffen (`frontend/public/assets/fonts/`). Repo nach WSL2 umziehen, dort mit Node 22 auf Vitest 5 und jsdom 30. User-Store für Level, Rang und Prestige statt fester Werte in `App.vue`.
+
+## 2026-10-15 — Umzug nach WSL2 abgeschlossen
+
+- **Branch:** `dev`
+- **Commits:** dieser Doku-Commit
+- **Ergebnis:**
+  - Erste Session im WSL2-Checkout `~/learnharder.app`. `C:\v\learnharder.app` ist nur noch Archiv bis zur Nutzer-Migration (E-005).
+  - Claude-Memory aus `~/claude-memory-backup/learnharder-2026-10-15/` in den Memory-Ordner des WSL2-Projekts kopiert (13 Dateien).
+  - Doku angepasst: Windows-Begründung in `CLAUDE.md` gekürzt, Node 22 in `README.md` und `frontend/CLAUDE.md`, alte `C:\`-Notlösungen in `backend/.env` als Baustelle in `backend/CLAUDE.md`, Ist-Stand 2.1 in `docs/plans/README.md`.
+- **Geprüft:** In WSL2 mit Node 22.23.3: `sail artisan test` 13/13 grün, `npm run test` 47/47 grün, `npm run build` und `npm run check:tokens` grün.
+- **Offen:**
+  - `dev` pushen.
+  - M1: Policies (Schritt 6), danach CI.
+  - `backend/.env` aufräumen (`APP_PORT`, `VITE_PORT`, `VIEW_COMPILED_PATH`, Caches nach `/tmp`).
+  - Vitest 5 und jsdom 30.
+  - Supabase-Dump (O-004), Level-Formel (Widerspruch 4), Filament 3 oder 4 (O-002).
