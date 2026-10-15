@@ -23,7 +23,7 @@ cp .env.example .env                  # nur beim ersten Mal
 ```
 
 Der Import liest standardmäßig `/var/www/legacy-data`, das ist `_archiv/legacy/assets/data`, read-only gemountet (`compose.yaml`).
-Fragen ohne gültige Lösung überspringt er mit Warnung.
+Fragen ohne gültige Lösung überspringt er mit Warnung. Themen, die schon Theorie oder Fragen haben, lässt er aus: Er überschreibt nichts aus dem CMS.
 Der Seeder legt Rollen immer an, Demo-Accounts nur in `local`/`testing`. In Produktion den Admin per `php artisan make:filament-user` anlegen.
 Fehlt `vendor/`: einmalig `docker run --rm -v "$(pwd)":/app -w /app composer install`.
 
@@ -45,8 +45,5 @@ Fehlt `vendor/`: einmalig `docker run --rm -v "$(pwd)":/app -w /app composer ins
 - Filament erlaubt eine Aktion, wenn die Policy-Methode fehlt. Neue Policies deshalb mit allen Filament-Aktionen anlegen, auch wenn sie nur `false` liefern.
 - Jede neue Logik bekommt einen Feature-Test (`tests/Feature`), Tests vor jedem Commit grün.
 - Oberfläche und Meldungen nur auf Deutsch (`APP_LOCALE=de`, E-012). Laravels Texte liegen in `lang/de/`, ein Test prüft, dass gegenüber Laravel kein Schlüssel fehlt.
+- Übersetzbare Models nutzen `HasTranslationsWithoutEmpty` statt `HasTranslations`: Leere Sprachfelder werden `NULL`, nicht `{"de":null}`.
 - Code-Stil: `sail pint` vor jedem Commit. CI (`.github/workflows/ci.yml`) prüft `pint --test` und die Tests bei jedem Push.
-
-## Bekannte Baustellen (Stand 2026-10-15)
-
-1. Leere Sprachfelder (z. B. Beschreibung) speichert das CMS als `{"de":null}` statt `NULL`.

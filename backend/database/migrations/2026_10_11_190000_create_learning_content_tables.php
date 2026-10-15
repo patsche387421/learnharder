@@ -19,7 +19,7 @@ return new class extends Migration
             $table->json('name'); // {"de": "Programmieren", "en": "Programming"}
             $table->json('description')->nullable();
             $table->string('icon_name')->default('code');
-            $table->string('color_token')->default('--fach-pos');
+            $table->string('color_token')->default('--subject-pos'); // Token aus frontend/src/styles/tokens.css
             $table->integer('order_index')->default(0);
             $table->boolean('is_active')->default(true);
             $table->timestamps();

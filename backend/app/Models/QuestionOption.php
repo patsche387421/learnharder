@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasTranslationsWithoutEmpty;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Spatie\Translatable\HasTranslations;
 
 class QuestionOption extends Model
 {
-    use HasFactory, HasTranslations, HasUuids;
+    use HasFactory, HasTranslationsWithoutEmpty, HasUuids;
 
     protected $fillable = [
         'question_id',
