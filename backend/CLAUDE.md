@@ -6,7 +6,7 @@ Laravel-API und Filament-CMS für learnharder.app. Allgemeine Regeln: siehe `../
 
 - PHP ^8.3, **Laravel 13.35** (in alten Commits steht „Laravel 11“, das stimmt nicht)
 - Filament 3.3 (CMS unter `/admin`), Livewire 3
-- Sanctum (Token-Auth für das Vue-Frontend, **noch nicht eingerichtet**)
+- Sanctum im SPA-Modus: Login per Session-Cookie, keine Tokens (`/api/v1/login`, `logout`, `me`)
 - Spatie Permission (Rollen: admin, autor, tester, teacher, student), Spatie Translatable (de/en in JSON-Spalten)
 - Lokal: Sail (`compose.yaml`, PHP 8.5) mit Postgres 18 und Redis
 
@@ -37,7 +37,9 @@ Fehlt `vendor/`: einmalig `docker run --rm -v "$(pwd)":/app -w /app composer ins
 
 - Spiellogik (XP, Brainpower, Streaks, Trophäen) läuft **nur serverseitig**. Der Client schickt Antworten, der Server rechnet.
 - Quiz-Abschlüsse brauchen einen Idempotency-Key, damit doppelte Requests nicht doppelt XP geben.
-- API-Routen kommen nach `routes/api.php` (existiert noch nicht), versioniert unter `/api/v1/…`.
+- API-Routen kommen nach `routes/api.php`, versioniert unter `/api/v1/…`.
+- Die Vue-App holt vor dem Login `GET /sanctum/csrf-cookie` und schickt Cookies mit. Ihr Host muss in `SANCTUM_STATEFUL_DOMAINS` stehen, ihre Origin in `CORS_ALLOWED_ORIGINS` (`.env`).
+- API-Antworten über Resources (`app/Http/Resources`). Über Schüler:innen nie E-Mail oder Klarnamen ausgeben, nur den Gamer-Tag.
 - Zugriffsrechte über Policies, nicht über `if`-Abfragen im Controller.
 - Jede neue Logik bekommt einen Feature-Test (`tests/Feature`), Tests vor jedem Commit grün.
 - Code-Stil: `sail pint` vor jedem Commit.
