@@ -3,6 +3,7 @@
 import { computed, watch } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 import LoadError from '../components/LoadError.vue'
+import LhArt from '../components/ui/LhArt.vue'
 import LhButton from '../components/ui/LhButton.vue'
 import LhIcon from '../components/ui/LhIcon.vue'
 import { getSubject } from '../api/learn.js'
@@ -27,7 +28,10 @@ function meta(topic) {
     <p v-if="loading && !subject" class="subject__loading" aria-live="polite">Lädt …</p>
     <LoadError v-else-if="error" :error="error" @retry="load" />
     <template v-else-if="subject">
-      <h1 class="subject__title">{{ subject.name }}</h1>
+      <div class="subject__head">
+        <LhArt :name="`subject-${subject.code}`" :size="48" />
+        <h1 class="subject__title">{{ subject.name }}</h1>
+      </div>
       <ol class="subject__topics">
         <li v-for="(topic, i) in subject.topics" :key="topic.slug">
           <RouterLink
@@ -56,6 +60,7 @@ function meta(topic) {
 .subject { display: grid; gap: var(--space-4); }
 .subject__back { justify-self: start; }
 .subject__loading { margin: 0; color: var(--ink-muted); }
+.subject__head { display: flex; align-items: center; gap: var(--space-3); }
 .subject__title { margin: 0; font: 700 26px/32px var(--font-text); color: var(--ink); }
 .subject__topics { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--space-3); }
 .subject__topic { display: block; }

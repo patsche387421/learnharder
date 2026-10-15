@@ -1,5 +1,6 @@
 import { flushPromises, mount } from '@vue/test-utils'
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import { icons } from '../components/ui/icons.js'
 import { mockFetch } from '../test/api.js'
 import { mountRoute } from '../test/router.js'
 import SubjectView from './SubjectView.vue'
@@ -21,6 +22,7 @@ describe('SubjectView', () => {
 
     expect(fetch.mock.calls[0][0]).toContain('/api/v1/subjects/pos')
     expect(wrapper.find('h1').text()).toBe('Programmieren')
+    expect(wrapper.find('.subject__head img').attributes('src')).toBe(icons['subject-pos'])
     const items = wrapper.findAll('.lh-topic')
     expect(items).toHaveLength(3)
     expect(items[0].classes()).toContain('lh-topic--done')
