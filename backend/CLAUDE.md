@@ -43,9 +43,8 @@ Fehlt `vendor/`: einmalig `docker run --rm -v "$(pwd)":/app -w /app composer ins
 - Zugriffsrechte über Policies, nicht über `if`-Abfragen im Controller. Admin darf alles (`Gate::before` im `AppServiceProvider`), Inhalte erben von `app/Policies/ContentPolicy.php`.
 - Filament erlaubt eine Aktion, wenn die Policy-Methode fehlt. Neue Policies deshalb mit allen Filament-Aktionen anlegen, auch wenn sie nur `false` liefern.
 - Jede neue Logik bekommt einen Feature-Test (`tests/Feature`), Tests vor jedem Commit grün.
-- Code-Stil: `sail pint` vor jedem Commit.
+- Code-Stil: `sail pint` vor jedem Commit. CI (`.github/workflows/ci.yml`) prüft `pint --test` und die Tests bei jedem Push.
 
 ## Bekannte Baustellen (Stand 2026-10-15)
 
 1. `APP_LOCALE=en`, aber alle Inhalte sind nur auf Deutsch vorhanden.
-2. `ImportLegacyContent.php` besteht `pint --test` nicht (alte Formatierung).

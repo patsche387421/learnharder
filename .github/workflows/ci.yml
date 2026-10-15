@@ -1,0 +1,80 @@
+# Prüft jeden Push: Backend (Pint + Tests gegen Postgres) und Frontend (Tokens, Tests, Build).
+name: CI
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Neuer Push auf denselben Branch bricht den alten Lauf ab
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    services:
+      # Wie Sail (compose.yaml), die Datenbank heißt wie in phpunit.xml
+      pgsql:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_DB: testing
+          POSTGRES_USER: sail
+          POSTGRES_PASSWORD: password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U sail -d testing"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DB_HOST: 127.0.0.1
+    steps:
+      - uses: actions/checkout@v7
+
+      # Drittanbieter-Action, deshalb auf den Commit von 2.40.0 festgelegt
+      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: '8.5'
+          extensions: intl, pdo_pgsql, zip
+          coverage: none
+
+      - name: Composer-Abhängigkeiten
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: .env aus Vorlage
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Code-Stil (Pint)
+        run: vendor/bin/pint --test
+
+      - name: Tests
+        run: php artisan test
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - run: npm ci
+      - run: npm run check:tokens
+      - run: npm run test
+      - run: npm run build

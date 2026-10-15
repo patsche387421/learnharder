@@ -19,7 +19,7 @@
 | 2.3 | CMS | 🟡 generiert, noch nicht redaktionstauglich |
 | 2.4–2.7 | Spiellogik, Klassen, API, Echtzeit | ⬜ nur Tabellen |
 | 3.x | Vue-Frontend | 🟡 Gerüst mit App-Rahmen, 13 `Lh`-Bausteinen (mit Tests) und Platzhalter-Routen. Noch keine echten Screens |
-| 5.x | Tests, CI, Hetzner | ⬜ |
+| 5.x | Tests, CI, Hetzner | 🟡 CI bei jedem Push (Pint, Backend-Tests gegen Postgres, Frontend-Tests und Build). Hetzner offen |
 | — | Content-Import aus V1 | ✅ 7 Fächer, 32 Themen, 158 Theorieblöcke, 158 Fragen (lokal) |
 | — | Nutzer-Migration aus Supabase | ⬜ |
 
