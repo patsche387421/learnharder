@@ -56,7 +56,7 @@ Alles außer `login` braucht `auth:sanctum`. Sichtbar ist nur `published` (Thema
 - Die Vue-App holt vor dem Login `GET /sanctum/csrf-cookie` und schickt Cookies mit. Ihr Host muss in `SANCTUM_STATEFUL_DOMAINS` stehen, ihre Origin in `CORS_ALLOWED_ORIGINS` (`.env`).
 - API-Antworten über Resources (`app/Http/Resources`). Über Schüler:innen nie E-Mail oder Klarnamen ausgeben, nur den Gamer-Tag.
 - Feste Wertelisten als Enum in `app/Enums`. Ein Enum muss zur `CHECK`-Regel seiner Spalte passen (Test für alle Fälle).
-- Zugriffsrechte über Policies, nicht über `if`-Abfragen im Controller. Admin darf alles (`Gate::before` im `AppServiceProvider`), Inhalte erben von `app/Policies/ContentPolicy.php`.
+- Zugriffsrechte über Policies, nicht über `if`-Abfragen im Controller. Admin darf alles (`Gate::before` im `AppServiceProvider`), nur fremde Lerneinheiten nicht beantworten oder abschließen. Inhalte erben von `app/Policies/ContentPolicy.php`.
 - Filament erlaubt eine Aktion, wenn die Policy-Methode fehlt. Neue Policies deshalb mit allen Filament-Aktionen anlegen, auch wenn sie nur `false` liefern.
 - Jede neue Logik bekommt einen Feature-Test (`tests/Feature`), Tests vor jedem Commit grün.
 - Oberfläche und Meldungen nur auf Deutsch (`APP_LOCALE=de`, E-012). Laravels Texte liegen in `lang/de/`, ein Test prüft, dass gegenüber Laravel kein Schlüssel fehlt.
