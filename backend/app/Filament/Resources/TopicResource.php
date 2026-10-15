@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\ContentStatus;
 use App\Filament\Resources\TopicResource\Pages\CreateTopic;
 use App\Filament\Resources\TopicResource\Pages\EditTopic;
 use App\Filament\Resources\TopicResource\Pages\ListTopics;
@@ -16,6 +17,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -64,8 +66,10 @@ class TopicResource extends Resource
                     ->required()
                     ->numeric()
                     ->default(0),
-                TextInput::make('status')
+                Select::make('status')
                     ->label('Status')
+                    ->options(ContentStatus::class)
+                    ->default(ContentStatus::Draft)
                     ->required(),
             ]);
     }
@@ -94,7 +98,7 @@ class TopicResource extends Resource
                     ->sortable(),
                 TextColumn::make('status')
                     ->label('Status')
-                    ->searchable(),
+                    ->badge(),
                 TextColumn::make('created_at')
                     ->label('Erstellt')
                     ->dateTime()
@@ -107,7 +111,9 @@ class TopicResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('status')
+                    ->label('Status')
+                    ->options(ContentStatus::class),
             ])
             ->recordActions([
                 EditAction::make(),

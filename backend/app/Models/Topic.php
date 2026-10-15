@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ContentStatus;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -28,6 +29,7 @@ class Topic extends Model
     protected $casts = [
         'level_required' => 'integer',
         'order_index' => 'integer',
+        'status' => ContentStatus::class,
     ];
 
     public function subject(): BelongsTo
