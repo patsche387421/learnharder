@@ -26,4 +26,4 @@ Regeln und Komponenten-Anleitungen: `docs/design/`. Icons: `src/assets/icons/`.
 
 ## Offen
 
-- `tokens.css` §5 (Übergangs-Aliase `--fach-*`, `--primary` …) löschen, sobald nichts mehr darauf verweist. Das Backend speichert in `subjects.color_token` noch `--fach-*`-Namen.
+- `tokens.css` §5 (Übergangs-Aliase `--fach-*`, `--primary` …) löschen, sobald nichts mehr darauf verweist. Das Backend speichert in `subjects.color_token` seit 2026-10-15 `--subject-*`-Namen, nicht mehr `--fach-*`.

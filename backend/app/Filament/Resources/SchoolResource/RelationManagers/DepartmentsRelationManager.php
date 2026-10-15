@@ -35,7 +35,7 @@ class DepartmentsRelationManager extends RelationManager
                     ->maxLength(255),
                 TextInput::make('color_token')
                     ->label('Farb-Token')
-                    ->helperText('Token aus frontend/src/styles/tokens.css, z. B. --fach-pos')
+                    ->helperText('Token aus frontend/src/styles/tokens.css, z. B. --subject-pos')
                     ->maxLength(255),
                 Toggle::make('is_active')
                     ->label('Aktiv')

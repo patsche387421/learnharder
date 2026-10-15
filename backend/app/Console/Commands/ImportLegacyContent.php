@@ -86,7 +86,7 @@ class ImportLegacyContent extends Command
                         'name' => ['de' => $nameDe],
                         'description' => ['de' => $descDe],
                         'icon_name' => basename($fachData['icon'] ?? 'book', '.svg'),
-                        'color_token' => "--fach-{$slug}",
+                        'color_token' => "--subject-{$slug}",
                         'order_index' => $fIndex + 1,
                         'is_active' => true,
                     ]
