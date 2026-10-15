@@ -21,7 +21,15 @@ class QuestionResource extends Resource
 {
     protected static ?string $model = Question::class;
 
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-question-mark-circle';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Inhalte';
+
+    protected static ?string $modelLabel = 'Frage';
+
+    protected static ?string $pluralModelLabel = 'Fragen';
+
+    protected static ?int $navigationSort = 3;
 
     public static function form(Schema $schema): Schema
     {

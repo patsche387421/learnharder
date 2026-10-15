@@ -21,7 +21,15 @@ class TopicResource extends Resource
 {
     protected static ?string $model = Topic::class;
 
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-queue-list';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Inhalte';
+
+    protected static ?string $modelLabel = 'Thema';
+
+    protected static ?string $pluralModelLabel = 'Themen';
+
+    protected static ?int $navigationSort = 2;
 
     public static function form(Schema $schema): Schema
     {
