@@ -15,7 +15,7 @@ Schema, Migrationen, Seeder und Factories. Allgemeine Regeln: `../../CLAUDE.md`,
 - Jede Migration braucht ein funktionierendes `down()`.
 - Lernverlauf der Schüler darf nicht durch CMS-Löschungen verschwinden: für Inhalte Soft Deletes oder `restrictOnDelete`, kein `cascadeOnDelete` auf Verlaufstabellen.
 - Seeder mit Test-Accounts nur in `local`/`testing` ausführen (`app()->environment(...)` prüfen).
-- Zieldatenbank: Postgres (Entscheidung offen, siehe `docs/ENTSCHEIDUNGEN.md`). Keine DB-spezifischen Features ohne Not.
+- Zieldatenbank: Postgres (E-007 in `docs/ENTSCHEIDUNGEN.md`). Keine DB-spezifischen Features ohne Not.
 
 ## Bekannte Schema-Lücken
 

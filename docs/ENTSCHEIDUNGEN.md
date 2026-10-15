@@ -33,11 +33,15 @@ Jede Entscheidung: Nummer, Datum, was, warum, Folgen. Offene Fragen stehen unten
 - **Warum:** Ein Ort für Designänderungen, damit Repo und Design nicht auseinanderlaufen. Das Google-Fonts-`@import` des Artefakts würde beim Laden externe Server kontaktieren. Das verbietet die Datenschutz-Regel in `CLAUDE.md` (keine externen CDNs oder Fonts).
 - **Folgen:** Das `@import` wird nie übernommen. Schriften liegen selbst gehostet unter `frontend/public/assets/fonts/`. Stand 2026-10-14 entspricht die Kopie dem Artefakt (Version 25) bis auf dieses `@import`. Geänderte Token-Namen werden in den Komponenten nachgezogen. Regeln: `frontend/src/styles/CLAUDE.md`.
 
+### E-007 — Datenbank: PostgreSQL (2026-10-15)
+- **Entscheidung:** learnharder.app nutzt PostgreSQL, lokal und in Produktion. MariaDB fällt weg.
+- **Warum:** Sail und `backend/.env.example` laufen schon mit Postgres 18, und die Nutzerdaten in Supabase liegen ebenfalls in Postgres. Der Umzug bleibt so ein Postgres-zu-Postgres-Import ohne Typumwandlung.
+- **Folgen:** Der Prod-Stack in `infra/` bekommt Postgres. Die Pläne nennen noch „PostgreSQL / MariaDB“. Es gilt dieser Eintrag. Schließt O-001.
+
 ## Offen
 
 | Nr. | Frage | Empfehlung | Warum offen |
 |---|---|---|---|
-| O-001 | Datenbank: Postgres oder MariaDB? | **Postgres** | Sail nutzt schon Postgres, und der Supabase-Export ist Postgres. Die Pläne nennen noch beides. |
 | O-002 | Laravel 13 + Filament 3 oder auf Filament 4 wechseln? | Vor dem Ausbau des CMS prüfen | Lock-Datei hat Laravel 13.35 mit Filament 3.3. Je später der Wechsel, desto teurer. |
 | O-003 | MVP-Umfang | Kürzen, siehe `plans/README.md` | Der Plan packt Landing Page, KI-Übersetzung, Newsletter und PWA-Offline ins MVP. |
 | O-004 | Wann werden die Supabase-Nutzerdaten exportiert? | Möglichst bald einen Sicherungs-Dump ziehen | Die Prod-Daten liegen nur dort. Die App ist im Wartungsmodus und erzeugt keinen Traffic mehr. |
