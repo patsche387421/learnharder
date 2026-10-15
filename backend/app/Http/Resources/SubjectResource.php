@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\Subject;
+use App\Support\Progression;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -25,6 +26,8 @@ class SubjectResource extends JsonResource
             'color_token' => $this->color_token,
             'topics_count' => $this->whenCounted('topics'),
             'topics_done' => $this->whenCounted('topics_done'),
+            'xp' => $this->whenHas('xp'),
+            'level' => $this->whenHas('xp', fn ($xp) => Progression::subjectLevel($xp)),
             'topics' => TopicResource::collection($this->whenLoaded('topics')),
         ];
     }

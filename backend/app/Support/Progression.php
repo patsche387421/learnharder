@@ -66,6 +66,12 @@ final readonly class Progression
         ];
     }
 
+    /** Fach-Level aus den Fach-EP (E-018): dieselbe Kurve, ohne Prestige, ab 7.880 EP bleibt es bei 100. */
+    public static function subjectLevel(int $xp): int
+    {
+        return $xp >= self::CYCLE_XP ? self::MAX_LEVEL : self::fromTotalXp($xp)->level;
+    }
+
     /** EP im Zyklus, ab denen Level n beginnt. */
     public static function threshold(int $level): int
     {

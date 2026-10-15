@@ -53,6 +53,10 @@ $$\text{Schwellenwert}(n) = \text{round}((n-1)^{1.5} \times 8)$$
 
 Nach einem Prestige beginnt der Rang wieder bei Bronze.
 
+### 2.4 Fach-Level (E-018)
+
+Jedes Fach hat ein eigenes Level aus den EP, die man in diesem Fach gesammelt hat. Es nutzt die Schwellen aus §2.1, hat aber kein Prestige und bleibt ab 7.880 Fach-EP bei Level 100.
+
 ---
 
 ## 3. Brainpower (BP) System-Balancierung

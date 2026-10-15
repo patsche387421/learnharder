@@ -83,6 +83,15 @@ class ProgressionTest extends TestCase
         $this->assertSame($rank, Progression::fromTotalXp(Progression::threshold($level))->rank);
     }
 
+    public function test_fach_level_ohne_prestige_mit_schluss_bei_100(): void
+    {
+        $this->assertSame(1, Progression::subjectLevel(0));
+        $this->assertSame(2, Progression::subjectLevel(8));
+        $this->assertSame(100, Progression::subjectLevel(7880));
+        $this->assertSame(100, Progression::subjectLevel(8000));
+        $this->assertSame(100, Progression::subjectLevel(20000));
+    }
+
     public function test_negative_ep_zaehlen_als_null(): void
     {
         $this->assertSame(1, Progression::fromTotalXp(-5)->level);
