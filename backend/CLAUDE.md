@@ -29,7 +29,7 @@ Fehlt `vendor/`: einmalig `docker run --rm -v "$(pwd)":/app -w /app composer ins
 
 ## Zuständigkeit
 
-- `app/Models`, `app/Http`, `routes/` → diese Rolle
+- `app/Models`, `app/Enums`, `app/Http`, `routes/` → diese Rolle
 - `database/` → eigene Rolle, siehe `database/CLAUDE.md`
 - `app/Filament/` → eigene Rolle, siehe `app/Filament/CLAUDE.md`
 
@@ -40,6 +40,7 @@ Fehlt `vendor/`: einmalig `docker run --rm -v "$(pwd)":/app -w /app composer ins
 - API-Routen kommen nach `routes/api.php`, versioniert unter `/api/v1/…`.
 - Die Vue-App holt vor dem Login `GET /sanctum/csrf-cookie` und schickt Cookies mit. Ihr Host muss in `SANCTUM_STATEFUL_DOMAINS` stehen, ihre Origin in `CORS_ALLOWED_ORIGINS` (`.env`).
 - API-Antworten über Resources (`app/Http/Resources`). Über Schüler:innen nie E-Mail oder Klarnamen ausgeben, nur den Gamer-Tag.
+- Feste Wertelisten als Enum in `app/Enums`. Ein Enum muss zur `CHECK`-Regel seiner Spalte passen (Test für alle Fälle).
 - Zugriffsrechte über Policies, nicht über `if`-Abfragen im Controller. Admin darf alles (`Gate::before` im `AppServiceProvider`), Inhalte erben von `app/Policies/ContentPolicy.php`.
 - Filament erlaubt eine Aktion, wenn die Policy-Methode fehlt. Neue Policies deshalb mit allen Filament-Aktionen anlegen, auch wenn sie nur `false` liefern.
 - Jede neue Logik bekommt einen Feature-Test (`tests/Feature`), Tests vor jedem Commit grün.
