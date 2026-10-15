@@ -2,9 +2,15 @@
 
 namespace Tests\Feature\Filament;
 
+use App\Filament\Resources\QuestionResource\Pages\CreateQuestion;
+use App\Filament\Resources\QuestionResource\Pages\ListQuestions;
 use App\Filament\Resources\SubjectResource\Pages\EditSubject;
 use App\Filament\Resources\SubjectResource\Pages\ListSubjects;
+use App\Filament\Resources\TopicResource\Pages\CreateTopic;
+use App\Filament\Resources\TopicResource\Pages\ListTopics;
+use App\Models\Question;
 use App\Models\Subject;
+use App\Models\Topic;
 use App\Models\User;
 use Filament\Actions\DeleteAction;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -18,11 +24,47 @@ class ContentPanelTest extends TestCase
 
     private Subject $subject;
 
+    private Topic $topic;
+
+    private Question $question;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->subject = Subject::create(['slug' => 'mathe', 'name' => ['de' => 'Mathematik']]);
+        $this->topic = $this->subject->topics()->create(['slug' => 'brueche', 'title' => ['de' => 'Brüche']]);
+        $this->question = $this->topic->questions()->create(['question_text' => ['de' => 'Was ist 1/2 + 1/4?']]);
+    }
+
+    public function test_admin_oeffnet_alle_inhaltsseiten(): void
+    {
+        $this->actingAs($this->userWithRole('admin'));
+
+        foreach (['subjects' => $this->subject, 'topics' => $this->topic, 'questions' => $this->question] as $path => $record) {
+            $this->get("/admin/{$path}")->assertOk();
+            $this->get("/admin/{$path}/create")->assertOk();
+            $this->get("/admin/{$path}/{$record->id}/edit")->assertOk();
+        }
+    }
+
+    public function test_fach_und_thema_erscheinen_deutsch_auch_bei_englischer_locale(): void
+    {
+        config(['app.fallback_locale' => 'en']);
+        app()->setLocale('en');
+        $this->actingAs($this->userWithRole('admin'));
+
+        Livewire::test(ListTopics::class)
+            ->assertTableColumnStateSet('subject.name', 'Mathematik', $this->topic)
+            ->searchTable('Mathe')
+            ->assertCanSeeTableRecords([$this->topic]);
+        Livewire::test(ListQuestions::class)
+            ->assertTableColumnStateSet('topic.title', 'Brüche', $this->question);
+
+        $this->assertSame([$this->subject->id => 'Mathematik'],
+            Livewire::test(CreateTopic::class)->instance()->form->getComponent('subject_id')->getOptions());
+        $this->assertSame([$this->topic->id => 'Mathematik – Brüche'],
+            Livewire::test(CreateQuestion::class)->instance()->form->getComponent('topic_id')->getOptions());
     }
 
     public function test_autor_kann_bearbeiten_aber_nicht_loeschen(): void

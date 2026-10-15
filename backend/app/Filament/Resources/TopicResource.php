@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\TopicResource\Pages\CreateTopic;
 use App\Filament\Resources\TopicResource\Pages\EditTopic;
 use App\Filament\Resources\TopicResource\Pages\ListTopics;
+use App\Models\Subject;
 use App\Models\Topic;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -16,6 +17,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class TopicResource extends Resource
 {
@@ -36,7 +38,9 @@ class TopicResource extends Resource
         return $schema
             ->components([
                 Select::make('subject_id')
-                    ->relationship('subject', 'name')
+                    // Postgres kann nicht nach JSON sortieren, Namen zeigt das CMS auf Deutsch (E-012)
+                    ->relationship('subject', 'slug', fn (Builder $query) => $query->orderBy('order_index'))
+                    ->getOptionLabelFromRecordUsing(fn (Subject $record): string => $record->getTranslation('name', 'de'))
                     ->required(),
                 TextInput::make('slug')
                     ->required(),
@@ -66,6 +70,7 @@ class TopicResource extends Resource
                     ->label('ID')
                     ->searchable(),
                 TextColumn::make('subject.name')
+                    ->state(fn (Topic $record): string => $record->subject->getTranslation('name', 'de'))
                     ->searchable(),
                 TextColumn::make('slug')
                     ->searchable(),

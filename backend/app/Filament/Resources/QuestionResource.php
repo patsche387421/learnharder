@@ -6,6 +6,8 @@ use App\Filament\Resources\QuestionResource\Pages\CreateQuestion;
 use App\Filament\Resources\QuestionResource\Pages\EditQuestion;
 use App\Filament\Resources\QuestionResource\Pages\ListQuestions;
 use App\Models\Question;
+use App\Models\Subject;
+use App\Models\Topic;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -16,6 +18,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class QuestionResource extends Resource
 {
@@ -36,7 +39,12 @@ class QuestionResource extends Resource
         return $schema
             ->components([
                 Select::make('topic_id')
-                    ->relationship('topic', 'title')
+                    // Postgres kann nicht nach JSON sortieren: nach Fach, dann Thema, Titel auf Deutsch (E-012)
+                    ->relationship('topic', 'slug', fn (Builder $query) => $query
+                        ->with('subject')
+                        ->orderBy(Subject::select('order_index')->whereColumn('subjects.id', 'topics.subject_id'))
+                        ->orderBy('order_index'))
+                    ->getOptionLabelFromRecordUsing(fn (Topic $record): string => $record->subject->getTranslation('name', 'de').' – '.$record->getTranslation('title', 'de'))
                     ->required(),
                 TextInput::make('type')
                     ->required(),
@@ -70,6 +78,7 @@ class QuestionResource extends Resource
                     ->label('ID')
                     ->searchable(),
                 TextColumn::make('topic.title')
+                    ->state(fn (Question $record): string => $record->topic->getTranslation('title', 'de'))
                     ->searchable(),
                 TextColumn::make('type')
                     ->searchable(),
