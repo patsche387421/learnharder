@@ -17,8 +17,7 @@ const routes = [
       { path: ':subject', component: () => import('../views/SubjectView.vue') },
       { path: ':subject/:topic', component: () => import('../views/TopicView.vue') },
       { path: ':subject/:topic/theory', component: () => import('../views/TheoryView.vue'), meta: { title: 'Theorie', focus: true } },
-      // Lerneinheit folgt in Schritt 8, bis dahin Platzhalter
-      { path: ':subject/:topic/lesson', component: placeholder, meta: { title: 'Lerneinheit', focus: true } },
+      { path: ':subject/:topic/lesson', component: () => import('../views/LessonView.vue'), meta: { title: 'Lerneinheit', focus: true } },
     ],
   },
   { path: '/team', component: placeholder, meta: { title: 'Team' } },
