@@ -25,7 +25,7 @@
 
 ## Widersprüche in den Plänen
 
-1. **Laravel 11** steht in beiden Plänen. Installiert ist **Laravel 13.35**.
+1. **Laravel 11** steht in beiden Plänen. Installiert ist **Laravel 13.36**.
 2. **Datenbank:** „PostgreSQL / MariaDB“. Sail und `.env.example` nutzen Postgres (`pgsql`). Die Pläne nennen noch beides. → entschieden: Postgres (`ENTSCHEIDUNGEN.md` E-007)
 3. **Versionen:** Der Setup-Plan nennt `v2.0.0-alpha.1` als Ziel, §4 nennt `v0.1.0`/`v0.2.0`. Beide Tags `v0.1.0` und `v2.0.0-plan` existieren mit derselben Beschreibung. Vorschlag: nur noch `v2.0.0-alpha.N` weiterführen.
 4. **Ökonomie-Modell §2:** Die Formel `round(n^1.5 × 8)` passt zu Level 5/10/25/50/100, aber nicht zu Level 1 (Formel ergibt 8, Tabelle sagt 0) und Level 2 (Formel 23, Tabelle 8). Die Spalte „XP zum nächsten Level“ ist dadurch auch falsch. Vor der Umsetzung festlegen, ob die Schwelle für Level n `(n−1)` oder `n` verwendet.
@@ -55,4 +55,4 @@ Der kritische Pfad zum ersten echten Nutzer ist kürzer:
 
 1. **Prod-Daten nur in Supabase.** Ohne Traffic kann ein Free-Projekt pausiert werden. → Bald einen Dump ziehen und sicher ablegen (nicht ins Repo).
 2. **Umfang.** Ohne gekürztes MVP (R4 im Plan) gibt es keinen Go-Live.
-3. **Framework-Versionen.** Filament 3 auf Laravel 13: vor dem CMS-Ausbau klären, ob Filament 4 der bessere Weg ist.
+3. **Framework-Versionen.** Entschieden: Filament 5 (E-008). Das Translatable-Plugin für v5 ist ein Community-Fork, vor M2 prüfen.
