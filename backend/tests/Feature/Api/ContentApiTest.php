@@ -124,6 +124,7 @@ class ContentApiTest extends TestCase
             ->assertOk()
             ->assertJsonPath('data.title', 'Schleifen')
             ->assertJsonPath('data.questions_count', 1)
+            ->assertJsonPath('data.xp_total', 2)
             ->assertJsonPath('data.theory.0.title', 'for-Schleife')
             ->assertJsonPath('data.theory.0.html', fn (string $html) => str_contains($html, '<strong>for</strong>')
                 && str_contains($html, '<code class="language-java">'));

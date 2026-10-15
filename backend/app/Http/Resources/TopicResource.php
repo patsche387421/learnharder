@@ -26,6 +26,7 @@ class TopicResource extends JsonResource
             'level_required' => $this->level_required,
             'locked' => $this->level_required > $request->user()->progression()->level,
             'questions_count' => $this->whenCounted('questions'),
+            'xp_total' => $this->whenHas('xp_total', fn ($xp) => (int) $xp), // höchstens so viele EP, je Frage einmal pro Tag
             'done' => $this->whenHas('done'),
             'theory' => TheorySectionResource::collection($this->whenLoaded('theorySections')),
         ];

@@ -22,6 +22,12 @@ describe('LhSubjectCard', () => {
     expect(w.find('.lh-xp__meta').text()).toContain('12 / 19 Themen')
   })
 
+  it('begonnen ohne Fach-Level zeigt nur die erledigten Themen', () => {
+    const w = mount(LhSubjectCard, { props: { ...pos, done: 3, total: 14 } })
+    expect(w.find('.lh-xp__meta').text()).not.toContain('Noch nicht begonnen')
+    expect(w.find('.lh-xp__meta').text()).toContain('3 / 14 Themen')
+  })
+
   it('zeigt „Noch nicht begonnen“ statt 0 %', () => {
     const w = mount(LhSubjectCard, { props: { ...pos, total: 14 } })
     expect(w.find('.lh-xp__meta').text()).toContain('Noch nicht begonnen')

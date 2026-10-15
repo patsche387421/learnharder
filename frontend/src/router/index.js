@@ -8,7 +8,19 @@ const placeholder = () => import('../views/PlaceholderView.vue')
 const routes = [
   { path: '/login', component: () => import('../views/LoginView.vue'), meta: { title: 'Einloggen', layout: false, public: true } },
   { path: '/', component: placeholder, meta: { title: 'Hub' } },
-  { path: '/learn', component: placeholder, meta: { title: 'Lernen' } },
+  // Verschachtelt, damit der Tab „Lernen“ auch auf Fach, Thema und in der Lerneinheit aktiv bleibt
+  {
+    path: '/learn',
+    meta: { title: 'Lernen' },
+    children: [
+      { path: '', component: () => import('../views/LearnView.vue') },
+      { path: ':subject', component: () => import('../views/SubjectView.vue') },
+      { path: ':subject/:topic', component: () => import('../views/TopicView.vue') },
+      // Theorie (Schritt 7) und Lerneinheit (Schritt 8) folgen, bis dahin Platzhalter
+      { path: ':subject/:topic/theory', component: placeholder, meta: { title: 'Theorie', focus: true } },
+      { path: ':subject/:topic/lesson', component: placeholder, meta: { title: 'Lerneinheit', focus: true } },
+    ],
+  },
   { path: '/team', component: placeholder, meta: { title: 'Team' } },
   { path: '/league', component: placeholder, meta: { title: 'Liga' } },
   { path: '/profile', component: () => import('../views/ProfileView.vue'), meta: { title: 'Profil' } },
