@@ -22,7 +22,15 @@ class SubjectResource extends Resource
 {
     protected static ?string $model = Subject::class;
 
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-book-open';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Inhalte';
+
+    protected static ?string $modelLabel = 'Fach';
+
+    protected static ?string $pluralModelLabel = 'Fächer';
+
+    protected static ?int $navigationSort = 1;
 
     public static function form(Schema $schema): Schema
     {

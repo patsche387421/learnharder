@@ -155,3 +155,26 @@ V1-Protokoll: `_archiv/agent/SESSION_REPORT.md` und `SESSION_REPORT_ARCHIVE.md`.
   - Vor M3: mehr Fragen oder weniger XP für wiederholte Antworten (158 Fragen = 316 XP pro Durchlauf, ein Zyklus hat 8.000).
   - Registrierung in V2 mit sauberer Einwilligung, auch für unter 14-Jährige.
   - Verschlüsselte Zweitkopie des Dumps (Patsche). Vitest 5 und jsdom 30.
+
+## 2026-10-15 — Nur Deutsch im CMS, Datenmodell Schule, Schulstruktur in Filament
+
+- **Branch:** `feat/cms-translatable` (nur Prüfung, unverändert gelöscht), `dev` (E-012, E-013), `feat/schulstruktur` (nach `dev` gemerged als `9ac2005`, `--no-ff`, gelöscht), `feat/schulstruktur-models` (offen, noch nicht gemerged)
+- **Commits:** `1f7d64e` (E-012), `552efb7` (E-013 und Plan), `769829b` (Schema), `b33e910` (Doku), `8379316` (Models und Enums), `a32570b` (Doku), `bb3af01` (Filament und Policies), `cd23e3d` (Doku), `9325ad3` (Menü), dazu dieser Eintrag
+- **Ergebnis:**
+  - `lara-zeus/spatie-translatable` 2.0.1 geprüft (MIT, Dry-Run ohne Konflikte, eine Person pflegt es, offene Fehler #42, #51, #63). Entscheidung E-012: CMS bis nach M5 nur Deutsch, kein Plugin.
+  - Recherche HTL Mödling: 12 Abteilungen, 5 Ausbildungsformen (5 Jahre bis 4 Semester). Daraus E-013 und `docs/plans/DATENMODELL_SCHULE.md`, Szenarien durchgespielt: kritische eingebaut, mittlere geplant, schwache in §6 gemerkt.
+  - Schema in den bestehenden Migrationen (lief noch auf keinem Server): Schule → Abteilung → Ausbildungsgang → Klasse je Schuljahr, Lehrplan, Lehrkraft-Zuordnung. Postgres sichert ab: zusammengesetzter Fremdschlüssel, Teil-Index „eine aktive Klasse pro Schuljahr“, `NULLS NOT DISTINCT`, `CHECK`s, `lower()`-Indizes auf E-Mail, Gamer-Tag und Domain. `quiz_attempts.topic_id` jetzt `RESTRICT`, `users.deactivated_at` neu.
+  - Models und Enums (`ProgramForm`, `ProgramUnit`) für die Schulstruktur. Filament: `SchoolResource` (Mail-Domains, Abteilungen, Schuljahre) und `ProgramResource` (Lehrplan), nur Admin über `SchoolStructurePolicy`. Menü deutsch, Gruppen „Inhalte“ und „Schule“, „Übersicht“ statt Dashboard.
+  - Gelernt: Selbstverweis-Fremdschlüssel braucht ein eigenes `Schema::table` nach dem `create`. `ON DELETE RESTRICT` meldet SQLSTATE `23001`, nicht `23503`.
+  - Haiku-Subagent zur DB-Überwachung bewusst weggelassen. Vorher/Nachher stattdessen per Skript (Schema-Dump und Zeilenzahlen).
+- **Geprüft:** Tests 23 → 56 grün, Pint sauber. `migrate:fresh`, kompletter Rollback, `migrate`, Seed und Import: Inhalte wieder vollständig (7 Fächer, 32 Themen, 158 Theorieblöcke, 158 Fragen, 632 Optionen), nur Cache und Sessions leer. CI auf `dev` grün (Runs `38754459893`, `38759218245`). Menü von Patsche im Browser gesehen. Formulare der Schulstruktur nur per Test geprüft, nicht im Browser. `feat/schulstruktur-models` noch nicht gepusht, CI dafür offen.
+- **Offen:**
+  - `feat/schulstruktur-models` mit `--no-ff` nach `dev`, pushen, CI.
+  - `APP_LOCALE=de` und Fallback in `.env.example` (lokal steht `en`/`en`), dazu deutsche Validierungsmeldungen (Laravel-Sprachdateien fehlen).
+  - Leere Spalten Fach/Thema in den Inhaltstabellen (Labels auf JSON-Spalten) samt Feature-Tests.
+  - M2-Rest: Enums für `status`/`type`/`difficulty`, Antwortoptionen im Fragenformular, Panel-Theme aus `tokens.css` (Tailwind 4), Veröffentlichen in `ContentPolicy`.
+  - Plan Schule §8 Schritte 2–4 (Klassen, Sichtbarkeit, Registrierung) und §7 (Mail-Domains und Microsoft 365, Kürzel, `users.name`, Einwilligung unter 14).
+  - Hetzner (M4a Staging und Backups) erst, wenn andere Inhalte schreiben. Patsche arbeitet vorerst lokal. Bausteine für Backups (Dump, offsite, verschlüsselt, append-only, Aufbewahrung, Alarm, Restore-Test, Runbook) noch nirgends dokumentiert.
+  - Lehrkraft-Testlauf verworfen.
+  - `docs/plans/README.md` „Ist-Stand“ veraltet (u. a. „13 Tests“).
+  - Weiter offen: verschlüsselte Zweitkopie des Dumps, mehr Fragen oder weniger XP vor M3, Vitest 5 und jsdom 30.
