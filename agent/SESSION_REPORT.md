@@ -197,3 +197,24 @@ V1-Protokoll: `_archiv/agent/SESSION_REPORT.md` und `SESSION_REPORT_ARCHIVE.md`.
   - Plan Schule §8 Schritte 2–4 und §7.
   - `docs/plans/README.md` „Ist-Stand“ veraltet (u. a. „13 Tests“).
   - Weiter offen: Hetzner (M4a) und Backup-Bausteine dokumentieren, verschlüsselte Zweitkopie des Dumps, mehr Fragen oder weniger XP vor M3, Vitest 5 und jsdom 30.
+
+## 2026-10-15 — M2: CMS redaktionstauglich
+
+- **Branch:** je Schritt ein Branch, mit `--no-ff` nach `dev` gemerged und gelöscht: `feat/cms-wertelisten` (`d159746`), `feat/cms-antwortoptionen` (`03d3789`), `feat/cms-veroeffentlichen` (`34c30f5`), `feat/cms-theorie` (`28cc886`), `feat/cms-panel-design` (`571c4a8`), `chore/cms-aufraeumen` (`45f98ca`), `docs/m2-abschluss` (`6e1c930`)
+- **Commits:** 17 Einzel-Commits und 7 Merges, siehe `git log 2b370f9..6e1c930`, dazu dieser Eintrag
+- **Ergebnis:**
+  - Wertelisten als Enums (`ContentStatus`, `QuestionType`, `Difficulty`) mit `CHECK`-Regeln in Postgres. Neue Inhalte starten als Entwurf. Fragetypen in M2: eine richtige und mehrere richtige Antworten, Lückentext später (Entscheidung Patsche).
+  - Fragenformular: Antworten direkt pflegen (2–6, sortierbar), bei einer richtigen schaltet der neue Schalter die anderen aus, erst Fach dann Thema, Hilfetexte. Kürzel prüft das Formular auf Format und Eindeutigkeit (vorher Serverfehler).
+  - E-014: Veröffentlichen nur Admins. Ändern Autor:innen Veröffentlichtes oder dessen Theorie, geht es zurück in Prüfung. Mehrfachaktion „Veröffentlichen“ für Admins.
+  - Theorie als Relation Manager am Thema (Markdown, ohne Uploads, kein CDN).
+  - Panel: Name „learnharder“, Bronze-Palette aus `--accent` von Hand in OKLCH (Filaments Automatik wurde Orange mit Kontrast 4,15), `Color::Stone`, Atkinson Hyperlegible Next als Kopie in `backend/public/fonts/`. `APP_NAME=learnharder` in `.env.example`.
+  - Aufräumen: leere Sprachfelder werden `NULL` (`HasTranslationsWithoutEmpty`), `color_token` nutzt `--subject-*`, der Import überschreibt keine Themen mit Inhalt mehr (vorher löschte er Fragen und Theorie).
+  - Gelernt: Filament schreibt Labels in Fehlermeldungen klein („titel“), jetzt zentral über `Field::configureUsing` gelöst. Gesperrte Felder prüft Filament trotzdem, gesperrte Optionen lehnt es auf dem Server ab. GitHub hat für einen Push zwei CI-Läufe gestartet, `concurrency` brach einen ab.
+- **Geprüft:** Tests 66 → 108 grün, Pint sauber, beides auf jedem Zwischen-Commit. CI auf `dev` nach jedem Merge grün. Lokale DB zweimal neu aufgesetzt (`migrate:fresh --seed` und Import), Zahlen danach vollständig. Fragenformular, Theorie und Panel-Design von Patsche im Browser gesehen, das Veröffentlichen als Autor nur per Test.
+- **Offen:**
+  - Lokale `.env` hat noch `APP_NAME=Laravel` (Umstellen loggt einmal aus).
+  - Ändert ein Autor Theorie, zeigt das Status-Feld des Themas bis zum Neuladen noch „Veröffentlicht“.
+  - Für M3: Die App zeigt nur `published`, auch das Thema muss veröffentlicht sein. Theorie-Markdown sicher rendern.
+  - Schriftdatei liegt doppelt (Frontend und Backend), bei Änderungen beide ersetzen. `tokens.css` §5 (`--fach-*`) kann jetzt raus.
+  - Plan Schule §8 Schritte 2–4 und §7. Vor M3: mehr Fragen oder weniger XP für wiederholte Antworten.
+  - Weiter offen: Hetzner (M4a) und Backup-Bausteine, verschlüsselte Zweitkopie des Dumps, Vitest 5 und jsdom 30.
