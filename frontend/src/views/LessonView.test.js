@@ -60,6 +60,22 @@ describe('LessonView', () => {
     expect(wrapper.find('.lh-lessonbar a').attributes('href')).toBe('/learn/pos/schleifen')
   })
 
+  it('Fragetext, Antworten und Erklärung behalten ihre Zeilenumbrüche', async () => {
+    const code = 'Was gibt das aus?\nstring name = "max";\nConsole.WriteLine(name);'
+    mockFetch(ok(topic), { status: 201, body: { data: { id: 'a1', questions: [{ ...lesson.questions[0], text: code }] } } }, ok(answer({ correct_option_ids: ['o1'], explanation: 'Zeile 1\nZeile 2' })))
+    const { wrapper } = await mountRoute(mount, LessonView, '/learn/:subject/:topic/lesson', '/learn/pos/schleifen/lesson')
+    await flushPromises()
+
+    const question = wrapper.find('.lesson__question')
+    expect(question.text()).toBe(code)
+    expect(question.classes()).toContain('lesson__pre')
+    expect(options(wrapper)[0].find('.lesson__pre').text()).toBe('Dreimal')
+
+    await click(options(wrapper)[0])
+    await click(primary(wrapper))
+    expect(wrapper.find('.lh-feedback__text.lesson__pre').text()).toBe('Zeile 1\nZeile 2')
+  })
+
   it('Prüfen geht erst nach einer Auswahl, bei einer richtigen ersetzt die Auswahl', async () => {
     const { wrapper } = await show()
 
