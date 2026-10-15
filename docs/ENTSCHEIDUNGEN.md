@@ -91,6 +91,11 @@ Jede Entscheidung: Nummer, Datum, was, warum, Folgen. Offene Fragen stehen unten
 - **Warum:** M3 soll nur den Lernablauf liefern. Klassen und Einschreibungen in Filament würden M3 etwa verdoppeln.
 - **Folgen:** Die Fächer-API filtert in M3 nur nach Status und `is_active`. Mit dem Klassenfilter kommt die Einschreibung dazu, die Routen bleiben gleich.
 
+### E-018 — Fach-Level aus den EP eines Fachs (2026-10-15)
+- **Entscheidung:** Fach-EP sind alle EP, die eine Person in einem Fach bekommen hat. Das Fach-Level nutzt dieselbe Kurve wie das Gesamt-Level (`round((n−1)^1.5 × 8)`), ohne Prestige und mit Schluss bei Level 100.
+- **Warum:** So war es in V1 (`subject_xp`), und es wächst mit jedem Üben, auch nachdem alle Themen einmal erledigt sind. Eine zweite Kurve müsste man erklären.
+- **Folgen:** Keine neue Tabelle: Die Fach-EP sind die Summe von `question_answers.xp_awarded` über die Fragen des Fachs. Die Tagesregel (E-015) gilt damit auch fürs Fach-Level. Der Server rechnet, die Fach-Karte zeigt „Fach-Level n“.
+
 ## Offen
 
 | Nr. | Frage | Empfehlung | Warum offen |
