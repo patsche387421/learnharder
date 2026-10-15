@@ -6,6 +6,7 @@ use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -56,6 +57,11 @@ class User extends Authenticatable implements FilamentUser
             'last_active_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function stats(): HasOne
+    {
+        return $this->hasOne(UserStat::class);
     }
 
     /**
