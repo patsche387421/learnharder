@@ -10,6 +10,7 @@ Pläne, Entscheidungen und Produktkonzepte für V2. Allgemeine Regeln: `../CLAUD
 | `plans/LEARNHARDER_V2_PROJEKTPLAN_PSP_RISIKEN.md` | Gesamtplan: Rollen, PSP, Releases, Risiken |
 | `plans/SETUP_DOMAIN_UND_DATENBANK_MIGRATION.md` | Hetzner, Domains, Datenmigration, Versionen |
 | `plans/GAMIFICATION_OEKONOMIE_MODELL.md` | XP-, Level- und Brainpower-Formeln |
+| `plans/DATENMODELL_SCHULE.md` | Schule, Abteilungen, Klassen, Lehrkräfte, Registrierung |
 | `ENTSCHEIDUNGEN.md` | Entscheidungslog: was entschieden ist, was offen ist |
 | `design/` | Brand Book, Sprache & Glossar, Komponenten-Anleitungen. Kopie aus dem Design-System-Artefakt, Änderungen dort machen (siehe `frontend/src/styles/CLAUDE.md`) |
 

@@ -65,6 +65,11 @@ Jede Entscheidung: Nummer, Datum, was, warum, Folgen. Offene Fragen stehen unten
 - **Warum:** Alle Inhalte gibt es nur auf Deutsch, Englisch steht erst nach M5 an. Das einzige Plugin für Filament 5 (`lara-zeus/spatie-translatable` 2.0.1) ist der offizielle Nachfolger, wird aber von einer Person gepflegt und hat offene Fehler beim Sprachwechsel (Issues #42, #51, #63). Eigene Sprach-Tabs ohne Umschalter für das ganze Formular waren keine saubere Lösung.
 - **Folgen:** Die JSON-Spalten `{"de": …}` bleiben, Englisch braucht später keine Migration. Wenn Englisch kommt, wird der Sprachumschalter neu entschieden (Plugin oder selbst gebaut, beide Sprachen im Formular-State). M2 heißt jetzt „Deutsch“ statt „de/en“.
 
+### E-013 — Datenmodell für Schule, Klassen und Registrierung (2026-10-15)
+- **Entscheidung:** Schule → Abteilung → Ausbildungsgang → Klasse pro Schuljahr. Der Lehrplan verbindet Fach und Ausbildungsgang, `teaching_assignments` regelt, wer in welcher Klasse welches Fach unterrichtet. Schüler:innen registrieren sich nur mit Schul-Mail und Bestätigungscode und sehen Inhalte erst nach der Zuordnung zu einer Klasse. Lehrkräfte legt der Admin an. Plan: `plans/DATENMODELL_SCHULE.md`.
+- **Warum:** Die HTL Mödling hat 12 Abteilungen und Ausbildungsformen mit unterschiedlicher Dauer (5 Jahre bis 4 Semester) und eigenen Lehrplänen. Ein Fach kann in einer Klasse von mehreren Lehrkräften unterrichtet werden. Die Szenarien Klassenwechsel, DSGVO-Löschung und Sommerferien haben das erste Modell gebrochen und sind eingearbeitet.
+- **Folgen:** `classes` wird zu `school_classes`, `schools.domain` zu `school_email_domains`. Die Kaskade über `classes.teacher_id` entfällt. Löschregeln richten sich nach der Richtung (Personendaten `CASCADE`, Inhalte und Struktur `RESTRICT`). Offene Punkte stehen im Plan §7.
+
 ## Offen
 
 | Nr. | Frage | Empfehlung | Warum offen |
