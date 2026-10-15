@@ -42,6 +42,12 @@ public/assets/fonts/   selbst gehostete Schriften (keine CDNs)
 - Keine Secrets im Frontend. Konfiguration über `import.meta.env.VITE_*`.
 - `public/` wird 1:1 ausgeliefert, deshalb dort keine CLAUDE.md und keine internen Notizen.
 
-## Stand (2026-10-15)
+## Stand (2026-10-15, nach M3)
 
-13 `Lh`-Bausteine in `src/components/ui/`, jeder mit Test. `App.vue` legt den Rahmen (`LhAppLayout`) um alle Seiten, die fünf Hauptziele sind noch `PlaceholderView`. Level, Rang und Prestige im Rahmen sind fest eingetragen, bis ein User-Store sie von der API holt. `/styleguide` zeigt alle Tokens, Icons und Bausteine (nur in der Entwicklung). Beide Schriften liegen selbst gehostet in `public/assets/fonts/`. In WSL2 sind 47 Tests, `build` und `check:tokens` grün.
+- **Login:** `LoginView` (`/login`, ohne Rahmen). Der Router-Guard schickt ohne Login dorthin, eine 401 leert den Store.
+- **API:** `api/client.js` ist der einzige Ort mit `fetch` (Cookies, `X-XSRF-TOKEN`, bei 419 ein gemeinsamer CSRF-Refresh und genau eine Wiederholung, deutsche Fehlertexte). `api/learn.js` bündelt die Lern-Routen. Basis-URL aus `VITE_API_URL` (`.env.example`, lokal `.env.local`).
+- **Store:** `stores/auth.js` hält `me`, daraus Level, Rang und Prestige für den Rahmen. `applyProgress` übernimmt den Fortschritt nach einer Lerneinheit.
+- **Lernen:** `/learn` → `LearnView` (Fächer mit Fach-Level) → `SubjectView` (Themen) → `TopicView` → `TheoryView` und `LessonView` (beide `meta.focus`, ohne Tab-Leiste). Laden und Fehler über `composables/useLoad.js` und `LoadError`.
+- **Offen:** Hub, Team und Liga sind noch `PlaceholderView`, `ProfileView` zeigt nur Gamer-Tag und „Abmelden“.
+
+13 `Lh`-Bausteine in `src/components/ui/`, jeder mit Test. `/styleguide` zeigt alle Tokens, Icons und Bausteine (nur in der Entwicklung). Beide Schriften liegen selbst gehostet in `public/assets/fonts/`. In WSL2 sind 92 Tests, `build` und `check:tokens` grün.

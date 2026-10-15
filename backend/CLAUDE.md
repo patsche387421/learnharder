@@ -6,7 +6,7 @@ Laravel-API und Filament-CMS für learnharder.app. Allgemeine Regeln: siehe `../
 
 - PHP ^8.3, **Laravel 13.36** (in alten Commits steht „Laravel 11“, das stimmt nicht)
 - Filament 5.10 (CMS unter `/admin`), Livewire 4 (E-008)
-- Sanctum im SPA-Modus: Login per Session-Cookie, keine Tokens (`/api/v1/login`, `logout`, `me`)
+- Sanctum im SPA-Modus: Login per Session-Cookie, keine Tokens
 - Spatie Permission (Rollen: admin, autor, tester, teacher, student), Spatie Translatable (de/en in JSON-Spalten)
 - Lokal: Sail (`compose.yaml`, PHP 8.5) mit Postgres 18 und Redis
 
@@ -26,6 +26,20 @@ Der Import liest standardmäßig `/var/www/legacy-data`, das ist `_archiv/legacy
 Fragen ohne gültige Lösung überspringt er mit Warnung. Themen, die schon Theorie oder Fragen haben, lässt er aus: Er überschreibt nichts aus dem CMS.
 Der Seeder legt Rollen immer an, Demo-Accounts nur in `local`/`testing`. In Produktion den Admin per `php artisan make:filament-user` anlegen.
 Fehlt `vendor/`: einmalig `docker run --rm -v "$(pwd)":/app -w /app composer install`.
+Die Tests laufen gegen die Datenbank `testing` (`phpunit.xml`). Andere Befehle für diese Datenbank nur mit `./vendor/bin/sail exec -T -e DB_DATABASE=testing laravel.test …`, nie mit `--env=testing`: Es gibt keine `.env.testing`, der Befehl trifft dann die Entwicklungs-DB.
+
+## API (`routes/api.php`, alles unter `/api/v1`)
+
+| Route | Zweck |
+|---|---|
+| `POST login`, `POST logout`, `GET me` | Login per Session, `me` liefert Gamer-Tag und Fortschritt (Level, Rang, Prestige, EP) |
+| `GET subjects`, `GET subjects/{slug}` | sichtbare Fächer mit Themen, Fortschritt und Fach-Level (E-018) |
+| `GET subjects/{slug}/topics/{slug}` | Thema mit Theorie als sicherem HTML (`Str::markdown` mit `html_input: escape`) |
+| `POST topics/{id}/attempts` | Lerneinheit starten, Fragen ohne Lösung |
+| `POST attempts/{id}/answers` | eine Antwort prüfen, nur die erste pro Frage zählt |
+| `POST attempts/{id}/finish` | abschließen und EP vergeben, idempotent |
+
+Alles außer `login` braucht `auth:sanctum`. Sichtbar ist nur `published` (Thema und Frage) in einem aktiven Fach, sonst 404. In M3 sieht jede eingeloggte Person alle Inhalte (E-017).
 
 ## Zuständigkeit
 
@@ -36,7 +50,8 @@ Fehlt `vendor/`: einmalig `docker run --rm -v "$(pwd)":/app -w /app composer ins
 ## Regeln
 
 - Spiellogik (XP, Brainpower, Streaks, Trophäen) läuft **nur serverseitig**. Der Client schickt Antworten, der Server rechnet.
-- Quiz-Abschlüsse brauchen einen Idempotency-Key, damit doppelte Requests nicht doppelt XP geben.
+- Quiz-Abschlüsse brauchen einen Idempotency-Key, damit doppelte Requests nicht doppelt XP geben. Bei Lerneinheiten ist das die Attempt-ID.
+- EP vergibt nur `QuizAttempt::finish()`: erst `lockForUpdate` auf `user_stats`, dann die Tagesregel (E-015, Tag in `Europe/Vienna`, `App\Support\DailyXp`). Level, Rang und Prestige rechnet `App\Support\Progression` aus den Gesamt-EP, gespeichert wird nur `total_xp`.
 - API-Routen kommen nach `routes/api.php`, versioniert unter `/api/v1/…`.
 - Die Vue-App holt vor dem Login `GET /sanctum/csrf-cookie` und schickt Cookies mit. Ihr Host muss in `SANCTUM_STATEFUL_DOMAINS` stehen, ihre Origin in `CORS_ALLOWED_ORIGINS` (`.env`).
 - API-Antworten über Resources (`app/Http/Resources`). Über Schüler:innen nie E-Mail oder Klarnamen ausgeben, nur den Gamer-Tag.

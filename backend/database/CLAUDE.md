@@ -5,7 +5,7 @@ Schema, Migrationen, Seeder und Factories. Allgemeine Regeln: `../../CLAUDE.md`,
 ## Schema (Stand 2026-10-15)
 
 - **Inhalte:** `subjects` → `topics` → `theory_sections` / `questions` → `question_options` (UUID-Schlüssel, Texte als JSON `{"de": …, "en": …}`)
-- **Gamification:** `user_stats`, `quiz_attempts`, `trophies`, `user_trophies`
+- **Gamification:** `user_stats`, `quiz_attempts` (mit `finished_at`), `question_answers` (erste Antwort je Frage und Lerneinheit, mit `xp_awarded` und `xp_date`), `trophies`, `user_trophies`
 - **Schule:** `schools` → `departments` → `programs` → `school_classes` (je Schuljahr) mit `class_enrollments` und `teaching_assignments`, dazu `school_email_domains`, `school_years`, `curriculum_entries`. Plan: `docs/plans/DATENMODELL_SCHULE.md`
 - **Teams:** `teams`, `team_members`
 - **Benutzer:** `users` (bigint-ID) mit `gamer_tag`, `brainpower_current`/`_max`, `current_streak`, `deactivated_at`
@@ -23,7 +23,9 @@ Schema, Migrationen, Seeder und Factories. Allgemeine Regeln: `../../CLAUDE.md`,
 1. `current_streak` liegt doppelt in `users` und `user_stats`.
 2. Für die Brainpower-Regeneration fehlt ein Zeitstempel (z. B. `brainpower_refilled_at`).
 3. `user_stats.trophies` (Währung) und die Tabelle `trophies` (Errungenschaften) tragen denselben Namen.
-4. Es gibt kein Antwort-Log pro Frage und kein XP-Ereignis-Log (`xp_events`). Beides braucht man für Statistiken und Wiederholungen.
+4. Das Antwort-Log gibt es seit M3 (`question_answers`), ein XP-Ereignis-Log (`xp_events`) für EP außerhalb von Lerneinheiten noch nicht.
+5. `user_stats.prestige_level` wird nicht mehr gelesen, Prestige rechnet der Server aus `total_xp`. Kann weg.
+6. `question_answers.question_id` ist `RESTRICT`: Eine Frage mit Antworten lässt sich nicht löschen. Filament fängt das noch nicht ab (vermutlich Fehler 500, nicht im Browser geprüft).
 
 ## Datenmigration aus V1
 
