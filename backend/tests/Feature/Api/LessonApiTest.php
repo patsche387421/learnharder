@@ -15,6 +15,7 @@ use Carbon\CarbonImmutable;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\TestResponse;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class LessonApiTest extends TestCase
@@ -326,6 +327,27 @@ class LessonApiTest extends TestCase
         $this->actingAs($andere);
         $this->answer($id, $this->einfach, 'richtig')->assertForbidden();
         $this->finish($id)->assertForbidden();
+    }
+
+    public function test_auch_admin_darf_keine_fremde_lerneinheit_beantworten(): void
+    {
+        $id = $this->start()->json('data.id');
+        $admin = User::factory()->create();
+        $admin->assignRole(Role::create(['name' => 'admin', 'guard_name' => 'web']));
+
+        $this->flushSession();
+        $this->actingAs($admin);
+        $this->answer($id, $this->einfach, 'richtig')->assertForbidden();
+        $this->finish($id)->assertForbidden();
+    }
+
+    public function test_admin_darf_gesperrte_themen_zum_pruefen_starten(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole(Role::create(['name' => 'admin', 'guard_name' => 'web']));
+        $this->schleifen->update(['level_required' => 50]);
+
+        $this->start($admin)->assertCreated();
     }
 
     public function test_ohne_login_gibt_es_keine_lerneinheit(): void
