@@ -2,38 +2,46 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\SubjectResource\Pages;
+use App\Filament\Resources\SubjectResource\Pages\CreateSubject;
+use App\Filament\Resources\SubjectResource\Pages\EditSubject;
+use App\Filament\Resources\SubjectResource\Pages\ListSubjects;
 use App\Models\Subject;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class SubjectResource extends Resource
 {
     protected static ?string $model = Subject::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('slug')
+        return $schema
+            ->components([
+                TextInput::make('slug')
                     ->required(),
-                Forms\Components\Textarea::make('name')
+                Textarea::make('name')
                     ->required()
                     ->columnSpanFull(),
-                Forms\Components\Textarea::make('description')
+                Textarea::make('description')
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('icon_name')
+                TextInput::make('icon_name')
                     ->required(),
-                Forms\Components\TextInput::make('order_index')
+                TextInput::make('order_index')
                     ->required()
                     ->numeric()
                     ->default(0),
-                Forms\Components\Toggle::make('is_active')
+                Toggle::make('is_active')
                     ->required(),
             ]);
     }
@@ -42,23 +50,23 @@ class SubjectResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
+                TextColumn::make('id')
                     ->label('ID')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('slug')
+                TextColumn::make('slug')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('icon_name')
+                TextColumn::make('icon_name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('order_index')
+                TextColumn::make('order_index')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\IconColumn::make('is_active')
+                IconColumn::make('is_active')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -66,12 +74,12 @@ class SubjectResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -86,9 +94,9 @@ class SubjectResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListSubjects::route('/'),
-            'create' => Pages\CreateSubject::route('/create'),
-            'edit' => Pages\EditSubject::route('/{record}/edit'),
+            'index' => ListSubjects::route('/'),
+            'create' => CreateSubject::route('/create'),
+            'edit' => EditSubject::route('/{record}/edit'),
         ];
     }
 }

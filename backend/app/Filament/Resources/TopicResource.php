@@ -2,43 +2,50 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\TopicResource\Pages;
+use App\Filament\Resources\TopicResource\Pages\CreateTopic;
+use App\Filament\Resources\TopicResource\Pages\EditTopic;
+use App\Filament\Resources\TopicResource\Pages\ListTopics;
 use App\Models\Topic;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class TopicResource extends Resource
 {
     protected static ?string $model = Topic::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Select::make('subject_id')
+        return $schema
+            ->components([
+                Select::make('subject_id')
                     ->relationship('subject', 'name')
                     ->required(),
-                Forms\Components\TextInput::make('slug')
+                TextInput::make('slug')
                     ->required(),
-                Forms\Components\Textarea::make('title')
+                Textarea::make('title')
                     ->required()
                     ->columnSpanFull(),
-                Forms\Components\Textarea::make('description')
+                Textarea::make('description')
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('level_required')
+                TextInput::make('level_required')
                     ->required()
                     ->numeric()
                     ->default(1),
-                Forms\Components\TextInput::make('order_index')
+                TextInput::make('order_index')
                     ->required()
                     ->numeric()
                     ->default(0),
-                Forms\Components\TextInput::make('status')
+                TextInput::make('status')
                     ->required(),
             ]);
     }
@@ -47,26 +54,26 @@ class TopicResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
+                TextColumn::make('id')
                     ->label('ID')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('subject.name')
+                TextColumn::make('subject.name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('slug')
+                TextColumn::make('slug')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('level_required')
+                TextColumn::make('level_required')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('order_index')
+                TextColumn::make('order_index')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('status')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -74,12 +81,12 @@ class TopicResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -94,9 +101,9 @@ class TopicResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListTopics::route('/'),
-            'create' => Pages\CreateTopic::route('/create'),
-            'edit' => Pages\EditTopic::route('/{record}/edit'),
+            'index' => ListTopics::route('/'),
+            'create' => CreateTopic::route('/create'),
+            'edit' => EditTopic::route('/{record}/edit'),
         ];
     }
 }
