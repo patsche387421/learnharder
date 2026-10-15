@@ -41,9 +41,6 @@ onMounted(load)
 .learn__title { margin: 0; font: 700 26px/32px var(--font-text); color: var(--ink); }
 .learn__loading { margin: 0; color: var(--ink-muted); }
 .learn__list { display: grid; gap: var(--space-3); }
-/* Abstand zwischen „Noch nicht begonnen“ und „0 / 21 Themen“, wenn die Karte schmal ist.
-   Gehört eigentlich in .lh-xp__meta im Design-System-Artefakt (E-006), bis dahin hier. */
-.learn__list :deep(.lh-xp__meta) { gap: var(--space-2); }
 @media (min-width: 768px) {
   .learn__list { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
 }
