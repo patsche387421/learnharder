@@ -46,7 +46,7 @@ Der kritische Pfad zum ersten echten Nutzer ist kürzer:
 |---|---|---|
 | **M0** | Aufräumen | Struktur steht, Archiv entschieden, `backend/laravel` entfernt, Seeder abgesichert |
 | **M1** | Backend-Fundament | DB entschieden, `routes/api.php` + Sanctum-Login, Policies, erste Feature-Tests, CI (Pint + Tests) |
-| **M2** | Inhalte pflegbar | CMS mit Antwortoptionen, Wertelisten, de/en; Import mit Prüfung statt stillem Fallback |
+| **M2** | Inhalte pflegbar | CMS mit Antwortoptionen, Wertelisten, Deutsch (E-012); Import mit Prüfung statt stillem Fallback |
 | **M3** | Lernen funktioniert | Login → Fächer → Thema → Theorie → Quiz → Ergebnis mit serverseitigen XP/Level, Vue mit `lh-`-Komponenten |
 | **M4** | Hetzner läuft | Prod-Stack in `infra/`, TLS, tägliche Backups, Staging |
 | **M5** | Start | DNS umgestellt, Registrierung offen, Neuregistrierung angekündigt, V1-Supabase abgeschaltet → Tag `v2.0.0-alpha.1` |
@@ -56,4 +56,4 @@ Der kritische Pfad zum ersten echten Nutzer ist kürzer:
 
 1. **Prod-Daten aus Supabase.** Seit 2026-10-15 gesichert (E-009). Kein Import, V2 startet ohne V1-Nutzer (E-011).
 2. **Umfang.** Ohne gekürztes MVP (R4 im Plan) gibt es keinen Go-Live.
-3. **Framework-Versionen.** Entschieden: Filament 5 (E-008). Das Translatable-Plugin für v5 ist ein Community-Fork, vor M2 prüfen.
+3. **Framework-Versionen.** Entschieden: Filament 5 (E-008). Translatable-Plugin geprüft, vorerst keins, CMS nur Deutsch (E-012).

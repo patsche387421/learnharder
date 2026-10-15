@@ -42,6 +42,7 @@ Jede Entscheidung: Nummer, Datum, was, warum, Folgen. Offene Fragen stehen unten
 - **Entscheidung:** Das CMS läuft auf Filament 5 mit Livewire 4. Upgrade von 3.3 über 4 auf 5.10 vor dem CMS-Ausbau in M2.
 - **Warum:** Filament 3 bekommt seit 2026-08-01 keine Bugfixes mehr (Sicherheitsfixes bis 2028-01-01), Filament 4 nur bis 2027-01-15. Filament 5 ist Filament 4 mit Livewire 4 und hat den längsten Support. Betroffen waren nur 510 generierte Zeilen ohne Plugins, später wäre der Wechsel teurer geworden.
 - **Folgen:** Filament-Code nutzt `Filament\Schemas\Schema` und `Filament\Actions\*`. Ein eigenes Panel-Theme braucht Tailwind 4. Für de/en kommt in M2 der Community-Fork `lara-zeus/spatie-translatable` (v2 für Filament 5) in Frage, ein offizielles Plugin für v5 war nicht zu finden. Fehlt eine Policy-Methode, erlaubt Filament die Aktion weiterhin (abgesichert in `tests/Feature/Filament`). Schließt O-002.
+- **Präzisierung:** Seit E-012 kommt kein Translatable-Plugin, das CMS pflegt zunächst nur Deutsch.
 
 ### E-009 — Supabase-Daten gesichert (2026-10-15)
 - **Entscheidung:** Die V1-Daten (`public` und `auth`) sind per `pg_dump` aus Supabase gesichert. Der Dump liegt außerhalb des Repos. Eine zweite Kopie gehört verschlüsselt offline (z. B. USB-Stick).
@@ -58,6 +59,11 @@ Jede Entscheidung: Nummer, Datum, was, warum, Folgen. Offene Fragen stehen unten
 - **Entscheidung:** Aus V1 werden weder Accounts noch Fortschritte übernommen. Alle registrieren sich in V2 neu.
 - **Warum:** V2 startet ohne alte Fortschritte (E-010). Eine neue Registrierung holt die Einwilligung unter den V2-Bedingungen ein, wichtig bei Minderjährigen. Ohne Import-Command wird M5 deutlich kleiner, und die V1-Test-Accounts kommen nicht mit.
 - **Folgen:** Kein Branch `feat/supabase-import`. §2 im Setup-Plan (Datenmigration) entfällt. Die Wartungsseite kündigt die Neuregistrierung an. Nach dem V2-Start wird das V1-Supabase-Projekt abgeschaltet und der Dump (E-009) 3 Monate später gelöscht. Danach kann auch `C:\v\learnharder.app` weg.
+
+### E-012 — CMS zunächst nur auf Deutsch (2026-10-15)
+- **Entscheidung:** Das CMS pflegt bis nach M5 nur Deutsch. Formularfelder schreiben direkt in den deutschen Eintrag der JSON-Spalte (z. B. `title.de`). Kein Translatable-Plugin.
+- **Warum:** Alle Inhalte gibt es nur auf Deutsch, Englisch steht erst nach M5 an. Das einzige Plugin für Filament 5 (`lara-zeus/spatie-translatable` 2.0.1) ist der offizielle Nachfolger, wird aber von einer Person gepflegt und hat offene Fehler beim Sprachwechsel (Issues #42, #51, #63). Eigene Sprach-Tabs ohne Umschalter für das ganze Formular waren keine saubere Lösung.
+- **Folgen:** Die JSON-Spalten `{"de": …}` bleiben, Englisch braucht später keine Migration. Wenn Englisch kommt, wird der Sprachumschalter neu entschieden (Plugin oder selbst gebaut, beide Sprachen im Formular-State). M2 heißt jetzt „Deutsch“ statt „de/en“.
 
 ## Offen
 
