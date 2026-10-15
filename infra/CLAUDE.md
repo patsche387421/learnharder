@@ -25,6 +25,21 @@ backup/                   tägliche DB-Dumps, offsite (S3-kompatibel)
 README.md                 Runbook: Server aufsetzen, deployen, zurückrollen
 ```
 
+## Login über zwei Subdomains (vor M4)
+
+Die App auf `app.learnharder.app` liest das Cookie `XSRF-TOKEN`, das die API auf `api.learnharder.app` setzt (Sanctum im SPA-Modus).
+Das klappt nur, wenn das Cookie für die ganze Domain gilt. In der Produktions-`.env` des Backends:
+
+```
+SESSION_DOMAIN=.learnharder.app
+SESSION_SECURE_COOKIE=true
+SANCTUM_STATEFUL_DOMAINS=app.learnharder.app
+CORS_ALLOWED_ORIGINS=https://app.learnharder.app
+```
+
+Der Frontend-Build bekommt `VITE_API_URL=https://api.learnharder.app`.
+Offen: Staging unter `staging.app…` und `staging.api…` läge ebenfalls unter `.learnharder.app`, die Cookies von Staging und Produktion würden sich dann überschreiben. Auch `.staging.learnharder.app` reicht nicht ganz: Der Browser schickt die Cookies von `.learnharder.app` dorthin mit, dann gibt es zwei `XSRF-TOKEN`. Vor M4 entscheiden, am sichersten ist eine eigene Domain für Staging.
+
 ## Regeln
 
 - **Keine Secrets hier einchecken.** Nur `*.example`-Dateien. Echte Werte liegen auf dem Server.
