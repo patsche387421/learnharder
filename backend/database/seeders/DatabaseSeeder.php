@@ -60,7 +60,22 @@ class DatabaseSeeder extends Seeder
         );
         $autor->syncRoles([$autorRole]);
 
-        // 4. Test-Lehrkraft Account
+        // 4. Tester:in (im CMS nur lesen)
+        $tester = User::firstOrCreate(
+            ['email' => 'tester@learnharder.app'],
+            [
+                'name' => 'QA Tester',
+                'first_name' => 'Tess',
+                'last_name' => 'Prüfer',
+                'gamer_tag' => 'BugHunter',
+                'brainpower_current' => 100,
+                'brainpower_max' => 100,
+                'password' => Hash::make('learnharder123'),
+            ]
+        );
+        $tester->syncRoles([$testerRole]);
+
+        // 5. Test-Lehrkraft Account
         $teacher = User::firstOrCreate(
             ['email' => 'lehrer@learnharder.app'],
             [
@@ -75,7 +90,7 @@ class DatabaseSeeder extends Seeder
         );
         $teacher->syncRoles([$teacherRole]);
 
-        // 5. Schüler Account
+        // 6. Schüler Account
         $student = User::firstOrCreate(
             ['email' => 'schueler@learnharder.app'],
             [
