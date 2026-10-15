@@ -24,6 +24,7 @@ infra/       Hetzner-Server, Docker, Caddy, Backups    → infra/CLAUDE.md
 docs/        Pläne, Entscheidungen                     → docs/CLAUDE.md
 agent/       Arbeitsbereich des KI-Agenten             → agent/CLAUDE.md
 .claude/     agents/ + skills/ (versioniert), launch.json; Rest lokal
+.github/     CI bei jedem Push: Backend (Pint, Tests gegen Postgres), Frontend (Tokens, Tests, Build)
 public/      Wartungsseite (live über Netlify, bis Hetzner steht). Hier KEINE CLAUDE.md, sonst wird sie öffentlich ausgeliefert.
 _archiv/     V1-Prototyp und V1-Material für den Umzug. Nur lesen. → _archiv/CLAUDE.md
 ```
