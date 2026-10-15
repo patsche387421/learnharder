@@ -231,7 +231,6 @@ V1-Protokoll: `_archiv/agent/SESSION_REPORT.md` und `SESSION_REPORT_ARCHIVE.md`.
   - Gelernt: Eine Nicht-UUID in der Route gab in Postgres 500, jetzt vorher 404 bzw. 422. Ein zweiter Login im selben Test braucht `flushSession()` (Ursache nicht untersucht). `LhCard` ohne Link zeigt nur seinen Slot. `pint --dirty` geht im Container nicht (kein Git), deshalb Pint mit Pfaden.
 - **Geprüft:** Backend-Tests 108 → 164 grün, Pint sauber. Frontend-Tests 47 → 92 grün, `build` und `check:tokens` grün. Gegenprobe: Ohne die Wiederholungs-Logik schlägt der Ablauf-Test der Lerneinheit fehl. CI auf `dev` nach jedem Merge grün (zuletzt Run `38808007645`). Patsche hat Login, Fächer und Lerneinheit im Browser durchgeklickt (Handy-Ansicht). Die 0 EP bei Wiederholung am selben Tag und das Verschwinden eines Themas „In Prüfung“ nur per Test geprüft, nicht im Browser.
 - **Offen:**
-  - Unklar, ob die Tab-Leiste das letzte Thema in der Liste verdeckt oder ob das nur am Ganzseiten-Screenshot lag.
   - Der Abstand in `.lh-xp__meta` steht als Scoped-CSS in `LearnView`, gehört aber ins Design-Artefakt (E-006).
   - Admins dürfen über `Gate::before` fremde Lerneinheiten beantworten und abschließen.
   - Eine Frage mit Antworten lässt sich nicht löschen (`RESTRICT`), Filament zeigt dann vermutlich 500.
