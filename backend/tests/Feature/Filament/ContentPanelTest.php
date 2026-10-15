@@ -17,6 +17,7 @@ use App\Models\Subject;
 use App\Models\Topic;
 use App\Models\User;
 use Filament\Actions\DeleteAction;
+use Filament\Forms\Components\Repeater;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Spatie\Permission\Models\Role;
@@ -65,7 +66,7 @@ class ContentPanelTest extends TestCase
         $this->get('/admin/questions')
             ->assertSeeTextInOrder(['Thema', 'Typ', 'EP', 'Schwierigkeit', 'Status', 'Reihenfolge']);
         $this->get("/admin/questions/{$this->question->id}/edit")
-            ->assertSeeTextInOrder(['Thema', 'Typ', 'Frage', 'Erklärung', 'EP', 'Schwierigkeit', 'Status', 'Reihenfolge'])
+            ->assertSeeTextInOrder(['Fach', 'Thema', 'Frage', 'Erklärung', 'Typ', 'Schwierigkeit', 'Antworten', 'EP', 'Reihenfolge', 'Status'])
             ->assertDontSeeText(['Slug', 'Order index', 'Question text', 'Xp reward', 'Difficulty', 'Save changes', 'Cancel']);
     }
 
@@ -116,12 +117,14 @@ class ContentPanelTest extends TestCase
     public function test_neue_frage_speichert_die_gewaehlten_werte(): void
     {
         $this->actingAs($this->userWithRole('admin'));
+        Repeater::fake();
 
         Livewire::test(CreateQuestion::class)
             ->assertSchemaStateSet(['type' => QuestionType::SingleChoice, 'difficulty' => Difficulty::VeryEasy, 'status' => ContentStatus::Draft])
             ->fillForm([
-                'topic_id' => $this->topic->id, 'question_text.de' => 'Welche sind Primzahlen?',
+                'subject_id' => $this->subject->id, 'topic_id' => $this->topic->id, 'question_text.de' => 'Welche sind Primzahlen?',
                 'type' => QuestionType::MultipleChoice->value, 'difficulty' => Difficulty::Medium->value, 'status' => ContentStatus::Review->value,
+                'options' => [['option_text' => ['de' => '2'], 'is_correct' => true], ['option_text' => ['de' => '3'], 'is_correct' => true]],
             ])
             ->call('create')
             ->assertHasNoFormErrors();
@@ -147,8 +150,8 @@ class ContentPanelTest extends TestCase
 
         $this->assertSame([$this->subject->id => 'Mathematik'],
             Livewire::test(CreateTopic::class)->instance()->form->getComponent('subject_id')->getOptions());
-        $this->assertSame([$this->topic->id => 'Mathematik – Brüche'],
-            Livewire::test(CreateQuestion::class)->instance()->form->getComponent('topic_id')->getOptions());
+        $this->assertSame([$this->topic->id => 'Brüche'],
+            Livewire::test(CreateQuestion::class)->fillForm(['subject_id' => $this->subject->id])->instance()->form->getComponent('topic_id')->getOptions());
     }
 
     public function test_autor_kann_bearbeiten_aber_nicht_loeschen(): void
