@@ -72,7 +72,7 @@ Jede Entscheidung: Nummer, Datum, was, warum, Folgen. Offene Fragen stehen unten
 - **Präzisierung:** Die bestehenden Migrationen wurden geändert, statt neue anzulegen, weil noch keine auf einem Server lief.
 
 ### E-014 — Veröffentlichen nur durch Admins, Autor-Änderungen gehen zurück in Prüfung (2026-10-15)
-- **Entscheidung:** Themen und Fragen veröffentlichen nur Admins. Speichert jemand ohne dieses Recht einen veröffentlichten Inhalt, geht er zurück auf „In Prüfung“. Neue Inhalte starten als Entwurf.
+- **Entscheidung:** Themen und Fragen veröffentlichen nur Admins. Speichert jemand ohne dieses Recht einen veröffentlichten Inhalt oder ändert die Theorie eines veröffentlichten Themas, geht der Inhalt zurück auf „In Prüfung“. Neue Inhalte starten als Entwurf.
 - **Warum:** Die Inhalte lernen Minderjährige. Eine falsche Antwort soll nicht ungeprüft live gehen, auch nicht durch eine kleine Korrektur.
 - **Folgen:** Der Inhalt verschwindet bis zur erneuten Freigabe aus der App. Admins geben mit der Mehrfachaktion „Veröffentlichen“ gesammelt frei. Die App (M3) zeigt nur `published`.
 

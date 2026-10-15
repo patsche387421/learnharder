@@ -26,5 +26,6 @@ Fach und Thema erscheinen auf Deutsch. Status, Typ und Schwierigkeit sind Enums 
 Antworten pflegt das Fragenformular direkt (2–6, sortierbar). Bei `single_choice` schaltet eine richtige Antwort die anderen aus, beim Speichern gilt: genau eine richtige bei `single_choice`, mindestens eine bei `multiple_choice`.
 Im Fragenformular kommt erst das Fach, dann das Thema. Kürzel prüft das Formular auf Format und Eindeutigkeit, Felder haben kurze Hilfetexte.
 Veröffentlichen dürfen nur Admins (`ContentPolicy::publish`, E-014): „Veröffentlicht“ ist sonst nicht wählbar, Änderungen an Veröffentlichtem gehen zurück in Prüfung. Gemeinsame Logik in `Resources/Concerns/`.
+Theorie pflegt das Thema im Relation Manager „Theorie“ (Markdown, ohne Uploads). Ändern Autor:innen sie, geht ein veröffentlichtes Thema zurück in Prüfung.
 
 Schulstruktur (Gruppe „Schule“, nur Admin über `SchoolStructurePolicy`): `SchoolResource` mit Mail-Domains, Abteilungen und Schuljahren als Relation Manager, `ProgramResource` mit dem Lehrplan.
