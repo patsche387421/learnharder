@@ -15,7 +15,7 @@ auf Deutsch zuerst, Englisch optional. Workflow: `draft` → `review` → `publi
 - Übersetzbare Felder vorerst nur auf Deutsch, direkt auf den Eintrag der JSON-Spalte (`TextInput::make('title.de')`). Kein Translatable-Plugin (E-012).
 - Relationen auf JSON-Spalten (z. B. `topic.title`) über `getOptionLabelFromRecordUsing` anzeigen, nicht über die Rohspalte.
 - Löschen und Veröffentlichen sind nur über Policies erlaubt (autor: kein Löschen und kein Veröffentlichen, tester: nur lesen und kommentieren).
-- Panel-Farben und Schrift an das Design-System anlehnen (`frontend/src/styles/tokens.css`), nicht `Color::Amber`.
+- Panel-Farben und Schrift kommen aus dem Design-System (`frontend/src/styles/tokens.css`): Bronze-Palette und `Color::Stone` im `AdminPanelProvider`, Atkinson Hyperlegible Next als Kopie in `public/fonts/`. Ändert sich `--accent` oder die Schrift im Frontend, hier nachziehen.
 - Fehlermeldungen nennen das Label unverändert (`Field::configureUsing` im `AppServiceProvider`), Filament würde es kleinschreiben.
 - Was Postgres ablehnt (Eindeutigkeit, auch ohne Groß-/Kleinschreibung), prüft auch das Formular. Löschen nur anbieten, wenn kein `RESTRICT` greift, sonst gibt es einen Serverfehler.
 
