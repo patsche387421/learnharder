@@ -83,3 +83,14 @@ V1-Protokoll: `_archiv/agent/SESSION_REPORT.md` und `SESSION_REPORT_ARCHIVE.md`.
   - `backend/.env` aufräumen (`APP_PORT`, `VITE_PORT`, `VIEW_COMPILED_PATH`, Caches nach `/tmp`).
   - Vitest 5 und jsdom 30.
   - Supabase-Dump (O-004), Level-Formel (Widerspruch 4), Filament 3 oder 4 (O-002).
+
+## 2026-10-15 — `backend/.env` aufgeräumt
+
+- **Branch:** `dev`
+- **Commits:** `3ff43af` (`APP_URL` auf Sail-Port 80, `VITE_PORT` neben dem Frontend), dazu dieser Doku-Commit
+- **Ergebnis:**
+  - Alte `C:\`-Notlösungen aus der lokalen `backend/.env` entfernt (`APP_PORT=8080`, `WWWUSER`/`WWWGROUP`, `VIEW_COMPILED_PATH` und Caches nach `/tmp`). Die App läuft unter http://localhost.
+  - `VITE_PORT=5174` bleibt und steht jetzt auch in `.env.example`: `compose.yaml` veröffentlicht den Port, und 5173 gehört dem Vue-Frontend.
+  - Lokalen `APP_KEY` neu erzeugt, weil er in einer Agent-Ausgabe im Klartext stand. Im Code ist nichts damit verschlüsselt, nur lokale Sessions sind abgemeldet.
+- **Geprüft:** Nach Sail-Neustart: `/` 200, `/admin/login` 200, `/sanctum/csrf-cookie` 204, Login und `/api/v1/me` mit Demo-Schüler 200, ohne Login 401. `sail artisan test` 13/13 grün.
+- **Offen:** wie im Eintrag davor, ohne die `.env`-Aufräumung.
