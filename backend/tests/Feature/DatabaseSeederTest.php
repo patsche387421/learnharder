@@ -17,7 +17,7 @@ class DatabaseSeederTest extends TestCase
 
         $this->assertSame(5, Role::count());
         $this->assertTrue(User::where('email', 'admin@learnharder.app')->first()->hasRole('admin'));
-        $this->assertSame(4, User::count());
+        $this->assertSame(5, User::count());
     }
 
     public function test_legt_in_produktion_keine_demo_accounts_an(): void
