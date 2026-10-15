@@ -13,7 +13,7 @@
 
 | PSP | Inhalt | Stand |
 |---|---|---|
-| 1.4 | Design-System | ✅ Tokens, `tokens.json` und Komponenten da (Atkinson-Font fehlt) |
+| 1.4 | Design-System | ✅ Tokens, `tokens.json`, Komponenten und beide Schriften da |
 | 2.1 | Laravel-Setup | 🟡 läuft lokal, DB nicht entschieden, keine API, nur die Laravel-Beispieltests |
 | 2.2 | Rollen | 🟡 Rollen da, keine Policies |
 | 2.3 | CMS | 🟡 generiert, noch nicht redaktionstauglich |

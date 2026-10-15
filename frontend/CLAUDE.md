@@ -42,6 +42,6 @@ public/assets/fonts/   selbst gehostete Schriften (keine CDNs)
 - Keine Secrets im Frontend. Konfiguration über `import.meta.env.VITE_*`.
 - `public/` wird 1:1 ausgeliefert, deshalb dort keine CLAUDE.md und keine internen Notizen.
 
-## Stand (2026-10-14)
+## Stand (2026-10-15)
 
-13 `Lh`-Bausteine in `src/components/ui/`, jeder mit Test. `App.vue` legt den Rahmen (`LhAppLayout`) um alle Seiten, die fünf Hauptziele sind noch `PlaceholderView`. Level, Rang und Prestige im Rahmen sind fest eingetragen, bis ein User-Store sie von der API holt. `/styleguide` zeigt alle Tokens, Icons und Bausteine (nur in der Entwicklung). Die Schrift Atkinson Hyperlegible Next fehlt noch (`public/assets/fonts/AtkinsonHyperlegibleNext-Variable.woff2`), bis dahin greift die Systemschrift.
+13 `Lh`-Bausteine in `src/components/ui/`, jeder mit Test. `App.vue` legt den Rahmen (`LhAppLayout`) um alle Seiten, die fünf Hauptziele sind noch `PlaceholderView`. Level, Rang und Prestige im Rahmen sind fest eingetragen, bis ein User-Store sie von der API holt. `/styleguide` zeigt alle Tokens, Icons und Bausteine (nur in der Entwicklung). Beide Schriften liegen selbst gehostet in `public/assets/fonts/`.
