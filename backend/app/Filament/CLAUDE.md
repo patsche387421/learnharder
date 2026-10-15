@@ -6,15 +6,15 @@ Allgemeine Regeln: `../../../CLAUDE.md`, Backend-Regeln: `../../CLAUDE.md`.
 ## Ziel
 
 Autor:innen erfassen Fächer, Themen, Theorie (Markdown) und Fragen samt Antwortoptionen,
-auf Deutsch zuerst, Englisch optional. Workflow: `draft` → `review` → `published`.
+bis nach M5 nur auf Deutsch (E-012). Workflow: `draft` → `review` → `published` (E-014).
 
 ## Regeln
 
 - Feste Wertelisten (`type`, `status`, `difficulty`) als `Select` mit Enum, nie als freies Textfeld.
-- Antwortoptionen werden direkt in der Frage gepflegt (Repeater oder RelationManager), inklusive Markierung der richtigen Antwort.
+- Antwortoptionen werden direkt in der Frage gepflegt (Repeater), inklusive Markierung der richtigen Antwort.
 - Übersetzbare Felder vorerst nur auf Deutsch, direkt auf den Eintrag der JSON-Spalte (`TextInput::make('title.de')`). Kein Translatable-Plugin (E-012).
 - Relationen auf JSON-Spalten (z. B. `topic.title`) über `getOptionLabelFromRecordUsing` anzeigen, nicht über die Rohspalte.
-- Löschen und Veröffentlichen sind nur über Policies erlaubt (autor: kein Löschen und kein Veröffentlichen, tester: nur lesen und kommentieren).
+- Löschen und Veröffentlichen sind nur über Policies erlaubt (autor: kein Löschen und kein Veröffentlichen, tester: nur lesen). Kommentare gibt es noch nicht.
 - Panel-Farben und Schrift kommen aus dem Design-System (`frontend/src/styles/tokens.css`): Bronze-Palette und `Color::Stone` im `AdminPanelProvider`, Atkinson Hyperlegible Next als Kopie in `public/fonts/`. Ändert sich `--accent` oder die Schrift im Frontend, hier nachziehen.
 - Fehlermeldungen nennen das Label unverändert (`Field::configureUsing` im `AppServiceProvider`), Filament würde es kleinschreiben.
 - Was Postgres ablehnt (Eindeutigkeit, auch ohne Groß-/Kleinschreibung), prüft auch das Formular. Löschen nur anbieten, wenn kein `RESTRICT` greift, sonst gibt es einen Serverfehler.
