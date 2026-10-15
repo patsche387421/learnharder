@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Enums\ContentStatus;
 use App\Models\Concerns\HasTranslationsWithoutEmpty;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -45,5 +47,12 @@ class Topic extends Model
     public function questions(): HasMany
     {
         return $this->hasMany(Question::class)->orderBy('order_index');
+    }
+
+    /** Nur veröffentlicht (E-014): Das sieht die App. */
+    #[Scope]
+    protected function published(Builder $query): void
+    {
+        $query->where('status', ContentStatus::Published);
     }
 }
