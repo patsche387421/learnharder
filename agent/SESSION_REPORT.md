@@ -94,3 +94,19 @@ V1-Protokoll: `_archiv/agent/SESSION_REPORT.md` und `SESSION_REPORT_ARCHIVE.md`.
   - Lokalen `APP_KEY` neu erzeugt, weil er in einer Agent-Ausgabe im Klartext stand. Im Code ist nichts damit verschlüsselt, nur lokale Sessions sind abgemeldet.
 - **Geprüft:** Nach Sail-Neustart: `/` 200, `/admin/login` 200, `/sanctum/csrf-cookie` 204, Login und `/api/v1/me` mit Demo-Schüler 200, ohne Login 401. `sail artisan test` 13/13 grün.
 - **Offen:** wie im Eintrag davor, ohne die `.env`-Aufräumung.
+
+## 2026-10-15 — M1 Policies
+
+- **Branch:** `feat/policies` (von `dev`), nach `dev` gemerged als `b0b0f13` (`--no-ff`), Branch gelöscht.
+- **Commits:** `49cae8c` (Policies für Fach, Thema, Frage), `f0ebb01` (Demo-Account `tester@learnharder.app`), `46956aa` (Doku), dazu dieser Doku-Commit
+- **Ergebnis:**
+  - Basis `app/Policies/ContentPolicy.php`, davon erben `SubjectPolicy`, `TopicPolicy` und `QuestionPolicy`. Rollen werden direkt in der Policy geprüft, ohne Spatie-Permissions.
+  - Admin darf alles (`Gate::before` im `AppServiceProvider`). autor: sehen, anlegen, bearbeiten, duplizieren, sortieren, kein Löschen. tester: nur sehen. teacher, student und Nutzer ohne Rolle: nichts.
+  - Filament 3 erlaubt eine Aktion, wenn die Policy-Methode fehlt (`vendor/filament/filament/src/helpers.php`). Deshalb definiert die Basis alle 12 Aktionen, die Filament prüft. Als Regel in `backend/CLAUDE.md`.
+  - Neuer Demo-Account für die Rolle tester (nur `local`/`testing`).
+- **Geprüft:** `sail artisan test` 23/23 grün (neu: Matrix 5 Rollen × 12 Aktionen × 3 Models, Filament-Tests für Lösch-Button, Sammel-Löschen, 403 für tester und student), `pint --test` grün. Gegenprobe: „delete erlaubt“ lässt 5 Tests scheitern, fehlendes `deleteAny` fängt nur der Filament-Test. Nach dem Merge auf `dev` erneut grün. Nicht geprüft: Klicktest im Browser.
+- **Offen:**
+  - CI (Pint und Tests). Vorher `ImportLegacyContent.php` durch `pint --test` bringen.
+  - M2: `publish` in `ContentPolicy`. Policies für `TheorySection` und `QuestionOption`, sobald es Ressourcen oder API dafür gibt.
+  - M3: Schüler:innen brauchen `view` auf veröffentlichte Inhalte, sobald die Lern-API kommt.
+  - Vitest 5 und jsdom 30, Supabase-Dump (O-004), Level-Formel (Widerspruch 4), Filament 3 oder 4 (O-002).
