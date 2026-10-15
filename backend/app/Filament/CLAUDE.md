@@ -1,6 +1,6 @@
 # CLAUDE.md — backend/app/Filament/ (Rolle: CMS / Redaktion)
 
-Filament-3-Adminpanel unter `/admin` für Autor:innen, Tester:innen und Admins.
+Filament-5-Adminpanel (E-008) unter `/admin` für Autor:innen, Tester:innen und Admins.
 Allgemeine Regeln: `../../../CLAUDE.md`, Backend-Regeln: `../../CLAUDE.md`.
 
 ## Ziel
@@ -12,7 +12,7 @@ auf Deutsch zuerst, Englisch optional. Workflow: `draft` → `review` → `publi
 
 - Feste Wertelisten (`type`, `status`, `difficulty`) als `Select` mit Enum, nie als freies Textfeld.
 - Antwortoptionen werden direkt in der Frage gepflegt (Repeater oder RelationManager), inklusive Markierung der richtigen Antwort.
-- Übersetzbare Felder brauchen das Filament-Plugin für Spatie Translatable, damit Deutsch und Englisch getrennt bearbeitet werden.
+- Übersetzbare Felder brauchen ein Plugin für Spatie Translatable, damit Deutsch und Englisch getrennt bearbeitet werden. Für Filament 5 kommt `lara-zeus/spatie-translatable` (v2) in Frage, noch nicht installiert.
 - Relationen auf JSON-Spalten (z. B. `topic.title`) über `getOptionLabelFromRecordUsing` anzeigen, nicht über die Rohspalte.
 - Löschen und Veröffentlichen sind nur über Policies erlaubt (autor: kein Löschen und kein Veröffentlichen, tester: nur lesen und kommentieren).
 - Panel-Farben und Schrift an das Design-System anlehnen (`frontend/src/styles/tokens.css`), nicht `Color::Amber`.

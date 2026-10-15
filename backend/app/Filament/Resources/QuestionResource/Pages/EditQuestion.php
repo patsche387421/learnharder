@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\QuestionResource\Pages;
 
 use App\Filament\Resources\QuestionResource;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditQuestion extends EditRecord
@@ -13,7 +13,7 @@ class EditQuestion extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 }
