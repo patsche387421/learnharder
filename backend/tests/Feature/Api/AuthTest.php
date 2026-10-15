@@ -29,7 +29,8 @@ class AuthTest extends TestCase
             'brainpower_current' => 80,
             'brainpower_max' => 100,
         ]);
-        UserStat::create(['user_id' => $this->user->id, 'total_xp' => 450, 'prestige_level' => 1]);
+        // 8.450 EP: Prestige 1, im Zyklus 450 EP = Level 15 (ab 419, Level 16 ab 465)
+        UserStat::create(['user_id' => $this->user->id, 'total_xp' => 8450]);
     }
 
     public function test_login_mit_richtigem_passwort(): void
@@ -74,10 +75,25 @@ class AuthTest extends TestCase
             ->assertExactJson(['data' => [
                 'gamer_tag' => 'lena42',
                 'roles' => [],
-                'total_xp' => 450,
+                'level' => 15,
+                'rank' => 'bronze',
                 'prestige' => 1,
+                'xp' => ['total' => 8450, 'level_start' => 8419, 'next_level' => 8465],
                 'brainpower' => ['current' => 80, 'max' => 100],
             ]]);
+    }
+
+    public function test_me_ohne_statistik_startet_bei_level_1(): void
+    {
+        $neu = User::factory()->create();
+
+        $this->actingAs($neu)
+            ->getJson('/api/v1/me')
+            ->assertOk()
+            ->assertJsonPath('data.level', 1)
+            ->assertJsonPath('data.rank', 'bronze')
+            ->assertJsonPath('data.prestige', 0)
+            ->assertJsonPath('data.xp', ['total' => 0, 'level_start' => 0, 'next_level' => 8]);
     }
 
     public function test_logout_beendet_die_session(): void
