@@ -3,12 +3,13 @@
 namespace App\Http\Resources;
 
 use App\Models\User;
+use App\Support\Progression;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
  * Was die Vue-App über den eingeloggten Nutzer erfährt. Bewusst ohne E-Mail und Klarnamen.
- * Level und Rang kommen dazu, sobald die Level-Formel festgelegt ist (docs/plans/README.md, Widerspruch 4).
+ * Level, Rang und Prestige rechnet der Server aus den Gesamt-EP (App\Support\Progression).
  *
  * @mixin User
  */
@@ -19,11 +20,19 @@ class MeResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $progress = Progression::fromTotalXp($this->stats->total_xp ?? 0);
+
         return [
             'gamer_tag' => $this->gamer_tag,
             'roles' => $this->getRoleNames(),
-            'total_xp' => $this->stats->total_xp ?? 0,
-            'prestige' => $this->stats->prestige_level ?? 0,
+            'level' => $progress->level,
+            'rank' => $progress->rank,
+            'prestige' => $progress->prestige,
+            'xp' => [
+                'total' => $progress->total,
+                'level_start' => $progress->levelStart,
+                'next_level' => $progress->nextLevel,
+            ],
             'brainpower' => [
                 'current' => $this->brainpower_current,
                 'max' => $this->brainpower_max,
