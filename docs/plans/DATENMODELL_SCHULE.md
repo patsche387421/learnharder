@@ -1,7 +1,8 @@
 # Datenmodell Schule, Klassen und Registrierung (Plan, Stand 2026-10-15)
 
 Wer sieht welche Inhalte, wer unterrichtet was, und wie kommen Schüler:innen in die App.
-Vorlage ist die HTL Mödling. Entscheidung: E-013 in `../ENTSCHEIDUNGEN.md`. Noch nichts umgesetzt.
+Vorlage ist die HTL Mödling. Entscheidung: E-013 in `../ENTSCHEIDUNGEN.md`.
+Umgesetzt: Tabellen und Datenbankregeln aus §3 (Stand 2026-10-15). Offen: Models, Filament, Sichtbarkeit, Registrierung.
 
 ## 1. Begriffe
 
@@ -93,11 +94,10 @@ E-Mail-Adressen enthalten oft Klarnamen: nur intern, nie in API-Antworten über 
 
 ## 7. Offen
 
-1. Bestehende Migrationen ändern oder neue Migrationen anlegen? Bisher lief keine auf einem Server.
-2. Mail-Domain(s) der Schüler:innen und Lehrkräfte an der HTL Mödling. Nutzt die Schule Microsoft 365?
-3. Offizielle Klassen- und Ausbildungsgang-Kürzel (z. B. „HIT“), Quelle: Sekretariat oder WebUntis.
-4. `users.name` ist Pflicht, die Registrierung fragt aber keinen Namen ab. Nullable machen oder aus dem Gamer-Tag füllen?
-5. Einwilligung bei unter 14-Jährigen (Einzelfälle im 1. Jahrgang).
+1. Mail-Domain(s) der Schüler:innen und Lehrkräfte an der HTL Mödling. Nutzt die Schule Microsoft 365?
+2. Offizielle Klassen- und Ausbildungsgang-Kürzel (z. B. „HIT“), Quelle: Sekretariat oder WebUntis.
+3. `users.name` ist Pflicht, die Registrierung fragt aber keinen Namen ab. Nullable machen oder aus dem Gamer-Tag füllen?
+4. Einwilligung bei unter 14-Jährigen (Einzelfälle im 1. Jahrgang).
 
 ## 8. Reihenfolge der Umsetzung
 

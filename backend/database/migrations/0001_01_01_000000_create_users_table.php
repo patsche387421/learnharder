@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -23,10 +24,14 @@ return new class extends Migration
             $table->integer('current_streak')->default(0);
             $table->timestamp('last_active_at')->nullable();
             $table->timestamp('email_verified_at')->nullable();
+            $table->timestamp('deactivated_at')->nullable(); // Lehrkräfte werden gesperrt, nicht gelöscht (E-013)
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
         });
+        // Max@… und max@… dürfen nicht zwei Konten sein
+        DB::statement('CREATE UNIQUE INDEX users_email_lower_unique ON users (lower(email))');
+        DB::statement('CREATE UNIQUE INDEX users_gamer_tag_lower_unique ON users (lower(gamer_tag))');
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();

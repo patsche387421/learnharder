@@ -69,6 +69,7 @@ Jede Entscheidung: Nummer, Datum, was, warum, Folgen. Offene Fragen stehen unten
 - **Entscheidung:** Schule → Abteilung → Ausbildungsgang → Klasse pro Schuljahr. Der Lehrplan verbindet Fach und Ausbildungsgang, `teaching_assignments` regelt, wer in welcher Klasse welches Fach unterrichtet. Schüler:innen registrieren sich nur mit Schul-Mail und Bestätigungscode und sehen Inhalte erst nach der Zuordnung zu einer Klasse. Lehrkräfte legt der Admin an. Plan: `plans/DATENMODELL_SCHULE.md`.
 - **Warum:** Die HTL Mödling hat 12 Abteilungen und Ausbildungsformen mit unterschiedlicher Dauer (5 Jahre bis 4 Semester) und eigenen Lehrplänen. Ein Fach kann in einer Klasse von mehreren Lehrkräften unterrichtet werden. Die Szenarien Klassenwechsel, DSGVO-Löschung und Sommerferien haben das erste Modell gebrochen und sind eingearbeitet.
 - **Folgen:** `classes` wird zu `school_classes`, `schools.domain` zu `school_email_domains`. Die Kaskade über `classes.teacher_id` entfällt. Löschregeln richten sich nach der Richtung (Personendaten `CASCADE`, Inhalte und Struktur `RESTRICT`). Offene Punkte stehen im Plan §7.
+- **Präzisierung:** Die bestehenden Migrationen wurden geändert, statt neue anzulegen, weil noch keine auf einem Server lief.
 
 ## Offen
 

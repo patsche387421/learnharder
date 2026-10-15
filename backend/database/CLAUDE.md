@@ -2,12 +2,13 @@
 
 Schema, Migrationen, Seeder und Factories. Allgemeine Regeln: `../../CLAUDE.md`, Backend-Regeln: `../CLAUDE.md`.
 
-## Schema (Stand 2026-10-14)
+## Schema (Stand 2026-10-15)
 
 - **Inhalte:** `subjects` → `topics` → `theory_sections` / `questions` → `question_options` (UUID-Schlüssel, Texte als JSON `{"de": …, "en": …}`)
 - **Gamification:** `user_stats`, `quiz_attempts`, `trophies`, `user_trophies`
-- **Schule/Teams:** `schools`, `classes`, `class_enrollments`, `teams`, `team_members`
-- **Benutzer:** `users` (bigint-ID) mit `gamer_tag`, `brainpower_current`/`_max`, `current_streak`
+- **Schule:** `schools` → `departments` → `programs` → `school_classes` (je Schuljahr) mit `class_enrollments` und `teaching_assignments`, dazu `school_email_domains`, `school_years`, `curriculum_entries`. Plan: `docs/plans/DATENMODELL_SCHULE.md`
+- **Teams:** `teams`, `team_members`
+- **Benutzer:** `users` (bigint-ID) mit `gamer_tag`, `brainpower_current`/`_max`, `current_streak`, `deactivated_at`
 
 ## Regeln
 
@@ -15,15 +16,14 @@ Schema, Migrationen, Seeder und Factories. Allgemeine Regeln: `../../CLAUDE.md`,
 - Jede Migration braucht ein funktionierendes `down()`.
 - Lernverlauf der Schüler darf nicht durch CMS-Löschungen verschwinden: für Inhalte Soft Deletes oder `restrictOnDelete`, kein `cascadeOnDelete` auf Verlaufstabellen.
 - Seeder mit Test-Accounts nur in `local`/`testing` ausführen (`app()->environment(...)` prüfen).
-- Zieldatenbank: Postgres (E-007 in `docs/ENTSCHEIDUNGEN.md`). Keine DB-spezifischen Features ohne Not.
+- Zieldatenbank: Postgres (E-007 in `docs/ENTSCHEIDUNGEN.md`). Postgres-Features (`CHECK`, Teil-Indizes, `NULLS NOT DISTINCT`) per `DB::statement`, nur wo sie Datenregeln absichern. Tests dafür in `tests/Feature/Database`.
 
 ## Bekannte Schema-Lücken
 
-1. `quiz_attempts.topic_id` hat `cascadeOnDelete` → Topic löschen löscht den Verlauf.
-2. `current_streak` liegt doppelt in `users` und `user_stats`.
-3. Für die Brainpower-Regeneration fehlt ein Zeitstempel (z. B. `brainpower_refilled_at`).
-4. `user_stats.trophies` (Währung) und die Tabelle `trophies` (Errungenschaften) tragen denselben Namen.
-5. Es gibt kein Antwort-Log pro Frage und kein XP-Ereignis-Log (`xp_events`). Beides braucht man für Statistiken und Wiederholungen.
+1. `current_streak` liegt doppelt in `users` und `user_stats`.
+2. Für die Brainpower-Regeneration fehlt ein Zeitstempel (z. B. `brainpower_refilled_at`).
+3. `user_stats.trophies` (Währung) und die Tabelle `trophies` (Errungenschaften) tragen denselben Namen.
+4. Es gibt kein Antwort-Log pro Frage und kein XP-Ereignis-Log (`xp_events`). Beides braucht man für Statistiken und Wiederholungen.
 
 ## Datenmigration aus V1
 
