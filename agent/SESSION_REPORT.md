@@ -218,3 +218,24 @@ V1-Protokoll: `_archiv/agent/SESSION_REPORT.md` und `SESSION_REPORT_ARCHIVE.md`.
   - Schriftdatei liegt doppelt (Frontend und Backend), bei Änderungen beide ersetzen. `tokens.css` §5 (`--fach-*`) kann jetzt raus.
   - Plan Schule §8 Schritte 2–4 und §7. Vor M3: mehr Fragen oder weniger XP für wiederholte Antworten.
   - Weiter offen: Hetzner (M4a) und Backup-Bausteine, verschlüsselte Zweitkopie des Dumps, Vitest 5 und jsdom 30.
+
+## 2026-10-15 — M3: Lernen funktioniert
+
+- **Branch:** je Schritt ein Branch, mit `--no-ff` nach `dev` gemerged und gelöscht: `docs/m3-entscheidungen` (`3e77848`), `feat/api-fortschritt` (`c612a25`), `feat/api-inhalte` (`70457bd`), `feat/api-lerneinheit` (`10852b1`), `feat/app-login` (`9e12e5c`), `feat/app-faecher` (`3939b40`), `feat/app-theorie` (`f9ee94e`), `feat/app-lerneinheit` (`2a5a9a9`), `fix/app-fach-anzeige` (`1827e20`), `feat/fach-level` (`b7e667e`), dazu `docs/m3-abschluss`
+- **Commits:** 11 Einzel-Commits und 10 Merges, siehe `git log 10d58ba..b7e667e`, dazu der Doku-Abschluss mit diesem Eintrag
+- **Ergebnis:**
+  - Entscheidungen: E-015 (EP je Frage einmal pro Tag, Tag in `Europe/Vienna`), E-016 (Ränge 1/25/50/75), E-017 (M3 ohne Klassenfilter, Klassen kommen in M3b), E-018 (Fach-Level aus den EP eines Fachs, wie in V1).
+  - Server: `Progression` rechnet Level, Rang und Prestige aus `total_xp`. API für Fächer, Themen und Theorie (Markdown sicher als HTML) und für Lerneinheiten. `finish` sperrt erst `user_stats` und prüft dann die Tagesregel, die Attempt-ID ist der Idempotency-Key. Neue Tabelle `question_answers` (bestehende Migration geändert, lief noch auf keinem Server).
+  - App: API-Client mit CSRF und einer Wiederholung bei 419, Login und Router-Guard, Store für Spielerdaten, Fächer → Thema → Theorie → Lerneinheit mit Feedback, Wiederholung falscher Fragen am Ende und Ergebnis mit Level-Aufstieg. Fach-Icon auf der Fach-Seite, Fach-Level in der Fach-Karte.
+  - **Vorfall:** `migrate:fresh --env=testing` hat die lokale Entwicklungs-DB gelöscht, weil es keine `.env.testing` gibt und Laravel dann `.env` nimmt. Mit `migrate:fresh --seed` und Import wiederhergestellt (7 Fächer, 32 Themen, 158 Theorieblöcke, 158 Fragen, 632 Optionen, 5 Accounts). Änderungen im CMS seit dem letzten Import sind weg. Regel jetzt in `backend/CLAUDE.md`: nur `sail exec -T -e DB_DATABASE=testing`, Ziel vorher prüfen.
+  - Gelernt: Eine Nicht-UUID in der Route gab in Postgres 500, jetzt vorher 404 bzw. 422. Ein zweiter Login im selben Test braucht `flushSession()` (Ursache nicht untersucht). `LhCard` ohne Link zeigt nur seinen Slot. `pint --dirty` geht im Container nicht (kein Git), deshalb Pint mit Pfaden.
+- **Geprüft:** Backend-Tests 108 → 164 grün, Pint sauber. Frontend-Tests 47 → 92 grün, `build` und `check:tokens` grün. Gegenprobe: Ohne die Wiederholungs-Logik schlägt der Ablauf-Test der Lerneinheit fehl. CI auf `dev` nach jedem Merge grün (zuletzt Run `38808007645`). Patsche hat Login, Fächer und Lerneinheit im Browser durchgeklickt (Handy-Ansicht). Die 0 EP bei Wiederholung am selben Tag und das Verschwinden eines Themas „In Prüfung“ nur per Test geprüft, nicht im Browser.
+- **Offen:**
+  - Unklar, ob die Tab-Leiste das letzte Thema in der Liste verdeckt oder ob das nur am Ganzseiten-Screenshot lag.
+  - Der Abstand in `.lh-xp__meta` steht als Scoped-CSS in `LearnView`, gehört aber ins Design-Artefakt (E-006).
+  - Admins dürfen über `Gate::before` fremde Lerneinheiten beantworten und abschließen.
+  - Eine Frage mit Antworten lässt sich nicht löschen (`RESTRICT`), Filament zeigt dann vermutlich 500.
+  - Fragen sind reiner Text, kein Markdown und kein Code. Bei 403 zeigt die Lerneinheit nur den allgemeinen Fehlertext.
+  - `user_stats.prestige_level` wird nicht mehr gelesen und kann weg.
+  - Für M4: `SESSION_DOMAIN=.learnharder.app`, damit das XSRF-Cookie über Subdomains geht.
+  - Weiter offen: M3b (Klassen und Sichtbarkeit), Hetzner (M4) und Backup-Bausteine, verschlüsselte Zweitkopie des Dumps, Vitest 5 und jsdom 30.

@@ -15,11 +15,11 @@
 | PSP | Inhalt | Stand |
 |---|---|---|
 | 1.4 | Design-System | ✅ Tokens, `tokens.json`, Komponenten und beide Schriften da |
-| 2.1 | Laravel-Setup | 🟡 läuft lokal in WSL2, Postgres (E-007), Login-API (`/api/v1/login`, `logout`, `me`), 108 Backend-Tests |
+| 2.1 | Laravel-Setup | 🟡 läuft lokal in WSL2, Postgres (E-007), API für Login, Fächer, Themen und Lerneinheiten (`/api/v1/…`), 164 Backend-Tests |
 | 2.2 | Rollen | ✅ Policies für Fach, Thema, Theorie, Frage (autor ohne Löschen, tester nur lesen). Veröffentlichen nur Admin (E-014) |
 | 2.3 | CMS | ✅ redaktionstauglich auf Deutsch (E-012): Wertelisten, Antworten, Theorie, Veröffentlichen, Design-System. KI-Übersetzung offen (nach M5) |
-| 2.4–2.7 | Spiellogik, Klassen, API, Echtzeit | ⬜ nur Tabellen |
-| 3.x | Vue-Frontend | 🟡 Gerüst mit App-Rahmen, 13 `Lh`-Bausteinen (mit Tests) und Platzhalter-Routen. Noch keine echten Screens |
+| 2.4–2.7 | Spiellogik, Klassen, API, Echtzeit | 🟡 EP, Level, Rang, Prestige und Fach-Level rechnet der Server (E-015, E-016, E-018), EP je Frage einmal pro Tag. Brainpower, Streaks, Trophäen, Klassen und Echtzeit offen |
+| 3.x | Vue-Frontend | 🟡 Login, Fächer, Thema, Theorie, Lerneinheit mit Ergebnis (M3), 92 Tests. Hub, Team, Liga und PWA offen |
 | 5.x | Tests, CI, Hetzner | 🟡 CI bei jedem Push (Pint, Backend-Tests gegen Postgres, Frontend-Tests und Build). Hetzner offen |
 | — | Content-Import aus V1 | ✅ 7 Fächer, 32 Themen, 158 Theorieblöcke, 158 Fragen (lokal). Überschreibt keine gepflegten Themen |
 | — | Nutzer-Migration aus Supabase | entfällt, alle registrieren sich neu (E-011) |
@@ -48,7 +48,7 @@ Der kritische Pfad zum ersten echten Nutzer ist kürzer:
 | **M0** ✅ | Aufräumen | Struktur steht, Archiv entschieden, `backend/laravel` entfernt, Seeder abgesichert |
 | **M1** ✅ | Backend-Fundament | DB entschieden, `routes/api.php` + Sanctum-Login, Policies, erste Feature-Tests, CI (Pint + Tests) |
 | **M2** ✅ | Inhalte pflegbar | CMS mit Antwortoptionen, Wertelisten, Deutsch (E-012); Import mit Prüfung statt stillem Fallback |
-| **M3** | Lernen funktioniert | Login → Fächer → Thema → Theorie → Quiz → Ergebnis mit serverseitigen XP/Level, Vue mit `lh-`-Komponenten. EP je Frage einmal pro Tag (E-015), Ränge (E-016), ohne Klassenfilter (E-017) |
+| **M3** ✅ | Lernen funktioniert | Login → Fächer → Thema → Theorie → Quiz → Ergebnis mit serverseitigen XP/Level, Vue mit `lh-`-Komponenten. EP je Frage einmal pro Tag (E-015), Ränge (E-016), ohne Klassenfilter (E-017), Fach-Level (E-018) |
 | **M3b** | Klassen und Sichtbarkeit | Klassen und Einschreibungen in Filament, App zeigt nur Fächer der eigenen Klasse (Plan Schule §8 Schritte 2–3) |
 | **M4** | Hetzner läuft | Prod-Stack in `infra/`, TLS, tägliche Backups, Staging |
 | **M5** | Start | DNS umgestellt, Registrierung offen, Neuregistrierung angekündigt, V1-Supabase abgeschaltet → Tag `v2.0.0-alpha.1` |
