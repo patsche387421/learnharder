@@ -2,12 +2,12 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\Concerns\DeletesOnlyUnused;
 use App\Filament\Resources\SubjectResource\Pages\CreateSubject;
 use App\Filament\Resources\SubjectResource\Pages\EditSubject;
 use App\Filament\Resources\SubjectResource\Pages\ListSubjects;
 use App\Models\Subject;
 use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -20,6 +20,10 @@ use Filament\Tables\Table;
 
 class SubjectResource extends Resource
 {
+    use DeletesOnlyUnused;
+
+    public const IN_USE_HINT = 'Fächer mit Lernverlauf oder im Lehrplan bleiben erhalten. Schalte „Aktiv“ aus, dann verschwinden sie aus der App.';
+
     protected static ?string $model = Subject::class;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-book-open';
@@ -107,7 +111,7 @@ class SubjectResource extends Resource
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    self::deleteBulkAction(),
                 ]),
             ]);
     }

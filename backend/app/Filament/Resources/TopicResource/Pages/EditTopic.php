@@ -4,7 +4,6 @@ namespace App\Filament\Resources\TopicResource\Pages;
 
 use App\Filament\Resources\Concerns\DemotesPublishedContent;
 use App\Filament\Resources\TopicResource;
-use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditTopic extends EditRecord
@@ -16,7 +15,7 @@ class EditTopic extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            DeleteAction::make(),
+            TopicResource::deleteAction(),
         ];
     }
 }

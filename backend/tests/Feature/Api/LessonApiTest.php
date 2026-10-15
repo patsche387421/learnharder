@@ -407,7 +407,10 @@ class LessonApiTest extends TestCase
     {
         $this->playPerfect();
 
+        // Das Model verweigert es, die Datenbank sperrt es auch ohne Model (RESTRICT)
+        $this->assertFalse($this->einfach->delete());
+        $this->assertModelExists($this->einfach);
         $this->expectException(QueryException::class);
-        $this->einfach->delete();
+        Question::whereKey($this->einfach->id)->delete();
     }
 }

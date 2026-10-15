@@ -17,7 +17,7 @@ bis nach M5 nur auf Deutsch (E-012). Workflow: `draft` → `review` → `publish
 - Löschen und Veröffentlichen sind nur über Policies erlaubt (autor: kein Löschen und kein Veröffentlichen, tester: nur lesen). Kommentare gibt es noch nicht.
 - Panel-Farben und Schrift kommen aus dem Design-System (`frontend/src/styles/tokens.css`): Bronze-Palette und `Color::Stone` im `AdminPanelProvider`, Atkinson Hyperlegible Next als Kopie in `public/fonts/`. Ändert sich `--accent` oder die Schrift im Frontend, hier nachziehen.
 - Fehlermeldungen nennen das Label unverändert (`Field::configureUsing` im `AppServiceProvider`), Filament würde es kleinschreiben.
-- Was Postgres ablehnt (Eindeutigkeit, auch ohne Groß-/Kleinschreibung), prüft auch das Formular. Löschen nur anbieten, wenn kein `RESTRICT` greift, sonst gibt es einen Serverfehler.
+- Was Postgres ablehnt (Eindeutigkeit, auch ohne Groß-/Kleinschreibung), prüft auch das Formular. Löschen nur anbieten, wenn kein `RESTRICT` greift, sonst gibt es einen Serverfehler. Fächer, Themen und Fragen mit Lernverlauf verweigern das Löschen im Model (`BlocksDeletionWhileInUse`), das CMS sagt dann, was stattdessen geht (`DeletesOnlyUnused`).
 
 ## Stand (2026-10-15)
 

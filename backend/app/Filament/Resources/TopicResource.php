@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Enums\ContentStatus;
+use App\Filament\Resources\Concerns\DeletesOnlyUnused;
 use App\Filament\Resources\Concerns\HasContentStatus;
 use App\Filament\Resources\TopicResource\Pages\CreateTopic;
 use App\Filament\Resources\TopicResource\Pages\EditTopic;
@@ -11,7 +12,6 @@ use App\Filament\Resources\TopicResource\RelationManagers\TheorySectionsRelation
 use App\Models\Subject;
 use App\Models\Topic;
 use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -26,7 +26,9 @@ use Illuminate\Database\Eloquent\Builder;
 
 class TopicResource extends Resource
 {
-    use HasContentStatus;
+    use DeletesOnlyUnused, HasContentStatus;
+
+    public const IN_USE_HINT = 'Themen, mit denen schon gelernt wurde, bleiben für den Lernverlauf erhalten. Setz sie auf Entwurf, dann verschwinden sie aus der App.';
 
     protected static ?string $model = Topic::class;
 
@@ -128,7 +130,7 @@ class TopicResource extends Resource
             ->toolbarActions([
                 BulkActionGroup::make([
                     self::publishBulkAction(),
-                    DeleteBulkAction::make(),
+                    self::deleteBulkAction(),
                 ]),
             ]);
     }

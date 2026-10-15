@@ -4,20 +4,29 @@ namespace Tests\Feature\Filament;
 
 use App\Enums\ContentStatus;
 use App\Enums\Difficulty;
+use App\Enums\ProgramForm;
+use App\Enums\ProgramUnit;
 use App\Enums\QuestionType;
+use App\Filament\Resources\QuestionResource;
 use App\Filament\Resources\QuestionResource\Pages\CreateQuestion;
+use App\Filament\Resources\QuestionResource\Pages\EditQuestion;
 use App\Filament\Resources\QuestionResource\Pages\ListQuestions;
 use App\Filament\Resources\SubjectResource\Pages\EditSubject;
 use App\Filament\Resources\SubjectResource\Pages\ListSubjects;
 use App\Filament\Resources\TopicResource\Pages\CreateTopic;
 use App\Filament\Resources\TopicResource\Pages\EditTopic;
 use App\Filament\Resources\TopicResource\Pages\ListTopics;
+use App\Models\CurriculumEntry;
 use App\Models\Question;
+use App\Models\QuestionAnswer;
+use App\Models\QuizAttempt;
+use App\Models\School;
 use App\Models\Subject;
 use App\Models\Topic;
 use App\Models\User;
 use Filament\Actions\DeleteAction;
 use Filament\Forms\Components\Repeater;
+use Filament\Notifications\Notification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Spatie\Permission\Models\Role;
@@ -186,11 +195,70 @@ class ContentPanelTest extends TestCase
         $this->assertModelMissing($this->subject);
     }
 
+    public function test_inhalt_mit_lernverlauf_wird_nicht_geloescht_sondern_erklaert(): void
+    {
+        $this->actingAs($this->userWithRole('admin'));
+        $this->learn();
+
+        Livewire::test(EditQuestion::class, ['record' => $this->question->getRouteKey()])
+            ->callAction(DeleteAction::class)
+            ->assertNotified(Notification::make()->danger()->title('Nicht gelöscht')->body(QuestionResource::IN_USE_HINT)->persistent());
+        Livewire::test(EditTopic::class, ['record' => $this->topic->getRouteKey()])
+            ->callAction(DeleteAction::class)
+            ->assertNotified('Nicht gelöscht');
+        Livewire::test(EditSubject::class, ['record' => $this->subject->getRouteKey()])
+            ->callAction(DeleteAction::class)
+            ->assertNotified('Nicht gelöscht');
+
+        $this->assertModelExists($this->question);
+        $this->assertModelExists($this->topic);
+        $this->assertModelExists($this->subject);
+    }
+
+    public function test_mehrfach_loeschen_ueberspringt_inhalt_mit_lernverlauf(): void
+    {
+        $this->actingAs($this->userWithRole('admin'));
+        $this->learn();
+        $unused = $this->topic->questions()->create(['question_text' => ['de' => 'Was ist 1/3 + 1/3?']]);
+
+        Livewire::test(ListQuestions::class)
+            ->callTableBulkAction('delete', [$this->question, $unused])
+            ->assertNotified('1 von 2 gelöscht');
+
+        $this->assertModelExists($this->question);
+        $this->assertModelMissing($unused);
+    }
+
+    public function test_fach_im_lehrplan_wird_nicht_geloescht(): void
+    {
+        $program = School::create(['name' => 'HTL Mödling'])
+            ->departments()->create(['code' => 'IT', 'name' => 'Informationstechnologie'])
+            ->programs()->create([
+                'code' => 'HIT', 'name' => 'Höhere Lehranstalt Informationstechnologie',
+                'form' => ProgramForm::HigherTechnical, 'unit' => ProgramUnit::Year, 'duration' => 5,
+            ]);
+        CurriculumEntry::create(['program_id' => $program->id, 'subject_id' => $this->subject->id, 'stage_from' => 1, 'stage_to' => 5]);
+
+        $this->assertFalse($this->subject->delete());
+        $this->assertModelExists($this->subject);
+    }
+
     public function test_schueler_kommt_nicht_ins_panel(): void
     {
         $this->actingAs($this->userWithRole('student'));
 
         $this->get('/admin/subjects')->assertForbidden();
+    }
+
+    /** Eine Schülerin hat die Frage beantwortet: Lerneinheit und Antwort hängen jetzt am Inhalt. */
+    private function learn(): void
+    {
+        $student = User::factory()->create();
+        $attempt = QuizAttempt::create(['user_id' => $student->id, 'topic_id' => $this->topic->id]);
+        QuestionAnswer::create([
+            'quiz_attempt_id' => $attempt->id, 'user_id' => $student->id, 'question_id' => $this->question->id,
+            'selected_option_ids' => [], 'is_correct' => false, 'xp_awarded' => 0, 'xp_date' => '2026-10-16',
+        ]);
     }
 
     private function userWithRole(string $role): User
