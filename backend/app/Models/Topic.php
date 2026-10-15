@@ -49,6 +49,11 @@ class Topic extends Model
         return $this->hasMany(Question::class)->orderBy('order_index');
     }
 
+    public function quizAttempts(): HasMany
+    {
+        return $this->hasMany(QuizAttempt::class);
+    }
+
     /** Nur veröffentlicht (E-014): Das sieht die App. */
     #[Scope]
     protected function published(Builder $query): void
