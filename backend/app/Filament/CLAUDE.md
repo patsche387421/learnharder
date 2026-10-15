@@ -20,7 +20,7 @@ auf Deutsch zuerst, Englisch optional. Workflow: `draft` → `review` → `publi
 
 ## Stand (2026-10-15)
 
-Die Ressourcen `SubjectResource`, `TopicResource` und `QuestionResource` sind automatisch generiert und noch nicht redaktionstauglich:
-Antwortoptionen fehlen, Wertelisten sind Freitext, und die Sprachfelder sind nicht getrennt.
+Die Ressourcen `SubjectResource`, `TopicResource` und `QuestionResource` haben deutsche Feldnamen, Sprachfelder schreiben auf `.de`,
+Fach und Thema erscheinen auf Deutsch. Noch nicht redaktionstauglich: Antwortoptionen fehlen, Wertelisten sind Freitext.
 
 Schulstruktur (Gruppe „Schule“, nur Admin über `SchoolStructurePolicy`): `SchoolResource` mit Mail-Domains, Abteilungen und Schuljahren als Relation Manager, `ProgramResource` mit dem Lehrplan.

@@ -45,7 +45,7 @@ class AuthTest extends TestCase
     {
         $this->postJson('/api/v1/login', ['email' => 'lena@htl.at', 'password' => 'falsch'])
             ->assertUnprocessable()
-            ->assertJsonValidationErrors('email');
+            ->assertJsonValidationErrors(['email' => 'E-Mail oder Passwort stimmt nicht.']);
 
         $this->assertGuest('web');
     }
