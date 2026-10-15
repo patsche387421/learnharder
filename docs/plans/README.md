@@ -53,6 +53,6 @@ Der kritische Pfad zum ersten echten Nutzer ist kürzer:
 
 ### Größte Risiken jetzt
 
-1. **Prod-Daten nur in Supabase.** Ohne Traffic kann ein Free-Projekt pausiert werden. → Bald einen Dump ziehen und sicher ablegen (nicht ins Repo).
+1. **Prod-Daten aus Supabase.** Seit 2026-10-15 gesichert (E-009). Offen bleibt der Import nach V2 (M5).
 2. **Umfang.** Ohne gekürztes MVP (R4 im Plan) gibt es keinen Go-Live.
 3. **Framework-Versionen.** Entschieden: Filament 5 (E-008). Das Translatable-Plugin für v5 ist ein Community-Fork, vor M2 prüfen.

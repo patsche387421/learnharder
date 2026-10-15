@@ -43,10 +43,14 @@ Jede Entscheidung: Nummer, Datum, was, warum, Folgen. Offene Fragen stehen unten
 - **Warum:** Filament 3 bekommt seit 2026-08-01 keine Bugfixes mehr (Sicherheitsfixes bis 2028-01-01), Filament 4 nur bis 2027-01-15. Filament 5 ist Filament 4 mit Livewire 4 und hat den längsten Support. Betroffen waren nur 510 generierte Zeilen ohne Plugins, später wäre der Wechsel teurer geworden.
 - **Folgen:** Filament-Code nutzt `Filament\Schemas\Schema` und `Filament\Actions\*`. Ein eigenes Panel-Theme braucht Tailwind 4. Für de/en kommt in M2 der Community-Fork `lara-zeus/spatie-translatable` (v2 für Filament 5) in Frage, ein offizielles Plugin für v5 war nicht zu finden. Fehlt eine Policy-Methode, erlaubt Filament die Aktion weiterhin (abgesichert in `tests/Feature/Filament`). Schließt O-002.
 
+### E-009 — Supabase-Daten gesichert (2026-10-15)
+- **Entscheidung:** Die V1-Daten (`public` und `auth`) sind per `pg_dump` aus Supabase gesichert. Der Dump liegt außerhalb des Repos. Eine zweite Kopie gehört verschlüsselt offline (z. B. USB-Stick).
+- **Warum:** Die Prod-Daten lagen nur in Supabase, ein Free-Projekt ohne Traffic kann pausiert werden.
+- **Folgen:** Dumps kommen nie ins Repo, in keine Cloud und in keinen Chat (Daten von Minderjährigen). Der Import nach V2 bekommt einen eigenen Branch. Verbindung nur über den Session-Pooler (Port 5432), den manche Netze sperren. Schließt O-004.
+
 ## Offen
 
 | Nr. | Frage | Empfehlung | Warum offen |
 |---|---|---|---|
 | O-003 | MVP-Umfang | Kürzen, siehe `plans/README.md` | Der Plan packt Landing Page, KI-Übersetzung, Newsletter und PWA-Offline ins MVP. |
-| O-004 | Wann werden die Supabase-Nutzerdaten exportiert? | Möglichst bald einen Sicherungs-Dump ziehen | Die Prod-Daten liegen nur dort. Die App ist im Wartungsmodus und erzeugt keinen Traffic mehr. |
 | O-005 | Landing Page: Astro/Nuxt oder statisch? | Zuerst statisch | Eine weitere Technologie lohnt sich für eine Seite noch nicht. |
