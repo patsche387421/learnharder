@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Enums\ContentStatus;
 use App\Enums\Difficulty;
 use App\Enums\QuestionType;
+use App\Filament\Resources\Concerns\DeletesOnlyUnused;
 use App\Filament\Resources\Concerns\HasContentStatus;
 use App\Filament\Resources\QuestionResource\Pages\CreateQuestion;
 use App\Filament\Resources\QuestionResource\Pages\EditQuestion;
@@ -14,7 +15,6 @@ use App\Models\Subject;
 use App\Models\Topic;
 use Closure;
 use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Repeater\TableColumn;
@@ -34,7 +34,9 @@ use Illuminate\Database\Eloquent\Builder;
 
 class QuestionResource extends Resource
 {
-    use HasContentStatus;
+    use DeletesOnlyUnused, HasContentStatus;
+
+    public const IN_USE_HINT = 'Beantwortete Fragen bleiben für den Lernverlauf erhalten. Setz sie auf Entwurf, dann verschwinden sie aus der App.';
 
     protected static ?string $model = Question::class;
 
@@ -196,7 +198,7 @@ class QuestionResource extends Resource
             ->toolbarActions([
                 BulkActionGroup::make([
                     self::publishBulkAction(),
-                    DeleteBulkAction::make(),
+                    self::deleteBulkAction(),
                 ]),
             ]);
     }

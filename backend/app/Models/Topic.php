@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ContentStatus;
+use App\Models\Concerns\BlocksDeletionWhileInUse;
 use App\Models\Concerns\HasTranslationsWithoutEmpty;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
@@ -14,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Topic extends Model
 {
-    use HasFactory, HasTranslationsWithoutEmpty, HasUuids;
+    use BlocksDeletionWhileInUse, HasFactory, HasTranslationsWithoutEmpty, HasUuids;
 
     protected $fillable = [
         'subject_id',
@@ -52,6 +53,13 @@ class Topic extends Model
     public function quizAttempts(): HasMany
     {
         return $this->hasMany(QuizAttempt::class);
+    }
+
+    /** Lerneinheiten zum Thema oder Antworten auf seine Fragen (eine Frage kann das Thema gewechselt haben). */
+    public function isInUse(): bool
+    {
+        return $this->quizAttempts()->exists()
+            || QuestionAnswer::whereIn('question_id', Question::where('topic_id', $this->id)->select('id'))->exists();
     }
 
     /** Nur veröffentlicht (E-014): Das sieht die App. */

@@ -24,7 +24,6 @@ Schema, Migrationen, Seeder und Factories. Allgemeine Regeln: `../../CLAUDE.md`,
 2. Für die Brainpower-Regeneration fehlt ein Zeitstempel (z. B. `brainpower_refilled_at`).
 3. `user_stats.trophies` (Währung) und die Tabelle `trophies` (Errungenschaften) tragen denselben Namen.
 4. Das Antwort-Log gibt es seit M3 (`question_answers`), ein XP-Ereignis-Log (`xp_events`) für EP außerhalb von Lerneinheiten noch nicht.
-5. `question_answers.question_id` ist `RESTRICT`: Eine Frage mit Antworten lässt sich nicht löschen. Filament fängt das noch nicht ab (vermutlich Fehler 500, nicht im Browser geprüft).
 
 ## Datenmigration aus V1
 

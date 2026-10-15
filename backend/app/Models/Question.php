@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\ContentStatus;
 use App\Enums\Difficulty;
 use App\Enums\QuestionType;
+use App\Models\Concerns\BlocksDeletionWhileInUse;
 use App\Models\Concerns\HasTranslationsWithoutEmpty;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
@@ -16,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Question extends Model
 {
-    use HasFactory, HasTranslationsWithoutEmpty, HasUuids;
+    use BlocksDeletionWhileInUse, HasFactory, HasTranslationsWithoutEmpty, HasUuids;
 
     protected $fillable = [
         'topic_id',
@@ -47,6 +48,12 @@ class Question extends Model
     public function options(): HasMany
     {
         return $this->hasMany(QuestionOption::class)->orderBy('order_index');
+    }
+
+    /** Schon beantwortet: Die Antworten gehören zum Lernverlauf. */
+    public function isInUse(): bool
+    {
+        return QuestionAnswer::where('question_id', $this->id)->exists();
     }
 
     /** Nur veröffentlicht (E-014): Das sieht die App. */
