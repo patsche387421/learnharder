@@ -22,6 +22,14 @@ class DatabaseSeeder extends Seeder
         $teacherRole = Role::firstOrCreate(['name' => 'teacher']);
         $studentRole = Role::firstOrCreate(['name' => 'student']);
 
+        // Demo-Accounts haben ein bekanntes Passwort und dürfen nie in Produktion landen.
+        // Den echten Admin dort per `php artisan make:filament-user` anlegen.
+        if (! app()->environment(['local', 'testing'])) {
+            $this->command?->warn('Demo-Accounts übersprungen (nur in local/testing).');
+
+            return;
+        }
+
         // 2. Super-Admin für Filament CMS
         $admin = User::firstOrCreate(
             ['email' => 'admin@learnharder.app'],
