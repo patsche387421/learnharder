@@ -11,14 +11,21 @@ use App\Filament\Resources\QuestionResource\Pages\ListQuestions;
 use App\Models\Question;
 use App\Models\Subject;
 use App\Models\Topic;
+use Closure;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Repeater\TableColumn;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
+use Filament\Support\Enums\Alignment;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -42,19 +49,26 @@ class QuestionResource extends Resource
     {
         return $schema
             ->components([
+                // Nur Hilfe zur Auswahl, gespeichert wird das Thema
+                Select::make('subject_id')
+                    ->label('Fach')
+                    ->options(fn (): array => Subject::orderBy('order_index')->get()
+                        ->mapWithKeys(fn (Subject $subject): array => [$subject->id => $subject->getTranslation('name', 'de')])
+                        ->all())
+                    ->afterStateHydrated(fn (Select $component, ?Question $record) => $component->state($record?->topic?->subject_id))
+                    ->afterStateUpdated(fn (Set $set) => $set('topic_id', null))
+                    ->dehydrated(false)
+                    ->live()
+                    ->required(),
                 Select::make('topic_id')
                     ->label('Thema')
-                    // Postgres kann nicht nach JSON sortieren: nach Fach, dann Thema, Titel auf Deutsch (E-012)
-                    ->relationship('topic', 'slug', fn (Builder $query) => $query
-                        ->with('subject')
-                        ->orderBy(Subject::select('order_index')->whereColumn('subjects.id', 'topics.subject_id'))
+                    // Postgres kann nicht nach JSON sortieren, Titel zeigt das CMS auf Deutsch (E-012)
+                    ->relationship('topic', 'slug', fn (Builder $query, Get $get) => $query
+                        ->where('subject_id', $get('subject_id'))
                         ->orderBy('order_index'))
-                    ->getOptionLabelFromRecordUsing(fn (Topic $record): string => $record->subject->getTranslation('name', 'de').' – '.$record->getTranslation('title', 'de'))
-                    ->required(),
-                Select::make('type')
-                    ->label('Typ')
-                    ->options(QuestionType::class)
-                    ->default(QuestionType::SingleChoice)
+                    ->getOptionLabelFromRecordUsing(fn (Topic $record): string => $record->getTranslation('title', 'de'))
+                    ->disabled(fn (Get $get): bool => blank($get('subject_id')))
+                    ->placeholder(fn (Get $get): string => blank($get('subject_id')) ? 'Zuerst ein Fach wählen' : 'Thema wählen')
                     ->required(),
                 // Nur Deutsch, direkt in den Eintrag der JSON-Spalte (E-012)
                 Textarea::make('question_text.de')
@@ -63,27 +77,66 @@ class QuestionResource extends Resource
                     ->columnSpanFull(),
                 Textarea::make('explanation.de')
                     ->label('Erklärung')
+                    ->helperText('Erscheint nach dem Antworten und begründet die richtige Lösung.')
                     ->columnSpanFull(),
-                TextInput::make('xp_reward')
-                    ->label('EP')
-                    ->required()
-                    ->numeric()
-                    ->default(2),
+                Select::make('type')
+                    ->label('Typ')
+                    ->options(QuestionType::class)
+                    ->default(QuestionType::SingleChoice)
+                    ->live()
+                    ->required(),
                 Select::make('difficulty')
                     ->label('Schwierigkeit')
                     ->options(Difficulty::class)
                     ->default(Difficulty::VeryEasy)
                     ->required(),
-                Select::make('status')
-                    ->label('Status')
-                    ->options(ContentStatus::class)
-                    ->default(ContentStatus::Draft)
-                    ->required(),
+                Repeater::make('options')
+                    ->label('Antworten')
+                    ->helperText(fn (Get $get): string => self::isSingleChoice($get('type'))
+                        ? '2 bis 6 Antworten. Genau eine ist richtig.'
+                        : '2 bis 6 Antworten. Mindestens eine ist richtig.')
+                    ->relationship()
+                    ->orderColumn('order_index')
+                    ->table([
+                        TableColumn::make('Antwort')
+                            ->markAsRequired(),
+                        TableColumn::make('Richtig')
+                            ->width('6rem')
+                            ->alignment(Alignment::Center),
+                    ])
+                    ->schema([
+                        TextInput::make('option_text.de')
+                            ->label('Antwort')
+                            ->required(),
+                        Toggle::make('is_correct')
+                            ->label('Richtig')
+                            // Bei einer richtigen Antwort schaltet das Einschalten die anderen aus
+                            ->fixIndistinctState(fn (Get $get): bool => self::isSingleChoice($get('../../type'))),
+                    ])
+                    ->defaultItems(4)
+                    ->minItems(2)
+                    ->maxItems(6)
+                    ->addActionLabel('Antwort hinzufügen')
+                    ->rules([fn (Get $get): Closure => self::correctAnswersRule($get('type'))])
+                    ->columnSpanFull(),
+                TextInput::make('xp_reward')
+                    ->label('EP')
+                    ->helperText('Erfahrungspunkte für eine richtige Antwort.')
+                    ->required()
+                    ->numeric()
+                    ->default(2),
                 TextInput::make('order_index')
                     ->label('Reihenfolge')
+                    ->helperText('Position im Thema. Kleinere Zahlen kommen zuerst.')
                     ->required()
                     ->numeric()
                     ->default(0),
+                Select::make('status')
+                    ->label('Status')
+                    ->helperText('Nur veröffentlichte Fragen erscheinen in der App.')
+                    ->options(ContentStatus::class)
+                    ->default(ContentStatus::Draft)
+                    ->required(),
             ]);
     }
 
@@ -100,6 +153,9 @@ class QuestionResource extends Resource
                     ->searchable(),
                 TextColumn::make('type')
                     ->label('Typ'),
+                TextColumn::make('options_count')
+                    ->label('Antworten')
+                    ->counts('options'),
                 TextColumn::make('xp_reward')
                     ->label('EP')
                     ->numeric()
@@ -144,6 +200,38 @@ class QuestionResource extends Resource
                     DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    /**
+     * Eine richtige Antwort bei single_choice, mindestens eine bei multiple_choice.
+     */
+    private static function correctAnswersRule(QuestionType|string|null $type): Closure
+    {
+        return function (string $attribute, mixed $value, Closure $fail) use ($type): void {
+            $type = self::questionType($type);
+            $correct = count(array_filter(array_column((array) $value, 'is_correct')));
+
+            if ($type === QuestionType::SingleChoice && $correct !== 1) {
+                $fail('Markiere genau eine richtige Antwort.');
+            }
+
+            if ($type === QuestionType::MultipleChoice && $correct < 1) {
+                $fail('Markiere mindestens eine richtige Antwort.');
+            }
+        };
+    }
+
+    private static function isSingleChoice(QuestionType|string|null $type): bool
+    {
+        return self::questionType($type) === QuestionType::SingleChoice;
+    }
+
+    /**
+     * Der Formular-State liefert den Typ je nach Zeitpunkt als Enum oder als String.
+     */
+    private static function questionType(QuestionType|string|null $type): ?QuestionType
+    {
+        return $type instanceof QuestionType ? $type : QuestionType::tryFrom((string) $type);
     }
 
     public static function getRelations(): array
