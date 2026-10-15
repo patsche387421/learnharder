@@ -36,9 +36,26 @@ return new class extends Migration
             $table->integer('xp_earned')->default(0);
             $table->integer('brainpower_spent')->default(0);
             $table->string('attempt_type')->default('standard'); // standard, challenge, daily, duel
+            $table->timestamp('finished_at')->nullable(); // gesetzt beim Abschluss, erst dann zählen die EP
             $table->timestamps();
 
             $table->index(['user_id', 'topic_id']);
+        });
+
+        // 2b. Erste Antwort pro Frage und Lerneinheit (Antwort-Log). Grundlage für „EP je Frage einmal pro Tag“ (E-015)
+        Schema::create('question_answers', function (Blueprint $table) {
+            $table->id();
+            $table->foreignUuid('quiz_attempt_id')->constrained('quiz_attempts')->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignUuid('question_id')->index()->constrained('questions')->restrictOnDelete(); // Verlauf bleibt
+            $table->json('selected_option_ids');
+            $table->boolean('is_correct');
+            $table->integer('xp_awarded')->default(0);
+            $table->date('xp_date')->nullable(); // Tag in Europe/Vienna, gesetzt beim Abschluss
+            $table->timestamps();
+
+            $table->unique(['quiz_attempt_id', 'question_id']);
+            $table->index(['user_id', 'question_id', 'xp_date']);
         });
 
         // 3. Schulen (Schools)
@@ -232,6 +249,7 @@ return new class extends Migration
         Schema::dropIfExists('departments');
         Schema::dropIfExists('school_email_domains');
         Schema::dropIfExists('schools');
+        Schema::dropIfExists('question_answers');
         Schema::dropIfExists('quiz_attempts');
         Schema::dropIfExists('user_stats');
     }

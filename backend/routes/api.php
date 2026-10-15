@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\QuizAttemptController;
 use App\Http\Controllers\Api\V1\SubjectController;
 use App\Http\Controllers\Api\V1\TopicController;
 use Illuminate\Support\Facades\Route;
@@ -16,5 +17,9 @@ Route::prefix('v1')->group(function () {
         Route::get('subjects', [SubjectController::class, 'index']);
         Route::get('subjects/{subject}', [SubjectController::class, 'show']);
         Route::get('subjects/{subject}/topics/{topic}', [TopicController::class, 'show']);
+
+        Route::post('topics/{topic}/attempts', [QuizAttemptController::class, 'store']);
+        Route::post('attempts/{attempt}/answers', [QuizAttemptController::class, 'answer']);
+        Route::post('attempts/{attempt}/finish', [QuizAttemptController::class, 'finish']);
     });
 });

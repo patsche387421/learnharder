@@ -24,6 +24,7 @@ class SubjectResource extends JsonResource
             'description' => $this->description,
             'color_token' => $this->color_token,
             'topics_count' => $this->whenCounted('topics'),
+            'topics_done' => $this->whenCounted('topics_done'),
             'topics' => TopicResource::collection($this->whenLoaded('topics')),
         ];
     }

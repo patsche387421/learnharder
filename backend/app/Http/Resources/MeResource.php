@@ -19,19 +19,10 @@ class MeResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $progress = $this->progression();
-
         return [
             'gamer_tag' => $this->gamer_tag,
             'roles' => $this->getRoleNames(),
-            'level' => $progress->level,
-            'rank' => $progress->rank,
-            'prestige' => $progress->prestige,
-            'xp' => [
-                'total' => $progress->total,
-                'level_start' => $progress->levelStart,
-                'next_level' => $progress->nextLevel,
-            ],
+            ...$this->progression()->toArray(),
             'brainpower' => [
                 'current' => $this->brainpower_current,
                 'max' => $this->brainpower_max,

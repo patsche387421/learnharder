@@ -47,6 +47,25 @@ final readonly class Progression
         );
     }
 
+    /**
+     * Fortschritt, wie ihn die App bekommt (/me und Abschluss einer Lerneinheit).
+     *
+     * @return array<string, mixed>
+     */
+    public function toArray(): array
+    {
+        return [
+            'level' => $this->level,
+            'rank' => $this->rank->value,
+            'prestige' => $this->prestige,
+            'xp' => [
+                'total' => $this->total,
+                'level_start' => $this->levelStart,
+                'next_level' => $this->nextLevel,
+            ],
+        ];
+    }
+
     /** EP im Zyklus, ab denen Level n beginnt. */
     public static function threshold(int $level): int
     {
