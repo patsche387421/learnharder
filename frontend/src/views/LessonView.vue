@@ -6,6 +6,7 @@ import { RouterLink, useRoute } from 'vue-router'
 import LoadError from '../components/LoadError.vue'
 import LhAnswerOption from '../components/ui/LhAnswerOption.vue'
 import LhButton from '../components/ui/LhButton.vue'
+import LhEmptyState from '../components/ui/LhEmptyState.vue'
 import LhIcon from '../components/ui/LhIcon.vue'
 import LhLevelBadge from '../components/ui/LhLevelBadge.vue'
 import LhXpBar from '../components/ui/LhXpBar.vue'
@@ -21,6 +22,7 @@ const subjectPath = `/learn/${route.params.subject}`
 
 const phase = ref('loading') // loading | question | feedback | result
 const loadError = ref(null)
+const locked = ref(false) // Level reicht noch nicht: kein Fehler, sondern ein Grund
 const actionError = ref('')
 const busy = ref(false)
 
@@ -43,15 +45,26 @@ async function start() {
   loadError.value = null
   try {
     topic.value = await getTopic(route.params.subject, route.params.topic)
+    if (topic.value.locked) {
+      locked.value = true
+      return
+    }
     const lesson = await startLesson(topic.value.id)
     attemptId.value = lesson.id
     queue.value = lesson.questions.map((question) => ({ question, repeat: false }))
     phase.value = 'question'
   } catch (e) {
-    loadError.value = e
+    // 403 beim Start: Der Server sagt, das Level reicht nicht (etwa direkt über die Adresse geöffnet)
+    if (e.status === 403 && topic.value) locked.value = true
+    else loadError.value = e
   }
 }
 onMounted(start)
+
+const lockedText = computed(() => {
+  const level = `Fragen gibt es ab Level ${topic.value.level_required}.`
+  return topic.value.theory.length ? `${level} Die Theorie kannst du schon lesen.` : level
+})
 
 function toggle(optionId) {
   if (phase.value !== 'question') return
@@ -142,7 +155,11 @@ const levelBar = computed(() => {
     </div>
 
     <div class="lh-screen__body">
-      <p v-if="phase === 'loading' && !loadError" class="lesson__muted" aria-live="polite">Lädt …</p>
+      <LhEmptyState v-if="locked" title="Noch gesperrt." :text="lockedText">
+        <LhButton v-if="topic.theory.length" variant="secondary" :to="`${base}/theory`">Theorie lesen</LhButton>
+        <LhButton v-else variant="secondary" :to="base">Zum Thema</LhButton>
+      </LhEmptyState>
+      <p v-else-if="phase === 'loading' && !loadError" class="lesson__muted" aria-live="polite">Lädt …</p>
       <LoadError v-else-if="loadError" :error="loadError" @retry="start" />
 
       <template v-else-if="phase === 'question' || phase === 'feedback'">
