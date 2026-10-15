@@ -16,10 +16,10 @@ class ContentPolicyTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** Aktionen, die Filament prüft. Die mit Datensatz bekommen das Model, die anderen die Klasse. */
-    private const RECORD_ABILITIES = ['view', 'update', 'replicate', 'delete', 'restore', 'forceDelete'];
+    /** Aktionen, die Filament prüft, dazu publish. Die mit Datensatz bekommen das Model, die anderen die Klasse. */
+    private const RECORD_ABILITIES = ['view', 'update', 'replicate', 'delete', 'restore', 'forceDelete', 'publish'];
 
-    private const CLASS_ABILITIES = ['viewAny', 'create', 'reorder', 'deleteAny', 'restoreAny', 'forceDeleteAny'];
+    private const CLASS_ABILITIES = ['viewAny', 'create', 'reorder', 'deleteAny', 'restoreAny', 'forceDeleteAny', 'publish'];
 
     /** Erlaubte Aktionen je Rolle, alles andere ist verboten */
     private const ALLOWED = [

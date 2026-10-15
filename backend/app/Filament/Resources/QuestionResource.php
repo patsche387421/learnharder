@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Enums\ContentStatus;
 use App\Enums\Difficulty;
 use App\Enums\QuestionType;
+use App\Filament\Resources\Concerns\HasContentStatus;
 use App\Filament\Resources\QuestionResource\Pages\CreateQuestion;
 use App\Filament\Resources\QuestionResource\Pages\EditQuestion;
 use App\Filament\Resources\QuestionResource\Pages\ListQuestions;
@@ -33,6 +34,8 @@ use Illuminate\Database\Eloquent\Builder;
 
 class QuestionResource extends Resource
 {
+    use HasContentStatus;
+
     protected static ?string $model = Question::class;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-question-mark-circle';
@@ -131,12 +134,7 @@ class QuestionResource extends Resource
                     ->required()
                     ->numeric()
                     ->default(0),
-                Select::make('status')
-                    ->label('Status')
-                    ->helperText('Nur veröffentlichte Fragen erscheinen in der App.')
-                    ->options(ContentStatus::class)
-                    ->default(ContentStatus::Draft)
-                    ->required(),
+                self::statusSelect('die Frage', 'Fragen'),
             ]);
     }
 
@@ -197,6 +195,7 @@ class QuestionResource extends Resource
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
+                    self::publishBulkAction(),
                     DeleteBulkAction::make(),
                 ]),
             ]);

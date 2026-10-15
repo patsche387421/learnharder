@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Enums\ContentStatus;
+use App\Filament\Resources\Concerns\HasContentStatus;
 use App\Filament\Resources\TopicResource\Pages\CreateTopic;
 use App\Filament\Resources\TopicResource\Pages\EditTopic;
 use App\Filament\Resources\TopicResource\Pages\ListTopics;
@@ -24,6 +25,8 @@ use Illuminate\Database\Eloquent\Builder;
 
 class TopicResource extends Resource
 {
+    use HasContentStatus;
+
     protected static ?string $model = Topic::class;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-queue-list';
@@ -73,12 +76,7 @@ class TopicResource extends Resource
                     ->required()
                     ->numeric()
                     ->default(0),
-                Select::make('status')
-                    ->label('Status')
-                    ->helperText('Nur veröffentlichte Themen erscheinen in der App.')
-                    ->options(ContentStatus::class)
-                    ->default(ContentStatus::Draft)
-                    ->required(),
+                self::statusSelect('das Thema', 'Themen'),
             ]);
     }
 
@@ -128,6 +126,7 @@ class TopicResource extends Resource
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
+                    self::publishBulkAction(),
                     DeleteBulkAction::make(),
                 ]),
             ]);
