@@ -30,3 +30,5 @@ Veröffentlichen dürfen nur Admins (`ContentPolicy::publish`, E-014): „Veröf
 Theorie pflegt das Thema im Relation Manager „Theorie“ (Markdown, ohne Uploads). Ändern Autor:innen sie, geht ein veröffentlichtes Thema zurück in Prüfung.
 
 Schulstruktur (Gruppe „Schule“, nur Admin über `SchoolStructurePolicy`): `SchoolResource` mit Mail-Domains, Abteilungen und Schuljahren als Relation Manager, `ProgramResource` mit dem Lehrplan, `SchoolClassResource` mit den Relation Managern „Schüler:innen“ (eintragen, austragen statt löschen, eine aktive Klasse pro Schuljahr) und „Lehrkräfte“ (Fach, Lehrkraft, Semester).
+
+Konten (`UserResource`, nur Admin über `UserPolicy`, E-025/E-027): Personal und Schüler:innen unter 14 (nur mit bestätigtem Elternformular) anlegen, ohne Passwort. Rollen ändern, sperren, entsperren, Gamer-Tag zurücksetzen und Schüler:innen löschen laufen über `App\Support\Accounts`. Lehnt eine Schutzregel ab, meldet das CMS „Nicht gespeichert“ mit dem Grund. Gamer-Tag-Regeln stehen in `App\Support\GamerTag`.
