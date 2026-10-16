@@ -33,17 +33,19 @@ class ParseTest(unittest.TestCase):
         self.assertIsNone(dev.extract_code('Konto für 20269999@htl-md.schule'))
         self.assertIsNone(dev.extract_code(None))
 
-    def test_log_nur_warnungen_und_fehler_mit_erster_zeile(self):
+    def test_log_nur_warnungen_und_fehler_der_app_mit_erster_zeile(self):
         lines = [
             '[2026-10-16 16:40:01] local.INFO: Mail verschickt',
             '[2026-10-16 16:41:02] local.ERROR: SQLSTATE[08006] Verbindung fehlgeschlagen {"exception":"[object]"}',
             '#0 /var/www/html/vendor/laravel/framework/src/Database/Connection.php(1)',
+            '[2026-10-16 16:41:30] testing.ERROR: gewollter Fehler aus einem Test',
             '[2026-10-16 16:42:03] local.WARNING: Langsame Anfrage',
         ]
-        self.assertEqual([
-            '16:41:02 ERROR: SQLSTATE[08006] Verbindung fehlgeschlagen {"exception":"[object]"}',
-            '16:42:03 WARNING: Langsame Anfrage',
-        ], dev.log_problems(lines))
+        with mock.patch.object(dev, 'local_time', lambda text: (text, text[11:])):
+            self.assertEqual([
+                '16:41:02 ERROR: SQLSTATE[08006] Verbindung fehlgeschlagen {"exception":"[object]"}',
+                '16:42:03 WARNING: Langsame Anfrage',
+            ], dev.log_problems(lines))
 
     def test_testergebnis_aus_laravel_vitest_und_json(self):
         laravel = '  PASS  Tests\\Feature\\LegalTest\n\n  Tests:    262 passed (2075 assertions)\n  Duration: 61.42s\n'
@@ -86,6 +88,72 @@ class ParseTest(unittest.TestCase):
         self.assertEqual(1228.8, dev.parse_mib('1.2GiB'))
         self.assertEqual(0.5, dev.parse_mib('512KiB'))
         self.assertEqual(0.0, dev.parse_mib('?'))
+
+
+class LogSourcesTest(unittest.TestCase):
+    """Log-Zeilen wie sie Laravel, Postgres (log_line_prefix aus backend/compose.yaml) und php artisan serve schreiben."""
+
+    def setUp(self):
+        # Ortszeit unabhängig vom Rechner: UTC-Text bleibt, wie er ist
+        patcher = mock.patch.object(dev, 'local_time', lambda text: (text, text[11:]))
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+    def test_laravel_mit_stacktrace_in_details(self):
+        [entry] = dev.parse_laravel_log([
+            '[2026-10-16 18:00:00] local.ERROR: Kaputt {"exception":"[object]"}',
+            '[stacktrace]',
+            '#0 /var/www/html/app/X.php(12)',
+        ])
+        self.assertEqual(('local', 'ERROR', 'Kaputt {"exception":"[object]"}'), (entry['env'], entry['level'], entry['text']))
+        self.assertEqual('[stacktrace]\n#0 /var/www/html/app/X.php(12)\n', entry['detail'])
+
+    def test_postgres_mit_datenbank_details_und_langsamen_abfragen(self):
+        entries = dev.parse_postgres_log([
+            '2026-10-16 18:43:26.258 UTC [1] LOG:  database system is ready to accept connections',
+            '2026-10-16 18:43:47.155 UTC [42] sail@laravel ERROR:  duplicate key value violates unique constraint "users_email_unique"',
+            '2026-10-16 18:43:47.155 UTC [42] sail@laravel DETAIL:  Key (email)=(a@b.c) already exists.',
+            '2026-10-16 18:43:47.156 UTC [42] sail@laravel STATEMENT:  insert into "users" ...',
+            '2026-10-16 18:43:47.768 UTC [56] sail@laravel LOG:  duration: 307.172 ms  statement: select pg_sleep(0.3)',
+            '2026-10-16 18:43:48.001 UTC [57] sail@testing LOG:  duration: 512.9 ms  execute pdo_stmt_00000001: select * from "users"',
+            'unbekannte Zeile ohne Format',
+        ])
+        self.assertEqual([(None, 'LOG'), ('laravel', 'ERROR'), ('laravel', 'SLOW'), ('testing', 'SLOW')],
+                         [(entry['db'], entry['level']) for entry in entries])
+        self.assertEqual('DETAIL: Key (email)=(a@b.c) already exists.\nSTATEMENT: insert into "users" ...\n', entries[1]['detail'])
+        self.assertEqual('307 ms: select pg_sleep(0.3)', entries[2]['text'])
+        self.assertEqual('513 ms: select * from "users"', entries[3]['text'])
+
+    def test_anfragen_ohne_up(self):
+        requests = dev.parse_requests([
+            '  2026-10-16 18:40:20 /up .......................................... ~ 0.12ms',
+            '  2026-10-16 18:40:21 /api/v1/me ................................... ~ 12.5ms',
+            '  2026-10-16 18:40:22 /admin/users ................................ ~ 1.02s',
+            '   INFO  Server running on [http://0.0.0.0:80].',
+        ])
+        self.assertEqual([('18:40:21', '/api/v1/me'), ('18:40:22', '/admin/users')],
+                         [(request['time'], request['path']) for request in requests])
+
+    def test_quellen_trennen_app_datenbank_und_tests(self):
+        laravel = ['[2026-10-16 18:00:00] local.ERROR: App kaputt', '[2026-10-16 18:00:01] testing.ERROR: aus einem alten Testlauf']
+        testing = ['[2026-10-16 18:00:02] testing.WARNING: aus testing.log']
+        postgres = [
+            '2026-10-16 18:00:03.000 UTC [1] sail@laravel ERROR:  echter Fehler',
+            '2026-10-16 18:00:04.000 UTC [2] sail@testing ERROR:  gewollter Fehler',
+            '2026-10-16 18:00:05.000 UTC [3] LOG:  checkpoint starting: time',
+        ]
+        requests = ['  2026-10-16 18:00:06 /api/v1/me ...... ~ 700ms']
+        logs = dev.classify_logs(laravel, testing, postgres, requests, ['\x1b[32mVITE ready\x1b[39m', ''])
+
+        self.assertEqual(['App kaputt'], [entry['text'] for entry in logs['app']])
+        self.assertEqual(['echter Fehler', 'checkpoint starting: time'], [entry['text'] for entry in logs['database']])
+        self.assertEqual([('Laravel', 'aus einem alten Testlauf'), ('Laravel', 'aus testing.log'), ('Datenbank', 'gewollter Fehler')],
+                         [(entry['origin'], entry['text']) for entry in logs['tests']])
+        self.assertEqual([{'text': 'VITE ready'}], logs['vite'])
+        self.assertEqual({
+            'app': {'total': 1, 'problems': 1}, 'requests': {'total': 1, 'problems': 0}, 'database': {'total': 2, 'problems': 1},
+            'tests': {'total': 3, 'problems': 0}, 'vite': {'total': 1, 'problems': 0},
+        }, dev.log_counts(logs))
 
 
 class TestHistoryTest(unittest.TestCase):

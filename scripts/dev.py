@@ -21,13 +21,14 @@ import time
 import urllib.error
 import urllib.request
 from collections import deque
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 BACKEND = ROOT / 'backend'
 SAIL = BACKEND / 'vendor' / 'bin' / 'sail'
 LARAVEL_LOG = BACKEND / 'storage' / 'logs' / 'laravel.log'
+TESTING_LOG = BACKEND / 'storage' / 'logs' / 'testing.log'
 STATE_DIR = Path.home() / '.cache' / 'learnharder-dev'
 VITE_PID = STATE_DIR / 'vite.pid'
 VITE_LOG = STATE_DIR / 'vite.log'
@@ -39,7 +40,16 @@ SERVICES = ['laravel.test', 'pgsql', 'redis', 'mailpit']
 URLS = {'1': ('App', 'http://localhost:5173'), '2': ('CMS', 'http://localhost/admin'), '3': ('Mailpit', 'http://localhost:8025')}
 MAILPIT_API = 'http://localhost:8025/api/v1'
 LOG_LEVELS = ('WARNING', 'ERROR', 'CRITICAL', 'ALERT', 'EMERGENCY')
-LOG_ENTRY = re.compile(r'^\[\d{4}-\d{2}-\d{2} (\d{2}:\d{2}:\d{2})\] \w+\.(\w+): (.*)')
+# Laravel und der Container schreiben UTC (config/app.php), die Oberfläche zeigt Ortszeit
+LOG_ENTRY = re.compile(r'^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\] (\w+)\.(\w+): (.*)')
+# Postgres mit log_line_prefix aus backend/compose.yaml: Zeit, Prozess, Benutzer@Datenbank (fehlt bei Serverprozessen)
+POSTGRES_LINE = re.compile(r'^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\.\d+ \w+ \[\d+\] (?:\S+@(\S+) )?([A-Z]+):\s+(.*)')
+POSTGRES_DETAIL = ('DETAIL', 'STATEMENT', 'HINT', 'CONTEXT', 'QUERY', 'LOCATION')
+POSTGRES_PROBLEMS = ('WARNING', 'ERROR', 'FATAL', 'PANIC', 'SLOW')
+# php artisan serve im Container: `  2026-10-16 18:40:20 /api/v1/me ....... ~ 0.12ms`. Die Dauer dort taugt nichts
+# (gemessen 50–120 ms, im Log 0,1 ms oder 500 ms), deshalb nur Zeit und Pfad. Echte Antwortzeit: health() von außen.
+REQUEST_LINE = re.compile(r'^\s*(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) (\S+) \.*\s*~ [\d.]+\s*m?s\s*$')
+LOG_KEEP = 300
 ANSI = re.compile(r'\x1b\[[0-9;?]*[A-Za-z]')
 MIB_PER_UNIT = {'b': 1 / 1048576, 'kib': 1 / 1024, 'kb': 1 / 1024, 'mib': 1, 'mb': 1, 'gib': 1024, 'gb': 1024}
 TEST_KINDS = ('passed', 'failed', 'skipped', 'todo', 'incomplete', 'risky')
@@ -75,13 +85,84 @@ def extract_code(text):
 
 
 def log_problems(lines, limit=4):
-    """Die letzten Warnungen und Fehler aus dem Laravel-Log, je nur die erste Zeile."""
-    problems = []
+    """Die letzten Warnungen und Fehler der App aus dem Laravel-Log, je nur die erste Zeile. Einträge aus Tests zählen nicht."""
+    return [f'{entry["time"]} {entry["level"]}: {entry["text"]}' for entry in parse_laravel_log(lines)
+            if entry['env'] != 'testing' and entry['level'] in LOG_LEVELS][-limit:]
+
+
+def local_time(text):
+    """UTC-Zeit `2026-10-16 18:40:20` → (ISO mit Zeitzone, `20:40:20`) in Ortszeit."""
+    moment = datetime.strptime(text, '%Y-%m-%d %H:%M:%S').replace(tzinfo=timezone.utc).astimezone()
+    return moment.isoformat(timespec='seconds'), moment.strftime('%H:%M:%S')
+
+
+def parse_laravel_log(lines):
+    """Einträge aus einem Laravel-Log. Folgezeilen (Stacktrace) landen in `detail`."""
+    entries = []
     for line in lines:
-        match = LOG_ENTRY.match(line)
-        if match and match.group(2) in LOG_LEVELS:
-            problems.append(f'{match.group(1)} {match.group(2)}: {match.group(3)}')
-    return problems[-limit:]
+        if match := LOG_ENTRY.match(line):
+            stamp, time_ = local_time(match.group(1))
+            entries.append({'stamp': stamp, 'time': time_, 'env': match.group(2), 'level': match.group(3),
+                            'text': match.group(4), 'detail': ''})
+        elif entries and line.strip() and len(entries[-1]['detail']) < 4000:
+            entries[-1]['detail'] += line + '\n'
+    return entries
+
+
+def parse_postgres_log(lines):
+    """Einträge aus dem Postgres-Log. DETAIL, STATEMENT und Co. gehören zur Zeile davor, langsame Abfragen heißen SLOW."""
+    entries = []
+    for line in lines:
+        match = POSTGRES_LINE.match(line)
+        if not match:
+            continue
+        stamp, time_ = local_time(match.group(1))
+        database, level, text = match.group(2), match.group(3), match.group(4)
+        if level in POSTGRES_DETAIL and entries:
+            entries[-1]['detail'] += f'{level}: {text}\n'
+            continue
+        if level == 'LOG' and (slow := re.match(r'duration: ([\d.]+) ms\s+(?:statement|execute [^:]*): (.*)', text)):
+            level, text = 'SLOW', f'{float(slow.group(1)):.0f} ms: {slow.group(2)}'
+        entries.append({'stamp': stamp, 'time': time_, 'db': database, 'level': level, 'text': text, 'detail': ''})
+    return entries
+
+
+def parse_requests(lines):
+    """Anfragen an Laravel (Zeit und Pfad), ohne /up: Das fragt die Testzentrale selbst ständig ab."""
+    requests = []
+    for line in lines:
+        match = REQUEST_LINE.match(line)
+        if match and match.group(2) != '/up':
+            stamp, time_ = local_time(match.group(1))
+            requests.append({'stamp': stamp, 'time': time_, 'path': match.group(2)})
+    return requests
+
+
+def classify_logs(laravel, testing, postgres, requests, vite):
+    """Log-Zeilen nach Quelle: App, Anfragen, Datenbank (Entwicklung), Tests (Laravel und Datenbank testing), Vite."""
+    laravel_entries = parse_laravel_log(laravel)
+    postgres_entries = parse_postgres_log(postgres)
+    tests = ([{**entry, 'origin': 'Laravel'} for entry in laravel_entries if entry['env'] == 'testing']
+             + [{**entry, 'origin': 'Laravel'} for entry in parse_laravel_log(testing)]
+             + [{**entry, 'origin': 'Datenbank'} for entry in postgres_entries if entry['db'] == 'testing'])
+    sources = {
+        'app': [entry for entry in laravel_entries if entry['env'] != 'testing'],
+        'requests': parse_requests(requests),
+        'database': [entry for entry in postgres_entries if entry['db'] != 'testing'],
+        'tests': sorted(tests, key=lambda entry: entry['stamp']),
+        'vite': [{'text': ANSI.sub('', line)} for line in vite if line.strip()],
+    }
+    return {name: entries[-LOG_KEEP:] for name, entries in sources.items()}
+
+
+def log_counts(logs):
+    """Je Quelle: Anzahl und Probleme. Probleme zählen nur bei App und Datenbank, Fehler aus Tests sind gewollt."""
+    problems = {
+        'app': lambda entry: entry['level'] in LOG_LEVELS,
+        'database': lambda entry: entry['level'] in POSTGRES_PROBLEMS,
+    }
+    return {name: {'total': len(entries), 'problems': sum(1 for entry in entries if name in problems and problems[name](entry))}
+            for name, entries in logs.items()}
 
 
 def test_summary(output, returncode):
@@ -358,6 +439,17 @@ def health():
         return error.code, None
     except OSError:
         return None
+
+
+def compose_logs(service, lines=400):
+    """Container-Log eines Dienstes. Nur stdout, auf stderr warnt docker compose über fehlende Variablen."""
+    code, out, _ = run(['docker', 'compose', 'logs', '--no-log-prefix', '--no-color', '--tail', str(lines), service], cwd=BACKEND, timeout=10)
+    return out.splitlines() if code == 0 else []
+
+
+def read_logs():
+    big = 262144  # Stacktraces sind lang
+    return classify_logs(tail(LARAVEL_LOG, big), tail(TESTING_LOG, big), compose_logs('pgsql'), compose_logs('laravel.test'), tail(VITE_LOG))
 
 
 def snapshot(mail_limit=3):

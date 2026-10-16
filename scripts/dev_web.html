@@ -108,11 +108,26 @@
   .failures { margin: 6px 0 0; padding-left: 18px; color: var(--wrong); font: 400 12px/18px var(--font-mono); }
   pre { margin: 0; padding: var(--space-3); border-radius: var(--radius-sm); background: var(--surface-sunken); overflow: auto;
         font: 400 12.5px/19px var(--font-mono); white-space: pre-wrap; word-break: break-word; }
-  .log { max-height: 70vh; }
-  .log .lvl-ERROR, .log .lvl-CRITICAL, .log .lvl-ALERT, .log .lvl-EMERGENCY { color: var(--wrong); }
-  .log .lvl-WARNING { color: var(--rank-gold); }
-  .log .lvl-INFO, .log .lvl-DEBUG { color: var(--ink); }
-  .log .trace { color: var(--ink-muted); }
+  .entries { margin: 0; padding: 0; list-style: none; }
+  .entry { display: grid; grid-template-columns: 70px 92px minmax(0, 1fr); gap: var(--space-3); align-items: start; padding: 8px 0; border-top: 1px solid var(--line); font-size: 13px; }
+  .entry:first-child { border-top: 0; }
+  .entry__text { font: 400 12.5px/19px var(--font-mono); word-break: break-word; }
+  .entry__origin { display: block; margin-top: 2px; font-size: 11px; color: var(--ink-muted); }
+  .entry details summary { margin-top: 4px; font-size: 12px; color: var(--ink-muted); cursor: pointer; }
+  .entry details pre { margin-top: 6px; max-height: 320px; }
+  @media (max-width: 700px) { .entry { grid-template-columns: 60px minmax(0, 1fr); } .entry > :nth-child(2) { grid-column: 2; } .entry > :nth-child(3) { grid-column: 1 / -1; } }
+  .lvl { display: inline-block; min-width: 64px; padding: 0 8px; border-radius: var(--radius-full); background: var(--surface-sunken);
+         color: var(--ink-muted); font: 700 11px/20px var(--font-mono); text-align: center; }
+  .lvl--bad { background: color-mix(in srgb, var(--wrong) 22%, transparent); color: var(--wrong); }
+  .lvl--warn { background: color-mix(in srgb, var(--rank-gold) 22%, transparent); color: var(--rank-gold); }
+  .lvl--slow { background: color-mix(in srgb, var(--rank-platin) 22%, transparent); color: var(--rank-platin); }
+  .source-note { margin: 0 0 var(--space-3); color: var(--ink-muted); font-size: 14px; }
+  .seg .badge { margin-left: 6px; }
+  .reqbar { height: 6px; min-width: 2px; border-radius: 3px; background: var(--rank-prestige); }
+  .logrow { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); width: 100%; padding: 8px 0;
+            border: 0; border-top: 1px solid var(--line); background: none; text-align: left; cursor: pointer; }
+  .logrow:first-child { border-top: 0; }
+  .logrow:hover strong { text-decoration: underline; }
   .toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); margin-bottom: var(--space-3); }
   .toolbar input { flex: 1 1 200px; min-height: 36px; padding: 0 12px; border-radius: var(--radius-sm); border: 1px solid var(--line-strong); background: var(--surface-sunken); }
   .seg { display: inline-flex; border: 1px solid var(--line-strong); border-radius: var(--radius-sm); overflow: hidden; }
@@ -204,8 +219,8 @@
         <div id="last-tests"></div>
       </article>
       <article class="card">
-        <h2>Laravel-Log <button class="btn btn--small" data-tab-link="log">Öffnen</button></h2>
-        <div id="problems"></div>
+        <h2>Logs <button class="btn btn--small" data-tab-link="log">Öffnen</button></h2>
+        <div id="log-summary"></div>
       </article>
     </div>
   </section>
@@ -244,14 +259,24 @@
   <!-- Log -->
   <section class="tab" id="tab-log" role="tabpanel" hidden>
     <div class="toolbar">
+      <div class="seg" id="log-sources">
+        <button data-source="app">App<span class="badge" data-count="app">0</span></button>
+        <button data-source="requests">Anfragen<span class="badge" data-count="requests">0</span></button>
+        <button data-source="database">Datenbank<span class="badge" data-count="database">0</span></button>
+        <button data-source="tests">Tests<span class="badge" data-count="tests">0</span></button>
+        <button data-source="vite">Vite<span class="badge" data-count="vite">0</span></button>
+      </div>
+    </div>
+    <p class="source-note" id="log-note"></p>
+    <div class="toolbar">
       <div class="seg" id="log-filter">
-        <button data-filter="problems" aria-pressed="true">Warnungen und Fehler</button>
+        <button data-filter="problems" aria-pressed="true">Nur Probleme</button>
         <button data-filter="all" aria-pressed="false">Alles</button>
       </div>
-      <input id="log-search" type="search" placeholder="Im Log suchen …">
-      <span class="muted mono">backend/storage/logs/laravel.log</span>
+      <input id="log-search" type="search" placeholder="Suchen …">
+      <button class="btn" id="log-since"></button>
     </div>
-    <pre class="log card" id="log"></pre>
+    <div class="card" id="log-body"></div>
   </section>
 
   <!-- Aktivität -->
@@ -267,8 +292,15 @@
 const SERVICES = ['laravel.test', 'pgsql', 'redis', 'mailpit']
 const COLORS = { 'laravel.test': 'var(--subject-wir)', pgsql: 'var(--subject-dbi)', redis: 'var(--subject-syp)', mailpit: 'var(--subject-nsvs)' }
 const SUITES = { backend: 'Backend', frontend: 'Frontend' }
-const LEVEL = /^\[\d{4}-\d{2}-\d{2} (\d{2}:\d{2}:\d{2})\] \w+\.(\w+):/
-const PROBLEM_LEVELS = ['WARNING', 'ERROR', 'CRITICAL', 'ALERT', 'EMERGENCY']
+// Log-Quellen wie in dev.py classify_logs(). Probleme zählen nur bei App und Datenbank.
+const LOG_SOURCES = {
+  app: { name: 'App', alarm: true, note: 'Laravel-Log der App (<code>storage/logs/laravel.log</code>), ohne Einträge aus Tests. Probleme: Warnungen und Fehler.' },
+  requests: { name: 'Anfragen', alarm: false, note: 'Anfragen an Laravel, ohne <code>/up</code> (das fragt die Testzentrale selbst ständig ab). Ohne Dauer: <code>php artisan serve</code> misst sie falsch. Die echte Antwortzeit zeigt „Antwortzeit /up“ in der Übersicht.' },
+  database: { name: 'Datenbank', alarm: true, note: 'Postgres, Entwicklungs-Datenbank <code>laravel</code>: Fehler und Abfragen ab 250 ms (SLOW). Start- und Checkpoint-Meldungen unter „Alles“.' },
+  tests: { name: 'Tests', alarm: false, note: 'Aus Testläufen: <code>storage/logs/testing.log</code> und Fehler der Datenbank <code>testing</code>. Meist gewollt, denn Tests prüfen absichtlich Fehlerfälle. Ergebnisse stehen im Tab „Tests“.' },
+  vite: { name: 'Vite', alarm: false, note: 'Ausgabe des Vite-Servers, wenn Testzentrale oder Dashboard ihn gestartet haben (<code>~/.cache/learnharder-dev/vite.log</code>).' },
+}
+const BAD_LEVELS = ['ERROR', 'CRITICAL', 'ALERT', 'EMERGENCY', 'FATAL', 'PANIC']
 
 const $ = (selector) => document.querySelector(selector)
 const esc = (text) => String(text ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c])
@@ -283,8 +315,9 @@ let tab = 'overview'
 let selectedMail = null
 let lastCode = null
 let codeShown = false
+let logSource = LOG_SOURCES[store.get('lh-dev-log-source')] ? store.get('lh-dev-log-source') : 'app'
 let logFilter = 'problems'
-let logLines = []
+let logEntries = []
 
 async function api(path, options = {}) {
   const response = await fetch(path, { ...options, headers: { 'X-LH-Dev': '1' } })
@@ -451,13 +484,26 @@ function renderLastTests(tests) {
   }).join('')
 }
 
-function renderProblems(state) {
-  const problems = state?.problems || []
-  $('#badge-log').textContent = problems.length
-  $('#badge-log').className = `badge ${problems.length ? 'badge--bad' : ''}`
-  $('#problems').innerHTML = problems.length
-    ? problems.slice(-4).reverse().map((p) => `<pre class="${p.includes('WARNING') ? 'warn' : 'bad'}" style="margin-bottom:6px">${esc(p.slice(0, 220))}</pre>`).join('')
-    : '<div class="empty ok">Keine Warnungen oder Fehler.</div>'
+function renderLogSummary(state) {
+  const counts = state?.logs
+  if (!counts) return
+  const alarms = Object.entries(LOG_SOURCES).filter(([, source]) => source.alarm).reduce((sum, [name]) => sum + counts[name].problems, 0)
+  $('#badge-log').textContent = alarms
+  $('#badge-log').className = `badge ${alarms ? 'badge--bad' : ''}`
+  for (const [name, source] of Object.entries(LOG_SOURCES)) {
+    const el = document.querySelector(`[data-count="${name}"]`)
+    const problems = source.alarm ? counts[name].problems : 0
+    el.textContent = problems || counts[name].total
+    el.className = `badge ${problems ? 'badge--bad' : ''}`
+  }
+  $('#log-summary').innerHTML = Object.entries(LOG_SOURCES).map(([name, source]) => {
+    const { total, problems } = counts[name]
+    const label = name === 'requests' ? `${total} Anfragen` : name === 'vite' ? `${total} Zeilen` : `${total} Einträge`
+    const status = !source.alarm ? `<span class="muted">${name === 'tests' && total ? 'meist gewollt' : ''}</span>`
+      : problems ? `<span class="pill pill--bad">${problems} ${problems === 1 ? 'Problem' : 'Probleme'}</span>`
+      : '<span class="pill pill--ok">ok</span>'
+    return `<button class="logrow" data-log-link="${name}"><span><strong>${source.name}</strong> <span class="muted">${label}</span></span>${status}</button>`
+  }).join('')
 }
 
 function renderMails(state) {
@@ -537,7 +583,7 @@ function render() {
   renderCharts(history)
   renderCode(state)
   renderLastTests(tests)
-  renderProblems(state)
+  renderLogSummary(state)
   renderMails(state)
   renderTests(tests)
   renderActivity(activity)
@@ -546,24 +592,72 @@ function render() {
 
 /* ---------- Log ---------- */
 
+const isProblem = (source, entry) => {
+  if (source === 'requests') return false
+  if (source === 'vite') return /error|fail/i.test(entry.text)
+  return BAD_LEVELS.includes(entry.level) || entry.level === 'WARNING' || (source !== 'app' && entry.level === 'SLOW')
+}
+const levelClass = (level) => (BAD_LEVELS.includes(level) ? 'lvl--bad' : level === 'WARNING' ? 'lvl--warn' : level === 'SLOW' ? 'lvl--slow' : '')
+
+function entryList(entries) {
+  return `<ul class="entries">${entries.map((e) => `<li class="entry">
+      <span class="mono muted">${esc(e.time)}</span>
+      <span><span class="lvl ${levelClass(e.level)}">${esc(e.level)}</span>${e.origin ? `<span class="entry__origin">${esc(e.origin)}</span>` : ''}</span>
+      <div><div class="entry__text">${esc(e.text)}</div>${e.detail ? `<details><summary>Details</summary><pre>${esc(e.detail)}</pre></details>` : ''}</div>
+    </li>`).join('')}</ul>`
+}
+
+function requestTable(entries) {
+  // Häufigste Pfade, Livewire-Pfade mit Hash zusammengefasst
+  const counts = {}
+  for (const e of entries) {
+    const path = e.path.replace(/^\/livewire-[^/]+/, '/livewire-…').replace(/\?.*$/, '')
+    counts[path] = (counts[path] || 0) + 1
+  }
+  const top = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 6)
+  const max = top[0][1]
+  return `<div class="grid" style="grid-template-columns: minmax(0, 1fr) minmax(0, 1fr)">
+      <div><h2 class="muted" style="font-size:12px;margin:0 0 8px">HÄUFIGSTE PFADE</h2>
+        <table><tbody>${top.map(([path, count]) => `<tr><td class="mono">${esc(path)}</td><td class="mono" style="text-align:right">${count}</td>
+          <td style="width:40%"><div class="reqbar" style="width:${((count / max) * 100).toFixed(1)}%"></div></td></tr>`).join('')}</tbody></table></div>
+      <div class="table-wrap"><h2 class="muted" style="font-size:12px;margin:0 0 8px">${entries.length} ANFRAGEN, NEUESTE ZUERST</h2>
+        <table><tbody>${entries.map((e) => `<tr><td class="mono muted">${esc(e.time)}</td><td class="mono">${esc(e.path)}</td></tr>`).join('')}</tbody></table></div>
+    </div>`
+}
+
 function renderLog() {
   const search = $('#log-search').value.trim().toLowerCase()
-  let lines = logLines
-  if (logFilter === 'problems') lines = lines.filter((line) => PROBLEM_LEVELS.includes(line.match(LEVEL)?.[2]))
-  if (search) lines = lines.filter((line) => line.toLowerCase().includes(search))
-  const el = $('#log')
-  const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 40
-  el.innerHTML = lines.length
-    ? lines.map((line) => {
-        const level = line.match(LEVEL)?.[2]
-        return `<span class="${level ? `lvl-${level}` : 'trace'}">${esc(line)}</span>`
-      }).join('\n')
-    : `<span class="muted">${logFilter === 'problems' ? 'Keine Warnungen oder Fehler.' : 'Log ist leer.'}</span>`
-  if (atBottom) el.scrollTop = el.scrollHeight
+  const since = store.get(`lh-dev-since-${logSource}`)
+  let entries = logEntries
+  if (since) entries = entries.filter((e) => !e.stamp || new Date(e.stamp) > new Date(since))
+  if (logFilter === 'problems') entries = entries.filter((e) => isProblem(logSource, e))
+  if (search) entries = entries.filter((e) => JSON.stringify(e).toLowerCase().includes(search))
+  document.querySelectorAll('#log-sources button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.source === logSource))
+  document.querySelectorAll('#log-filter button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.filter === logFilter))
+  $('#log-note').innerHTML = LOG_SOURCES[logSource].note
+  $('#log-since').hidden = logSource === 'vite'
+  $('#log-since').textContent = since ? `Ab ${new Date(since).toLocaleTimeString('de-AT')} · alle zeigen` : 'Ältere ausblenden'
+  const empty = logFilter === 'problems' ? 'Keine Probleme. Alle Einträge unter „Alles“.' : 'Keine Einträge.'
+  $('#log-body').innerHTML = !entries.length ? `<div class="empty">${empty}</div>`
+    : logSource === 'requests' ? requestTable(entries)
+    : logSource === 'vite' ? `<pre>${esc(entries.slice().reverse().map((e) => e.text).join('\n'))}</pre>`
+    : entryList(entries)
 }
 
 async function loadLog() {
-  try { logLines = (await api('/api/log')).lines; renderLog() } catch { /* nächster Versuch beim nächsten Takt */ }
+  // Nicht neu zeichnen, solange Details offen sind, sonst klappen sie bei jedem Takt zu
+  if (document.querySelector('#log-body details[open]')) return
+  try { logEntries = (await api(`/api/logs/${logSource}`)).entries; renderLog() } catch { /* nächster Versuch beim nächsten Takt */ }
+}
+
+function selectLogSource(name) {
+  logSource = name
+  if (tab === 'log') history.replaceState(null, '', `#log:${name}`)
+  logFilter = name === 'requests' || name === 'vite' ? 'all' : 'problems'
+  logEntries = []
+  store.set('lh-dev-log-source', name)
+  renderLog()
+  loadLog()
 }
 
 /* ---------- Ablauf ---------- */
@@ -571,7 +665,7 @@ async function loadLog() {
 function selectTab(name) {
   tab = name
   store.set('lh-dev-tab', name)
-  history.replaceState(null, '', `#${name}`)
+  history.replaceState(null, '', name === 'log' ? `#log:${logSource}` : `#${name}`)
   document.querySelectorAll('.tab-btn').forEach((button) => button.setAttribute('aria-selected', button.dataset.tab === name))
   document.querySelectorAll('.tab').forEach((section) => { section.hidden = section.id !== `tab-${name}` })
   if (name === 'log') loadLog()
@@ -608,21 +702,27 @@ async function showOutput(id) {
 }
 
 document.addEventListener('click', (event) => {
-  const target = event.target.closest('[data-action],[data-tab],[data-tab-link],[data-copy],[data-mail],[data-output],[data-filter]')
+  const target = event.target.closest('[data-action],[data-tab],[data-tab-link],[data-log-link],[data-source],[data-copy],[data-mail],[data-output],[data-filter]')
   if (!target) return
   if (target.dataset.copy) { event.stopPropagation(); copy(target.dataset.copy) }
   else if (target.dataset.action) runAction(target)
   else if (target.dataset.tab) selectTab(target.dataset.tab)
   else if (target.dataset.tabLink) selectTab(target.dataset.tabLink)
+  else if (target.dataset.logLink) { selectTab('log'); selectLogSource(target.dataset.logLink) }
+  else if (target.dataset.source) selectLogSource(target.dataset.source)
   else if (target.dataset.mail) showMail(target.dataset.mail)
   else if (target.dataset.output) showOutput(target.dataset.output)
   else if (target.dataset.filter) {
     logFilter = target.dataset.filter
-    document.querySelectorAll('#log-filter button').forEach((b) => b.setAttribute('aria-pressed', b === target))
     renderLog()
   }
 })
 $('#log-search').addEventListener('input', renderLog)
+$('#log-since').addEventListener('click', () => {
+  const key = `lh-dev-since-${logSource}`
+  store.set(key, store.get(key) ? '' : new Date().toISOString())
+  renderLog()
+})
 $('#dialog-close').addEventListener('click', () => $('#dialog').close())
 $('#theme').addEventListener('click', () => {
   const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'
@@ -632,7 +732,11 @@ $('#theme').addEventListener('click', () => {
 
 document.documentElement.dataset.theme = store.get('lh-dev-theme') || 'dark'
 const tabs = ['overview', 'mails', 'tests', 'log', 'activity']
-selectTab(tabs.find((t) => `#${t}` === location.hash) || (tabs.includes(store.get('lh-dev-tab')) ? store.get('lh-dev-tab') : 'overview'))
+// Adresse wie #tests oder #log:database öffnet Tab und Log-Quelle direkt
+const [hashTab, hashSource] = location.hash.slice(1).split(':')
+if (LOG_SOURCES[hashSource]) logSource = hashSource
+selectTab(tabs.includes(hashTab) ? hashTab : (tabs.includes(store.get('lh-dev-tab')) ? store.get('lh-dev-tab') : 'overview'))
+if (tab === 'log') selectLogSource(logSource)
 setInterval(() => { if (tab === 'log') loadLog() }, 3000)
 poll()
 </script>
