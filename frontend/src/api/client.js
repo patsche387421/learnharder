@@ -20,7 +20,10 @@ export class ApiError extends Error {
 
 let unauthorizedHandler = () => {}
 
-/** Wird bei jeder 401 aufgerufen (Session abgelaufen). main.js leert dann den Store und zeigt /login. */
+/**
+ * Wird bei jeder 401 aufgerufen (Session abgelaufen) und bei einem gesperrten Konto (403 mit reason, E-027).
+ * main.js leert dann den Store und zeigt /login. Der Handler bekommt den Grund oder null.
+ */
 export function onUnauthorized(handler) {
   unauthorizedHandler = handler
 }
@@ -64,6 +67,7 @@ async function send(path, method, body) {
 
 function errorMessage(status, data) {
   if (status === 422 && data?.errors) return Object.values(data.errors)[0][0]
+  if (data?.reason === 'account_deactivated') return data.message
   if (status === 429) return MESSAGES.tooMany
   return MESSAGES.generic
 }
@@ -85,6 +89,7 @@ export async function api(path, { method = 'GET', body } = {}) {
   const data = await response.json().catch(() => null)
   if (response.ok) return data
 
-  if (response.status === 401) unauthorizedHandler()
+  if (response.status === 401) unauthorizedHandler(null)
+  if (response.status === 403 && data?.reason === 'account_deactivated') unauthorizedHandler(data.reason)
   throw new ApiError(response.status, errorMessage(response.status, data), data?.errors ?? {})
 }

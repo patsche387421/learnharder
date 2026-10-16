@@ -38,6 +38,12 @@ export const useAuthStore = defineStore('auth', () => {
     loaded.value = true
   }
 
+  /** Letzter Schritt der Registrierung: legt das Konto an und meldet an (E-025). */
+  async function register(fields) {
+    me.value = (await api('/register', { method: 'POST', body: fields })).data
+    loaded.value = true
+  }
+
   async function logout() {
     try {
       await api('/logout', { method: 'POST' })
@@ -55,5 +61,5 @@ export const useAuthStore = defineStore('auth', () => {
     me.value = null
   }
 
-  return { me, loaded, player, waitingForClass, fetchMe, login, logout, applyProgress, clear }
+  return { me, loaded, player, waitingForClass, fetchMe, login, register, logout, applyProgress, clear }
 })

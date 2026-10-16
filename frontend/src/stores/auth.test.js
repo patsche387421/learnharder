@@ -81,4 +81,15 @@ describe('auth-Store', () => {
     expect(auth.player.level).toBe(25)
     expect(auth.me.gamer_tag).toBe('lena42')
   })
+
+  it('register legt das Konto an und merkt sich die Person', async () => {
+    const fetch = mockFetch({ status: 201, body: { data: me } })
+    const auth = useAuthStore()
+
+    await auth.register({ token: 'einmal', gamer_tag: 'lena42' })
+    expect(fetch.mock.calls[0][0]).toMatch(/\/api\/v1\/register$/)
+    expect(JSON.parse(fetch.mock.calls[0][1].body)).toEqual({ token: 'einmal', gamer_tag: 'lena42' })
+    expect(auth.me.gamer_tag).toBe('lena42')
+    expect(auth.loaded).toBe(true)
+  })
 })

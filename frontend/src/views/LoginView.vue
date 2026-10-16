@@ -1,7 +1,7 @@
 <script setup>
-// Login mit Schul-Mail und Passwort. Registrieren kommt in M5, bis dahin legt der Admin Accounts an.
+// Login mit Schul-Mail und Passwort. Neu hier? Dann über /registrieren (E-025).
 import { ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
 import LhButton from '../components/ui/LhButton.vue'
 import LhTextField from '../components/ui/LhTextField.vue'
 import { useAuthStore } from '../stores/auth.js'
@@ -13,7 +13,8 @@ const router = useRouter()
 const email = ref('')
 const password = ref('')
 const sending = ref(false)
-const error = ref('')
+// Nach einer Sperre schickt main.js mit ?gesperrt=1 hierher (E-027)
+const error = ref(route.query.gesperrt ? 'Dein Konto ist gesperrt. Wende dich an deine Lehrkraft.' : '')
 
 // Nur Pfade innerhalb der App, kein //andere-seite.at
 function target() {
@@ -44,6 +45,11 @@ async function submit() {
       <LhTextField v-model="password" label="Passwort" type="password" autocomplete="current-password" />
       <LhButton type="submit" block :disabled="sending || !email || !password">Einloggen</LhButton>
     </form>
+    <p class="login__text">Neu hier? <RouterLink to="/registrieren">Registrieren</RouterLink></p>
+    <nav class="login__legal" aria-label="Rechtliches">
+      <RouterLink to="/datenschutz">Datenschutz</RouterLink>
+      <RouterLink to="/impressum">Impressum</RouterLink>
+    </nav>
   </main>
 </template>
 
@@ -52,4 +58,6 @@ async function submit() {
 .login__title { margin: 0; font: 700 26px/32px var(--font-text); color: var(--ink); }
 .login__text { margin: 0 0 var(--space-4); font: 400 16px/24px var(--font-text); color: var(--ink-muted); }
 .login__form { display: grid; gap: var(--space-4); }
+.login__text a, .login__legal a { color: var(--ink); }
+.login__legal { display: flex; gap: var(--space-4); margin-top: var(--space-2); font: 400 14px/20px var(--font-text); }
 </style>

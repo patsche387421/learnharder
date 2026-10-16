@@ -19,7 +19,8 @@ class EnsureAccountActive
             $request->session()->invalidate();
             $request->session()->regenerateToken();
 
-            return response()->json(['message' => __('accounts.deactivated')], Response::HTTP_FORBIDDEN);
+            // reason, damit die App die Sperre erkennt, ohne Texte zu vergleichen
+            return response()->json(['message' => __('accounts.deactivated'), 'reason' => 'account_deactivated'], Response::HTTP_FORBIDDEN);
         }
 
         return $next($request);

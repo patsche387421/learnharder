@@ -53,7 +53,8 @@ class DeactivatedAccountTest extends TestCase
 
         $this->actingAs($user->fresh())->getJson('/api/v1/me')
             ->assertForbidden()
-            ->assertJsonPath('message', 'Dein Konto ist gesperrt. Wende dich an deine Lehrkraft.');
+            ->assertJsonPath('message', 'Dein Konto ist gesperrt. Wende dich an deine Lehrkraft.')
+            ->assertJsonPath('reason', 'account_deactivated');
         $this->assertGuest('web');
     }
 

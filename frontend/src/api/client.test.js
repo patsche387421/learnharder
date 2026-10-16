@@ -71,6 +71,22 @@ describe('api', () => {
     mockFetch({ status: 401, body: { message: 'Unauthenticated.' } })
 
     await expect(api('/me')).rejects.toMatchObject({ status: 401 })
+    expect(handler).toHaveBeenCalledExactlyOnceWith(null)
+  })
+
+  it('gesperrtes Konto (403 mit reason) ruft den Abmelde-Handler mit Grund', async () => {
+    const handler = vi.fn()
+    onUnauthorized(handler)
+    mockFetch(
+      { status: 403, body: { message: 'Dein Konto ist gesperrt. Wende dich an deine Lehrkraft.', reason: 'account_deactivated' } },
+      { status: 403, body: { message: 'This action is unauthorized.' } },
+    )
+
+    await expect(api('/me')).rejects.toMatchObject({ status: 403, message: 'Dein Konto ist gesperrt. Wende dich an deine Lehrkraft.' })
+    expect(handler).toHaveBeenCalledExactlyOnceWith('account_deactivated')
+
+    // Ein anderes 403 meldet niemanden ab und zeigt keinen englischen Servertext
+    await expect(api('/x')).rejects.toMatchObject({ status: 403, message: MESSAGES.generic })
     expect(handler).toHaveBeenCalledOnce()
   })
 
