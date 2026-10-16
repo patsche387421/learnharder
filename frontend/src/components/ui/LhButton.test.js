@@ -18,6 +18,13 @@ describe('LhButton', () => {
     expect(w.classes()).toContain('lh-btn--block')
   })
 
+  it('kennt die Variante Gefahr für Unumkehrbares', () => {
+    const w = mount(LhButton, { props: { variant: 'danger' } })
+    expect(w.classes()).toEqual(['lh-btn', 'lh-btn--danger'])
+    expect(LhButton.props.variant.validator('danger')).toBe(true)
+    expect(LhButton.props.variant.validator('rot')).toBe(false)
+  })
+
   it('wird mit to zum Router-Link und mit href zum normalen Link', async () => {
     const router = testRouter()
     const internal = mount(LhButton, { props: { to: '/hub' }, global: { plugins: [router] } })
