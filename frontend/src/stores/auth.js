@@ -3,6 +3,9 @@ import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { api, refreshCsrf } from '../api/client.js'
 
+// Diese Rollen sehen alle Fächer, alle anderen nur den Lehrplan ihrer Klasse (E-024, entscheidet der Server)
+const STAFF_ROLES = ['admin', 'autor', 'tester', 'teacher']
+
 export const useAuthStore = defineStore('auth', () => {
   const me = ref(null)
   // true, sobald einmal geprüft wurde, ob eine Session besteht
@@ -13,6 +16,10 @@ export const useAuthStore = defineStore('auth', () => {
     rank: me.value?.rank ?? 'bronze',
     prestige: me.value?.prestige ?? 0,
   }))
+
+  // Ohne Klasse liefert der Server keine Fächer. Die App erklärt dann, warum.
+  const waitingForClass = computed(() => !!me.value && !me.value.school_class
+    && !STAFF_ROLES.some((role) => me.value.roles?.includes(role)))
 
   async function fetchMe() {
     try {
@@ -48,5 +55,5 @@ export const useAuthStore = defineStore('auth', () => {
     me.value = null
   }
 
-  return { me, loaded, player, fetchMe, login, logout, applyProgress, clear }
+  return { me, loaded, player, waitingForClass, fetchMe, login, logout, applyProgress, clear }
 })
