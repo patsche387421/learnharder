@@ -14,12 +14,13 @@ const app = createApp(App)
 app.use(createPinia())
 app.use(router)
 
-// Session abgelaufen: Store leeren und zum Login. Beim ersten Prüfen erledigt das der Router-Guard selbst.
-onUnauthorized(() => {
+// Session abgelaufen oder Konto gesperrt: Store leeren und zum Login. Beim ersten Prüfen erledigt das der Router-Guard selbst.
+onUnauthorized((reason) => {
   const auth = useAuthStore()
   if (!auth.loaded || router.currentRoute.value.meta.public) return
   auth.clear()
-  router.replace({ path: '/login', query: { redirect: router.currentRoute.value.fullPath } })
+  const query = reason === 'account_deactivated' ? { gesperrt: '1' } : { redirect: router.currentRoute.value.fullPath }
+  router.replace({ path: '/login', query })
 })
 // Erst nach der ersten Navigation mounten, damit route.meta (Rahmen ja/nein) von Anfang an stimmt.
 router.isReady().then(() => app.mount('#app'))

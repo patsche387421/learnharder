@@ -30,16 +30,19 @@ describe('authGuard', () => {
     expect(fetch).toHaveBeenCalledOnce()
   })
 
-  it('wer eingeloggt ist, sieht den Login nicht mehr', async () => {
+  it('wer eingeloggt ist, sieht Login und Registrierung nicht mehr, Rechtstexte aber schon', async () => {
     mockFetch({ status: 200, body: { data: { gamer_tag: 'x' } } })
 
-    expect(await authGuard(route('/login', { public: true }))).toBe('/learn')
+    expect(await authGuard(route('/login', { public: true, guest: true }))).toBe('/learn')
+    expect(await authGuard(route('/registrieren', { public: true, guest: true }))).toBe('/learn')
+    expect(await authGuard(route('/datenschutz', { public: true }))).toBe(true)
   })
 
   it('öffentliche Seiten gehen auch ohne Session', async () => {
     mockFetch({ status: 401 })
 
-    expect(await authGuard(route('/login', { public: true }))).toBe(true)
+    expect(await authGuard(route('/login', { public: true, guest: true }))).toBe(true)
+    expect(await authGuard(route('/impressum', { public: true }))).toBe(true)
   })
 
   it('ist der Server nicht erreichbar, geht es zum Login', async () => {

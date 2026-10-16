@@ -2,11 +2,18 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '../stores/auth.js'
 
 // meta.title: Seitentitel. meta.focus: ohne Navigation (Lerneinheit, Quiz, Theorie). meta.layout: false = ohne App-Rahmen.
-// meta.public: ohne Login erreichbar. Alles andere braucht eine Session.
+// meta.public: ohne Login erreichbar. meta.guest: nur ohne Login (sonst weiter zu Lernen). Alles andere braucht eine Session.
 const placeholder = () => import('../views/PlaceholderView.vue')
+const legal = () => import('../views/LegalView.vue')
 
 const routes = [
-  { path: '/login', component: () => import('../views/LoginView.vue'), meta: { title: 'Einloggen', layout: false, public: true } },
+  { path: '/login', component: () => import('../views/LoginView.vue'), meta: { title: 'Einloggen', layout: false, public: true, guest: true } },
+  { path: '/registrieren', component: () => import('../views/RegisterView.vue'), meta: { title: 'Registrieren', layout: false, public: true, guest: true } },
+  // Rechtstexte (E-023): mit und ohne Login lesbar, der Server liefert Text und Fassung
+  { path: '/datenschutz', component: legal, props: { slug: 'datenschutz' }, meta: { title: 'Datenschutz', layout: false, public: true } },
+  { path: '/impressum', component: legal, props: { slug: 'impressum' }, meta: { title: 'Impressum', layout: false, public: true } },
+  { path: '/nutzungsregeln', component: legal, props: { slug: 'nutzungsregeln' }, meta: { title: 'Nutzungsregeln', layout: false, public: true } },
+  { path: '/einwilligung-eltern', component: legal, props: { slug: 'einwilligung-eltern' }, meta: { title: 'Einwilligung der Eltern', layout: false, public: true } },
   { path: '/', component: placeholder, meta: { title: 'Hub' } },
   // Verschachtelt, damit der Tab „Lernen“ auch auf Fach, Thema und in der Lerneinheit aktiv bleibt
   {
@@ -36,7 +43,7 @@ export async function authGuard(to) {
   // Ist der Server nicht erreichbar, geht es zum Login. Dort erscheint dann der Verbindungsfehler.
   if (!auth.loaded) await auth.fetchMe().catch(() => {})
 
-  if (to.meta.public) return to.path === '/login' && auth.me ? '/learn' : true
+  if (to.meta.public) return to.meta.guest && auth.me ? '/learn' : true
   if (!auth.me) return { path: '/login', query: to.fullPath === '/' ? {} : { redirect: to.fullPath } }
   return true
 }

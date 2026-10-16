@@ -74,4 +74,15 @@ describe('LoginView', () => {
     expect(wrapper.find('.lh-field--error').text()).toContain('E-Mail oder Passwort stimmt nicht.')
     expect(router.currentRoute.value.path).toBe('/login')
   })
+
+  it('verlinkt Registrierung und Rechtstexte', async () => {
+    const { wrapper } = await view()
+    const links = wrapper.findAll('a').map((a) => a.attributes('href'))
+    expect(links).toEqual(expect.arrayContaining(['/registrieren', '/datenschutz', '/impressum']))
+  })
+
+  it('erklärt nach einer Sperre, was los ist', async () => {
+    const { wrapper } = await view('/login?gesperrt=1')
+    expect(wrapper.find('.lh-field--error').text()).toContain('Dein Konto ist gesperrt. Wende dich an deine Lehrkraft.')
+  })
 })
