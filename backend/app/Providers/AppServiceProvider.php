@@ -5,8 +5,10 @@ namespace App\Providers;
 use App\Models\QuizAttempt;
 use App\Models\User;
 use Filament\Forms\Components\Field;
+use Illuminate\Auth\Events\Login;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
@@ -36,6 +38,9 @@ class AppServiceProvider extends ServiceProvider
 
             return $user->hasRole('admin') ? true : null;
         });
+
+        // Letzter Login in App und CMS, für die Löschfrist nach 12 Monaten (E-028)
+        Event::listen(Login::class, fn (Login $event) => $event->user->forceFill(['last_login_at' => now()])->saveQuietly());
 
         // Höchstens 5 Login-Versuche pro Minute je E-Mail und IP
         RateLimiter::for('login', fn (Request $request) => Limit::perMinute(5)

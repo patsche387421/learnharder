@@ -18,10 +18,20 @@ class AuthController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        if (! Auth::guard('web')->attempt($credentials)) {
+        $guard = Auth::guard('web');
+
+        if (! $guard->validate($credentials)) {
             throw ValidationException::withMessages(['email' => __('auth.failed')]);
         }
 
+        // Dass ein Konto gesperrt ist, erfährt nur, wer das richtige Passwort kennt (E-027)
+        $user = $guard->getLastAttempted();
+
+        if ($user->isDeactivated()) {
+            throw ValidationException::withMessages(['email' => __('accounts.deactivated')]);
+        }
+
+        $guard->login($user);
         $request->session()->regenerate();
 
         return new MeResource($request->user());

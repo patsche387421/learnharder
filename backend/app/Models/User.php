@@ -13,13 +13,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements FilamentUser
 {
     /** @use HasFactory<UserFactory> */
-    use HasApiTokens, HasFactory, HasRoles, Notifiable;
+    // Kein HasApiTokens: Die App nutzt Sanctum nur mit Session-Cookies, es gibt keine Token-Tabelle
+    use HasFactory, HasRoles, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -116,6 +116,7 @@ class User extends Authenticatable implements FilamentUser
      */
     public function canAccessPanel(Panel $panel): bool
     {
-        return $this->hasAnyRole(['admin', 'autor', 'tester']);
+        // Filament fragt das bei jeder Anfrage, eine Sperre wirkt also sofort (E-027)
+        return $this->hasAnyRole(['admin', 'autor', 'tester']) && ! $this->isDeactivated();
     }
 }
