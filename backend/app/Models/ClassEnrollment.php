@@ -29,9 +29,11 @@ class ClassEnrollment extends Model
 
     protected static function booted(): void
     {
-        // Das Schuljahr steht schon an der Klasse, der zusammengesetzte Fremdschlüssel prüft, dass beide passen
         static::creating(function (self $enrollment): void {
+            // Das Schuljahr steht schon an der Klasse, der zusammengesetzte Fremdschlüssel prüft, dass beide passen
             $enrollment->school_year_id ??= SchoolClass::whereKey($enrollment->school_class_id)->value('school_year_id');
+            // Dieselbe Uhr wie beim Austragen (left_at), sonst kann die Datenbank-Uhr vorgehen und left_check schlägt fehl
+            $enrollment->enrolled_at ??= now();
         });
     }
 
