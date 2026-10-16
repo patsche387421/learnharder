@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Lokales Dashboard für learnharder (WSL2): Dienste starten und stoppen, Zustand live sehen.
 
-Aufruf aus dem Repo: `scripts/dev.py` (Dashboard), `scripts/dev.py start`, `scripts/dev.py stop`.
+Aufruf aus dem Repo: `scripts/dev.py` (Dashboard im Terminal), `scripts/dev.py web` (Testzentrale im Browser, dev_web.py),
+`scripts/dev.py start`, `scripts/dev.py stop`.
 Nur Standardbibliothek. Liest Docker, Mailpit (API) und das Laravel-Log, ändert keinen Code.
-Vite läuft im Hintergrund weiter, wenn das Dashboard endet. PID und Log liegen in ~/.cache/learnharder-dev/.
+Vite läuft im Hintergrund weiter, wenn das Dashboard endet. PID, Logs und Testverlauf liegen in ~/.cache/learnharder-dev/.
 """
 
 import argparse
@@ -30,6 +31,8 @@ LARAVEL_LOG = BACKEND / 'storage' / 'logs' / 'laravel.log'
 STATE_DIR = Path.home() / '.cache' / 'learnharder-dev'
 VITE_PID = STATE_DIR / 'vite.pid'
 VITE_LOG = STATE_DIR / 'vite.log'
+TEST_HISTORY = STATE_DIR / 'test-history.json'
+TEST_HISTORY_LIMIT = 50
 VITE_PORT = 5173
 
 SERVICES = ['laravel.test', 'pgsql', 'redis', 'mailpit']
@@ -38,6 +41,8 @@ MAILPIT_API = 'http://localhost:8025/api/v1'
 LOG_LEVELS = ('WARNING', 'ERROR', 'CRITICAL', 'ALERT', 'EMERGENCY')
 LOG_ENTRY = re.compile(r'^\[\d{4}-\d{2}-\d{2} (\d{2}:\d{2}:\d{2})\] \w+\.(\w+): (.*)')
 ANSI = re.compile(r'\x1b\[[0-9;?]*[A-Za-z]')
+MIB_PER_UNIT = {'b': 1 / 1048576, 'kib': 1 / 1024, 'kb': 1 / 1024, 'mib': 1, 'mb': 1, 'gib': 1024, 'gb': 1024}
+TEST_KINDS = ('passed', 'failed', 'skipped', 'todo', 'incomplete', 'risky')
 
 _vite_process = None
 
@@ -95,6 +100,52 @@ def test_summary(output, returncode):
             detail = re.sub(r'\s+', ' ', line)
             break
     return ('grün' if returncode == 0 else 'ROT') + (f' · {detail}' if detail else '')
+
+
+def test_counts(output):
+    """{'passed', 'failed', 'total'} aus Laravel (Text oder JSON) oder Vitest, None wenn nichts erkennbar."""
+    for line in reversed(ANSI.sub('', output).splitlines()):
+        line = line.strip()
+        if line.startswith('{') and '"tests"' in line:
+            try:
+                data = json.loads(line)
+                return {'passed': data.get('passed', 0), 'failed': data.get('failed', 0), 'total': data['tests']}
+            except (ValueError, KeyError):
+                continue
+        if re.match(r'Tests:?\s', line):
+            found = {kind: int(number) for number, kind in re.findall(r'(\d+) (\w+)', line) if kind in TEST_KINDS}
+            return {'passed': found.get('passed', 0), 'failed': found.get('failed', 0), 'total': sum(found.values())}
+    return None
+
+
+def failed_tests(output, limit=15):
+    """Namen fehlgeschlagener Tests: Laravel `FAILED  Klasse > Test`, Vitest `FAIL  Datei > Test`, JSON `failures`."""
+    names = []
+    for line in ANSI.sub('', output).splitlines():
+        line = line.strip()
+        if line.startswith('{') and '"failures"' in line:
+            try:
+                names += [failure['test'] for failure in json.loads(line)['failures']]
+            except (ValueError, KeyError, TypeError):
+                pass
+        elif match := re.match(r'(?:FAILED|FAIL|×|⨯)\s+(.+)', line):
+            names.append(re.sub(r'\s{2,}.*$', '', match.group(1)))
+    return list(dict.fromkeys(names))[:limit]
+
+
+def parse_percent(text):
+    try:
+        return float(text.rstrip('%'))
+    except (ValueError, AttributeError):
+        return 0.0
+
+
+def parse_mib(text):
+    """`219.5MiB`, `1.2GiB`, `512kB` → MiB."""
+    match = re.match(r'([\d.]+)\s*([A-Za-z]+)', text or '')
+    if not match or match.group(2).lower() not in MIB_PER_UNIT:
+        return 0.0
+    return float(match.group(1)) * MIB_PER_UNIT[match.group(2).lower()]
 
 
 # --- Befehle und Dienste ---
@@ -188,17 +239,49 @@ def action_stop(log):
     log('Docker-Dienste gestoppt, Daten bleiben.' if code == 0 else f'sail stop fehlgeschlagen: {last_line(err or out)}')
 
 
-def action_tests(log):
+TEST_SUITES = {
+    'backend': ('Backend', [str(SAIL), 'artisan', 'test'], BACKEND),
+    'frontend': ('Frontend', ['npm', '--prefix', 'frontend', 'run', 'test'], ROOT),
+}
+_history_lock = threading.Lock()
+
+
+def load_test_history():
+    try:
+        return json.loads(TEST_HISTORY.read_text())
+    except (OSError, ValueError):
+        return []
+
+
+def save_test_run(entry, output):
+    """Lauf mit Ausgabe speichern. Ältere Läufe über TEST_HISTORY_LIMIT fallen samt Ausgabe weg."""
     STATE_DIR.mkdir(parents=True, exist_ok=True)
-    for name, cmd, cwd in [
-        ('Backend', [str(SAIL), 'artisan', 'test'], BACKEND),
-        ('Frontend', ['npm', '--prefix', 'frontend', 'run', 'test'], ROOT),
-    ]:
+    (STATE_DIR / f'{entry["id"]}.log').write_text(output)
+    with _history_lock:
+        history = load_test_history() + [entry]
+        for old in history[:-TEST_HISTORY_LIMIT]:
+            (STATE_DIR / f'{old["id"]}.log').unlink(missing_ok=True)
+        TEST_HISTORY.write_text(json.dumps(history[-TEST_HISTORY_LIMIT:], ensure_ascii=False, indent=1))
+
+
+def run_tests(suites, log):
+    _, branch, _ = run(['git', 'branch', '--show-current'], timeout=5)
+    _, commit, _ = run(['git', 'rev-parse', '--short', 'HEAD'], timeout=5)
+    for suite in suites:
+        name, cmd, cwd = TEST_SUITES[suite]
         log(f'{name}-Tests laufen …')
+        started, stamp = time.monotonic(), datetime.now()
         code, out, err = run(cmd, cwd=cwd)
-        report = STATE_DIR / f'tests-{name.lower()}.log'
-        report.write_text(out + err)
-        log(f'{name}: {test_summary(out + err, code)}' + ('' if code == 0 else f' (Ausgabe: {report})'))
+        save_test_run({
+            'id': f'tests-{suite}-{stamp:%Y%m%d-%H%M%S}', 'suite': suite, 'time': stamp.isoformat(timespec='seconds'),
+            'ok': code == 0, 'counts': test_counts(out + err), 'failures': failed_tests(out + err),
+            'duration': round(time.monotonic() - started, 1), 'branch': branch.strip(), 'commit': commit.strip(),
+        }, out + err)
+        log(f'{name}: {test_summary(out + err, code)}')
+
+
+def action_tests(log):
+    run_tests(['backend', 'frontend'], log)
 
 
 def action_config_clear(log):
@@ -248,18 +331,20 @@ def tail(path, max_bytes=65536):
         return []
 
 
-def mails():
-    """(Anzahl, [(Uhrzeit, An, Betreff, Code)]) der letzten drei Mails, None ohne Mailpit."""
+def mails(limit=3):
+    """(Anzahl, [Mail]) der neuesten Mails mit Uhrzeit, Empfänger, Betreff und Code. None ohne Mailpit."""
     try:
-        with urllib.request.urlopen(f'{MAILPIT_API}/messages?limit=3', timeout=1.5) as response:
+        with urllib.request.urlopen(f'{MAILPIT_API}/messages?limit={limit}', timeout=1.5) as response:
             data = json.load(response)
     except (OSError, ValueError):
         return None
     rows = []
     for message in data.get('messages') or []:
         created = datetime.fromisoformat(message['Created'].replace('Z', '+00:00')).astimezone()
-        to = message['To'][0]['Address'] if message.get('To') else '?'
-        rows.append((created.strftime('%H:%M'), to, message.get('Subject', ''), extract_code(message.get('Snippet'))))
+        rows.append({
+            'id': message['ID'], 'time': created.strftime('%H:%M:%S'), 'to': message['To'][0]['Address'] if message.get('To') else '?',
+            'subject': message.get('Subject', ''), 'code': extract_code(message.get('Snippet')), 'snippet': message.get('Snippet', ''),
+        })
     return data.get('messages_count', data.get('total', 0)), rows
 
 
@@ -275,7 +360,7 @@ def health():
         return None
 
 
-def snapshot():
+def snapshot(mail_limit=3):
     code, out, _ = run(['docker', 'compose', 'ps', '--all', '--format', 'json'], cwd=BACKEND, timeout=10)
     try:
         services = parse_compose_ps(out) if code == 0 else None
@@ -288,11 +373,12 @@ def snapshot():
         stats = {}
     _, branch, _ = run(['git', 'branch', '--show-current'], timeout=5)
     _, changes, _ = run(['git', 'status', '--porcelain'], timeout=5)
+    _, commit, _ = run(['git', 'rev-parse', '--short', 'HEAD'], timeout=5)
     return {
         'services': services, 'stats': stats,
         'vite': port_open(VITE_PORT), 'vite_own': vite_pid() is not None,
-        'up': health(), 'mails': mails(), 'log': tail(LARAVEL_LOG),
-        'branch': branch.strip() or '?', 'changes': len(changes.splitlines()),
+        'up': health(), 'mails': mails(mail_limit), 'log': tail(LARAVEL_LOG),
+        'branch': branch.strip() or '?', 'commit': commit.strip(), 'changes': len(changes.splitlines()),
     }
 
 
@@ -302,25 +388,17 @@ GREEN, RED, YELLOW, CYAN = 1, 2, 3, 4
 SPINNER = '|/-\\'
 
 
-class Dashboard:
-    def __init__(self):
+class Runner:
+    """Aktivität und genau eine laufende Aktion. Teilen sich Terminal-Dashboard und Testzentrale (dev_web.py)."""
+
+    def __init__(self, activity_size):
         self.lock = threading.Lock()
-        self.state = None
-        self.activity = deque(maxlen=6)
+        self.activity = deque(maxlen=activity_size)
         self.busy = None
-        self.confirm = None
-        self.show_log = False
 
     def log(self, message):
         with self.lock:
             self.activity.append(f'{datetime.now():%H:%M:%S}  {message}')
-
-    def collect(self):
-        while True:
-            state = snapshot()
-            with self.lock:
-                self.state = state
-            time.sleep(2)
 
     def run_action(self, name, action):
         if self.busy:
@@ -337,6 +415,21 @@ class Dashboard:
 
         self.busy = name
         threading.Thread(target=work, daemon=True).start()
+
+
+class Dashboard(Runner):
+    def __init__(self):
+        super().__init__(activity_size=6)
+        self.state = None
+        self.confirm = None
+        self.show_log = False
+
+    def collect(self):
+        while True:
+            state = snapshot()
+            with self.lock:
+                self.state = state
+            time.sleep(2)
 
     def handle(self, key):
         """Taste verarbeiten. False beendet das Dashboard."""
@@ -423,10 +516,10 @@ class Dashboard:
                 put('Mailpit nicht erreichbar.', curses.color_pair(RED))
             elif not mail[1]:
                 put('Keine Mails.', curses.A_DIM)
-            for time_, to, subject, code in (mail[1] if mail else []):
-                put(f'{time_}  {to[:24]:<24}  {subject}', newline=False)
-                if code:
-                    put(f' Code {code} ', curses.color_pair(YELLOW) | curses.A_BOLD | curses.A_REVERSE, max(0, width - 14))
+            for message in (mail[1] if mail else []):
+                put(f'{message["time"][:5]}  {message["to"][:24]:<24}  {message["subject"]}', newline=False)
+                if message['code']:
+                    put(f' Code {message["code"]} ', curses.color_pair(YELLOW) | curses.A_BOLD | curses.A_REVERSE, max(0, width - 14))
                 else:
                     put('')
 
@@ -483,10 +576,14 @@ def dashboard(screen):
 
 def main():
     parser = argparse.ArgumentParser(description='Lokales Dashboard für learnharder. Ohne Befehl startet das Dashboard.')
-    parser.add_argument('command', nargs='?', choices=['start', 'stop'], help='alles starten oder stoppen, ohne Dashboard')
+    parser.add_argument('command', nargs='?', choices=['start', 'stop', 'web'], help='alles starten oder stoppen, oder die Testzentrale im Browser')
     args = parser.parse_args()
     if not SAIL.exists():
         raise SystemExit(f'{SAIL} fehlt. Einmalig Composer installieren, siehe backend/CLAUDE.md.')
+    if args.command == 'web':
+        import dev_web
+        dev_web.serve()
+        return
     if args.command:
         (action_start if args.command == 'start' else action_stop)(print)
         return
