@@ -89,7 +89,7 @@ function changeEmail() {
         label="Schul-Mail"
         type="email"
         autocomplete="email"
-        placeholder="2026034@htl-md.schule"
+        placeholder="20260034@htl-md.schule"
         :error="error('email')"
       />
       <LhButton type="submit" block :disabled="sending || !email">Code schicken</LhButton>
