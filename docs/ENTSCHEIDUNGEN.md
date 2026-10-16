@@ -106,9 +106,23 @@ Jede Entscheidung: Nummer, Datum, was, warum, Folgen. Offene Fragen stehen unten
 - **Warum:** Ein Schema reicht. Zu jedem Meilenstein führt schon der Merge-Commit auf `dev` zurück.
 - **Folgen:** Getaggt wird auf `main`, wenn Patsche „deployen“ sagt. Es gibt bisher nur `v2.0.0-plan` (und die V1-Tags).
 
+### E-021 — Schlankes MVP bis zum Start (2026-10-16)
+- **Entscheidung:** Bis zum Start (M5) kommen nur dazu: Klassen und Sichtbarkeit (M3b), Registrierung und Rechtliches (M4a), Hetzner (M4). Brainpower, Streaks, Trophäen, Liga, Englisch mit KI-Übersetzung, PWA-Offline und Landing Page folgen nach dem Start. Bis dahin bleibt die statische Seite.
+- **Warum:** Ein Ein-Personen-Projekt. Mit dem MVP aus dem Projektplan (Phase 1) rückt der Start weit nach hinten (Risiko R4).
+- **Folgen:** Schließt O-003 und O-005 (zuerst statisch). Das Ökonomie-Modell gilt weiter, nur Brainpower und Booster werden erst später gebaut. Bis dahin gibt es EP, Level, Rang und Fach-Level.
+
+### E-022 — Zum Start: Hub schlank, Team und Liga ausgeblendet (2026-10-16)
+- **Entscheidung:** Der Hub zeigt Begrüßung, Level-Leiste und „Weiterlernen“ (nächstes offenes Thema). Team und Liga verschwinden aus der Tab-Leiste, bis es sie gibt. Die Tab-Leiste hat dann Hub, Lernen und Profil.
+- **Warum:** Leere Tabs wirken unfertig. „Kommt bald“ weckt Erwartungen, die nach E-021 länger offen bleiben.
+- **Folgen:** Kommt in M5. Die Routen `/team` und `/league` bleiben im Code, nur ohne Tab.
+
+### E-023 — Rechtstexte: Entwurf von Claude, Prüfung durch die Schule (2026-10-16)
+- **Entscheidung:** Claude entwirft Datenschutzerklärung, Impressum und Einwilligung (auch für unter 14-Jährige) aus dem, was die App wirklich speichert. Patsche klärt mit der Schule oder ihrer Datenschutzstelle, wer verantwortlich ist, und lässt die Texte prüfen.
+- **Warum:** Die App speichert Daten Minderjähriger. Die Entwürfe müssen zum Code passen, die rechtliche Prüfung kann nur jemand außerhalb machen.
+- **Folgen:** Kommt in M4a. Ohne geprüfte Texte kein Start (M5).
+
 ## Offen
 
 | Nr. | Frage | Empfehlung | Warum offen |
 |---|---|---|---|
-| O-003 | MVP-Umfang | Kürzen, siehe `plans/README.md` | Der Plan packt Landing Page, KI-Übersetzung, Newsletter und PWA-Offline ins MVP. |
-| O-005 | Landing Page: Astro/Nuxt oder statisch? | Zuerst statisch | Eine weitere Technologie lohnt sich für eine Seite noch nicht. |
+| – | Derzeit keine offenen Grundsatzfragen. Offene Fakten zur Schule: `plans/DATENMODELL_SCHULE.md` §7 | | |
