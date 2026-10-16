@@ -58,6 +58,20 @@ class TheorySectionsTest extends TestCase
         $this->assertSame(ContentStatus::Review, $this->topic->fresh()->status);
     }
 
+    public function test_formular_des_themas_zeigt_den_neuen_status_ohne_neuladen(): void
+    {
+        $this->actingAs($this->userWithRole('autor'));
+        $page = Livewire::test(EditTopic::class, ['record' => $this->topic->getRouteKey()])
+            ->assertSchemaStateSet(['status' => ContentStatus::Published]);
+
+        $this->theory()
+            ->callTableAction('edit', $this->section, data: ['content.de' => 'Ein benannter Speicherplatz für einen Wert.'])
+            ->assertDispatched(EditTopic::STATUS_CHANGED);
+
+        $page->dispatch(EditTopic::STATUS_CHANGED)
+            ->assertSchemaStateSet(['status' => ContentStatus::Review]);
+    }
+
     public function test_autor_bearbeitet_abschnitt_und_thema_geht_in_pruefung(): void
     {
         $this->actingAs($this->userWithRole('autor'));

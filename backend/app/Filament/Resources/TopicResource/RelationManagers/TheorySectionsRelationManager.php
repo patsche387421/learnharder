@@ -4,6 +4,7 @@ namespace App\Filament\Resources\TopicResource\RelationManagers;
 
 use App\Enums\ContentStatus;
 use App\Filament\Resources\TopicResource;
+use App\Filament\Resources\TopicResource\Pages\EditTopic;
 use App\Models\TheorySection;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
@@ -90,6 +91,8 @@ class TheorySectionsRelationManager extends RelationManager
         }
 
         $topic->update(['status' => ContentStatus::Review]);
+        // Das Formular des Themas daneben zeigt sonst bis zum Neuladen noch „Veröffentlicht“ (EditTopic)
+        $this->dispatch(EditTopic::STATUS_CHANGED);
 
         Notification::make()
             ->title('Das Thema ist jetzt „In Prüfung“.')
