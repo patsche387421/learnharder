@@ -33,14 +33,14 @@ Die Tests laufen gegen die Datenbank `testing` (`phpunit.xml`). Andere Befehle f
 
 | Route | Zweck |
 |---|---|
-| `POST login`, `POST logout`, `GET me` | Login per Session, `me` liefert Gamer-Tag und Fortschritt (Level, Rang, Prestige, EP) |
+| `POST login`, `POST logout`, `GET me` | Login per Session, `me` liefert Gamer-Tag, eigene Klasse und Fortschritt (Level, Rang, Prestige, EP) |
 | `GET subjects`, `GET subjects/{slug}` | sichtbare Fächer mit Themen, Fortschritt und Fach-Level (E-018) |
 | `GET subjects/{slug}/topics/{slug}` | Thema mit Theorie als sicherem HTML (`Str::markdown` mit `html_input: escape`) |
 | `POST topics/{id}/attempts` | Lerneinheit starten, Fragen ohne Lösung |
 | `POST attempts/{id}/answers` | eine Antwort prüfen, nur die erste pro Frage zählt |
 | `POST attempts/{id}/finish` | abschließen und EP vergeben, idempotent |
 
-Alles außer `login` braucht `auth:sanctum`. Sichtbar ist nur `published` (Thema und Frage) in einem aktiven Fach, sonst 404. In M3 sieht jede eingeloggte Person alle Inhalte (E-017).
+Alles außer `login` braucht `auth:sanctum`. Sichtbar ist nur `published` (Thema und Frage) in einem aktiven Fach, sonst 404. Dazu filtert `Subject::visibleTo()`: Schüler:innen sehen den Lehrplan ihrer Klasse, admin, autor, tester und teacher alles (E-024). API-Tests mit Schüler:innen brauchen deshalb eine Klasse (`Tests\Concerns\EnrollsStudents`).
 
 ## Zuständigkeit
 

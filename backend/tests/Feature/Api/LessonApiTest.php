@@ -16,11 +16,12 @@ use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\TestResponse;
 use Spatie\Permission\Models\Role;
+use Tests\Concerns\EnrollsStudents;
 use Tests\TestCase;
 
 class LessonApiTest extends TestCase
 {
-    use RefreshDatabase;
+    use EnrollsStudents, RefreshDatabase;
 
     private User $user;
 
@@ -43,6 +44,7 @@ class LessonApiTest extends TestCase
         $this->user = User::factory()->create();
 
         $this->pos = Subject::create(['slug' => 'pos', 'name' => ['de' => 'POS']]);
+        $this->addToCurriculum($this->enrollStudent($this->user), $this->pos);
         $this->schleifen = $this->topic('schleifen');
         $this->einfach = $this->question($this->schleifen, ['richtig' => true, 'falsch' => false], order: 1);
         $this->mehrfach = $this->question($this->schleifen, ['a' => true, 'b' => true, 'c' => false], QuestionType::MultipleChoice, order: 2);
@@ -371,6 +373,7 @@ class LessonApiTest extends TestCase
     public function test_fach_level_waechst_mit_den_ep_im_fach(): void
     {
         $dbi = Subject::create(['slug' => 'dbi', 'name' => ['de' => 'DBI'], 'order_index' => 2]);
+        $this->addToCurriculum($this->user->activeEnrollment->schoolClass, $dbi);
         $sql = $dbi->topics()->create(['slug' => 'sql', 'title' => ['de' => 'SQL'], 'status' => ContentStatus::Published]);
         $this->question($sql, ['ja' => true]);
 
@@ -389,8 +392,10 @@ class LessonApiTest extends TestCase
         $this->getJson('/api/v1/subjects/pos')->assertJsonPath('data.level', 2);
 
         // Andere Personen zählen nicht mit
+        $other = User::factory()->create();
+        $this->addToCurriculum($this->enrollStudent($other), $this->pos);
         $this->flushSession();
-        $this->actingAs(User::factory()->create())->getJson('/api/v1/subjects')->assertJsonPath('data.0.xp', 0);
+        $this->actingAs($other)->getJson('/api/v1/subjects')->assertJsonPath('data.0.xp', 0);
     }
 
     public function test_loeschen_einer_person_loescht_ihre_antworten(): void

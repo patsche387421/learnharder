@@ -31,7 +31,7 @@ class QuizAttemptController extends Controller
 
         $topic = Topic::published()
             ->whereKey($topic)
-            ->whereHas('subject', fn ($subjects) => $subjects->visible())
+            ->whereHas('subject', fn ($subjects) => $subjects->visibleTo($request->user()))
             ->firstOrFail();
 
         Gate::authorize('create', [QuizAttempt::class, $topic]);
