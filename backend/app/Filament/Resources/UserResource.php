@@ -11,6 +11,7 @@ use App\Support\Accounts;
 use App\Support\GamerTag;
 use Closure;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\CheckboxList;
@@ -192,21 +193,24 @@ class UserResource extends Resource
                     ->requiresConfirmation()
                     ->visible(fn (User $record): bool => $record->isDeactivated())
                     ->action(fn (User $record) => self::guarded(fn () => Accounts::reactivate($record, self::actor()), 'Entsperrt.')),
-                Action::make('resetGamerTag')
-                    ->label('Gamer-Tag zurücksetzen')
-                    ->icon('heroicon-o-arrow-path')
-                    ->requiresConfirmation()
-                    ->modalDescription('Der Gamer-Tag wird zu „Spieler-“ mit einer Zahl. Für Namen, die beleidigen oder verraten, wer dahintersteckt.')
-                    ->visible(fn (User $record): bool => $record->gamer_tag !== null)
-                    ->action(fn (User $record) => self::guarded(fn () => Accounts::resetGamerTag($record, self::actor()), 'Gamer-Tag zurückgesetzt.')),
-                Action::make('delete')
-                    ->label('Löschen')
-                    ->color('danger')
-                    ->icon('heroicon-o-trash')
-                    ->requiresConfirmation()
-                    ->modalDescription('Das Konto und der gesamte Lernverlauf werden sofort gelöscht. Das lässt sich nicht rückgängig machen.')
-                    ->visible(fn (User $record): bool => ! $record->hasAnyRole(Accounts::STAFF_ROLES))
-                    ->action(fn (User $record) => self::guarded(fn () => Accounts::deleteByAdmin($record, self::actor()), 'Gelöscht.')),
+                // Seltene Aktionen im Menü: Die Zeile bleibt schmal, und Löschen liegt nicht direkt neben Sperren
+                ActionGroup::make([
+                    Action::make('resetGamerTag')
+                        ->label('Gamer-Tag zurücksetzen')
+                        ->icon('heroicon-o-arrow-path')
+                        ->requiresConfirmation()
+                        ->modalDescription('Der Gamer-Tag wird zu „Spieler-“ mit einer Zahl. Für Namen, die beleidigen oder verraten, wer dahintersteckt.')
+                        ->visible(fn (User $record): bool => $record->gamer_tag !== null)
+                        ->action(fn (User $record) => self::guarded(fn () => Accounts::resetGamerTag($record, self::actor()), 'Gamer-Tag zurückgesetzt.')),
+                    Action::make('delete')
+                        ->label('Löschen')
+                        ->color('danger')
+                        ->icon('heroicon-o-trash')
+                        ->requiresConfirmation()
+                        ->modalDescription('Das Konto und der gesamte Lernverlauf werden sofort gelöscht. Das lässt sich nicht rückgängig machen.')
+                        ->visible(fn (User $record): bool => ! $record->hasAnyRole(Accounts::STAFF_ROLES))
+                        ->action(fn (User $record) => self::guarded(fn () => Accounts::deleteByAdmin($record, self::actor()), 'Gelöscht.')),
+                ]),
             ]);
     }
 

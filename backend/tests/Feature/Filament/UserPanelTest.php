@@ -6,6 +6,7 @@ use App\Filament\Resources\UserResource\Pages\CreateUser;
 use App\Filament\Resources\UserResource\Pages\EditUser;
 use App\Filament\Resources\UserResource\Pages\ListUsers;
 use App\Models\User;
+use Filament\Actions\ActionGroup;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Livewire;
@@ -168,6 +169,19 @@ class UserPanelTest extends TestCase
 
         $this->assertModelMissing($student);
         $this->assertModelExists($teacher);
+    }
+
+    /** Vier Aktionen nebeneinander passen nicht in die Zeile. Seltene und endgültige liegen im Menü. */
+    public function test_seltene_aktionen_liegen_im_menue(): void
+    {
+        $actions = Livewire::test(ListUsers::class)->instance()->getTable()->getRecordActions();
+
+        $direct = array_values(array_filter($actions, fn ($action) => ! $action instanceof ActionGroup));
+        $groups = array_values(array_filter($actions, fn ($action) => $action instanceof ActionGroup));
+
+        $this->assertSame(['edit', 'deactivate', 'reactivate'], array_map(fn ($action) => $action->getName(), $direct));
+        $this->assertCount(1, $groups);
+        $this->assertSame(['resetGamerTag', 'delete'], array_keys($groups[0]->getFlatActions()));
     }
 
     public function test_filter_ohne_klasse_und_gesperrt(): void
