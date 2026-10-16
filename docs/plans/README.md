@@ -40,9 +40,9 @@ Der Plan ist fachlich gut (Server-Autorität, Datenschutz, saubere Rollen), aber
 Es enthält Landing Page mit Newsletter, KI-Übersetzung, PWA-Offline, Brainpower-Ökonomie, CI/CD und Staging.
 Der kritische Pfad zum ersten echten Nutzer ist kürzer:
 
-**Hetzner-Server steht → API mit Login → Lern-Screens → Supabase-Nutzer migriert → DNS umgestellt.**
+**Hetzner-Server steht → API mit Login → Lern-Screens → Klassen und Registrierung → DNS umgestellt.** (Keine Nutzer-Migration, E-011.)
 
-### Vorschlag: Meilensteine
+### Meilensteine (Reihenfolge bestätigt 2026-10-16: M3b → M4a, parallel M4 → M5)
 
 | M | Ziel | Fertig, wenn … |
 |---|---|---|
@@ -51,12 +51,13 @@ Der kritische Pfad zum ersten echten Nutzer ist kürzer:
 | **M2** ✅ | Inhalte pflegbar | CMS mit Antwortoptionen, Wertelisten, Deutsch (E-012); Import mit Prüfung statt stillem Fallback |
 | **M3** ✅ | Lernen funktioniert | Login → Fächer → Thema → Theorie → Quiz → Ergebnis mit serverseitigen XP/Level, Vue mit `lh-`-Komponenten. EP je Frage einmal pro Tag (E-015), Ränge (E-016), ohne Klassenfilter (E-017), Fach-Level (E-018) |
 | **M3b** | Klassen und Sichtbarkeit | Klassen und Einschreibungen in Filament, App zeigt nur Fächer der eigenen Klasse (Plan Schule §8 Schritte 2–3) |
-| **M4** | Hetzner läuft | Prod-Stack in `infra/`, TLS, tägliche Backups, Staging |
-| **M5** | Start | Lernablauf, EP-Regeln und Brainpower mit betreuenden Lehrkräften abgestimmt, DNS umgestellt, Registrierung offen, Neuregistrierung angekündigt, V1-Supabase abgeschaltet → Tag `v2.0.0-alpha.1` |
-| danach | | Brainpower-Einsatz, Streaks, Trophäen → Lehrkräfte/Klassen → Englisch + KI-Übersetzung → Landing Page → Reverb |
+| **M4a** | Ankommen | Registrierung mit Mail-Code (Plan Schule §8 Schritt 4), Datenschutzerklärung, Impressum und Einwilligung als Entwurf und von der Schule geprüft (E-023), eigenes Konto löschen. Braucht die Antworten zu Plan Schule §7 |
+| **M4** | Hetzner läuft | Prod-Stack in `infra/` (Caddy nach E-019), TLS, tägliche Backups mit Restore-Test, Staging, Mailversand aus der EU. Parallel zu M4a, Patsche führt am Server aus |
+| **M5** | Start | Lernablauf, EP-Regeln und Brainpower-Konzept mit betreuenden Lehrkräften abgestimmt, Hub schlank, Team und Liga ausgeblendet (E-022), DNS umgestellt, Registrierung offen, Neuregistrierung angekündigt, V1-Supabase abgeschaltet → Tag `v2.0.0-alpha.1` (E-020) |
+| danach | | Nach E-021: Brainpower, Streaks, Trophäen, Liga → Lehrkraft-Dashboard → Englisch + KI-Übersetzung → PWA-Offline → Landing Page → Reverb |
 
 ### Größte Risiken jetzt
 
 1. **Prod-Daten aus Supabase.** Seit 2026-10-15 gesichert (E-009). Kein Import, V2 startet ohne V1-Nutzer (E-011).
-2. **Umfang.** Ohne gekürztes MVP (R4 im Plan) gibt es keinen Go-Live.
+2. **Umfang.** MVP gekürzt (E-021). Bleibt ein Risiko, wenn neue Wünsche vor den Start rutschen.
 3. **Framework-Versionen.** Entschieden: Filament 5 (E-008). Translatable-Plugin geprüft, vorerst keins, CMS nur Deutsch (E-012).
