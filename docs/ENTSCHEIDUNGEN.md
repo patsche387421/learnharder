@@ -96,6 +96,11 @@ Jede Entscheidung: Nummer, Datum, was, warum, Folgen. Offene Fragen stehen unten
 - **Warum:** So war es in V1 (`subject_xp`), und es wächst mit jedem Üben, auch nachdem alle Themen einmal erledigt sind. Eine zweite Kurve müsste man erklären.
 - **Folgen:** Keine neue Tabelle: Die Fach-EP sind die Summe von `question_answers.xp_awarded` über die Fragen des Fachs. Die Tagesregel (E-015) gilt damit auch fürs Fach-Level. Der Server rechnet, die Fach-Karte zeigt „Fach-Level n“.
 
+### E-019 — App und API unter einer Adresse je Umgebung (2026-10-16)
+- **Entscheidung:** Die App und ihre API laufen unter einer Adresse: `app.learnharder.app` liefert die App aus, Caddy leitet `/api` und `/sanctum` an Laravel weiter. Staging genauso unter `staging.learnharder.app`. Filament bleibt unter `api.learnharder.app/admin`.
+- **Warum:** Mit getrennten Subdomains (`app.` und `api.`) muss das Login-Cookie für die ganze Domain `.learnharder.app` gelten. Dann bekäme auch Staging die Cookies der Produktion, und es gäbe zwei `XSRF-TOKEN`. Unter einer Adresse gelten die Cookies nur für den eigenen Host.
+- **Folgen:** Kein `SESSION_DOMAIN` und kein CORS für die App. Der Frontend-Build ruft die API ohne eigene Adresse auf (`VITE_API_URL` leer). Der Setup-Plan §3 nennt noch `api.` für die App und `staging.app…`/`staging.api…` (Widerspruch 7 in `plans/README.md`). Filament hat eine eigene Session auf `api.learnharder.app`.
+
 ## Offen
 
 | Nr. | Frage | Empfehlung | Warum offen |

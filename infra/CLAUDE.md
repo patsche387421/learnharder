@@ -10,8 +10,9 @@ Ein Hetzner-Cloud-VPS in der EU, Dienste in Docker, Caddy als Reverse Proxy mit 
 | Host | Dienst |
 |---|---|
 | `learnharder.app` | Landing Page (zuerst statisch, später Astro) |
-| `app.learnharder.app` | Vue-PWA (statischer Build) |
+| `app.learnharder.app` | Vue-PWA (statischer Build), `/api` und `/sanctum` gehen an Laravel (E-019) |
 | `api.learnharder.app` | Laravel (PHP-FPM) + Filament `/admin` |
+| `staging.learnharder.app` | Staging: App, `/api`, `/sanctum` und `/admin` unter einer Adresse |
 | `ws.learnharder.app` | Laravel Reverb (erst Phase 2) |
 
 Dazu Postgres, Redis, ein Queue-Worker und der Laravel-Scheduler (Brainpower-Regeneration, Streak-Reset).
@@ -25,20 +26,19 @@ backup/                   tägliche DB-Dumps, offsite (S3-kompatibel)
 README.md                 Runbook: Server aufsetzen, deployen, zurückrollen
 ```
 
-## Login über zwei Subdomains (vor M4)
+## Login: App und API unter einer Adresse (E-019)
 
-Die App auf `app.learnharder.app` liest das Cookie `XSRF-TOKEN`, das die API auf `api.learnharder.app` setzt (Sanctum im SPA-Modus).
-Das klappt nur, wenn das Cookie für die ganze Domain gilt. In der Produktions-`.env` des Backends:
+Die App liest das Cookie `XSRF-TOKEN`, das Laravel setzt (Sanctum im SPA-Modus). Weil App und API unter einer Adresse laufen,
+gilt das Cookie nur für diesen Host, Staging und Produktion kommen sich nicht in die Quere. In der Produktions-`.env` des Backends:
 
 ```
-SESSION_DOMAIN=.learnharder.app
+SESSION_DOMAIN=null
 SESSION_SECURE_COOKIE=true
 SANCTUM_STATEFUL_DOMAINS=app.learnharder.app
-CORS_ALLOWED_ORIGINS=https://app.learnharder.app
 ```
 
-Der Frontend-Build bekommt `VITE_API_URL=https://api.learnharder.app`.
-Offen: Staging unter `staging.app…` und `staging.api…` läge ebenfalls unter `.learnharder.app`, die Cookies von Staging und Produktion würden sich dann überschreiben. Auch `.staging.learnharder.app` reicht nicht ganz: Der Browser schickt die Cookies von `.learnharder.app` dorthin mit, dann gibt es zwei `XSRF-TOKEN`. Vor M4 entscheiden, am sichersten ist eine eigene Domain für Staging.
+Staging genauso mit `staging.learnharder.app`. CORS braucht die App dann nicht.
+Der Frontend-Build bekommt `VITE_API_URL=` (leer, gleiche Adresse). Fehlt die Variable ganz, nimmt `api/client.js` `http://localhost`.
 
 ## Regeln
 

@@ -32,6 +32,7 @@
 4. **Ökonomie-Modell §2:** Die Formel `round(n^1.5 × 8)` passt zu Level 5/10/25/50/100, aber nicht zu Level 1 (Formel ergibt 8, Tabelle sagt 0) und Level 2 (Formel 23, Tabelle 8). Die Spalte „XP zum nächsten Level“ ist dadurch auch falsch. Vor der Umsetzung festlegen, ob die Schwelle für Level n `(n−1)` oder `n` verwendet. → entschieden: `(n−1)` wie in V1, Tabelle korrigiert (`ENTSCHEIDUNGEN.md` E-010)
 5. **Schritt 1 des Plans** („Abstimmung mit Professoren/Lehrkräften“) ist nirgends als erledigt vermerkt.
 6. **Setup-Plan §2:** beschreibt die Übernahme der Supabase-Nutzer samt bcrypt-Hashes. → entfällt, alle registrieren sich neu (`ENTSCHEIDUNGEN.md` E-011)
+7. **Setup-Plan §3:** Die App spricht mit `api.learnharder.app`, Staging liegt unter `staging.app…` und `staging.api…`. → entschieden: App und API unter einer Adresse, Staging unter `staging.learnharder.app` (`ENTSCHEIDUNGEN.md` E-019)
 
 ## Einschätzung (Projektleitung)
 
