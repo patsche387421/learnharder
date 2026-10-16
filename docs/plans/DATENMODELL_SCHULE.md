@@ -2,7 +2,7 @@
 
 Wer sieht welche Inhalte, wer unterrichtet was, und wie kommen Schüler:innen in die App.
 Vorlage ist die HTL Mödling. Entscheidungen: E-013, E-025 bis E-028 in `../ENTSCHEIDUNGEN.md`.
-Umgesetzt (Stand 2026-10-16): Tabellen und Datenbankregeln aus §3, Schritte 1–3 aus §8 (Schulstruktur, Klassen, Sichtbarkeit nach E-024). Offen: Schritt 4 (Registrierung und Konten, M4a) und §7.2.
+Umgesetzt (Stand 2026-10-16): Tabellen und Datenbankregeln aus §3, Schritte 1–4 aus §8 (Schulstruktur, Klassen, Sichtbarkeit nach E-024, Registrierung und Konten in M4a nach E-025 und E-027). Offen: §7.2.
 
 ## 1. Begriffe
 
