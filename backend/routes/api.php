@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\PasswordResetController;
 use App\Http\Controllers\Api\V1\QuizAttemptController;
 use App\Http\Controllers\Api\V1\RegistrationController;
 use App\Http\Controllers\Api\V1\SubjectController;
@@ -16,6 +17,10 @@ Route::prefix('v1')->group(function () {
     Route::post('register/code', [RegistrationController::class, 'sendCode'])->middleware('throttle:email-code');
     Route::post('register/verify', [RegistrationController::class, 'verify'])->middleware('throttle:email-code-verify');
     Route::post('register', [RegistrationController::class, 'register'])->middleware('throttle:email-code-verify');
+
+    // Passwort vergessen: Code anfordern → mit Code neues Passwort setzen
+    Route::post('password/code', [PasswordResetController::class, 'sendCode'])->middleware('throttle:email-code');
+    Route::post('password/reset', [PasswordResetController::class, 'reset'])->middleware('throttle:email-code-verify');
 
     Route::middleware(['auth:sanctum', EnsureAccountActive::class])->group(function () {
         Route::post('logout', [AuthController::class, 'logout']);
