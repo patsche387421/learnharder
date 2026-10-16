@@ -8,7 +8,7 @@ Schema, Migrationen, Seeder und Factories. Allgemeine Regeln: `../../CLAUDE.md`,
 - **Gamification:** `user_stats`, `quiz_attempts` (mit `finished_at`), `question_answers` (erste Antwort je Frage und Lerneinheit, mit `xp_awarded` und `xp_date`), `trophies`, `user_trophies`
 - **Schule:** `schools` → `departments` → `programs` → `school_classes` (je Schuljahr) mit `class_enrollments` und `teaching_assignments`, dazu `school_email_domains`, `school_years`, `curriculum_entries`. Plan: `docs/plans/DATENMODELL_SCHULE.md`. Einschreibungen werden ausgetragen (`left_at`), nicht gelöscht. Demo-Daten: `DemoSchoolSeeder` (nur `local`/`testing`, nach dem Import)
 - **Teams:** `teams`, `team_members`
-- **Benutzer:** `users` (bigint-ID) mit `gamer_tag`, `brainpower_current`/`_max`, `current_streak`, `deactivated_at`
+- **Benutzer:** `users` (bigint-ID) mit `gamer_tag`, `brainpower_current`/`_max`, `current_streak`. `name` nur fürs Personal, Schüler:innen ohne Namen (E-025). Konten: `consented_at`, `terms_version`, `parental_consent_at`/`_by`, `deactivated_at`/`_by`, `deactivation_reason`, `last_login_at` (E-027, E-028)
 
 ## Regeln
 

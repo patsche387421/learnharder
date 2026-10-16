@@ -8,6 +8,7 @@ use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -29,8 +30,6 @@ class User extends Authenticatable implements FilamentUser
         'name',
         'email',
         'gamer_tag',
-        'first_name',
-        'last_name',
         'brainpower_current',
         'brainpower_max',
         'current_streak',
@@ -58,8 +57,29 @@ class User extends Authenticatable implements FilamentUser
         return [
             'email_verified_at' => 'datetime',
             'last_active_at' => 'datetime',
+            'consented_at' => 'datetime',
+            'parental_consent_at' => 'datetime',
+            'deactivated_at' => 'datetime',
+            'last_login_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /** Gesperrt durch Admin (E-027): keine Anmeldung in App und CMS. */
+    public function isDeactivated(): bool
+    {
+        return $this->deactivated_at !== null;
+    }
+
+    public function deactivatedBy(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'deactivated_by');
+    }
+
+    /** Wer im CMS bestätigt hat, dass das Elternformular vorliegt (unter 14, E-025). */
+    public function parentalConsentBy(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'parental_consent_by');
     }
 
     public function stats(): HasOne

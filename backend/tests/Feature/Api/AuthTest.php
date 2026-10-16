@@ -24,8 +24,7 @@ class AuthTest extends TestCase
         $this->user = User::factory()->create([
             'email' => 'lena@htl.at',
             'gamer_tag' => 'lena42',
-            'first_name' => 'Lena',
-            'last_name' => 'Huber',
+            'name' => 'Lena Huber',
             'brainpower_current' => 80,
             'brainpower_max' => 100,
         ]);

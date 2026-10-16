@@ -35,8 +35,6 @@ class DatabaseSeeder extends Seeder
             ['email' => 'admin@learnharder.app'],
             [
                 'name' => 'Administrator',
-                'first_name' => 'Admin',
-                'last_name' => 'System',
                 'gamer_tag' => 'AdminRoot',
                 'brainpower_current' => 200,
                 'brainpower_max' => 200,
@@ -50,8 +48,6 @@ class DatabaseSeeder extends Seeder
             ['email' => 'autor@learnharder.app'],
             [
                 'name' => 'Content Autor',
-                'first_name' => 'Max',
-                'last_name' => 'Redakteur',
                 'gamer_tag' => 'ContentCreator',
                 'brainpower_current' => 150,
                 'brainpower_max' => 150,
@@ -65,8 +61,6 @@ class DatabaseSeeder extends Seeder
             ['email' => 'tester@learnharder.app'],
             [
                 'name' => 'QA Tester',
-                'first_name' => 'Tess',
-                'last_name' => 'Prüfer',
                 'gamer_tag' => 'BugHunter',
                 'brainpower_current' => 100,
                 'brainpower_max' => 100,
@@ -80,8 +74,6 @@ class DatabaseSeeder extends Seeder
             ['email' => 'lehrer@learnharder.app'],
             [
                 'name' => 'Prof. Dr. Mustermann',
-                'first_name' => 'Erika',
-                'last_name' => 'Mustermann',
                 'gamer_tag' => 'ProfMuster',
                 'brainpower_current' => 100,
                 'brainpower_max' => 100,
@@ -94,9 +86,6 @@ class DatabaseSeeder extends Seeder
         $student = User::firstOrCreate(
             ['email' => 'schueler@learnharder.app'],
             [
-                'name' => 'Lukas Lerner',
-                'first_name' => 'Lukas',
-                'last_name' => 'Lerner',
                 'gamer_tag' => 'CodeNinja99',
                 'brainpower_current' => 100,
                 'brainpower_max' => 100,
