@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\LegalController;
 use App\Http\Controllers\Api\V1\PasswordResetController;
 use App\Http\Controllers\Api\V1\QuizAttemptController;
 use App\Http\Controllers\Api\V1\RegistrationController;
@@ -12,6 +13,9 @@ use Illuminate\Support\Facades\Route;
 // Vor dem Login holt die Vue-App einmal GET /sanctum/csrf-cookie.
 Route::prefix('v1')->group(function () {
     Route::post('login', [AuthController::class, 'login'])->middleware('throttle:login');
+
+    // Rechtstexte ohne Login (E-023)
+    Route::get('legal/{slug}', [LegalController::class, 'show']);
 
     // Registrierung (E-025): Code anfordern → Code prüfen → Konto anlegen
     Route::post('register/code', [RegistrationController::class, 'sendCode'])->middleware('throttle:email-code');

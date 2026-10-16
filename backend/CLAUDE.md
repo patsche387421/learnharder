@@ -33,6 +33,7 @@ Die Tests laufen gegen die Datenbank `testing` (`phpunit.xml`). Andere Befehle f
 
 | Route | Zweck |
 |---|---|
+| `GET legal/{slug}` | Rechtstexte ohne Login (E-023): `datenschutz`, `impressum`, `nutzungsregeln`, `einwilligung-eltern` aus `resources/legal/`, Fassung aus `config/legal.php`. Neue Spalte mit Personendaten → `LegalTest` schlägt an, Datenschutzerklärung ergänzen |
 | `POST register/code`, `POST register/verify`, `POST register` | Registrierung (E-025): Code an die Schul-Mail (nur freigegebene Domain, `App\Support\EmailCode`), Code gegen Einmal-Token, Konto als `student` anlegen und anmelden. Limits je E-Mail, IP und Tag (`config/accounts.php`) |
 | `POST password/code`, `POST password/reset` | Passwort vergessen: Code nur für aktive Konten (Antwort immer gleich), neues Passwort beendet alle Anmeldungen (`Accounts::logoutEverywhere`). Auch der Weg zum ersten Passwort für Konten aus dem CMS |
 | `POST login`, `POST logout`, `GET me` | Login per Session, `me` liefert Gamer-Tag, eigene Klasse und Fortschritt (Level, Rang, Prestige, EP) |
