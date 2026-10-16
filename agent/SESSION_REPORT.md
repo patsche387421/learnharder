@@ -256,3 +256,20 @@ V1-Protokoll: `_archiv/agent/SESSION_REPORT.md` und `SESSION_REPORT_ARCHIVE.md`.
   - Vor M4 entscheiden: Staging unter `learnharder.app` teilt sich die Cookies mit Produktion, am sichersten eine eigene Domain.
   - Zweimal mit Änderungen auf `dev` angefangen statt auf dem Branch. Vor dem Commit verschoben, `dev` blieb sauber.
   - Weiter offen: M3b (Klassen und Sichtbarkeit), Hetzner (M4) und Backup-Bausteine, verschlüsselte Zweitkopie des Dumps, Vitest 5 und jsdom 30.
+
+## 2026-10-16 — Offene Punkte, Planung bis zum Start, M3b Klassen und Sichtbarkeit
+
+- **Branch:** je Schritt ein Branch, mit `--no-ff` nach `dev` gemerged und gelöscht, von `chore/tokens-uebergang-entfernen` (`fbe0cde`) bis `feat/app-klasse` (`d866e68`), siehe `git log --first-parent 582ace5..d866e68`, dazu `docs/m3b-abschluss` mit diesem Eintrag
+- **Ergebnis:**
+  - Offene Punkte: alte Token-Namen aus `tokens.css` entfernt, Status-Feld des Themas nach Theorie-Änderung sofort aktuell, Filament-Texte in du-Form (`lang/vendor/filament-*`), Vitest 5.0.3 und jsdom 30.1.1 (Versionen mindestens zwei Wochen alt, npm-Fehler `edgesOut` umgangen), Ursache für `flushSession()` geklärt (Sanctums `AuthenticateSession` merkt sich den Passwort-Hash).
+  - Entscheidungen: E-019 App und API unter einer Adresse je Umgebung, E-020 Tags nur `v2.0.0-alpha.N`, E-021 schlankes MVP, E-022 Hub schlank und Team/Liga ausgeblendet zum Start, E-023 Rechtstexte von Claude entworfen und von der Schule geprüft, E-024 Sichtbarkeit nach Klasse. Abstimmung mit Lehrkräften wird vor M5 nachgeholt. Meilensteine bis zum Start: M3b → M4a (Ankommen), parallel M4 → M5.
+  - Browser-Tests der M3-Aufräumrunde: alle 8 passen (Patsche).
+  - M3b: Models `SchoolClass` (mit `currentStage()`, Semester nach Wiener Zeit), `ClassEnrollment`, `TeachingAssignment`, Policies nur Admin. Filament `SchoolClassResource` mit „Schüler:innen“ und „Lehrkräfte“. `DemoSchoolSeeder` (Klasse 2AHIT, MEDT erst ab Jahrgang 3). API filtert über `Subject::visibleTo()`, `/me` liefert die eigene Klasse. App zeigt „Noch keiner Klasse zugeordnet.“ und die Klasse im Profil.
+  - Fehler gefunden: Austragen direkt nach dem Eintragen schlug an `class_enrollments_left_check` fehl, weil `enrolled_at` von der Datenbank-Uhr kam. Jetzt setzt das Model die Zeit.
+  - Gelernt: Filament prüft Auswahlfelder mit Relation schon gegen die gefilterte Liste (eigene `scopedExists` dafür überflüssig). Livewire liest `:` in erwarteten Fehlertexten als Regel-Trenner. `actingAs` behält geladene Beziehungen, echte Anfragen nicht.
+- **Geprüft:** Backend-Tests 169 → 204 grün, Pint sauber. Frontend-Tests 94 → 97 grün, `build` und `check:tokens` grün. Gegenproben für Admin-Ausnahme, Löschschutz, Statusanzeige, aktive Einschreibung, Abschnitt-Filter und Start-Filter. CI auf `dev` nach jedem Merge grün. Demo-Seeder lokal zweimal gelaufen. **M3b noch nicht im Browser geprüft.**
+- **Offen:**
+  - Browser-Test M3b (Plan „Prüfen am Ende“ Punkt 3).
+  - Für M4a: Antworten zu Plan Schule §7 (Mail-Domains, Microsoft 365, `users.name`, Einwilligung unter 14), Rechtstexte prüfen lassen.
+  - Für M4: Staging-Adresse nach E-019, Mailversand aus der EU, Backups mit Restore-Test.
+  - Patsche: `APP_NAME=learnharder` in der lokalen `.env`, verschlüsselte Zweitkopie des Dumps.

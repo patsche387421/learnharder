@@ -2,11 +2,11 @@
 
 Schema, Migrationen, Seeder und Factories. Allgemeine Regeln: `../../CLAUDE.md`, Backend-Regeln: `../CLAUDE.md`.
 
-## Schema (Stand 2026-10-15)
+## Schema (Stand 2026-10-16)
 
 - **Inhalte:** `subjects` → `topics` → `theory_sections` / `questions` → `question_options` (UUID-Schlüssel, Texte als JSON `{"de": …, "en": …}`)
 - **Gamification:** `user_stats`, `quiz_attempts` (mit `finished_at`), `question_answers` (erste Antwort je Frage und Lerneinheit, mit `xp_awarded` und `xp_date`), `trophies`, `user_trophies`
-- **Schule:** `schools` → `departments` → `programs` → `school_classes` (je Schuljahr) mit `class_enrollments` und `teaching_assignments`, dazu `school_email_domains`, `school_years`, `curriculum_entries`. Plan: `docs/plans/DATENMODELL_SCHULE.md`
+- **Schule:** `schools` → `departments` → `programs` → `school_classes` (je Schuljahr) mit `class_enrollments` und `teaching_assignments`, dazu `school_email_domains`, `school_years`, `curriculum_entries`. Plan: `docs/plans/DATENMODELL_SCHULE.md`. Einschreibungen werden ausgetragen (`left_at`), nicht gelöscht. Demo-Daten: `DemoSchoolSeeder` (nur `local`/`testing`, nach dem Import)
 - **Teams:** `teams`, `team_members`
 - **Benutzer:** `users` (bigint-ID) mit `gamer_tag`, `brainpower_current`/`_max`, `current_streak`, `deactivated_at`
 

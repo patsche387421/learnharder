@@ -20,7 +20,7 @@ bis nach M5 nur auf Deutsch (E-012). Workflow: `draft` → `review` → `publish
 - Filament siezt im Deutschen. Texte, die das CMS zeigt, stehen in du-Form in `lang/vendor/filament-*/de/` (nur die geänderten Schlüssel). Kommt eine Funktion dazu (Profil, Passwort zurücksetzen …), ihre Texte dort ergänzen.
 - Was Postgres ablehnt (Eindeutigkeit, auch ohne Groß-/Kleinschreibung), prüft auch das Formular. Löschen nur anbieten, wenn kein `RESTRICT` greift, sonst gibt es einen Serverfehler. Fächer, Themen und Fragen mit Lernverlauf verweigern das Löschen im Model (`BlocksDeletionWhileInUse`), das CMS sagt dann, was stattdessen geht (`DeletesOnlyUnused`).
 
-## Stand (2026-10-15)
+## Stand (2026-10-16)
 
 Die Ressourcen `SubjectResource`, `TopicResource` und `QuestionResource` haben deutsche Feldnamen, Sprachfelder schreiben auf `.de`,
 Fach und Thema erscheinen auf Deutsch. Status, Typ und Schwierigkeit sind Enums (`ContentStatus`, `QuestionType`, `Difficulty`), neue Inhalte starten als Entwurf.
@@ -29,4 +29,4 @@ Im Fragenformular kommt erst das Fach, dann das Thema. Kürzel prüft das Formul
 Veröffentlichen dürfen nur Admins (`ContentPolicy::publish`, E-014): „Veröffentlicht“ ist sonst nicht wählbar, Änderungen an Veröffentlichtem gehen zurück in Prüfung. Gemeinsame Logik in `Resources/Concerns/`.
 Theorie pflegt das Thema im Relation Manager „Theorie“ (Markdown, ohne Uploads). Ändern Autor:innen sie, geht ein veröffentlichtes Thema zurück in Prüfung.
 
-Schulstruktur (Gruppe „Schule“, nur Admin über `SchoolStructurePolicy`): `SchoolResource` mit Mail-Domains, Abteilungen und Schuljahren als Relation Manager, `ProgramResource` mit dem Lehrplan.
+Schulstruktur (Gruppe „Schule“, nur Admin über `SchoolStructurePolicy`): `SchoolResource` mit Mail-Domains, Abteilungen und Schuljahren als Relation Manager, `ProgramResource` mit dem Lehrplan, `SchoolClassResource` mit den Relation Managern „Schüler:innen“ (eintragen, austragen statt löschen, eine aktive Klasse pro Schuljahr) und „Lehrkräfte“ (Fach, Lehrkraft, Semester).
