@@ -17,9 +17,11 @@ export const useAuthStore = defineStore('auth', () => {
     prestige: me.value?.prestige ?? 0,
   }))
 
+  // Personal löscht sich nicht selbst und braucht keine Klasse (E-024, E-027)
+  const isStaff = computed(() => STAFF_ROLES.some((role) => me.value?.roles?.includes(role)))
+
   // Ohne Klasse liefert der Server keine Fächer. Die App erklärt dann, warum.
-  const waitingForClass = computed(() => !!me.value && !me.value.school_class
-    && !STAFF_ROLES.some((role) => me.value.roles?.includes(role)))
+  const waitingForClass = computed(() => !!me.value && !me.value.school_class && !isStaff.value)
 
   async function fetchMe() {
     try {
@@ -44,6 +46,12 @@ export const useAuthStore = defineStore('auth', () => {
     loaded.value = true
   }
 
+  /** Eigenes Konto löschen, mit Passwort (E-027). Danach gibt es niemanden mehr, der angemeldet ist. */
+  async function deleteAccount(password) {
+    await api('/me', { method: 'DELETE', body: { password } })
+    me.value = null
+  }
+
   async function logout() {
     try {
       await api('/logout', { method: 'POST' })
@@ -61,5 +69,5 @@ export const useAuthStore = defineStore('auth', () => {
     me.value = null
   }
 
-  return { me, loaded, player, waitingForClass, fetchMe, login, register, logout, applyProgress, clear }
+  return { me, loaded, player, isStaff, waitingForClass, fetchMe, login, register, deleteAccount, logout, applyProgress, clear }
 })

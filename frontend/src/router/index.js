@@ -9,6 +9,7 @@ const legal = () => import('../views/LegalView.vue')
 const routes = [
   { path: '/login', component: () => import('../views/LoginView.vue'), meta: { title: 'Einloggen', layout: false, public: true, guest: true } },
   { path: '/registrieren', component: () => import('../views/RegisterView.vue'), meta: { title: 'Registrieren', layout: false, public: true, guest: true } },
+  { path: '/passwort-vergessen', component: () => import('../views/ForgotPasswordView.vue'), meta: { title: 'Passwort vergessen', layout: false, public: true, guest: true } },
   // Rechtstexte (E-023): mit und ohne Login lesbar, der Server liefert Text und Fassung
   { path: '/datenschutz', component: legal, props: { slug: 'datenschutz' }, meta: { title: 'Datenschutz', layout: false, public: true } },
   { path: '/impressum', component: legal, props: { slug: 'impressum' }, meta: { title: 'Impressum', layout: false, public: true } },
@@ -30,6 +31,7 @@ const routes = [
   { path: '/team', component: placeholder, meta: { title: 'Team' } },
   { path: '/league', component: placeholder, meta: { title: 'Liga' } },
   { path: '/profile', component: () => import('../views/ProfileView.vue'), meta: { title: 'Profil' } },
+  { path: '/profile/delete', component: () => import('../views/DeleteAccountView.vue'), meta: { title: 'Konto löschen', focus: true } },
 ]
 
 // Styleguide nur in der Entwicklung. Im Produktions-Build fällt die Route samt Seite weg.

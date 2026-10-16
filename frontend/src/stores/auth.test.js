@@ -92,4 +92,22 @@ describe('auth-Store', () => {
     expect(auth.me.gamer_tag).toBe('lena42')
     expect(auth.loaded).toBe(true)
   })
+
+  it('deleteAccount schickt das Passwort und vergisst die Person', async () => {
+    const fetch = mockFetch({ status: 204 })
+    const auth = useAuthStore()
+    auth.me = { ...me, roles: ['student'] }
+
+    await auth.deleteAccount('geheim123')
+    expect(fetch.mock.calls[0][1].method).toBe('DELETE')
+    expect(auth.me).toBeNull()
+  })
+
+  it('isStaff erkennt Personal an der Rolle', () => {
+    const auth = useAuthStore()
+    auth.me = { ...me, roles: ['student'] }
+    expect(auth.isStaff).toBe(false)
+    auth.me = { ...me, roles: ['autor'] }
+    expect(auth.isStaff).toBe(true)
+  })
 })

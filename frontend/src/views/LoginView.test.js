@@ -78,11 +78,23 @@ describe('LoginView', () => {
   it('verlinkt Registrierung und Rechtstexte', async () => {
     const { wrapper } = await view()
     const links = wrapper.findAll('a').map((a) => a.attributes('href'))
-    expect(links).toEqual(expect.arrayContaining(['/registrieren', '/datenschutz', '/impressum']))
+    expect(links).toEqual(expect.arrayContaining(['/registrieren', '/passwort-vergessen', '/datenschutz', '/impressum']))
   })
 
   it('erklärt nach einer Sperre, was los ist', async () => {
     const { wrapper } = await view('/login?gesperrt=1')
     expect(wrapper.find('.lh-field--error').text()).toContain('Dein Konto ist gesperrt. Wende dich an deine Lehrkraft.')
+  })
+
+  it('bestätigt neues Passwort und gelöschtes Konto, ohne es als Fehler zu zeigen', async () => {
+    let { wrapper } = await view('/login?hinweis=passwort')
+    expect(wrapper.find('.login__notice').text()).toBe('Dein Passwort ist neu. Log dich damit ein.')
+    expect(wrapper.find('.lh-field--error').exists()).toBe(false)
+
+    ;({ wrapper } = await view('/login?hinweis=geloescht'))
+    expect(wrapper.find('.login__notice').text()).toContain('Dein Konto und dein Lernverlauf sind gelöscht.')
+
+    ;({ wrapper } = await view('/login?hinweis=quatsch'))
+    expect(wrapper.find('.login__notice').exists()).toBe(false)
   })
 })

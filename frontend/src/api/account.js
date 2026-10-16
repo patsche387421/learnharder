@@ -1,4 +1,4 @@
-// Registrierung und Rechtstexte (E-023, E-025). Was erlaubt ist, entscheidet der Server, die App zeigt seine Meldungen.
+// Registrierung, Passwort vergessen und Rechtstexte (E-023, E-025). Was erlaubt ist, entscheidet der Server, die App zeigt seine Meldungen.
 import { api } from './client.js'
 
 export async function requestRegistrationCode(email) {
@@ -12,4 +12,13 @@ export async function verifyRegistrationCode(email, code) {
 
 export async function getLegal(slug) {
   return (await api(`/legal/${encodeURIComponent(slug)}`)).data
+}
+
+export async function requestPasswordCode(email) {
+  return api('/password/code', { method: 'POST', body: { email } })
+}
+
+/** Neues Passwort mit dem Code aus der Mail. Danach sind alle anderen Anmeldungen beendet (E-027). */
+export async function resetPassword(fields) {
+  return api('/password/reset', { method: 'POST', body: fields })
 }

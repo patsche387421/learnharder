@@ -42,4 +42,19 @@ describe('ProfileView', () => {
     expect(wrapper.findAll('.lh-card')[1].text()).toContain('Klasse')
     expect(wrapper.findAll('.lh-card')[1].text()).toContain('2AHIT')
   })
+
+  it('Konto löschen nur für Schüler:innen, Rechtstexte für alle', async () => {
+    const router = testRouter()
+    router.push('/profile')
+    await router.isReady()
+
+    useAuthStore().me = { gamer_tag: 'lena42', roles: ['student'] }
+    let links = mount(ProfileView, { global: { plugins: [router] } }).findAll('a').map((a) => a.attributes('href'))
+    expect(links).toEqual(expect.arrayContaining(['/profile/delete', '/datenschutz', '/nutzungsregeln', '/impressum']))
+
+    useAuthStore().me = { gamer_tag: 'ProfMuster', roles: ['teacher'] }
+    links = mount(ProfileView, { global: { plugins: [router] } }).findAll('a').map((a) => a.attributes('href'))
+    expect(links).not.toContain('/profile/delete')
+    expect(links).toContain('/datenschutz')
+  })
 })
