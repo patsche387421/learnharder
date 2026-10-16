@@ -86,7 +86,7 @@ Jede Entscheidung: Nummer, Datum, was, warum, Folgen. Offene Fragen stehen unten
 - **Warum:** Gleichmäßige Viertel sind leicht zu merken. Silber kommt nach 941 EP, laut Ökonomie-Modell in Woche 3–4.
 - **Folgen:** Der Server liefert den Rang, die App färbt nur. Tabelle in `GAMIFICATION_OEKONOMIE_MODELL.md` §2.3.
 
-### E-017 — M3 ohne Klassenfilter (2026-10-15)
+### E-017 — M3 ohne Klassenfilter (2026-10-15, abgelöst durch E-024)
 - **Entscheidung:** In M3 sieht jede eingeloggte Person alle veröffentlichten Fächer und Themen. Der Filter nach Einschreibung (Plan Schule §8 Schritte 2–3) kommt als eigener Meilenstein vor M5.
 - **Warum:** M3 soll nur den Lernablauf liefern. Klassen und Einschreibungen in Filament würden M3 etwa verdoppeln.
 - **Folgen:** Die Fächer-API filtert in M3 nur nach Status und `is_active`. Mit dem Klassenfilter kommt die Einschreibung dazu, die Routen bleiben gleich.
@@ -120,6 +120,11 @@ Jede Entscheidung: Nummer, Datum, was, warum, Folgen. Offene Fragen stehen unten
 - **Entscheidung:** Claude entwirft Datenschutzerklärung, Impressum und Einwilligung (auch für unter 14-Jährige) aus dem, was die App wirklich speichert. Patsche klärt mit der Schule oder ihrer Datenschutzstelle, wer verantwortlich ist, und lässt die Texte prüfen.
 - **Warum:** Die App speichert Daten Minderjähriger. Die Entwürfe müssen zum Code passen, die rechtliche Prüfung kann nur jemand außerhalb machen.
 - **Folgen:** Kommt in M4a. Ohne geprüfte Texte kein Start (M5).
+
+### E-024 — Sichtbarkeit nach Klasse, nur für Schüler:innen (2026-10-16)
+- **Entscheidung:** Schüler:innen sehen die Fächer aus dem Lehrplan ihrer Klasse: letzte aktive Einschreibung, Fächer mit `stage_from` bis zum aktuellen Abschnitt (Plan Schule §4). Ohne aktive Klasse sehen sie nichts. Admin, Autor:in, Tester:in und Lehrkraft sehen alle veröffentlichten Fächer. Wer keine dieser vier Rollen hat, wird gefiltert wie Schüler:innen.
+- **Warum:** Wer Inhalte pflegt, prüft oder unterrichtet, muss sie in der App sehen. Der Filter als Standard schützt, falls eine Person ohne passende Rolle angelegt wird.
+- **Folgen:** Löst E-017 ab. Fach, Thema und Lerneinheit außerhalb des Lehrplans geben 404 wie Unveröffentlichtes. Lehrkräfte nur mit ihren Fächern kommt mit dem Lehrkraft-Dashboard nach dem Start.
 
 ## Offen
 
