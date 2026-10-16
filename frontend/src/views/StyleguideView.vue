@@ -8,6 +8,7 @@ import LhAnswerOption from '../components/ui/LhAnswerOption.vue'
 import LhArt from '../components/ui/LhArt.vue'
 import LhButton from '../components/ui/LhButton.vue'
 import LhCard from '../components/ui/LhCard.vue'
+import LhCheckbox from '../components/ui/LhCheckbox.vue'
 import LhCurrencyChip from '../components/ui/LhCurrencyChip.vue'
 import LhEmptyState from '../components/ui/LhEmptyState.vue'
 import LhIcon from '../components/ui/LhIcon.vue'
@@ -32,6 +33,8 @@ const email = ref('')
 const emailError = ref('')
 const tag = ref('patsche')
 const schoolClass = ref('3AHIF')
+const is14 = ref(false)
+const terms = ref(true)
 
 const xp = ref(154)
 
@@ -108,6 +111,7 @@ function check() {
         <LhButton variant="secondary" to="/">Zum Hub</LhButton>
       </div>
       <LhButton block>Los geht’s</LhButton>
+      <LhButton variant="danger" block>Konto endgültig löschen</LhButton>
     </section>
 
     <section class="sg__section">
@@ -147,6 +151,13 @@ function check() {
       />
       <LhTextField label="Gamer-Tag" v-model="tag" hint="Den sehen alle in der Liga." />
       <LhTextField label="Klasse" v-model="schoolClass" hint="Legt die Lehrkraft fest." disabled />
+    </section>
+
+    <section class="sg__section">
+      <h2 class="h2">LhCheckbox</h2>
+      <LhCheckbox v-model="is14" :error="is14 ? '' : 'Bestätige, dass du mindestens 14 bist.'">Ich bin mindestens 14 Jahre alt.</LhCheckbox>
+      <LhCheckbox v-model="terms">Ich stimme der <a href="#">Datenschutzerklärung</a> und den <a href="#">Nutzungsregeln</a> zu.</LhCheckbox>
+      <LhCheckbox disabled>Deaktiviert</LhCheckbox>
     </section>
 
     <section class="sg__section">

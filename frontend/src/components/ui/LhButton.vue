@@ -1,10 +1,11 @@
 <script setup>
-// Button: primary (die eine Hauptaktion pro Screen), secondary, ghost. Mit to/href wird er zum Link.
+// Button: primary (die eine Hauptaktion pro Screen), secondary, ghost, danger (nur Unumkehrbares wie „Konto löschen“).
+// Mit to/href wird er zum Link.
 import { computed } from 'vue'
 import { linkProps, useLink } from './link.js'
 
 const props = defineProps({
-  variant: { type: String, default: 'primary', validator: (v) => ['primary', 'secondary', 'ghost'].includes(v) },
+  variant: { type: String, default: 'primary', validator: (v) => ['primary', 'secondary', 'ghost', 'danger'].includes(v) },
   block: Boolean,
   disabled: Boolean,
   type: { type: String, default: 'button' },

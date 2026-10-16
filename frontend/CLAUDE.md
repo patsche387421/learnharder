@@ -50,4 +50,4 @@ public/assets/fonts/   selbst gehostete Schriften (keine CDNs)
 - **Lernen:** `/learn` → `LearnView` (Fächer mit Fach-Level) → `SubjectView` (Themen) → `TopicView` → `TheoryView` und `LessonView` (beide `meta.focus`, ohne Tab-Leiste). Laden und Fehler über `composables/useLoad.js` und `LoadError`. Ohne Klasse zeigt `LearnView` „Noch keiner Klasse zugeordnet.“
 - **Offen:** Hub, Team und Liga sind noch `PlaceholderView`, `ProfileView` zeigt Gamer-Tag, Klasse und „Abmelden“.
 
-13 `Lh`-Bausteine in `src/components/ui/`, jeder mit Test. `/styleguide` zeigt alle Tokens, Icons und Bausteine (nur in der Entwicklung). Beide Schriften liegen selbst gehostet in `public/assets/fonts/`. In WSL2 sind 97 Tests, `build` und `check:tokens` grün.
+14 `Lh`-Bausteine in `src/components/ui/` (seit M4a mit `LhCheckbox` und `LhButton variant="danger"`, Design-Artefakt Version 29), jeder mit Test. `/styleguide` zeigt alle Tokens, Icons und Bausteine (nur in der Entwicklung). Beide Schriften liegen selbst gehostet in `public/assets/fonts/`. In WSL2 sind 103 Tests, `build` und `check:tokens` grün.
