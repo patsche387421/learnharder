@@ -8,7 +8,7 @@ Regeln und Komponenten-Anleitungen: `docs/design/`. Icons: `src/assets/icons/`.
 |---|---|
 | `tokens.json` | Quelle aller Tokens (Kopie aus dem Artefakt). `tokens.css` muss dieselben Werte haben |
 | `fonts.css` | `@font-face` für Atkinson Hyperlegible Next (Text) und Space Mono (Zahlen/Code) |
-| `tokens.css` | Nur CSS-Variablen: Farben hell/dunkel, Schrift, Abstände, Radien, Layout, Text-Klassen, Übergangs-Aliase |
+| `tokens.css` | Nur CSS-Variablen: Farben hell/dunkel, Schrift, Abstände, Radien, Layout, Text-Klassen |
 | `bundle.css` | Komponenten mit `lh-`-Präfix (Button, Badge, Karte, Antwort, Feedback, Tabbar, Themen, Level-up …) |
 | `style.css` | Eigene Basis-Stile der App (Seitenrand, Seitenhintergrund, `color-scheme`). Nicht aus dem Artefakt, nur hier gepflegt |
 
@@ -23,7 +23,3 @@ Regeln und Komponenten-Anleitungen: `docs/design/`. Icons: `src/assets/icons/`.
 - Kontrast mindestens WCAG AA. Fokus immer sichtbar (`:focus-visible`).
 - Wenn sich das Artefakt ändert: `tokens.json`, `bundle.css`, `docs/design/` und Icons hier ersetzen, den Diff prüfen und Änderungen an Token-Namen in Komponenten nachziehen. Das `@import` von Google Fonts in der `bundle.css` des Artefakts wird dabei nicht übernommen. Danach `npm run check:tokens`: prüft, ob `tokens.css` zu `tokens.json` passt.
 - Schriften: `AtkinsonHyperlegibleNext-Variable.woff2` (Version 2.001, Achse `wght` 200–800) ist aus der Variable-TTF von Google Fonts mit `fontTools` nach WOFF2 umgewandelt. Copyright und OFL-Lizenz stecken in der Datei (`name`-Tabelle). Neue Version: genauso umwandeln, Dateiname bleibt.
-
-## Offen
-
-- `tokens.css` §5 (Übergangs-Aliase `--fach-*`, `--primary` …) löschen, sobald nichts mehr darauf verweist. Das Backend speichert in `subjects.color_token` seit 2026-10-15 `--subject-*`-Namen, nicht mehr `--fach-*`.
