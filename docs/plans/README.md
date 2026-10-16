@@ -30,7 +30,7 @@
 2. **Datenbank:** „PostgreSQL / MariaDB“. Sail und `.env.example` nutzen Postgres (`pgsql`). Die Pläne nennen noch beides. → entschieden: Postgres (`ENTSCHEIDUNGEN.md` E-007)
 3. **Versionen:** Der Setup-Plan nennt `v2.0.0-alpha.1` als Ziel, §4 nennt `v0.1.0`/`v0.2.0`. Beide Tags `v0.1.0` und `v2.0.0-plan` existieren mit derselben Beschreibung. Vorschlag: nur noch `v2.0.0-alpha.N` weiterführen. → entschieden: nur `v2.0.0-alpha.N`, `v0.1.0` gibt es nicht mehr (`ENTSCHEIDUNGEN.md` E-020)
 4. **Ökonomie-Modell §2:** Die Formel `round(n^1.5 × 8)` passt zu Level 5/10/25/50/100, aber nicht zu Level 1 (Formel ergibt 8, Tabelle sagt 0) und Level 2 (Formel 23, Tabelle 8). Die Spalte „XP zum nächsten Level“ ist dadurch auch falsch. Vor der Umsetzung festlegen, ob die Schwelle für Level n `(n−1)` oder `n` verwendet. → entschieden: `(n−1)` wie in V1, Tabelle korrigiert (`ENTSCHEIDUNGEN.md` E-010)
-5. **Schritt 1 des Plans** („Abstimmung mit Professoren/Lehrkräften“) ist nirgends als erledigt vermerkt.
+5. **Schritt 1 des Plans** („Abstimmung mit Professoren/Lehrkräften“) ist nirgends als erledigt vermerkt. → noch nicht passiert, wird vor dem Start nachgeholt (Patsche, 2026-10-16, siehe M5)
 6. **Setup-Plan §2:** beschreibt die Übernahme der Supabase-Nutzer samt bcrypt-Hashes. → entfällt, alle registrieren sich neu (`ENTSCHEIDUNGEN.md` E-011)
 7. **Setup-Plan §3:** Die App spricht mit `api.learnharder.app`, Staging liegt unter `staging.app…` und `staging.api…`. → entschieden: App und API unter einer Adresse, Staging unter `staging.learnharder.app` (`ENTSCHEIDUNGEN.md` E-019)
 
@@ -52,7 +52,7 @@ Der kritische Pfad zum ersten echten Nutzer ist kürzer:
 | **M3** ✅ | Lernen funktioniert | Login → Fächer → Thema → Theorie → Quiz → Ergebnis mit serverseitigen XP/Level, Vue mit `lh-`-Komponenten. EP je Frage einmal pro Tag (E-015), Ränge (E-016), ohne Klassenfilter (E-017), Fach-Level (E-018) |
 | **M3b** | Klassen und Sichtbarkeit | Klassen und Einschreibungen in Filament, App zeigt nur Fächer der eigenen Klasse (Plan Schule §8 Schritte 2–3) |
 | **M4** | Hetzner läuft | Prod-Stack in `infra/`, TLS, tägliche Backups, Staging |
-| **M5** | Start | DNS umgestellt, Registrierung offen, Neuregistrierung angekündigt, V1-Supabase abgeschaltet → Tag `v2.0.0-alpha.1` |
+| **M5** | Start | Lernablauf, EP-Regeln und Brainpower mit betreuenden Lehrkräften abgestimmt, DNS umgestellt, Registrierung offen, Neuregistrierung angekündigt, V1-Supabase abgeschaltet → Tag `v2.0.0-alpha.1` |
 | danach | | Brainpower-Einsatz, Streaks, Trophäen → Lehrkräfte/Klassen → Englisch + KI-Übersetzung → Landing Page → Reverb |
 
 ### Größte Risiken jetzt
