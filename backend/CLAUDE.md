@@ -40,7 +40,7 @@ Die Tests laufen gegen die Datenbank `testing` (`phpunit.xml`). Andere Befehle f
 | `POST attempts/{id}/answers` | eine Antwort prüfen, nur die erste pro Frage zählt |
 | `POST attempts/{id}/finish` | abschließen und EP vergeben, idempotent |
 
-Alles außer `login` braucht `auth:sanctum`. Sichtbar ist nur `published` (Thema und Frage) in einem aktiven Fach, sonst 404. Dazu filtert `Subject::visibleTo()`: Schüler:innen sehen den Lehrplan ihrer Klasse, admin, autor, tester und teacher alles (E-024). API-Tests mit Schüler:innen brauchen deshalb eine Klasse (`Tests\Concerns\EnrollsStudents`).
+Alles außer `login` braucht `auth:sanctum` und ein nicht gesperrtes Konto (`EnsureAccountActive`, sonst 403). Sichtbar ist nur `published` (Thema und Frage) in einem aktiven Fach, sonst 404. Dazu filtert `Subject::visibleTo()`: Schüler:innen sehen den Lehrplan ihrer Klasse, admin, autor, tester und teacher alles (E-024). API-Tests mit Schüler:innen brauchen deshalb eine Klasse (`Tests\Concerns\EnrollsStudents`).
 
 ## Zuständigkeit
 
@@ -58,6 +58,7 @@ Alles außer `login` braucht `auth:sanctum`. Sichtbar ist nur `published` (Thema
 - API-Antworten über Resources (`app/Http/Resources`). Über Schüler:innen nie E-Mail oder Klarnamen ausgeben, nur den Gamer-Tag.
 - Feste Wertelisten als Enum in `app/Enums`. Ein Enum muss zur `CHECK`-Regel seiner Spalte passen (Test für alle Fälle).
 - Zugriffsrechte über Policies, nicht über `if`-Abfragen im Controller. Admin darf alles (`Gate::before` im `AppServiceProvider`), nur fremde Lerneinheiten nicht beantworten oder abschließen. Inhalte erben von `app/Policies/ContentPolicy.php`.
+- Konten sperren, entsperren, löschen und Rollen ändern nur über `App\Support\Accounts`. Dort stehen die Schutzregeln (E-027), denn eine Policy würde `Gate::before` für Admins überspringen. `logoutEverywhere()` löscht Sessions und erneuert das Remember-Token. Sanctum-Tokens gibt es nicht.
 - Filament erlaubt eine Aktion, wenn die Policy-Methode fehlt. Neue Policies deshalb mit allen Filament-Aktionen anlegen, auch wenn sie nur `false` liefern.
 - Jede neue Logik bekommt einen Feature-Test (`tests/Feature`), Tests vor jedem Commit grün.
 - API-Tests mit zwei Personen: vor dem Wechsel `$this->flushSession()`. Sanctums `AuthenticateSession` merkt sich den Passwort-Hash der ersten Person in der Session und meldet sonst ab (401).
