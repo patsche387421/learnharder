@@ -1,11 +1,14 @@
 <script setup>
-// „Lernen“: alle Fächer mit Fortschritt (Fach-Level nach E-018, erledigte Themen). Sichtbar ist, was der Server liefert (E-017).
+// „Lernen“: alle Fächer mit Fortschritt (Fach-Level nach E-018, erledigte Themen). Sichtbar ist, was der Server liefert (E-024).
 import { onMounted } from 'vue'
 import LoadError from '../components/LoadError.vue'
 import LhEmptyState from '../components/ui/LhEmptyState.vue'
 import LhSubjectCard from '../components/ui/LhSubjectCard.vue'
 import { getSubjects } from '../api/learn.js'
 import { useLoad } from '../composables/useLoad.js'
+import { useAuthStore } from '../stores/auth.js'
+
+const auth = useAuthStore()
 
 const { data: subjects, error, loading, load } = useLoad(getSubjects)
 onMounted(load)
@@ -16,6 +19,11 @@ onMounted(load)
     <h1 class="learn__title">Lernen</h1>
     <p v-if="loading && !subjects" class="learn__loading" aria-live="polite">Lädt …</p>
     <LoadError v-else-if="error" :error="error" @retry="load" />
+    <LhEmptyState
+      v-else-if="subjects && !subjects.length && auth.waitingForClass"
+      title="Noch keiner Klasse zugeordnet."
+      text="Melde dich bei Admin oder deiner Lehrkraft, dann siehst du hier deine Fächer."
+    />
     <LhEmptyState
       v-else-if="subjects && !subjects.length"
       title="Noch keine Fächer."

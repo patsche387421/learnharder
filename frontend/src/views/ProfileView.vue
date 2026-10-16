@@ -1,5 +1,5 @@
 <script setup>
-// Profil, vorerst nur Gamer-Tag und Abmelden. Klarnamen und E-Mail zeigt die App nie.
+// Profil, vorerst Gamer-Tag, Klasse und Abmelden. Klarnamen und E-Mail zeigt die App nie.
 import { useRouter } from 'vue-router'
 import LhButton from '../components/ui/LhButton.vue'
 import LhCard from '../components/ui/LhCard.vue'
@@ -19,6 +19,9 @@ async function logout() {
   <div class="profile">
     <LhCard eyebrow="Gamer-Tag">
       <p class="profile__tag">{{ auth.me?.gamer_tag }}</p>
+    </LhCard>
+    <LhCard v-if="auth.me?.school_class" eyebrow="Klasse">
+      <p class="profile__tag">{{ auth.me.school_class.name }}</p>
     </LhCard>
     <LhButton variant="secondary" block @click="logout">Abmelden</LhButton>
   </div>

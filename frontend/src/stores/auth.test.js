@@ -22,6 +22,20 @@ describe('auth-Store', () => {
     expect(auth.player).toEqual({ level: 1, rank: 'bronze', prestige: 0 })
   })
 
+  it('wartet auf eine Klasse nur ohne Klasse und ohne Rolle, die alles sieht', () => {
+    const auth = useAuthStore()
+    expect(auth.waitingForClass).toBe(false)
+
+    auth.me = { ...me, roles: ['student'], school_class: null }
+    expect(auth.waitingForClass).toBe(true)
+
+    auth.me = { ...me, roles: ['student'], school_class: { name: '2AHIT' } }
+    expect(auth.waitingForClass).toBe(false)
+
+    auth.me = { ...me, roles: ['tester'], school_class: null }
+    expect(auth.waitingForClass).toBe(false)
+  })
+
   it('fetchMe übernimmt die Werte vom Server', async () => {
     mockFetch({ status: 200, body: { data: me } })
     const auth = useAuthStore()

@@ -25,9 +25,21 @@ describe('ProfileView', () => {
     const wrapper = mount(ProfileView, { global: { plugins: [router] } })
 
     expect(wrapper.text()).toContain('lena42')
+    expect(wrapper.text()).not.toContain('Klasse')
     await wrapper.find('button').trigger('click')
     await flushPromises()
     expect(useAuthStore().me).toBeNull()
     expect(router.currentRoute.value.path).toBe('/login')
+  })
+
+  it('zeigt die eigene Klasse, wenn es eine gibt', async () => {
+    useAuthStore().me = { gamer_tag: 'lena42', school_class: { name: '2AHIT' } }
+    const router = testRouter()
+    router.push('/profile')
+    await router.isReady()
+    const wrapper = mount(ProfileView, { global: { plugins: [router] } })
+
+    expect(wrapper.findAll('.lh-card')[1].text()).toContain('Klasse')
+    expect(wrapper.findAll('.lh-card')[1].text()).toContain('2AHIT')
   })
 })

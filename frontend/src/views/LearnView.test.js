@@ -1,5 +1,7 @@
 import { flushPromises, mount } from '@vue/test-utils'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { createPinia, setActivePinia } from 'pinia'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { useAuthStore } from '../stores/auth.js'
 import { mockFetch } from '../test/api.js'
 import { mountRoute } from '../test/router.js'
 import LearnView from './LearnView.vue'
@@ -7,6 +9,7 @@ import LearnView from './LearnView.vue'
 const show = () => mountRoute(mount, LearnView, '/learn', '/learn')
 
 describe('LearnView', () => {
+  beforeEach(() => setActivePinia(createPinia()))
   afterEach(() => vi.unstubAllGlobals())
 
   it('zeigt jedes Fach mit erledigten Themen und Link', async () => {
@@ -32,6 +35,16 @@ describe('LearnView', () => {
     await flushPromises()
 
     expect(wrapper.find('.lh-empty').text()).toContain('Noch keine Fächer.')
+  })
+
+  it('ohne Klasse erklärt die Seite, warum es keine Fächer gibt', async () => {
+    useAuthStore().me = { gamer_tag: 'lena42', roles: ['student'], school_class: null }
+    mockFetch({ status: 200, body: { data: [] } })
+    const { wrapper } = await show()
+    await flushPromises()
+
+    expect(wrapper.find('.lh-empty').text()).toContain('Noch keiner Klasse zugeordnet.')
+    expect(wrapper.find('.lh-empty').text()).toContain('Melde dich bei Admin oder deiner Lehrkraft')
   })
 
   it('bei einem Fehler lässt sich neu laden', async () => {
