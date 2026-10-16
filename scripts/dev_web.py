@@ -1,6 +1,7 @@
 """Testzentrale im Browser: `scripts/dev.py web` → http://localhost:8090.
 
-Gleiche Daten und Aktionen wie das Terminal-Dashboard (dev.py), dazu Grafiken, Mails im Volltext und der Testverlauf.
+Gleiche Daten und Aktionen wie das Terminal-Dashboard (dev.py), dazu Grafiken, Mails im Volltext, der Testverlauf
+und die Logs getrennt nach Quelle: App, Anfragen, Datenbank, Tests und Vite.
 Nur Standardbibliothek. Die Seite ist dev_web.html, Farben und Schriften kommen aus dem Design-System der App.
 Hört nur auf 127.0.0.1. Host und Origin müssen zu dieser Adresse passen, Aktionen brauchen den Header `X-LH-Dev: 1`:
 So kann keine fremde Webseite im selben Browser die Datenbank neu aufsetzen.
@@ -30,6 +31,7 @@ STATIC = {
 TYPES = {'.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.woff2': 'font/woff2'}
 HISTORY_SIZE = 300  # Messpunkte für die Grafiken, bei etwa 2,5 s Abstand gut 12 Minuten
 MAIL_LIMIT = 25
+LOG_SOURCES = ('app', 'requests', 'database', 'tests', 'vite')
 
 ACTIONS = {
     'start': ('Starten', dev.action_start),
@@ -69,14 +71,18 @@ class Center(dev.Runner):
     def __init__(self):
         super().__init__(activity_size=100)
         self.state = None
+        self.logs = {source: [] for source in LOG_SOURCES}
         self.history = deque(maxlen=HISTORY_SIZE)
 
     def collect(self):
         while True:
             state = dev.snapshot(mail_limit=MAIL_LIMIT)
             state['problems'] = dev.log_problems(state.pop('log'), limit=8)
+            logs = dev.read_logs()
+            state['logs'] = dev.log_counts(logs)
             with self.lock:
                 self.state = state
+                self.logs = logs
                 self.history.append(sample(state, time.time()))
             time.sleep(1)
 
@@ -131,8 +137,9 @@ def make_handler(center):
                 return self.respond(200, STATIC[path].read_bytes(), TYPES[STATIC[path].suffix])
             if path == '/api/state':
                 return self.respond(200, center.payload())
-            if path == '/api/log':
-                return self.respond(200, {'lines': dev.tail(dev.LARAVEL_LOG)[-500:]})
+            if (match := re.fullmatch(r'/api/logs/([a-z]+)', path)) and match.group(1) in LOG_SOURCES:
+                with center.lock:
+                    return self.respond(200, {'entries': center.logs[match.group(1)][::-1]})
             if match := re.fullmatch(r'/api/mails/([A-Za-z0-9]+)', path):
                 try:
                     return self.respond(200, mail_text(match.group(1)))

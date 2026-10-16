@@ -64,6 +64,14 @@ class ServerTest(unittest.TestCase):
         status, body = self.request('GET', '/styles/tokens.css')
         self.assertEqual((200, True), (status, b'--surface' in body))
 
+    def test_logs_je_quelle_neueste_zuerst(self):
+        self.center.logs = {source: [] for source in dev_web.LOG_SOURCES}
+        self.center.logs['database'] = [{'text': 'alt'}, {'text': 'neu'}]
+
+        status, body = self.request('GET', '/api/logs/database')
+        self.assertEqual((200, ['neu', 'alt']), (status, [entry['text'] for entry in json.loads(body)['entries']]))
+        self.assertEqual(404, self.request('GET', '/api/logs/geheim')[0])
+
     def test_fremder_host_und_unbekannte_pfade(self):
         self.assertEqual(403, self.request('GET', '/api/state', {'Host': f'boese.example:{self.port}'})[0])
         self.assertEqual(404, self.request('GET', '/styles/../dev.py')[0])
