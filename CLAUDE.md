@@ -23,7 +23,7 @@ frontend/    Vue 3 + Vite PWA                          → frontend/CLAUDE.md
 infra/       Hetzner-Server, Docker, Caddy, Backups    → infra/CLAUDE.md
 docs/        Pläne, Entscheidungen                     → docs/CLAUDE.md
 agent/       Arbeitsbereich des KI-Agenten             → agent/CLAUDE.md
-scripts/     lokale Hilfsskripte: dev.py (Dashboard)   → README.md
+scripts/     lokale Testwerkzeuge (dev.py)             → README.md
 .claude/     agents/ + skills/ (versioniert), launch.json; Rest lokal
 .github/     CI bei jedem Push: Backend (Pint, Tests gegen Postgres), Frontend (Tokens, Tests, Build)
 public/      Wartungsseite (live über Netlify, bis Hetzner steht). Hier KEINE CLAUDE.md, sonst wird sie öffentlich ausgeliefert.

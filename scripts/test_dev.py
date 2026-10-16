@@ -1,7 +1,10 @@
 """Tests für die Auswertung im Dashboard: `python3 -m unittest discover -s scripts` (aus dem Repo)."""
 
 import json
+import tempfile
 import unittest
+from pathlib import Path
+from unittest import mock
 
 import dev
 
@@ -53,6 +56,70 @@ class ParseTest(unittest.TestCase):
         self.assertEqual('ROT · 261 von 262 bestanden', dev.test_summary(agent, 1))
 
         self.assertEqual('ROT', dev.test_summary('Fatal error', 255))
+
+    def test_testzahlen_aus_laravel_vitest_und_json(self):
+        laravel = '  Tests:    1 failed, 2 skipped, 259 passed (2075 assertions)\n  Duration: 61.42s\n'
+        self.assertEqual({'passed': 259, 'failed': 1, 'total': 262}, dev.test_counts(laravel))
+        vitest = '      Tests  \x1b[31m1 failed\x1b[39m | \x1b[32m123 passed\x1b[39m (124)\n'
+        self.assertEqual({'passed': 123, 'failed': 1, 'total': 124}, dev.test_counts(vitest))
+        agent = '{"tool":"phpunit","result":"passed","tests":262,"passed":262}'
+        self.assertEqual({'passed': 262, 'failed': 0, 'total': 262}, dev.test_counts(agent))
+        self.assertIsNone(dev.test_counts('Fatal error'))
+
+    def test_namen_fehlgeschlagener_tests(self):
+        output = (
+            '  FAILED  Tests\\Feature\\Api\\LegalTest > alle texte ohne login   ErrorException\n'
+            ' FAIL  src/views/LoginView.test.js > LoginView > zeigt den Hinweis\n'
+            ' FAIL  src/views/LoginView.test.js > LoginView > zeigt den Hinweis\n'
+            '{"failures":[{"test":"Tests\\\\Feature\\\\X::test_y"}]}\n'
+        )
+        self.assertEqual([
+            'Tests\\Feature\\Api\\LegalTest > alle texte ohne login',
+            'src/views/LoginView.test.js > LoginView > zeigt den Hinweis',
+            'Tests\\Feature\\X::test_y',
+        ], dev.failed_tests(output))
+
+    def test_messwerte_in_prozent_und_mib(self):
+        self.assertEqual(1.25, dev.parse_percent('1.25%'))
+        self.assertEqual(0.0, dev.parse_percent('--'))
+        self.assertEqual(219.5, dev.parse_mib('219.5MiB'))
+        self.assertEqual(1228.8, dev.parse_mib('1.2GiB'))
+        self.assertEqual(0.5, dev.parse_mib('512KiB'))
+        self.assertEqual(0.0, dev.parse_mib('?'))
+
+
+class TestHistoryTest(unittest.TestCase):
+    def test_verlauf_behaelt_nur_die_letzten_laeufe_samt_ausgabe(self):
+        with tempfile.TemporaryDirectory() as folder, \
+                mock.patch.object(dev, 'STATE_DIR', Path(folder)), \
+                mock.patch.object(dev, 'TEST_HISTORY', Path(folder) / 'test-history.json'), \
+                mock.patch.object(dev, 'TEST_HISTORY_LIMIT', 2):
+            for number in range(3):
+                dev.save_test_run({'id': f'tests-backend-{number}', 'ok': True}, f'Ausgabe {number}')
+
+            self.assertEqual(['tests-backend-1', 'tests-backend-2'], [run['id'] for run in dev.load_test_history()])
+            self.assertFalse((Path(folder) / 'tests-backend-0.log').exists())
+            self.assertEqual('Ausgabe 2', (Path(folder) / 'tests-backend-2.log').read_text())
+
+    def test_lauf_wird_mit_zahlen_und_stand_gespeichert(self):
+        def fake_run(cmd, cwd=None, timeout=None):
+            if cmd[:2] == ['git', 'branch']:
+                return 0, 'dev\n', ''
+            if cmd[:2] == ['git', 'rev-parse']:
+                return 0, 'abc1234\n', ''
+            return 1, '  Tests:    1 failed, 9 passed (20 assertions)\n', ''
+
+        with tempfile.TemporaryDirectory() as folder, \
+                mock.patch.object(dev, 'STATE_DIR', Path(folder)), \
+                mock.patch.object(dev, 'TEST_HISTORY', Path(folder) / 'test-history.json'), \
+                mock.patch.object(dev, 'run', fake_run):
+            messages = []
+            dev.run_tests(['backend'], messages.append)
+            [run] = dev.load_test_history()
+
+        self.assertEqual(('backend', False, 'dev', 'abc1234'), (run['suite'], run['ok'], run['branch'], run['commit']))
+        self.assertEqual({'passed': 9, 'failed': 1, 'total': 10}, run['counts'])
+        self.assertEqual(['Backend-Tests laufen …', 'Backend: ROT · Tests: 1 failed, 9 passed (20 assertions)'], messages)
 
 
 if __name__ == '__main__':

@@ -1,0 +1,640 @@
+<!doctype html>
+<html lang="de" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>learnharder · Testzentrale</title>
+<!-- Farben und Schriften aus dem Design-System der App (frontend/src/styles), ausgeliefert von dev_web.py -->
+<link rel="stylesheet" href="/styles/fonts.css">
+<link rel="stylesheet" href="/styles/tokens.css">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--surface); color: var(--ink); font: 400 15px/22px var(--font-text); }
+  button, input { font: inherit; color: inherit; }
+  a { color: inherit; }
+  .mono { font-family: var(--font-mono); }
+  .muted { color: var(--ink-muted); }
+  .ok { color: var(--correct); }
+  .bad { color: var(--wrong); }
+  .warn { color: var(--rank-gold); }
+
+  /* Kopf */
+  .top { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-6);
+         padding: var(--space-3) var(--space-6); background: var(--surface-raised); border-bottom: 1px solid var(--line); }
+  .brand { display: flex; align-items: center; gap: var(--space-3); }
+  .brand__logo { display: grid; place-items: center; width: 36px; height: 36px; border-radius: var(--radius-sm);
+                 background: var(--accent); color: var(--ink-inverse); font: 700 15px/1 var(--font-mono); }
+  .brand strong { display: block; font-size: 17px; line-height: 20px; }
+  .brand div span { font-size: 13px; color: var(--ink-muted); }
+  .pills { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .pill { display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px; border-radius: var(--radius-full);
+          border: 1px solid var(--line); font-size: 13px; white-space: nowrap; }
+  .pill--ok { border-color: color-mix(in srgb, var(--correct) 50%, transparent); color: var(--correct); }
+  .pill--bad { border-color: color-mix(in srgb, var(--wrong) 50%, transparent); color: var(--wrong); }
+  .actions { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-left: auto; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 14px; border-radius: var(--radius-sm);
+         border: 1px solid var(--line-strong); background: transparent; cursor: pointer; text-decoration: none; font-size: 14px; }
+  .btn:hover:not(:disabled) { background: var(--surface-sunken); }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
+  .btn--primary { background: var(--accent); border-color: var(--accent); color: var(--ink-inverse); font-weight: 700; }
+  .btn--primary:hover:not(:disabled) { background: var(--accent); filter: brightness(1.1); }
+  .btn--danger { border-color: var(--wrong); color: var(--wrong); }
+  .btn--small { min-height: 28px; padding: 0 10px; font-size: 13px; }
+  .sep { width: 1px; align-self: stretch; background: var(--line); }
+
+  .banner { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-2) var(--space-6); font-size: 14px; }
+  .banner--busy { background: color-mix(in srgb, var(--rank-gold) 15%, var(--surface)); }
+  .banner--offline { background: color-mix(in srgb, var(--wrong) 18%, var(--surface)); }
+  .spin { width: 14px; height: 14px; border-radius: 50%; border: 2px solid currentColor; border-right-color: transparent; animation: spin .8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Tabs */
+  .tabs { display: flex; gap: var(--space-1); padding: 0 var(--space-6); border-bottom: 1px solid var(--line); overflow-x: auto; }
+  .tab-btn { position: relative; display: inline-flex; align-items: center; gap: 8px; padding: 12px 14px; border: 0; background: none;
+             color: var(--ink-muted); cursor: pointer; white-space: nowrap; }
+  .tab-btn[aria-selected="true"] { color: var(--ink); font-weight: 700; }
+  .tab-btn[aria-selected="true"]::after { content: ""; position: absolute; left: 10px; right: 10px; bottom: -1px; height: 3px;
+                                          border-radius: 3px 3px 0 0; background: var(--accent); }
+  .badge { min-width: 20px; padding: 0 6px; border-radius: var(--radius-full); background: var(--surface-sunken);
+           font: 700 12px/20px var(--font-mono); text-align: center; color: var(--ink-muted); }
+  .badge--bad { background: var(--wrong); color: var(--ink-inverse); }
+  .badge--ok { background: var(--correct); color: var(--ink-inverse); }
+
+  main { max-width: 1400px; margin: 0 auto; padding: var(--space-6); }
+  .grid { display: grid; gap: var(--space-4); grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+  .span-2 { grid-column: span 2; }
+  @media (max-width: 700px) { .span-2 { grid-column: auto; } main, .top, .tabs, .banner { padding-left: var(--space-4); padding-right: var(--space-4); } }
+  .card { min-width: 0; padding: var(--space-4); border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface-raised); }
+  .card h2 { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); margin: 0 0 var(--space-3);
+             font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-muted); }
+  .card h2 .mono { text-transform: none; letter-spacing: 0; color: var(--ink); }
+  .big { font: 700 32px/40px var(--font-mono); }
+
+  /* Dienste */
+  .svc { display: grid; grid-template-columns: 14px minmax(90px, 1.2fr) 80px 70px 90px minmax(80px, 2fr); align-items: center; gap: var(--space-3);
+         padding: 8px 0; border-top: 1px solid var(--line); font-size: 14px; }
+  .svc:first-child { border-top: 0; }
+  .svc .num { font-family: var(--font-mono); text-align: right; color: var(--ink-muted); font-size: 13px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--wrong); }
+  .dot--ok { background: var(--correct); box-shadow: 0 0 0 4px color-mix(in srgb, var(--correct) 20%, transparent); }
+  .spark { width: 100%; height: 28px; }
+  @media (max-width: 700px) { .svc { grid-template-columns: 14px 1fr 70px 80px; } .svc .spark, .svc .cpu { display: none; } }
+
+  /* Grafiken */
+  .chart { position: relative; }
+  .chart svg { display: block; width: 100%; height: 140px; }
+  .chart__axis { position: absolute; top: 0; right: 0; font: 400 11px/14px var(--font-mono); color: var(--ink-muted); }
+  .chart__foot { display: flex; justify-content: space-between; margin-top: 4px; font-size: 12px; color: var(--ink-muted); }
+  .legend { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-2); font-size: 12px; color: var(--ink-muted); }
+  .legend i { display: inline-block; width: 10px; height: 3px; margin-right: 6px; border-radius: 2px; vertical-align: middle; }
+  svg .grid-line { stroke: var(--line); stroke-width: 1; vector-effect: non-scaling-stroke; }
+  svg .line { fill: none; stroke-width: 2; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
+
+  /* Code */
+  .code { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; }
+  .code__digits { font: 700 40px/48px var(--font-mono); letter-spacing: .12em; color: var(--rank-gold); }
+  .code--fresh .code__digits { animation: flash 1.2s ease-out 2; }
+  @keyframes flash { 50% { color: var(--ink); text-shadow: 0 0 18px var(--rank-gold); } }
+
+  /* Tabellen und Listen */
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { text-align: left; font-size: 12px; font-weight: 700; color: var(--ink-muted); text-transform: uppercase; letter-spacing: .05em; padding: 6px 8px; }
+  td { padding: 8px; border-top: 1px solid var(--line); vertical-align: top; }
+  tr.clickable { cursor: pointer; }
+  tr.clickable:hover td, tr.selected td { background: var(--surface-sunken); }
+  .table-wrap { overflow-x: auto; }
+  .codebtn { padding: 2px 8px; border: 1px solid var(--rank-gold); border-radius: var(--radius-sm); background: none;
+             color: var(--rank-gold); font: 700 13px/20px var(--font-mono); cursor: pointer; }
+  .failures { margin: 6px 0 0; padding-left: 18px; color: var(--wrong); font: 400 12px/18px var(--font-mono); }
+  pre { margin: 0; padding: var(--space-3); border-radius: var(--radius-sm); background: var(--surface-sunken); overflow: auto;
+        font: 400 12.5px/19px var(--font-mono); white-space: pre-wrap; word-break: break-word; }
+  .log { max-height: 70vh; }
+  .log .lvl-ERROR, .log .lvl-CRITICAL, .log .lvl-ALERT, .log .lvl-EMERGENCY { color: var(--wrong); }
+  .log .lvl-WARNING { color: var(--rank-gold); }
+  .log .lvl-INFO, .log .lvl-DEBUG { color: var(--ink); }
+  .log .trace { color: var(--ink-muted); }
+  .toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); margin-bottom: var(--space-3); }
+  .toolbar input { flex: 1 1 200px; min-height: 36px; padding: 0 12px; border-radius: var(--radius-sm); border: 1px solid var(--line-strong); background: var(--surface-sunken); }
+  .seg { display: inline-flex; border: 1px solid var(--line-strong); border-radius: var(--radius-sm); overflow: hidden; }
+  .seg button { min-height: 34px; padding: 0 12px; border: 0; background: none; cursor: pointer; font-size: 14px; }
+  .seg button[aria-pressed="true"] { background: var(--accent); color: var(--ink-inverse); font-weight: 700; }
+  .mails { display: grid; gap: var(--space-4); grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); }
+  @media (max-width: 900px) { .mails { grid-template-columns: 1fr; } }
+  .activity { margin: 0; padding: 0; list-style: none; font: 400 13px/22px var(--font-mono); }
+  .activity li { padding: 4px 0; border-top: 1px solid var(--line); }
+  .activity li:first-child { border-top: 0; }
+  .empty { padding: var(--space-6); text-align: center; color: var(--ink-muted); }
+  .stat { display: flex; flex-wrap: wrap; gap: var(--space-6); margin-bottom: var(--space-3); }
+  .stat div span { display: block; font-size: 12px; color: var(--ink-muted); }
+  .stat div strong { font: 700 20px/28px var(--font-mono); }
+  .suite { display: grid; grid-template-columns: auto 1fr auto; gap: var(--space-2) var(--space-3); align-items: center; padding: 8px 0; border-top: 1px solid var(--line); }
+  .suite:first-child { border-top: 0; }
+
+  dialog { width: min(1000px, 92vw); max-height: 86vh; padding: 0; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface-raised); color: var(--ink); }
+  dialog::backdrop { background: rgb(0 0 0 / .55); }
+  dialog header { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--line); }
+  dialog h3 { margin: 0; font-size: 16px; }
+  dialog pre { max-height: calc(86vh - 70px); margin: var(--space-3); }
+  .toast { position: fixed; right: var(--space-6); bottom: var(--space-6); z-index: 20; max-width: min(420px, calc(100vw - 32px)); padding: 10px 16px;
+           border-radius: var(--radius-sm); background: var(--ink); color: var(--ink-inverse); box-shadow: 0 8px 24px rgb(0 0 0 / .35);
+           opacity: 0; transform: translateY(8px); transition: .2s; pointer-events: none; }
+  .toast--show { opacity: 1; transform: none; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <span class="brand__logo">lh</span>
+    <div><strong>learnharder</strong><span>Testzentrale · lokal</span></div>
+  </div>
+  <div class="pills" id="status"></div>
+  <div class="actions">
+    <button class="btn btn--primary" data-action="start">▶ Start</button>
+    <button class="btn" data-action="stop">■ Stop</button>
+    <button class="btn" data-action="config-clear">config:clear</button>
+    <button class="btn btn--danger" data-action="fresh" data-confirm="Lokale Datenbank leeren und neu befüllen (migrate:fresh, Import, Demo-Klasse)? Alle Testkonten sind danach weg.">Neu aufsetzen</button>
+    <span class="sep"></span>
+    <a class="btn" href="http://localhost:5173" target="_blank" rel="noopener">App ↗</a>
+    <a class="btn" href="http://localhost/admin" target="_blank" rel="noopener">CMS ↗</a>
+    <a class="btn" href="http://localhost:8025" target="_blank" rel="noopener">Mailpit ↗</a>
+    <button class="btn" id="theme" title="Hell oder dunkel">◐</button>
+  </div>
+</header>
+<div class="banner banner--offline" id="offline" hidden>Die Testzentrale antwortet nicht. Läuft <code>scripts/dev.py web</code> noch?</div>
+<div class="banner banner--busy" id="busy" hidden><span class="spin"></span><span id="busy-text"></span></div>
+
+<nav class="tabs" role="tablist">
+  <button class="tab-btn" role="tab" data-tab="overview">Übersicht</button>
+  <button class="tab-btn" role="tab" data-tab="mails">Mails <span class="badge" id="badge-mails">0</span></button>
+  <button class="tab-btn" role="tab" data-tab="tests">Tests <span class="badge" id="badge-tests">–</span></button>
+  <button class="tab-btn" role="tab" data-tab="log">Log <span class="badge" id="badge-log">0</span></button>
+  <button class="tab-btn" role="tab" data-tab="activity">Aktivität</button>
+</nav>
+
+<main>
+  <!-- Übersicht -->
+  <section class="tab" id="tab-overview" role="tabpanel">
+    <div class="grid">
+      <article class="card span-2">
+        <h2>Dienste <span class="muted" id="services-note"></span></h2>
+        <div id="services"></div>
+      </article>
+      <article class="card" id="code-card">
+        <h2>Letzter Code <button class="btn btn--small" data-tab-link="mails">Alle Mails</button></h2>
+        <div id="code"></div>
+      </article>
+      <article class="card">
+        <h2>Antwortzeit /up <span class="mono" id="up-now"></span></h2>
+        <div class="chart"><svg id="chart-up"></svg><span class="chart__axis" id="axis-up"></span></div>
+        <div class="chart__foot"><span id="span-up"></span><span>jetzt</span></div>
+      </article>
+      <article class="card">
+        <h2>CPU je Dienst</h2>
+        <div class="chart"><svg id="chart-cpu"></svg><span class="chart__axis" id="axis-cpu"></span></div>
+        <div class="legend" id="legend-cpu"></div>
+      </article>
+      <article class="card">
+        <h2>RAM je Dienst</h2>
+        <div class="chart"><svg id="chart-mem"></svg><span class="chart__axis" id="axis-mem"></span></div>
+        <div class="legend" id="legend-mem"></div>
+      </article>
+      <article class="card">
+        <h2>Letzte Tests <button class="btn btn--small" data-action="tests">▶ Alle</button></h2>
+        <div id="last-tests"></div>
+      </article>
+      <article class="card">
+        <h2>Laravel-Log <button class="btn btn--small" data-tab-link="log">Öffnen</button></h2>
+        <div id="problems"></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Mails -->
+  <section class="tab" id="tab-mails" role="tabpanel" hidden>
+    <div class="toolbar">
+      <strong id="mail-count"></strong>
+      <span class="muted">Ein Klick auf den Code kopiert ihn.</span>
+      <span style="margin-left:auto"></span>
+      <button class="btn btn--danger" data-action="clear-mails">Mails leeren</button>
+    </div>
+    <div class="mails">
+      <div class="card table-wrap"><table><thead><tr><th>Zeit</th><th>An</th><th>Betreff</th><th>Code</th></tr></thead><tbody id="mail-rows"></tbody></table></div>
+      <div class="card" id="mail-detail"><div class="empty">Mail anklicken, um sie zu lesen.</div></div>
+    </div>
+  </section>
+
+  <!-- Tests -->
+  <section class="tab" id="tab-tests" role="tabpanel" hidden>
+    <div class="toolbar">
+      <button class="btn btn--primary" data-action="tests">▶ Alle Tests</button>
+      <button class="btn" data-action="tests-backend">▶ Backend</button>
+      <button class="btn" data-action="tests-frontend">▶ Frontend</button>
+      <span class="muted">Backend über Sail gegen die Datenbank <code>testing</code>, Frontend mit Vitest. Die letzten 50 Läufe bleiben gespeichert.</span>
+    </div>
+    <div class="grid" style="margin-bottom: var(--space-4)">
+      <article class="card"><h2>Backend · Verlauf</h2><div id="trend-backend"></div></article>
+      <article class="card"><h2>Frontend · Verlauf</h2><div id="trend-frontend"></div></article>
+    </div>
+    <div class="card table-wrap">
+      <table><thead><tr><th>Zeit</th><th>Teil</th><th>Ergebnis</th><th>Tests</th><th>Dauer</th><th>Stand</th><th></th></tr></thead><tbody id="test-rows"></tbody></table>
+    </div>
+  </section>
+
+  <!-- Log -->
+  <section class="tab" id="tab-log" role="tabpanel" hidden>
+    <div class="toolbar">
+      <div class="seg" id="log-filter">
+        <button data-filter="problems" aria-pressed="true">Warnungen und Fehler</button>
+        <button data-filter="all" aria-pressed="false">Alles</button>
+      </div>
+      <input id="log-search" type="search" placeholder="Im Log suchen …">
+      <span class="muted mono">backend/storage/logs/laravel.log</span>
+    </div>
+    <pre class="log card" id="log"></pre>
+  </section>
+
+  <!-- Aktivität -->
+  <section class="tab" id="tab-activity" role="tabpanel" hidden>
+    <div class="card"><ul class="activity" id="activity"></ul></div>
+  </section>
+</main>
+
+<dialog id="dialog"><header><h3 id="dialog-title"></h3><button class="btn btn--small" id="dialog-close">Schließen</button></header><pre id="dialog-body"></pre></dialog>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const SERVICES = ['laravel.test', 'pgsql', 'redis', 'mailpit']
+const COLORS = { 'laravel.test': 'var(--subject-wir)', pgsql: 'var(--subject-dbi)', redis: 'var(--subject-syp)', mailpit: 'var(--subject-nsvs)' }
+const SUITES = { backend: 'Backend', frontend: 'Frontend' }
+const LEVEL = /^\[\d{4}-\d{2}-\d{2} (\d{2}:\d{2}:\d{2})\] \w+\.(\w+):/
+const PROBLEM_LEVELS = ['WARNING', 'ERROR', 'CRITICAL', 'ALERT', 'EMERGENCY']
+
+const $ = (selector) => document.querySelector(selector)
+const esc = (text) => String(text ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c])
+// Browser-Speicher nur für Bequemlichkeit (Tab, Theme). Kann fehlen, die Seite geht trotzdem.
+const store = {
+  get(key) { try { return localStorage.getItem(key) } catch { return null } },
+  set(key, value) { try { localStorage.setItem(key, value) } catch { /* egal */ } },
+}
+
+let data = null
+let tab = 'overview'
+let selectedMail = null
+let lastCode = null
+let codeShown = false
+let logFilter = 'problems'
+let logLines = []
+
+async function api(path, options = {}) {
+  const response = await fetch(path, { ...options, headers: { 'X-LH-Dev': '1' } })
+  const body = await response.json().catch(() => ({}))
+  if (!response.ok) throw new Error(body.error || `Fehler ${response.status}`)
+  return body
+}
+
+function toast(text) {
+  const el = $('#toast')
+  el.textContent = text
+  el.classList.add('toast--show')
+  clearTimeout(toast.timer)
+  toast.timer = setTimeout(() => el.classList.remove('toast--show'), 2600)
+}
+
+async function copy(text) {
+  try { await navigator.clipboard.writeText(text); toast(`Kopiert: ${text}`) } catch { toast(`Kopieren ging nicht: ${text}`) }
+}
+
+const ago = (iso) => {
+  const seconds = Math.max(0, (Date.now() - new Date(iso).getTime()) / 1000)
+  if (seconds < 60) return 'gerade eben'
+  if (seconds < 3600) return `vor ${Math.round(seconds / 60)} min`
+  if (seconds < 86400) return `vor ${Math.round(seconds / 3600)} h`
+  return new Date(iso).toLocaleDateString('de-AT')
+}
+const mib = (value) => (value >= 1024 ? `${(value / 1024).toFixed(2)} GiB` : `${value.toFixed(0)} MiB`)
+
+/* ---------- Grafiken (SVG ohne Bibliothek) ---------- */
+
+function lineChart(svg, series, { min = 1, fill = false } = {}) {
+  const W = 300, H = 100
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`)
+  svg.setAttribute('preserveAspectRatio', 'none')
+  const values = series.flatMap((s) => s.values.filter((v) => v != null))
+  const top = Math.max(min, ...values) * 1.15
+  const n = Math.max(2, ...series.map((s) => s.values.length))
+  const x = (i) => (i / (n - 1)) * W
+  const y = (v) => H - (v / top) * H
+  let out = [0.25, 0.5, 0.75].map((f) => `<line class="grid-line" x1="0" x2="${W}" y1="${H * f}" y2="${H * f}"/>`).join('')
+  for (const s of series) {
+    const offset = n - s.values.length
+    let d = '', open = false, first = null, last = null
+    s.values.forEach((v, i) => {
+      if (v == null) { open = false; return }
+      d += `${open ? 'L' : 'M'}${x(i + offset).toFixed(1)} ${y(v).toFixed(1)} `
+      open = true
+      first ??= x(i + offset)
+      last = x(i + offset)
+    })
+    if (fill && d) out += `<path d="${d}L${last} ${H} L${first} ${H} Z" fill="${s.color}" opacity=".15"/>`
+    out += `<path class="line" d="${d}" stroke="${s.color}"/>`
+  }
+  svg.innerHTML = out
+  return top / 1.15
+}
+
+function barChart(runs) {
+  if (!runs.length) return '<div class="empty">Noch keine Läufe.</div>'
+  const W = 300, H = 90, gap = 3
+  const top = Math.max(...runs.map((r) => r.duration)) * 1.1
+  const w = Math.min(28, (W - gap * (runs.length - 1)) / runs.length)
+  const bars = runs.map((r, i) => {
+    const h = Math.max(3, (r.duration / top) * H)
+    const label = `${new Date(r.time).toLocaleString('de-AT')} · ${r.ok ? 'grün' : 'rot'} · ${r.counts ? `${r.counts.passed}/${r.counts.total}` : '?'} · ${r.duration} s`
+    return `<rect x="${i * (w + gap)}" y="${H - h}" width="${w}" height="${h}" rx="2" fill="${r.ok ? 'var(--correct)' : 'var(--wrong)'}"><title>${esc(label)}</title></rect>`
+  }).join('')
+  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMinYMax meet" style="width:100%;height:110px">${bars}</svg>
+          <div class="chart__foot"><span>älter</span><span>Balken = Dauer, Farbe = Ergebnis</span><span>neuer</span></div>`
+}
+
+/* ---------- Darstellung ---------- */
+
+function renderStatus(state) {
+  if (!state) { $('#status').innerHTML = '<span class="pill">Lese Zustand …</span>'; return 0 }
+  const services = state.services || {}
+  const problems = []
+  if (!state.services) problems.push('Docker')
+  else SERVICES.filter((s) => services[s]?.state !== 'running').forEach((s) => problems.push(s))
+  if (!state.vite) problems.push('Vite')
+  if (!state.up || state.up[0] !== 200) problems.push('/up')
+  const overall = problems.length
+    ? `<span class="pill pill--bad">● ${problems.length} ${problems.length === 1 ? 'Problem' : 'Probleme'}: ${esc(problems.join(', '))}</span>`
+    : '<span class="pill pill--ok">● Alles läuft</span>'
+  const git = `<span class="pill mono">${esc(state.branch)} · ${esc(state.commit)} · ${state.changes ? `${state.changes} Änderungen` : 'sauber'}</span>`
+  $('#status').innerHTML = overall + git
+  return problems.length
+}
+
+function serviceRow(name, ok, stateText, cpu, mem, spark) {
+  return `<div class="svc"><span class="dot ${ok ? 'dot--ok' : ''}"></span><strong>${esc(name)}</strong>
+    <span class="${ok ? 'ok' : 'bad'}">${esc(stateText)}</span><span class="num cpu">${esc(cpu)}</span><span class="num">${esc(mem)}</span>${spark}</div>`
+}
+
+function renderServices(state, history) {
+  const el = $('#services')
+  if (!state) { el.innerHTML = '<div class="empty">Lese Zustand …</div>'; return }
+  if (!state.services) { el.innerHTML = '<div class="empty bad">Docker nicht erreichbar. Läuft Docker Desktop?</div>'; return }
+  const recent = history.slice(-60)
+  const rows = SERVICES.concat(Object.keys(state.services).filter((s) => !SERVICES.includes(s)).sort()).map((service) => {
+    const info = state.services[service]
+    const ok = info?.state === 'running'
+    const [cpu, mem] = (info && state.stats[info.name]) || ['', '']
+    return serviceRow(service, ok, ok ? 'läuft' : (info?.state ?? 'fehlt'), cpu, mem, `<svg class="spark" data-service="${esc(service)}"></svg>`)
+  })
+  rows.push(serviceRow('vite (App)', state.vite, state.vite ? 'läuft' : 'aus', '', ':5173', state.vite && !state.vite_own ? '<span class="muted">anderes Terminal</span>' : '<span></span>'))
+  const up = state.up
+  rows.push(serviceRow('/up', up?.[0] === 200, up ? `${up[0]}` : 'keine Antwort', '', up?.[1] != null ? `${Math.round(up[1])} ms` : '', '<span></span>'))
+  el.innerHTML = rows.join('')
+  el.querySelectorAll('svg.spark').forEach((svg) => {
+    const service = svg.dataset.service
+    lineChart(svg, [{ color: COLORS[service] || 'var(--accent)', values: recent.map((h) => h.cpu[service] ?? null) }], { min: 2, fill: true })
+  })
+  const minutes = history.length > 1 ? Math.round((history.at(-1).t - history[0].t) / 60) : 0
+  $('#services-note').textContent = minutes ? `Verlauf der letzten ${minutes} min` : ''
+}
+
+function renderCharts(history) {
+  const span = history.length > 1 ? `vor ${Math.max(1, Math.round((history.at(-1).t - history[0].t) / 60))} min` : ''
+  const upTop = lineChart($('#chart-up'), [{ color: 'var(--rank-prestige)', values: history.map((h) => h.up) }], { min: 50, fill: true })
+  $('#axis-up').textContent = `${Math.round(upTop)} ms`
+  $('#span-up').textContent = span
+  const last = history.at(-1)
+  $('#up-now').textContent = last?.up != null ? `${last.up} ms` : '–'
+  for (const [key, unit] of [['cpu', '%'], ['mem', 'MiB']]) {
+    const top = lineChart($(`#chart-${key}`), SERVICES.map((s) => ({ color: COLORS[s], values: history.map((h) => h[key][s] ?? null) })), { min: key === 'cpu' ? 5 : 50 })
+    $(`#axis-${key}`).textContent = key === 'cpu' ? `${top.toFixed(1)} %` : mib(top)
+    $(`#legend-${key}`).innerHTML = SERVICES.map((s) => {
+      const value = last?.[key][s]
+      return `<span><i style="background:${COLORS[s]}"></i>${esc(s)} <span class="mono">${value == null ? '–' : key === 'cpu' ? `${value.toFixed(1)} ${unit}` : mib(value)}</span></span>`
+    }).join('')
+  }
+}
+
+function renderCode(state) {
+  const el = $('#code')
+  const mail = state?.mails?.[1]?.find((m) => m.code)
+  if (!state?.mails || !mail) {
+    el.innerHTML = state?.mails ? '<div class="empty">Noch keine Mail mit Code.</div>' : '<div class="empty bad">Mailpit nicht erreichbar.</div>'
+    codeShown = false
+    return
+  }
+  const fresh = lastCode !== null && lastCode !== mail.id
+  if (fresh) toast(`Neuer Code: ${mail.code}`)
+  if (fresh || !codeShown) {
+    lastCode = mail.id
+    codeShown = true
+    el.innerHTML = `<div class="code ${fresh ? 'code--fresh' : ''}"><span class="code__digits">${esc(mail.code)}</span>
+      <button class="btn" data-copy="${esc(mail.code)}">Kopieren</button></div>
+      <p class="muted" style="margin:8px 0 0">${esc(mail.time)} · an ${esc(mail.to)}<br>${esc(mail.subject)}</p>`
+  }
+}
+
+function renderLastTests(tests) {
+  $('#last-tests').innerHTML = Object.entries(SUITES).map(([suite, name]) => {
+    const run = tests.find((t) => t.suite === suite)
+    if (!run) return `<div class="suite"><strong>${name}</strong><span class="muted">noch nicht gelaufen</span><button class="btn btn--small" data-action="tests-${suite}">▶</button></div>`
+    const counts = run.counts ? `${run.counts.passed}/${run.counts.total}` : '?'
+    return `<div class="suite"><strong>${name}</strong>
+      <span><span class="pill ${run.ok ? 'pill--ok' : 'pill--bad'}">${run.ok ? 'grün' : 'rot'} · ${counts}</span>
+      <span class="muted"> ${run.duration} s · ${ago(run.time)}</span></span>
+      <button class="btn btn--small" data-action="tests-${suite}">▶</button></div>`
+  }).join('')
+}
+
+function renderProblems(state) {
+  const problems = state?.problems || []
+  $('#badge-log').textContent = problems.length
+  $('#badge-log').className = `badge ${problems.length ? 'badge--bad' : ''}`
+  $('#problems').innerHTML = problems.length
+    ? problems.slice(-4).reverse().map((p) => `<pre class="${p.includes('WARNING') ? 'warn' : 'bad'}" style="margin-bottom:6px">${esc(p.slice(0, 220))}</pre>`).join('')
+    : '<div class="empty ok">Keine Warnungen oder Fehler.</div>'
+}
+
+function renderMails(state) {
+  const mails = state?.mails
+  $('#badge-mails').textContent = mails ? mails[0] : '–'
+  $('#mail-count').textContent = mails ? `${mails[0]} Mails in Mailpit` : 'Mailpit nicht erreichbar'
+  if (tab !== 'mails') return
+  const rows = mails?.[1] || []
+  $('#mail-rows').innerHTML = rows.length ? rows.map((m) => `<tr class="clickable ${m.id === selectedMail ? 'selected' : ''}" data-mail="${esc(m.id)}">
+      <td class="mono">${esc(m.time)}</td><td>${esc(m.to)}</td><td>${esc(m.subject)}</td>
+      <td>${m.code ? `<button class="codebtn" data-copy="${esc(m.code)}">${esc(m.code)}</button>` : ''}</td></tr>`).join('')
+    : '<tr><td colspan="4" class="empty">Keine Mails.</td></tr>'
+}
+
+async function showMail(id) {
+  selectedMail = id
+  renderMails(data?.state)
+  $('#mail-detail').innerHTML = '<div class="empty">Lade …</div>'
+  try {
+    const mail = await api(`/api/mails/${encodeURIComponent(id)}`)
+    $('#mail-detail').innerHTML = `<h2>${esc(mail.subject)}</h2>
+      <p class="muted" style="margin:0 0 12px">von ${esc(mail.from)}<br>an ${esc(mail.to)}</p><pre>${esc(mail.text)}</pre>`
+  } catch (error) {
+    $('#mail-detail').innerHTML = `<div class="empty bad">${esc(error.message)}</div>`
+  }
+}
+
+function trend(runs) {
+  const ordered = runs.slice(0, 20).reverse()
+  const latest = runs[0]
+  if (!latest) return '<div class="empty">Noch keine Läufe.</div>'
+  const previous = runs[1]
+  const diff = latest.counts && previous?.counts ? latest.counts.total - previous.counts.total : 0
+  const avg = runs.slice(0, 10).reduce((sum, r) => sum + r.duration, 0) / Math.min(10, runs.length)
+  const greenRate = Math.round((runs.filter((r) => r.ok).length / runs.length) * 100)
+  return `<div class="stat">
+      <div><span>Tests</span><strong>${latest.counts?.total ?? '?'}</strong>${diff ? ` <span class="${diff > 0 ? 'ok' : 'bad'} mono">${diff > 0 ? '+' : ''}${diff}</span>` : ''}</div>
+      <div><span>Dauer</span><strong>${latest.duration} s</strong> <span class="muted mono">Ø ${avg.toFixed(1)}</span></div>
+      <div><span>Grün</span><strong>${greenRate} %</strong> <span class="muted mono">${runs.length} Läufe</span></div>
+    </div>${barChart(ordered)}`
+}
+
+function renderTests(tests) {
+  const latest = tests[0]
+  const badge = $('#badge-tests')
+  badge.textContent = latest ? (latest.ok ? '✓' : '✗') : '–'
+  badge.className = `badge ${latest ? (latest.ok ? 'badge--ok' : 'badge--bad') : ''}`
+  if (tab !== 'tests') return
+  for (const suite of Object.keys(SUITES)) $(`#trend-${suite}`).innerHTML = trend(tests.filter((t) => t.suite === suite))
+  $('#test-rows').innerHTML = tests.length ? tests.map((t) => `<tr>
+      <td class="mono">${esc(new Date(t.time).toLocaleString('de-AT'))}</td><td>${SUITES[t.suite] || esc(t.suite)}</td>
+      <td><span class="pill ${t.ok ? 'pill--ok' : 'pill--bad'}">${t.ok ? 'grün' : 'rot'}</span></td>
+      <td class="mono">${t.counts ? `${t.counts.passed}/${t.counts.total}${t.counts.failed ? ` <span class="bad">(${t.counts.failed} rot)</span>` : ''}` : '?'}
+        ${t.failures?.length ? `<ul class="failures">${t.failures.map((f) => `<li>${esc(f)}</li>`).join('')}</ul>` : ''}</td>
+      <td class="mono">${t.duration} s</td><td class="mono muted">${esc(t.branch)} · ${esc(t.commit)}</td>
+      <td><button class="btn btn--small" data-output="${esc(t.id)}">Ausgabe</button></td></tr>`).join('')
+    : '<tr><td colspan="7" class="empty">Noch keine Testläufe. Starte oben einen.</td></tr>'
+}
+
+function renderActivity(activity) {
+  if (tab !== 'activity') return
+  $('#activity').innerHTML = activity.length
+    ? activity.map((line) => `<li class="${/ROT|fehlgeschlagen|Fehler|Abgebrochen/.test(line) ? 'bad' : ''}">${esc(line)}</li>`).join('')
+    : '<li class="muted">Noch nichts passiert.</li>'
+}
+
+function renderBusy(busy) {
+  $('#busy').hidden = !busy
+  $('#busy-text').textContent = busy ? `${busy} läuft … (Details unter „Aktivität“)` : ''
+  document.querySelectorAll('[data-action]').forEach((button) => { button.disabled = !!busy })
+}
+
+function render() {
+  const { state, history, tests, activity, busy } = data
+  renderStatus(state)
+  renderServices(state, history)
+  renderCharts(history)
+  renderCode(state)
+  renderLastTests(tests)
+  renderProblems(state)
+  renderMails(state)
+  renderTests(tests)
+  renderActivity(activity)
+  renderBusy(busy)
+}
+
+/* ---------- Log ---------- */
+
+function renderLog() {
+  const search = $('#log-search').value.trim().toLowerCase()
+  let lines = logLines
+  if (logFilter === 'problems') lines = lines.filter((line) => PROBLEM_LEVELS.includes(line.match(LEVEL)?.[2]))
+  if (search) lines = lines.filter((line) => line.toLowerCase().includes(search))
+  const el = $('#log')
+  const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 40
+  el.innerHTML = lines.length
+    ? lines.map((line) => {
+        const level = line.match(LEVEL)?.[2]
+        return `<span class="${level ? `lvl-${level}` : 'trace'}">${esc(line)}</span>`
+      }).join('\n')
+    : `<span class="muted">${logFilter === 'problems' ? 'Keine Warnungen oder Fehler.' : 'Log ist leer.'}</span>`
+  if (atBottom) el.scrollTop = el.scrollHeight
+}
+
+async function loadLog() {
+  try { logLines = (await api('/api/log')).lines; renderLog() } catch { /* nächster Versuch beim nächsten Takt */ }
+}
+
+/* ---------- Ablauf ---------- */
+
+function selectTab(name) {
+  tab = name
+  store.set('lh-dev-tab', name)
+  history.replaceState(null, '', `#${name}`)
+  document.querySelectorAll('.tab-btn').forEach((button) => button.setAttribute('aria-selected', button.dataset.tab === name))
+  document.querySelectorAll('.tab').forEach((section) => { section.hidden = section.id !== `tab-${name}` })
+  if (name === 'log') loadLog()
+  if (data) render()
+}
+
+async function poll() {
+  try {
+    data = await api('/api/state')
+    $('#offline').hidden = true
+    render()
+  } catch {
+    $('#offline').hidden = false
+  } finally {
+    setTimeout(poll, 1000)
+  }
+}
+
+async function runAction(button) {
+  if (button.dataset.confirm && !confirm(button.dataset.confirm)) return
+  try {
+    await api(`/api/actions/${button.dataset.action}`, { method: 'POST' })
+    toast(`${button.textContent.replace(/[▶■]/g, '').trim()} gestartet.`)
+  } catch (error) {
+    toast(error.message)
+  }
+}
+
+async function showOutput(id) {
+  $('#dialog-title').textContent = `Ausgabe ${id}`
+  $('#dialog-body').textContent = 'Lade …'
+  $('#dialog').showModal()
+  try { $('#dialog-body').textContent = (await api(`/api/tests/${encodeURIComponent(id)}`)).output || '(leer)' } catch (error) { $('#dialog-body').textContent = error.message }
+}
+
+document.addEventListener('click', (event) => {
+  const target = event.target.closest('[data-action],[data-tab],[data-tab-link],[data-copy],[data-mail],[data-output],[data-filter]')
+  if (!target) return
+  if (target.dataset.copy) { event.stopPropagation(); copy(target.dataset.copy) }
+  else if (target.dataset.action) runAction(target)
+  else if (target.dataset.tab) selectTab(target.dataset.tab)
+  else if (target.dataset.tabLink) selectTab(target.dataset.tabLink)
+  else if (target.dataset.mail) showMail(target.dataset.mail)
+  else if (target.dataset.output) showOutput(target.dataset.output)
+  else if (target.dataset.filter) {
+    logFilter = target.dataset.filter
+    document.querySelectorAll('#log-filter button').forEach((b) => b.setAttribute('aria-pressed', b === target))
+    renderLog()
+  }
+})
+$('#log-search').addEventListener('input', renderLog)
+$('#dialog-close').addEventListener('click', () => $('#dialog').close())
+$('#theme').addEventListener('click', () => {
+  const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'
+  document.documentElement.dataset.theme = next
+  store.set('lh-dev-theme', next)
+})
+
+document.documentElement.dataset.theme = store.get('lh-dev-theme') || 'dark'
+const tabs = ['overview', 'mails', 'tests', 'log', 'activity']
+selectTab(tabs.find((t) => `#${t}` === location.hash) || (tabs.includes(store.get('lh-dev-tab')) ? store.get('lh-dev-tab') : 'overview'))
+setInterval(() => { if (tab === 'log') loadLog() }, 3000)
+poll()
+</script>
+</body>
+</html>
