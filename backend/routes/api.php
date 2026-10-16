@@ -25,6 +25,8 @@ Route::prefix('v1')->group(function () {
     Route::middleware(['auth:sanctum', EnsureAccountActive::class])->group(function () {
         Route::post('logout', [AuthController::class, 'logout']);
         Route::get('me', [AuthController::class, 'me']);
+        // Eigenes Konto löschen (E-027), mit Passwort, deshalb wie der Login begrenzt
+        Route::delete('me', [AuthController::class, 'destroy'])->middleware('throttle:5,1');
 
         Route::get('subjects', [SubjectController::class, 'index']);
         Route::get('subjects/{subject}', [SubjectController::class, 'show']);

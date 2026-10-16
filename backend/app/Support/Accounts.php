@@ -62,6 +62,22 @@ class Accounts
         });
     }
 
+    /**
+     * Schüler:innen löschen sich selbst, sofort und vollständig (E-027). Der Lernverlauf hängt per CASCADE am Konto,
+     * die Rollen löst Spatie beim Löschen. Personal wird nur vom Admin gesperrt.
+     */
+    public static function deleteOwn(User $user): void
+    {
+        if ($user->hasAnyRole(self::STAFF_ROLES)) {
+            throw new AccountRuleViolation('Dein Konto kann nur ein Admin sperren oder löschen.');
+        }
+
+        DB::transaction(function () use ($user) {
+            self::logoutEverywhere($user);
+            $user->delete();
+        });
+    }
+
     /** Beleidigender Gamer-Tag: neutraler Ersatz, die Person wählt später selbst einen neuen. */
     public static function resetGamerTag(User $user, User $by): string
     {
