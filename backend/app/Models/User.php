@@ -79,6 +79,12 @@ class User extends Authenticatable implements FilamentUser
             ->ofMany(['enrolled_at' => 'max', 'id' => 'max'], fn (Builder $enrollments) => $enrollments->whereNull('left_at'));
     }
 
+    /** Diese Rollen sehen in der App alle veröffentlichten Fächer, alle anderen nur den Lehrplan ihrer Klasse (E-024). */
+    public function seesAllContent(): bool
+    {
+        return $this->hasAnyRole(['admin', 'autor', 'tester', 'teacher']);
+    }
+
     /** Level, Rang und Prestige aus den Gesamt-EP. */
     public function progression(): Progression
     {

@@ -49,11 +49,37 @@ class Subject extends Model
             || DB::table('teaching_assignments')->where('subject_id', $this->id)->exists();
     }
 
-    /** Was die App zeigt: aktive Fächer mit mindestens einem veröffentlichten Thema (E-017: noch ohne Klassenfilter). */
+    /** Aktive Fächer mit mindestens einem veröffentlichten Thema, noch ohne Blick auf die Person. */
     #[Scope]
     protected function visible(Builder $query): void
     {
         $query->where('is_active', true)
             ->whereHas('topics', fn (Builder $topics) => $topics->published());
+    }
+
+    /**
+     * Was die App dieser Person zeigt (E-024): Schüler:innen nur den Lehrplan ihrer Klasse bis zum aktuellen
+     * Abschnitt, ohne aktive Klasse nichts. Wer Inhalte pflegt, prüft oder unterrichtet, sieht alles.
+     */
+    #[Scope]
+    protected function visibleTo(Builder $query, User $user): void
+    {
+        $query->visible();
+
+        if ($user->seesAllContent()) {
+            return;
+        }
+
+        $class = $user->activeEnrollment?->schoolClass;
+
+        if (! $class) {
+            $query->whereRaw('1 = 0');
+
+            return;
+        }
+
+        $query->whereIn('id', CurriculumEntry::where('program_id', $class->program_id)
+            ->where('stage_from', '<=', $class->currentStage())
+            ->select('subject_id'));
     }
 }

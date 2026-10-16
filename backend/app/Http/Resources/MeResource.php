@@ -21,6 +21,8 @@ class MeResource extends JsonResource
     {
         return [
             'gamer_tag' => $this->gamer_tag,
+            // Nur die eigene Klasse, für den Hinweis in der App, wenn noch keine Klasse da ist
+            'school_class' => ($class = $this->activeEnrollment?->schoolClass) ? ['name' => $class->name] : null,
             'roles' => $this->getRoleNames(),
             ...$this->progression()->toArray(),
             'brainpower' => [

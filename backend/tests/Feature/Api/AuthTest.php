@@ -74,6 +74,7 @@ class AuthTest extends TestCase
             ->assertOk()
             ->assertExactJson(['data' => [
                 'gamer_tag' => 'lena42',
+                'school_class' => null,
                 'roles' => [],
                 'level' => 15,
                 'rank' => 'bronze',

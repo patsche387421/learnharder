@@ -3,19 +3,23 @@
 namespace Tests\Feature\Api;
 
 use App\Enums\ContentStatus;
+use App\Models\SchoolClass;
 use App\Models\Subject;
 use App\Models\Topic;
 use App\Models\User;
 use App\Models\UserStat;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\Concerns\EnrollsStudents;
 use Tests\TestCase;
 
 class ContentApiTest extends TestCase
 {
-    use RefreshDatabase;
+    use EnrollsStudents, RefreshDatabase;
 
     private User $user;
+
+    private SchoolClass $class;
 
     private Subject $pos;
 
@@ -31,6 +35,8 @@ class ContentApiTest extends TestCase
         $this->user = User::factory()->create();
 
         $this->pos = Subject::create(['slug' => 'pos', 'name' => ['de' => 'Programmieren'], 'order_index' => 2]);
+        $this->class = $this->enrollStudent($this->user);
+        $this->addToCurriculum($this->class, $this->pos);
         $this->schleifen = $this->pos->topics()->create([
             'slug' => 'schleifen', 'title' => ['de' => 'Schleifen'], 'status' => ContentStatus::Published, 'order_index' => 1,
         ]);
@@ -68,6 +74,11 @@ class ContentApiTest extends TestCase
         $inaktiv = Subject::create(['slug' => 'wir', 'name' => ['de' => 'Wirtschaft'], 'is_active' => false]);
         $this->topic($inaktiv, 'markt', ContentStatus::Published);
 
+        // Alle im Lehrplan: Hier filtern nur Status und is_active
+        foreach ([$dbi, $nurEntwurf, $inaktiv] as $subject) {
+            $this->addToCurriculum($this->class, $subject);
+        }
+
         $this->actingAs($this->user)
             ->getJson('/api/v1/subjects')
             ->assertOk()
@@ -100,6 +111,7 @@ class ContentApiTest extends TestCase
         $this->topic($this->pos, 'methoden', ContentStatus::Review);
         $inaktiv = Subject::create(['slug' => 'wir', 'name' => ['de' => 'Wirtschaft'], 'is_active' => false]);
         $this->topic($inaktiv, 'markt', ContentStatus::Published);
+        $this->addToCurriculum($this->class, $inaktiv);
 
         $this->actingAs($this->user);
         $this->getJson('/api/v1/subjects/gibtsnicht')->assertNotFound();
@@ -113,6 +125,7 @@ class ContentApiTest extends TestCase
     {
         $dbi = Subject::create(['slug' => 'dbi', 'name' => ['de' => 'Datenbanken']]);
         $this->topic($dbi, 'sql', ContentStatus::Published);
+        $this->addToCurriculum($this->class, $dbi);
 
         $this->actingAs($this->user)->getJson('/api/v1/subjects/pos/topics/sql')->assertNotFound();
     }
@@ -181,6 +194,8 @@ class ContentApiTest extends TestCase
     public function test_jede_rolle_darf_lesen(): void
     {
         $this->seed(DatabaseSeeder::class);
+        $student = User::where('email', 'schueler@learnharder.app')->sole();
+        $this->addToCurriculum($this->enrollStudent($student), $this->pos);
 
         foreach (User::whereNotNull('gamer_tag')->get() as $user) {
             // Jede Person mit eigener Session wie im echten Betrieb (ein Wechsel in derselben Session gibt 401)
