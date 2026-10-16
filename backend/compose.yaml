@@ -28,6 +28,9 @@ services:
             - mailpit
     pgsql:
         image: 'postgres:18-alpine'
+        # Jede Log-Zeile mit Benutzer und Datenbank (Fehler aus den Tests kommen aus „testing“),
+        # dazu Abfragen ab 250 ms. Beides zeigt die Testzentrale (scripts/dev.py web).
+        command: ['postgres', '-c', 'log_line_prefix=%m [%p] %q%u@%d ', '-c', 'log_min_duration_statement=250']
         ports:
             - '${FORWARD_DB_PORT:-5432}:5432'
         environment:
