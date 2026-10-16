@@ -6,7 +6,9 @@ use App\Enums\ProgramForm;
 use App\Enums\ProgramUnit;
 use App\Models\CurriculumEntry;
 use App\Models\School;
+use App\Models\SchoolClass;
 use App\Models\Subject;
+use App\Models\TeachingAssignment;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -68,6 +70,10 @@ class SchoolStructurePolicyTest extends TestCase
         $subject = Subject::create(['slug' => 'mathe', 'name' => ['de' => 'Mathematik']]);
         $entry = CurriculumEntry::create(['program_id' => $program->id, 'subject_id' => $subject->id, 'stage_from' => 1, 'stage_to' => 5]);
 
-        return [$school, $domain, $year, $department, $program, $entry];
+        $class = SchoolClass::create(['program_id' => $program->id, 'school_year_id' => $year->id, 'name' => '2AHET', 'stage' => 2]);
+        $enrollment = $class->enrollments()->create(['user_id' => User::factory()->create()->id]);
+        $assignment = TeachingAssignment::create(['school_class_id' => $class->id, 'subject_id' => $subject->id, 'teacher_id' => User::factory()->create()->id]);
+
+        return [$school, $domain, $year, $department, $program, $entry, $class, $enrollment, $assignment];
     }
 }
