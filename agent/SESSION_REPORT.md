@@ -319,3 +319,27 @@ V1-Protokoll: `_archiv/agent/SESSION_REPORT.md` und `SESSION_REPORT_ARCHIVE.md`.
     - Der Demo-Schüler heißt bis `migrate:fresh --seed` noch „Lukas Lerner“.
     - `backend/.env.bak` löschen.
   - Patsche: verschlüsselte Zweitkopie des Dumps.
+
+## 2026-10-16 — Testwerkzeuge, getrennte Logs, Vorbereitung M4
+
+- **Branch:** `feat/dev-dashboard` (`b5d3f00`), `feat/dev-web` (`3faf1fc`), `chore/logs-trennen` (`a754df3`), `feat/testzentrale-logs` (`d9aea5e`), je mit `--no-ff` nach `dev`. Dazu `docs/session-testwerkzeuge` mit diesem Eintrag.
+- **Ergebnis:**
+  - Mailpit lokal eingerichtet (`.env` von Patsche angepasst). Mails landen nur in Mailpit, echte Zustellung erst mit Scaleway TEM in M4.
+  - `scripts/dev.py`: Dashboard im Terminal (curses) mit Diensten, CPU/RAM, `/up`, letztem Mail-Code, Log-Warnungen und Tasten für Start, Stop, Tests, `config:clear`, Neu aufsetzen und Mailpit leeren. Dazu `scripts/dev.py start|stop`.
+  - `scripts/dev.py web`: Testzentrale im Browser (http://localhost:8090, `dev_web.py` und `dev_web.html`). Sie bietet Grafiken, Mails im Volltext mit Code zum Kopieren und einen Testverlauf (die letzten 50 Läufe in `~/.cache/learnharder-dev/`). Logs sind getrennt nach App, Anfragen, Datenbank, Tests und Vite. Nur Standardbibliothek, Design-Tokens und Schriften der App, kein CDN. Sie hört nur auf `127.0.0.1` und prüft Host und Origin, Aktionen brauchen den Header `X-LH-Dev`.
+  - Backend: Tests loggen nach `storage/logs/testing.log`. Postgres schreibt Benutzer@Datenbank vor jede Zeile und meldet Abfragen ab 250 ms (`backend/compose.yaml`). So sind die gewollten Fehler aus Tests von echten Fehlern zu trennen.
+  - Gelernt:
+    - Die Dauer im Log von `php artisan serve` ist falsch: gemessen 50–120 ms, im Log 0,1 ms oder 500 ms. Die Testzentrale zeigt bei Anfragen deshalb keine Dauer.
+    - Läuft Patsches Testzentrale schon auf 8090, braucht ein Probe-Server einen anderen Port.
+  - M4 vorbereitet: Patsche hat noch kein Hetzner-Konto. Wer Vertragspartner und datenschutzrechtlich verantwortlich ist, klärt Patsche mit einer Lehrkraft (Mail- und Teams-Entwurf erstellt). Bis dahin ist ein Testserver nur mit Testkonten und Passwortschutz vorgesehen.
+- **Geprüft:**
+  - Backend-Tests 262 → 263 grün, Pint sauber. Frontend unverändert bei 124. Neue Python-Tests: 21 grün (`python3 -m unittest discover -s scripts`).
+  - Gegenproben: Code-Erkennung ohne Ziffern-Grenzen, Host-Prüfung, Sperre gegen doppelte Aktionen, Datenbankfilter, Test-Log ohne `LOG_STACK`.
+  - Probeläufe gegen die echten Dienste mit Screenshots über Chrome ohne Fenster. Patsche hat Terminal-Dashboard und Testzentrale im Browser benutzt.
+  - CI auf `dev` nach jedem Merge grün, zuletzt Lauf `38950666557`.
+- **Offen:**
+  - M4: Antwort der Lehrkraft abwarten, dann Hetzner-Konto (Zwei-Faktor-Anmeldung, Projekt „learnharder“, noch kein Server) und Planung von M4: Server, DNS, Backup-Ziel, Deploy-Weg, Staging, Scaleway.
+  - Widerspruch: Der Projektplan nennt für Lehrkräfte „Klarnamensicht“, E-025 speichert für Schüler:innen keine Namen. Vor dem Lehrkraft-Dashboard klären.
+  - Die Python-Tests laufen nicht in der CI (nur lokales Werkzeug).
+  - In der Testzentrale nur teilweise im Browser geklickt: Details aufklappen, Suche und „Ältere ausblenden“ im Log.
+  - Weiter offen aus dem Eintrag davor: Rechtstexte mit der Schule, Löschlauf per Scheduler, erneute Zustimmung, Design-Artefakt-README.
