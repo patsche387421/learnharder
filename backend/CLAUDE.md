@@ -59,6 +59,7 @@ Alles außer `login` braucht `auth:sanctum`. Sichtbar ist nur `published` (Thema
 - Zugriffsrechte über Policies, nicht über `if`-Abfragen im Controller. Admin darf alles (`Gate::before` im `AppServiceProvider`), nur fremde Lerneinheiten nicht beantworten oder abschließen. Inhalte erben von `app/Policies/ContentPolicy.php`.
 - Filament erlaubt eine Aktion, wenn die Policy-Methode fehlt. Neue Policies deshalb mit allen Filament-Aktionen anlegen, auch wenn sie nur `false` liefern.
 - Jede neue Logik bekommt einen Feature-Test (`tests/Feature`), Tests vor jedem Commit grün.
+- API-Tests mit zwei Personen: vor dem Wechsel `$this->flushSession()`. Sanctums `AuthenticateSession` merkt sich den Passwort-Hash der ersten Person in der Session und meldet sonst ab (401).
 - Oberfläche und Meldungen nur auf Deutsch (`APP_LOCALE=de`, E-012). Laravels Texte liegen in `lang/de/`, ein Test prüft, dass gegenüber Laravel kein Schlüssel fehlt.
 - Übersetzbare Models nutzen `HasTranslationsWithoutEmpty` statt `HasTranslations`: Leere Sprachfelder werden `NULL`, nicht `{"de":null}`.
 - Code-Stil: `sail pint` vor jedem Commit. CI (`.github/workflows/ci.yml`) prüft `pint --test` und die Tests bei jedem Push.
