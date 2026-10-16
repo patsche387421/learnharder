@@ -42,12 +42,14 @@ public/assets/fonts/   selbst gehostete Schriften (keine CDNs)
 - Keine Secrets im Frontend. Konfiguration über `import.meta.env.VITE_*`.
 - `public/` wird 1:1 ausgeliefert, deshalb dort keine CLAUDE.md und keine internen Notizen.
 
-## Stand (2026-10-16, nach M3b)
+## Stand (2026-10-16, nach M4a)
 
-- **Login:** `LoginView` (`/login`, ohne Rahmen). Der Router-Guard schickt ohne Login dorthin, eine 401 leert den Store.
-- **API:** `api/client.js` ist der einzige Ort mit `fetch` (Cookies, `X-XSRF-TOKEN`, bei 419 ein gemeinsamer CSRF-Refresh und genau eine Wiederholung, deutsche Fehlertexte). `api/learn.js` bündelt die Lern-Routen. Basis-URL aus `VITE_API_URL` (`.env.example`, lokal `.env.local`).
-- **Store:** `stores/auth.js` hält `me`, daraus Level, Rang und Prestige für den Rahmen. `applyProgress` übernimmt den Fortschritt nach einer Lerneinheit. `waitingForClass`: keine Klasse und keine Rolle, die alles sieht (E-024).
+- **Ankommen (M4a, E-025, E-027):** ohne Login und ohne Rahmen. `meta.guest` schickt Angemeldete weiter zu `/learn`. `LoginView` verlinkt `RegisterView` (`/registrieren`: Schul-Mail → Code → Gamer-Tag, Passwort, Häkchen ab 14 und Zustimmung) und `ForgotPasswordView` (`/passwort-vergessen`) und zeigt danach Hinweise über `?hinweis=passwort|geloescht`. `LegalView` zeigt `/datenschutz`, `/impressum`, `/nutzungsregeln` und `/einwilligung-eltern` (beim Drucken ohne „Zurück“).
+- **Login:** Der Router-Guard schickt ohne Login zu `/login`, eine 401 leert den Store. Eine 403 mit `reason: account_deactivated` leert ihn auch und führt zu `/login?gesperrt=1` (`main.js`).
+- **API:** `api/client.js` ist der einzige Ort mit `fetch` (Cookies, `X-XSRF-TOKEN`, bei 419 ein gemeinsamer CSRF-Refresh und genau eine Wiederholung, deutsche Fehlertexte). `api/learn.js` bündelt die Lern-Routen, `api/account.js` Registrierung, Rechtstexte und Passwort. Basis-URL aus `VITE_API_URL` (`.env.example`, lokal `.env.local`).
+- **Store:** `stores/auth.js` hält `me`, daraus Level, Rang und Prestige für den Rahmen. `register()` und `deleteAccount()` für M4a. `isStaff`: Personal-Rolle. `waitingForClass`: keine Klasse und kein Personal (E-024). `applyProgress` übernimmt den Fortschritt nach einer Lerneinheit.
 - **Lernen:** `/learn` → `LearnView` (Fächer mit Fach-Level) → `SubjectView` (Themen) → `TopicView` → `TheoryView` und `LessonView` (beide `meta.focus`, ohne Tab-Leiste). Laden und Fehler über `composables/useLoad.js` und `LoadError`. Ohne Klasse zeigt `LearnView` „Noch keiner Klasse zugeordnet.“
-- **Offen:** Hub, Team und Liga sind noch `PlaceholderView`, `ProfileView` zeigt Gamer-Tag, Klasse und „Abmelden“.
+- **Profil:** `ProfileView` zeigt Gamer-Tag, Klasse, „Abmelden“ und die Rechtstexte, dazu für Schüler:innen „Konto löschen“ (`/profile/delete`, `meta.focus`, nur mit Passwort).
+- **Offen:** Hub, Team und Liga sind noch `PlaceholderView`.
 
-14 `Lh`-Bausteine in `src/components/ui/` (seit M4a mit `LhCheckbox` und `LhButton variant="danger"`, Design-Artefakt Version 29), jeder mit Test. `/styleguide` zeigt alle Tokens, Icons und Bausteine (nur in der Entwicklung). Beide Schriften liegen selbst gehostet in `public/assets/fonts/`. In WSL2 sind 103 Tests, `build` und `check:tokens` grün.
+14 `Lh`-Bausteine in `src/components/ui/` (seit M4a mit `LhCheckbox` und `LhButton variant="danger"`, Design-Artefakt Version 29), jeder mit Test. `/styleguide` zeigt alle Tokens, Icons und Bausteine (nur in der Entwicklung). Beide Schriften liegen selbst gehostet in `public/assets/fonts/`. In WSL2 sind 124 Tests, `build` und `check:tokens` grün.

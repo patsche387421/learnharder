@@ -273,3 +273,49 @@ V1-Protokoll: `_archiv/agent/SESSION_REPORT.md` und `SESSION_REPORT_ARCHIVE.md`.
   - Für M4a: Antworten zu Plan Schule §7 (Mail-Domains, Microsoft 365, `users.name`, Einwilligung unter 14), Rechtstexte prüfen lassen.
   - Für M4: Staging-Adresse nach E-019, Mailversand aus der EU, Backups mit Restore-Test.
   - Patsche: `APP_NAME=learnharder` in der lokalen `.env`, verschlüsselte Zweitkopie des Dumps.
+
+## 2026-10-16 — Browser-Test M3b, Fragen zu Plan Schule §7, M4a „Ankommen“
+
+- **Branch:** je Schritt ein Branch, mit `--no-ff` nach `dev` gemerged, von `docs/m4a-entscheidungen` (`addfde5`) bis `feat/app-passwort-und-loeschen` (`a1f93f0`), danach `fix/schulmail-beispiel` (`84aa582`), `fix/elternformular-tabellenkopf` (`0d940ac`) und `fix/cms-konten-aktionen` (`f25145d`), siehe `git log --first-parent 310e883..f25145d`. Dazu `docs/m4a-abschluss` mit diesem Eintrag.
+- **Ergebnis:**
+  - Browser-Test M3b: alle 20 Fälle bestanden (Patsche).
+  - Geklärt mit Patsche, festgehalten in E-025 bis E-028:
+    - Schul-Mail `Nummer@htl-md.schule` gilt für alle, auch für Microsoft 365. Die Nummer hat nach Patsches Wissen 8 Ziffern (4 für das Jahr, 4 als Kennung). Das ist noch nicht von der Schule bestätigt, deshalb prüft die App nur die Domain.
+    - Schüler:innen bekommen keinen Namen.
+    - Ab 14 reicht ein Häkchen. Unter 14 braucht es das Elternformular, und der Admin legt das Konto an.
+    - Mail-Versand über Scaleway TEM (Einrichtung in M4), lokal über Mailpit.
+    - Konten löschen nur Schüler:innen selbst, sofort. Der Admin sperrt mit Grund. Keine Sperrliste.
+    - Admins können sich nicht selbst sperren und sich nicht gegenseitig gleichzeitig herabstufen (Row-Lock auf alle Admin-Zeilen). Für den Notfall gibt es `learnharder:make-admin`.
+    - Konten werden 12 Monate nach der letzten Anmeldung gelöscht, mit Hinweis 30 Tage vorher.
+  - Backend:
+    - Neue Spalten in `users`. `first_name` und `last_name` sind entfernt.
+    - `App\Support\Accounts` mit `logoutEverywhere` (Sessions löschen, neues Remember-Token) und Middleware `EnsureAccountActive`.
+    - Registrierung mit Mail-Code (`EmailCode`, Einmal-Token, Limits je E-Mail, IP und Tag), Passwort vergessen, `DELETE me`.
+    - Rechtstexte als Markdown mit Fassung in `config/legal.php`.
+    - Konten im CMS (`UserResource`). „Gamer-Tag zurücksetzen“ und „Löschen“ liegen im ⋮-Menü.
+  - Design-Artefakt Version 29: Häkchen und Gefahr-Button, ins Repo kopiert.
+  - App: Registrierung, Passwort vergessen, Rechtstexte, Konto löschen, Hinweis „gesperrt“ beim Login.
+  - Fehler, die die Gegenproben gefunden haben:
+    - `logout()` nach dem Löschen speichert das Remember-Token und legt das Konto neu an. Jetzt wird `forgetUser()` verwendet.
+    - Die Regel „letzter Admin“ war unerreichbar und ist entfernt: Der Schutz folgt schon aus „aktiver Admin handelt“ plus „nicht an sich selbst“.
+  - Browser-Test M4a: R1–R7, T1, P1–P2, K1–K7 und L1–L3 bestanden (Patsche). Danach behoben: Beispiel-Mail mit 8 Ziffern, leere Kopfzeile in den Tabellen des Elternformulars, abgeschnittene Aktionen in der CMS-Kontenliste.
+- **Geprüft:**
+  - Backend-Tests 204 → 262 grün, Pint sauber. Frontend-Tests 97 → 124 grün, `build` und `check:tokens` grün.
+  - Gegenproben für jede neue Regel, darunter der Test mit zwei Datenbankverbindungen für gleichzeitige Admin-Änderungen.
+  - CI auf `dev` nach jedem Merge grün, zuletzt Lauf `38923263076`.
+  - P1/P2 (andere Sitzung nach neuem Passwort abgemeldet) im Browser nur grob angesehen, der Test deckt es ab.
+- **Offen:**
+  - Rechtstexte: Platzhalter `[[…]]` mit der Schule füllen, Prüfung durch die Schule (E-023).
+  - Vor M5: Löschlauf nach 12 Monaten und Hinweis-Mail per Scheduler (E-028), erneute Zustimmung bei neuer `terms_version`.
+  - Später: Personal anonymisieren, 2FA fürs CMS, EP zurücksetzen, Änderungsverlauf für Inhalte.
+  - M4: Scaleway TEM einrichten, Mails über die Queue, Logs täglich rotieren (`LOG_STACK=daily`, 14 Tage).
+  - `main.js`: Die Weiterleitung nach einer Sperre hat keinen eigenen Unit-Test (der Browser-Test K2 deckt sie ab).
+  - Design-Artefakt:
+    - In der README fehlen Häkchen und Gefahr-Button in der Komponententabelle, ebenso in der Kopie `docs/design/README.md`.
+    - `lastChange` im Index ist nicht aktualisiert.
+  - Lokal:
+    - `DemoSchoolSeeder` gibt MEDT keine Themen.
+    - Das Icon im Team-Tab wird eventuell verzögert aktiv.
+    - Der Demo-Schüler heißt bis `migrate:fresh --seed` noch „Lukas Lerner“.
+    - `backend/.env.bak` löschen.
+  - Patsche: verschlüsselte Zweitkopie des Dumps.
