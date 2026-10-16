@@ -40,6 +40,11 @@ class Program extends Model
         return $this->belongsTo(Department::class);
     }
 
+    public function classes(): HasMany
+    {
+        return $this->hasMany(SchoolClass::class);
+    }
+
     public function curriculumEntries(): HasMany
     {
         return $this->hasMany(CurriculumEntry::class);

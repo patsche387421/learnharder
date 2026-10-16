@@ -6,7 +6,9 @@ use App\Support\Progression;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -63,6 +65,18 @@ class User extends Authenticatable implements FilamentUser
     public function stats(): HasOne
     {
         return $this->hasOne(UserStat::class);
+    }
+
+    public function enrollments(): HasMany
+    {
+        return $this->hasMany(ClassEnrollment::class);
+    }
+
+    /** Letzte aktive Einschreibung, unabhängig vom Datum: In den Sommerferien gilt die Klasse weiter (Plan Schule §4). */
+    public function activeEnrollment(): HasOne
+    {
+        return $this->hasOne(ClassEnrollment::class)
+            ->ofMany(['enrolled_at' => 'max', 'id' => 'max'], fn (Builder $enrollments) => $enrollments->whereNull('left_at'));
     }
 
     /** Level, Rang und Prestige aus den Gesamt-EP. */
