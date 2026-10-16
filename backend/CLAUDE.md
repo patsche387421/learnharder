@@ -8,7 +8,7 @@ Laravel-API und Filament-CMS für learnharder.app. Allgemeine Regeln: siehe `../
 - Filament 5.10 (CMS unter `/admin`), Livewire 4 (E-008)
 - Sanctum im SPA-Modus: Login per Session-Cookie, keine Tokens
 - Spatie Permission (Rollen: admin, autor, tester, teacher, student), Spatie Translatable (de/en in JSON-Spalten)
-- Lokal: Sail (`compose.yaml`, PHP 8.5) mit Postgres 18 und Redis
+- Lokal: Sail (`compose.yaml`, PHP 8.5) mit Postgres 18, Redis und Mailpit (alle Mails unter http://localhost:8025, E-026)
 
 ## Befehle (in WSL2, aus `backend/`)
 
