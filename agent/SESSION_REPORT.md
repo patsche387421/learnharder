@@ -238,3 +238,21 @@ V1-Protokoll: `_archiv/agent/SESSION_REPORT.md` und `SESSION_REPORT_ARCHIVE.md`.
   - `user_stats.prestige_level` wird nicht mehr gelesen und kann weg.
   - Für M4: `SESSION_DOMAIN=.learnharder.app`, damit das XSRF-Cookie über Subdomains geht.
   - Weiter offen: M3b (Klassen und Sichtbarkeit), Hetzner (M4) und Backup-Bausteine, verschlüsselte Zweitkopie des Dumps, Vitest 5 und jsdom 30.
+
+## 2026-10-16 — Offene Punkte aus M3 bereinigt
+
+- **Branch:** je Punkt ein Branch, mit `--no-ff` nach `dev` gemerged und gelöscht: `chore/prestige-level-entfernen` (`9f20c48`), `fix/admin-fremde-lerneinheit` (`d4a4410`), `fix/cms-loeschen-mit-lernverlauf` (`30d6084`), `fix/app-gesperrte-lerneinheit` (`752a9a6`), `fix/app-zeilenumbrueche-in-fragen` (`d01cf32`), `style/xp-meta-abstand` (`26f011c`), `docs/m4-session-domain` (`454a254`). Dazu `93f5942` (Tab-Leiste im Report geklärt) direkt auf `dev`.
+- **Ergebnis:**
+  - Tab-Leiste: verdeckt nichts, lag am Ganzseiten-Screenshot (Patsche).
+  - `user_stats.prestige_level` per neuer Migration entfernt (erste Migration nach den Ursprungs-Migrationen, lokal ohne `migrate:fresh`).
+  - Admin darf fremde Lerneinheiten nicht mehr beantworten oder abschließen (`Gate::before` lässt `QuizAttempt` aus). Gesperrte Themen starten darf Admin weiter.
+  - Löschen im CMS (Entscheidung Patsche: sperren mit Hinweis): Fach, Thema und Frage mit Lernverlauf verweigern `delete()` im Model (`BlocksDeletionWhileInUse`), Filament meldet „Nicht gelöscht“ mit dem Weg über Entwurf bzw. „Aktiv“. Ein Fach im Lehrplan oder in einer Lehrkraft-Zuordnung zählt auch. Mehrfach löschen überspringt diese Einträge.
+  - Lerneinheit: Ein gesperrtes Thema zeigt „Noch gesperrt.“ mit Level und Weg zur Theorie statt eines allgemeinen Fehlers, auch bei 403 vom Server.
+  - Fragen (Entscheidung Patsche: kein Markdown): Fragetext, Antworten und Erklärung behalten ihre Zeilenumbrüche. 6 Fragen mit mehrzeiligem Code standen vorher in einer Zeile.
+  - Abstand in `.lh-xp__meta` jetzt im Design-Artefakt (Version 28, nur `bundle.css`) und in der Kopie im Repo, der Umweg in `LearnView` ist weg.
+  - `infra/CLAUDE.md`: Cookie-Einstellungen für Produktion (`SESSION_DOMAIN=.learnharder.app` und Co.).
+- **Geprüft:** Backend-Tests 164 → 169 grün, Pint sauber. Frontend-Tests 92 → 94 grün, `build` und `check:tokens` grün. Gegenproben: Ohne den Fix scheitern der Admin-Test, 4 Lösch-Tests und beide Gesperrt-Tests. Migration lokal hin, zurück und wieder hin. CI auf `dev` nach jedem Merge grün (zuletzt Run `38818453986`). Nichts davon im Browser angesehen: Lösch-Hinweis im CMS, „Noch gesperrt.“, Zeilenumbrüche und Abstand nur per Test.
+- **Offen:**
+  - Vor M4 entscheiden: Staging unter `learnharder.app` teilt sich die Cookies mit Produktion, am sichersten eine eigene Domain.
+  - Zweimal mit Änderungen auf `dev` angefangen statt auf dem Branch. Vor dem Commit verschoben, `dev` blieb sauber.
+  - Weiter offen: M3b (Klassen und Sichtbarkeit), Hetzner (M4) und Backup-Bausteine, verschlüsselte Zweitkopie des Dumps, Vitest 5 und jsdom 30.
