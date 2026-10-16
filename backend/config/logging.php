@@ -65,6 +65,14 @@ return [
             'replace_placeholders' => true,
         ],
 
+        // Tests loggen getrennt von der App (LOG_STACK in phpunit.xml), damit ihre gewollten Fehler das App-Log nicht füllen
+        'testing' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/testing.log'),
+            'level' => 'debug',
+            'replace_placeholders' => true,
+        ],
+
         'daily' => [
             'driver' => 'daily',
             'path' => storage_path('logs/laravel.log'),

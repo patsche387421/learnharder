@@ -27,7 +27,7 @@ Der Import liest standardmäßig `/var/www/legacy-data`, das ist `_archiv/legacy
 Fragen ohne gültige Lösung überspringt er mit Warnung. Themen, die schon Theorie oder Fragen haben, lässt er aus: Er überschreibt nichts aus dem CMS.
 Der Seeder legt Rollen immer an, Demo-Accounts nur in `local`/`testing`. In Produktion den Admin per `php artisan learnharder:make-admin <email> --name="…"` anlegen (auch Notfallweg, siehe `infra/CLAUDE.md`). `make:filament-user` vergibt keine Rolle und reicht deshalb nicht.
 Fehlt `vendor/`: einmalig `docker run --rm -v "$(pwd)":/app -w /app composer install`.
-Die Tests laufen gegen die Datenbank `testing` (`phpunit.xml`). Andere Befehle für diese Datenbank nur mit `./vendor/bin/sail exec -T -e DB_DATABASE=testing laravel.test …`, nie mit `--env=testing`: Es gibt keine `.env.testing`, der Befehl trifft dann die Entwicklungs-DB.
+Die Tests laufen gegen die Datenbank `testing` (`phpunit.xml`) und loggen nach `storage/logs/testing.log`, die App nach `laravel.log`. Andere Befehle für diese Datenbank nur mit `./vendor/bin/sail exec -T -e DB_DATABASE=testing laravel.test …`, nie mit `--env=testing`: Es gibt keine `.env.testing`, der Befehl trifft dann die Entwicklungs-DB.
 
 ## API (`routes/api.php`, alles unter `/api/v1`)
 
