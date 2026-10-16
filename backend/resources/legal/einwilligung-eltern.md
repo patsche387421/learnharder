@@ -13,7 +13,7 @@ Vollständig steht das in der Datenschutzerklärung: [[Adresse der App]]/datensc
 
 ## Angaben
 
-| | |
+| Angabe | Eintrag |
 |---|---|
 | Vor- und Nachname des Kindes | |
 | Klasse | |
@@ -28,7 +28,7 @@ Die Nutzungsregeln habe ich gelesen und mit meinem Kind besprochen.
 Ich kann diese Einwilligung jederzeit ohne Angabe von Gründen widerrufen, formlos bei [[E-Mail]]. Dann wird das Konto gelöscht.
 Was bis zum Widerruf verarbeitet wurde, bleibt rechtmäßig.
 
-| | |
+| Angabe | Eintrag |
 |---|---|
 | Ort, Datum | |
 | Name der/des Erziehungsberechtigten | |
@@ -36,7 +36,7 @@ Was bis zum Widerruf verarbeitet wurde, bleibt rechtmäßig.
 
 ## Nur für die Schule
 
-| | |
+| Vermerk | Eintrag |
 |---|---|
 | Konto angelegt am | |
 | von (Admin) | |

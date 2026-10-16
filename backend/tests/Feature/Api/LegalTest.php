@@ -32,6 +32,8 @@ class LegalTest extends TestCase
 
             $this->assertStringNotContainsString('<h1>', $html, $slug);
             $this->assertStringContainsString('Entwurf', $html, $slug);
+            // Leere Tabellenköpfe erscheinen als leere Zeile über der Tabelle, auch im Ausdruck
+            $this->assertStringNotContainsString('<th></th>', $html, $slug);
         }
 
         $this->assertSame(array_keys($titles), LegalController::DOCUMENTS);
