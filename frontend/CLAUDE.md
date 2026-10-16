@@ -5,7 +5,7 @@ Vue-3-PWA für Schüler:innen und Lehrkräfte. Allgemeine Regeln: `../CLAUDE.md`
 ## Stack
 
 Vue 3 (`<script setup>`), Vite, Pinia, Vue Router, Vitest. Geplant: vue-i18n, PWA-Plugin, Playwright.
-Lokal läuft Node 22 (nvm in WSL2). Vite 8 verlangt mindestens Node 20.19 (`package-lock.json`). Noch auf Vitest 4 und jsdom 29, das Upgrade auf Vitest 5 und jsdom 30 ist offen.
+Lokal läuft Node 22 (nvm in WSL2). Vite 8 verlangt mindestens Node 20.19 (`package-lock.json`). Tests mit Vitest 5 und jsdom 30. Neue Versionen erst nehmen, wenn sie mindestens zwei Wochen alt sind. Bricht `npm install` mit `reading 'edgesOut'` ab (npm-Fehler bei Peer-Abhängigkeiten), die Lock-Datei einmal mit `--legacy-peer-deps` erzeugen und danach mit `npm ci` prüfen.
 
 ## Start
 
