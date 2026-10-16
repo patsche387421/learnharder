@@ -29,6 +29,7 @@ class DemoSchoolSeederTest extends TestCase
         $this->assertSame(1, CurriculumEntry::where('subject_id', $pos->id)->value('stage_from'));
         $this->assertSame(3, CurriculumEntry::where('subject_id', $medt->id)->value('stage_from'));
         $this->assertSame(1, $enrollment->schoolClass->teachingAssignments()->count());
+        $this->assertTrue(School::sole()->emailDomains()->where('domain', 'htl-md.schule')->value('allows_registration'));
     }
 
     public function test_zweiter_lauf_aendert_nichts(): void
@@ -40,6 +41,7 @@ class DemoSchoolSeederTest extends TestCase
         $this->seed(DemoSchoolSeeder::class);
 
         $this->assertSame(1, School::count());
+        $this->assertSame(1, School::sole()->emailDomains()->count());
         $this->assertSame(1, ClassEnrollment::count());
         $this->assertSame(1, CurriculumEntry::count());
     }

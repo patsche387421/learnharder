@@ -46,6 +46,17 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('login', fn (Request $request) => Limit::perMinute(5)
             ->by(Str::lower((string) $request->input('email')).'|'.$request->ip()));
 
+        // Code-Mails (E-025): je E-Mail 3 in 10 Minuten, je IP 10 pro Stunde, alle zusammen höchstens codes_per_day am Tag.
+        // Die Adressen sind Nummern und leicht zu erraten, das schützt fremde Schulpostfächer.
+        RateLimiter::for('email-code', fn (Request $request) => [
+            Limit::perMinutes(10, 3)->by('email:'.Str::lower(trim((string) $request->input('email')))),
+            Limit::perHour(10)->by('ip:'.$request->ip()),
+            Limit::perDay(config('accounts.codes_per_day'))->by('alle'),
+        ]);
+
+        // Code prüfen und Registrierung abschließen. Die Versuche je Code begrenzt zusätzlich EmailCode.
+        RateLimiter::for('email-code-verify', fn (Request $request) => Limit::perMinute(20)->by($request->ip()));
+
         // Filament schreibt das Label in Fehlermeldungen klein („Das Feld titel …“). Deutsche Nomen bleiben groß.
         Field::configureUsing(fn (Field $field) => $field->validationAttribute(
             fn (Field $component): ?string => is_string($label = $component->getLabel()) ? $label : null,

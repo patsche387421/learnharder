@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\QuizAttemptController;
+use App\Http\Controllers\Api\V1\RegistrationController;
 use App\Http\Controllers\Api\V1\SubjectController;
 use App\Http\Controllers\Api\V1\TopicController;
 use App\Http\Middleware\EnsureAccountActive;
@@ -10,6 +11,11 @@ use Illuminate\Support\Facades\Route;
 // Vor dem Login holt die Vue-App einmal GET /sanctum/csrf-cookie.
 Route::prefix('v1')->group(function () {
     Route::post('login', [AuthController::class, 'login'])->middleware('throttle:login');
+
+    // Registrierung (E-025): Code anfordern → Code prüfen → Konto anlegen
+    Route::post('register/code', [RegistrationController::class, 'sendCode'])->middleware('throttle:email-code');
+    Route::post('register/verify', [RegistrationController::class, 'verify'])->middleware('throttle:email-code-verify');
+    Route::post('register', [RegistrationController::class, 'register'])->middleware('throttle:email-code-verify');
 
     Route::middleware(['auth:sanctum', EnsureAccountActive::class])->group(function () {
         Route::post('logout', [AuthController::class, 'logout']);

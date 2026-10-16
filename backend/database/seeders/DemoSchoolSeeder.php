@@ -41,6 +41,8 @@ class DemoSchoolSeeder extends Seeder
         }
 
         $school = School::firstOrCreate(['name' => 'Demo-HTL'], ['city' => 'Mödling']);
+        // Wie an der HTL Mödling (E-025). Lokal landen die Code-Mails in Mailpit.
+        $school->emailDomains()->firstOrCreate(['domain' => 'htl-md.schule'], ['allows_registration' => true]);
         $program = $school->departments()->firstOrCreate(['code' => 'IT'], ['name' => 'Informationstechnologie'])
             ->programs()->firstOrCreate(['code' => 'HIT'], [
                 'name' => 'Höhere Lehranstalt Informationstechnologie',
