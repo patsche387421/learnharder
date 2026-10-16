@@ -11,6 +11,7 @@ Gerade läuft der Neubau (V2). Bis dahin zeigt die Domain eine Wartungsseite.
 | `frontend/` | Vue 3 + Vite PWA, Design-System in `src/styles/` |
 | `infra/` | Hetzner-Server (Docker, Caddy, Backups), in Vorbereitung |
 | `docs/` | Pläne und Entscheidungen, Einstieg: `docs/plans/README.md` |
+| `scripts/` | lokale Hilfsskripte, z. B. das Dashboard zum Testen (`dev.py`) |
 | `public/` | Wartungsseite (Netlify, bis zum Umzug) |
 | `_archiv/` | V1-Prototyp und V1-Material für den Umzug, nur lesen |
 
@@ -27,6 +28,18 @@ git worktree add ../learnharder.app-main main    # Prod-Stand als zweiter Checko
 
 - **Backend:** Befehle in `backend/CLAUDE.md` (`.env` anlegen, `sail up -d`, Migrationen, Content-Import).
 - **Frontend:** `npm --prefix frontend install && npm --prefix frontend run dev` → http://localhost:5173
+
+### Dashboard zum Testen (`scripts/dev.py`)
+
+Startet und stoppt Sail und Vite und zeigt live: Dienste mit CPU und RAM, `/up`, die letzten Mails aus Mailpit samt Code, Warnungen und Fehler aus dem Laravel-Log.
+Per Taste: Tests, `config:clear`, Datenbank neu aufsetzen (mit Rückfrage), Mailpit leeren, App, CMS oder Mailpit im Browser öffnen. Nur Python-Standardbibliothek.
+
+```bash
+scripts/dev.py          # Dashboard, [q] beendet es, Dienste laufen weiter
+scripts/dev.py start    # alles starten, ohne Dashboard
+scripts/dev.py stop     # alles stoppen, Daten bleiben
+python3 -m unittest discover -s scripts   # Tests der Auswertung
+```
 
 ### Prod-Stand prüfen (`~/learnharder.app-main`)
 
