@@ -12,6 +12,9 @@ Thumbs.db
 # Local Netlify folder
 .netlify
 
+# Python (scripts/)
+__pycache__/
+
 # Backups
 backup*.zip
 
