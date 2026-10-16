@@ -1,6 +1,7 @@
 <?php
 
 use App\Console\Commands\ImportLegacyContent;
+use App\Console\Commands\MakeAdmin;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -15,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withCommands([
         ImportLegacyContent::class,
+        MakeAdmin::class,
     ])
     ->withMiddleware(function (Middleware $middleware): void {
         // Sanctum-SPA-Modus: Anfragen von SANCTUM_STATEFUL_DOMAINS bekommen Session-Cookie und CSRF-Schutz

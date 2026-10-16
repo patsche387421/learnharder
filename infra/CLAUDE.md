@@ -40,6 +40,17 @@ SANCTUM_STATEFUL_DOMAINS=app.learnharder.app
 Staging genauso mit `staging.learnharder.app`. CORS braucht die App dann nicht.
 Der Frontend-Build bekommt `VITE_API_URL=` (leer, gleiche Adresse). Fehlt die Variable ganz, nimmt `api/client.js` `http://localhost`.
 
+## Notfall: kein Admin mehr (E-027)
+
+Sind alle Admin-Zugänge verloren oder gesperrt, auf dem Server im Laravel-Container:
+
+```
+php artisan learnharder:make-admin <email> --name="Vorname Nachname"
+```
+
+Der Befehl legt das Konto an oder macht ein bestehendes zum aktiven Admin und entsperrt es. Das Passwort setzt die Person in der App über „Passwort vergessen“.
+Zum Start (M5) gibt es mindestens zwei Admins, einer davon von der Schule.
+
 ## Regeln
 
 - **Keine Secrets hier einchecken.** Nur `*.example`-Dateien. Echte Werte liegen auf dem Server.

@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
         $studentRole = Role::firstOrCreate(['name' => 'student']);
 
         // Demo-Accounts haben ein bekanntes Passwort und dürfen nie in Produktion landen.
-        // Den echten Admin dort per `php artisan make:filament-user` anlegen.
+        // Den echten Admin dort per `php artisan learnharder:make-admin <email> --name="…"` anlegen.
         if (! app()->environment(['local', 'testing'])) {
             $this->command?->warn('Demo-Accounts übersprungen (nur in local/testing).');
 
