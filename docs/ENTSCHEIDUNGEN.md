@@ -126,6 +126,26 @@ Jede Entscheidung: Nummer, Datum, was, warum, Folgen. Offene Fragen stehen unten
 - **Warum:** Wer Inhalte pflegt, prüft oder unterrichtet, muss sie in der App sehen. Der Filter als Standard schützt, falls eine Person ohne passende Rolle angelegt wird.
 - **Folgen:** Löst E-017 ab. Fach, Thema und Lerneinheit außerhalb des Lehrplans geben 404 wie Unveröffentlichtes. Lehrkräfte nur mit ihren Fächern kommt mit dem Lehrkraft-Dashboard nach dem Start.
 
+### E-025 — Registrierung und Einwilligung (2026-10-16)
+- **Entscheidung:** Registrieren kann sich, wer eine Adresse `…@htl-md.schule` hat. Die Domain gilt an der HTL Mödling für alle, auch für Microsoft 365. Wer sich registriert, wird immer `student`, Personal legt der Admin an. Die Registrierung fragt keinen Namen ab, `users.name` wird nullable und ist nur im CMS-Formular fürs Personal Pflicht. Mit einem Häkchen bestätigt man „mindestens 14“ und stimmt Datenschutzerklärung und Nutzungsregeln zu. Gespeichert werden `consented_at` und `terms_version`, kein Geburtsdatum. Unter 14 gibt es keine Selbstregistrierung: Die Eltern füllen ein Formular aus, danach legt der Admin das Konto an und bestätigt, dass das Formular vorliegt.
+- **Warum:** Adressen haben die Form `Nummer@htl-md.schule` und enthalten keinen Klarnamen. Ohne Namensfeld liegt für Schüler:innen gar kein Klarname im System. Ab 14 dürfen Jugendliche in Österreich selbst einwilligen (§ 4 Abs. 4 DSG). Unter 14 sind im 1. Jahrgang nur Einzelfälle, eine Eltern-Mail mit Link lohnt sich dafür nicht.
+- **Folgen:** An der Adresse lässt sich nicht erkennen, ob jemand Lehrkraft ist, die Rolle vergibt nur der Admin. Weil die Nummern leicht zu erraten sind, braucht der Code-Versand Rate-Limits pro E-Mail, pro IP und pro Tag. Eine erneute Zustimmung nach geänderten Texten kommt nach M4a. Die rechtliche Prüfung bleibt bei der Schule (E-023).
+
+### E-026 — Mailversand über Scaleway TEM (2026-10-16)
+- **Entscheidung:** Codes und Hinweise verschickt die App über Scaleway Transactional Email. Lokal fängt Mailpit alle Mails ab.
+- **Warum:** EU-Anbieter ohne US-Mutterkonzern, Daten in der EU. 300 Mails im Monat sind frei, darüber kostet es 0,25 € je 1000. Ein eigener Mailserver auf Hetzner scheidet aus: Port 25 ist für neue Konten gesperrt, und Microsoft 365 behandelt Mails von einer frischen IP schlecht.
+- **Folgen:** Konto und DNS-Einträge (SPF, DKIM, DMARC für `learnharder.app`) kommen in M4, Patsche führt aus. Vor dem Start die Schul-IT fragen, ob sie den Absender freigibt. Die App nutzt nur Laravels Mail-Schnittstelle, der Anbieter steht in der `.env`.
+
+### E-027 — Konten löschen, sperren und Admins schützen (2026-10-16)
+- **Entscheidung:** Schüler:innen löschen ihr Konto selbst, sofort und vollständig, nach Eingabe des Passworts. Personal kann sich nicht selbst löschen. Der Admin sperrt Konten (`deactivated_at`, `deactivated_by`, sachlicher interner Grund). Das wirkt sofort in App und CMS, und nur der Admin entsperrt. Beim Sperren, beim neuen Passwort und beim Löschen enden alle Sessions, Tokens und Remember-Cookies. Niemand kann sich selbst sperren, löschen oder die Admin-Rolle nehmen, und der letzte aktive Admin ist geschützt. Eine Sperrliste für gelöschte Konten gibt es nicht.
+- **Warum:** Sofort löschen ist eindeutig und passt zu Art. 17 DSGVO. Wenn man anonymisiert, bleiben die Antworten in einer Klasse mit 25 Personen oft zuordenbar. Lehrkräfte hängen an Zuordnungen (`RESTRICT`) und werden deshalb gesperrt, nicht gelöscht. Ein Hash einer Nummern-Adresse lässt sich zurückrechnen, eine Sperrliste wäre also personenbezogen. Wiederholungsfälle regelt die Schule mit ihren Mitteln.
+- **Folgen:** Die Schutzregeln stehen nicht in Policies, weil `Gate::before` Admins alles erlaubt. Die Prüfung sperrt alle Admin-Zeilen, damit zwei gleichzeitige Änderungen nicht beide durchgehen. Ein Artisan-Befehl auf dem Server legt im Notfall einen Admin an. Zum Start (M5) gibt es mindestens zwei Admins, einer davon von der Schule. Die Datenschutzerklärung nennt die Backup-Frist, bis zu der Gelöschtes noch in Sicherungen liegt.
+
+### E-028 — Konten nach 12 Monaten ohne Anmeldung löschen (2026-10-16)
+- **Entscheidung:** Wer sich 12 Monate nicht anmeldet, wird gelöscht, 30 Tage vorher kommt eine Hinweis-Mail. Ein Login stoppt das Löschen. Personal ist ausgenommen.
+- **Warum:** Die Regel deckt Matura, Schulwechsel, nie zugeordnete und vergessene Konten ab. Die Sommerferien liegen weit darunter. Gesperrte können sich nicht anmelden, ihr Konto verschwindet damit nach 12 Monaten von selbst.
+- **Folgen:** `users.last_login_at` kommt in M4a, damit die Frist ab dem Start richtig läuft. Hinweis-Mail und Löschlauf brauchen den Scheduler (M4) und kommen vor M5. Die Frist steht in der Datenschutzerklärung.
+
 ## Offen
 
 | Nr. | Frage | Empfehlung | Warum offen |

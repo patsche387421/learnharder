@@ -1,8 +1,8 @@
-# Datenmodell Schule, Klassen und Registrierung (Plan, Stand 2026-10-15)
+# Datenmodell Schule, Klassen und Registrierung (Plan, Stand 2026-10-16)
 
 Wer sieht welche Inhalte, wer unterrichtet was, und wie kommen Schüler:innen in die App.
-Vorlage ist die HTL Mödling. Entscheidung: E-013 in `../ENTSCHEIDUNGEN.md`.
-Umgesetzt (Stand 2026-10-16): Tabellen und Datenbankregeln aus §3, Schritte 1–3 aus §8 (Schulstruktur, Klassen, Sichtbarkeit nach E-024). Offen: Schritt 4 (Registrierung, M4a) und §7.
+Vorlage ist die HTL Mödling. Entscheidungen: E-013, E-025 bis E-028 in `../ENTSCHEIDUNGEN.md`.
+Umgesetzt (Stand 2026-10-16): Tabellen und Datenbankregeln aus §3, Schritte 1–3 aus §8 (Schulstruktur, Klassen, Sichtbarkeit nach E-024). Offen: Schritt 4 (Registrierung und Konten, M4a) und §7.2.
 
 ## 1. Begriffe
 
@@ -45,7 +45,7 @@ Neue Tabellen mit UUID (Laravel erzeugt UUIDv7). `users` bleibt bei `bigint`.
 | `school_classes` (ersetzt `classes`) | `program_id`, `school_year_id`, `name`, `stage`, `head_teacher_id`, `previous_class_id`, `join_code` | `UNIQUE(school_year_id, name)`, `UNIQUE(id, school_year_id)` für den Fremdschlüssel unten, `CHECK(stage >= 1)` |
 | `class_enrollments` (gibt es) | `school_class_id`, `school_year_id`, `user_id`, `enrolled_at`, `left_at` | Fremdschlüssel `(school_class_id, school_year_id)` → `school_classes(id, school_year_id)`. Teilweiser Index `UNIQUE(user_id, school_year_id) WHERE left_at IS NULL` |
 | `teaching_assignments` | `school_class_id`, `subject_id`, `teacher_id`, `semester` (leer = ganzes Jahr) | `UNIQUE NULLS NOT DISTINCT(school_class_id, subject_id, teacher_id, semester)`, `CHECK(semester IN (1, 2))`. Mehrere Lehrkräfte pro Fach und Klasse erlaubt |
-| `users` (gibt es) | + `deactivated_at` | `UNIQUE(lower(email))`, `UNIQUE(lower(gamer_tag))` |
+| `users` (gibt es) | + `deactivated_at`. M4a: `name` nullable, ohne `first_name`/`last_name`, + `consented_at`, `terms_version`, `parental_consent_at`, `parental_consent_by`, `deactivated_by`, `deactivation_reason`, `last_login_at` | `UNIQUE(lower(email))`, `UNIQUE(lower(gamer_tag))`. `parental_consent_by` und `deactivated_by` → `users` mit `SET NULL` |
 
 Teilweise Indizes, `lower()`-Indizes und `NULLS NOT DISTINCT` (ab Postgres 15) entstehen per `DB::statement` in der Migration.
 
@@ -66,13 +66,16 @@ Ohne aktive Einschreibung: keine Inhalte, nur der Hinweis „Melde dich bei Admi
 | `teaching_assignments.teacher_id` | `RESTRICT` | Lehrkräfte werden über `deactivated_at` gesperrt, nicht gelöscht |
 | `head_teacher_id`, `previous_class_id` | `SET NULL` | Verweis ist optional |
 
-**Registrierung (nur Schüler:innen):**
+**Registrierung (nur Schüler:innen ab 14, E-025):**
 1. E-Mail eingeben. Die Domain muss in `school_email_domains` mit `allows_registration` stehen, sonst Abbruch. Daraus ergibt sich die Schule.
-2. 6-stelliger Code per Mail: gehasht im Cache (Redis), 10 Minuten gültig, wenige Versuche, Rate-Limit pro E-Mail und IP.
-3. Danach Gamer-Tag und Passwort festlegen. Rolle immer `student`.
+2. 6-stelliger Code per Mail: gehasht im Cache, 10 Minuten gültig, höchstens 5 Versuche, Rate-Limit pro E-Mail, pro IP und pro Tag. Gibt es die Adresse schon, kommt statt des Codes ein Hinweis auf „Passwort vergessen“.
+3. Der richtige Code ergibt einen Einmal-Token (30 Minuten). Damit Gamer-Tag und Passwort festlegen, „mindestens 14“ bestätigen und zustimmen (`consented_at`, `terms_version`). Rolle immer `student`, kein Name.
 4. Zuordnung zur Klasse durch Admin (später auch Lehrkraft oder `join_code`).
 
-Lehrkräfte legt der Admin in Filament an. Über die Registrierung wird niemand Lehrkraft.
+Lehrkräfte legt der Admin in Filament an, ebenso Schüler:innen unter 14, sobald das Elternformular vorliegt. Ein Passwort vergibt der Admin nicht: Die Person setzt es selbst über „Passwort vergessen“. Über die Registrierung wird niemand Lehrkraft.
+
+**Konten (E-027, E-028):** Schüler:innen löschen sich selbst, sofort und vollständig. Personal wird gesperrt, nicht gelöscht. Sperren, neues Passwort und Löschen beenden alle Sessions. Der letzte aktive Admin ist geschützt. Nach 12 Monaten ohne Anmeldung wird ein Konto gelöscht.
+
 Dass `teacher_id` und `head_teacher_id` auf eine Lehrkraft zeigen, prüft die App (Validierung, Policy, Feature-Test), nicht die Datenbank.
 E-Mail-Adressen enthalten oft Klarnamen: nur intern, nie in API-Antworten über Schüler:innen.
 
@@ -88,16 +91,16 @@ E-Mail-Adressen enthalten oft Klarnamen: nur intern, nie in API-Antworten über 
 | Gruppenteilung in Labor und Werkstätte | `group_label` in `teaching_assignments` und `class_enrollments`, fürs Lehrkraft-Dashboard |
 | Neuer Lehrplan für neue Jahrgänge | Lehrplan-Versionen `curricula(program_id, valid_from)`, Klasse zeigt auf die Version |
 | Kolleg behandelt HTL-Stoff in anderer Reihenfolge | Freischaltung pro Thema und Ausbildungsgang (`curriculum_topics`) |
-| Schul-Postfach nach dem Abgang gelöscht | Aufbewahrungsdauer der Konten festlegen, hängt an der Einwilligung |
+| Schul-Postfach nach dem Abgang gelöscht | Entschieden: Löschen nach 12 Monaten ohne Anmeldung (E-028), Löschlauf mit dem Scheduler vor M5 |
 | Microsoft-365-Login | Braucht eine App-Registrierung der Schul-IT, danach als zweiter Weg neben dem Code |
 | Zweite Schule | Modell trägt das schon (Abteilungen und Schuljahre je Schule) |
 
 ## 7. Offen
 
-1. Mail-Domain(s) der Schüler:innen und Lehrkräfte an der HTL Mödling. Nutzt die Schule Microsoft 365?
+1. ~~Mail-Domain(s) und Microsoft 365~~ → `htl-md.schule` für alle, auch Microsoft 365, Form `Nummer@…` (E-025)
 2. Offizielle Klassen- und Ausbildungsgang-Kürzel (z. B. „HIT“), Quelle: Sekretariat oder WebUntis.
-3. `users.name` ist Pflicht, die Registrierung fragt aber keinen Namen ab. Nullable machen oder aus dem Gamer-Tag füllen?
-4. Einwilligung bei unter 14-Jährigen (Einzelfälle im 1. Jahrgang).
+3. ~~`users.name`~~ → nullable, Schüler:innen ohne Namen (E-025)
+4. ~~Einwilligung unter 14~~ → Elternformular, Admin legt an (E-025)
 
 ## 8. Reihenfolge der Umsetzung
 
