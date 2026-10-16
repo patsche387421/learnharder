@@ -101,6 +101,11 @@ Jede Entscheidung: Nummer, Datum, was, warum, Folgen. Offene Fragen stehen unten
 - **Warum:** Mit getrennten Subdomains (`app.` und `api.`) muss das Login-Cookie für die ganze Domain `.learnharder.app` gelten. Dann bekäme auch Staging die Cookies der Produktion, und es gäbe zwei `XSRF-TOKEN`. Unter einer Adresse gelten die Cookies nur für den eigenen Host.
 - **Folgen:** Kein `SESSION_DOMAIN` und kein CORS für die App. Der Frontend-Build ruft die API ohne eigene Adresse auf (`VITE_API_URL` leer). Der Setup-Plan §3 nennt noch `api.` für die App und `staging.app…`/`staging.api…` (Widerspruch 7 in `plans/README.md`). Filament hat eine eigene Session auf `api.learnharder.app`.
 
+### E-020 — Versionen nur als v2.0.0-alpha.N (2026-10-16)
+- **Entscheidung:** Tags folgen dem Setup-Plan §1: der erste ist `v2.0.0-alpha.1` beim Start (M5), danach `alpha.2` …, `beta.x` und `v2.0.0`. Meilensteine auf `dev` bekommen keinen Tag. Das `v0.x`-Schema aus Setup-Plan §4 gilt nicht.
+- **Warum:** Ein Schema reicht. Zu jedem Meilenstein führt schon der Merge-Commit auf `dev` zurück.
+- **Folgen:** Getaggt wird auf `main`, wenn Patsche „deployen“ sagt. Es gibt bisher nur `v2.0.0-plan` (und die V1-Tags).
+
 ## Offen
 
 | Nr. | Frage | Empfehlung | Warum offen |
