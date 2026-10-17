@@ -16,12 +16,12 @@
 | PSP | Inhalt | Stand |
 |---|---|---|
 | 1.4 | Design-System | ✅ Tokens, `tokens.json`, Komponenten und beide Schriften da |
-| 2.1 | Laravel-Setup | 🟡 läuft lokal in WSL2, Postgres (E-007), API für Login, Registrierung, Passwort, Konto löschen, Rechtstexte, Fächer, Themen, Lerneinheiten, Hub, Shop und Booster (`/api/v1/…`), Sichtbarkeit nach Klasse (E-024), Mail lokal über Mailpit (E-026), 324 Backend-Tests |
+| 2.1 | Laravel-Setup | 🟡 läuft lokal in WSL2, Postgres (E-007), API für Login, Registrierung, Passwort, Konto löschen, Rechtstexte, Fächer, Themen, Lerneinheiten, Hub, Shop und Booster (`/api/v1/…`), Sichtbarkeit nach Klasse (E-024), Mail lokal über Mailpit (E-026), 352 Backend-Tests |
 | 2.2 | Rollen | ✅ Policies für Fach, Thema, Theorie, Frage (autor ohne Löschen, tester nur lesen). Veröffentlichen nur Admin (E-014) |
 | 2.3 | CMS | ✅ redaktionstauglich auf Deutsch (E-012): Wertelisten, Antworten, Theorie, Veröffentlichen, Design-System. KI-Übersetzung offen (nach M5) |
 | 2.4–2.7 | Spiellogik, Klassen, API, Echtzeit | 🟡 EP, Level, Rang, Prestige und Fach-Level rechnet der Server (E-015, E-016, E-018), EP je Frage einmal pro Tag. Klassen mit Einschreibungen und Lehrkräften im CMS (M3b). Konten im CMS mit Sperren und Admin-Schutz (M4a, E-027). Streak, Brainpower und EP-Booster seit G2 (E-036, E-037). Trophäen, Join-Codes und Echtzeit offen |
-| 3.x | Vue-Frontend | 🟡 Login, Fächer, Thema, Theorie, Lerneinheit mit Ergebnis (M3), Hinweis ohne Klasse (M3b), Registrierung, Passwort vergessen, Rechtstexte und Konto löschen (M4a), Hub mit Weiterlernen und Streak (G1, G2), Shop mit EP-Boostern (G2), Avatar-Engine mit Platzhalter-Teilen im Hub, im Shop und im Profil (G4, E-031 bis E-034), 186 Tests. Team, Liga und PWA offen |
-| 5.x | Tests, CI, Hetzner | 🟡 CI bei jedem Push (Pint, Backend-Tests gegen Postgres, Frontend-Tests und Build). Hetzner offen |
+| 3.x | Vue-Frontend | 🟡 Login, Fächer, Thema, Theorie, Lerneinheit mit Ergebnis (M3), Hinweis ohne Klasse (M3b), Registrierung, Passwort vergessen, Rechtstexte und Konto löschen (M4a), Hub mit Weiterlernen und Streak (G1, G2), Shop mit EP-Boostern (G2), Avatar-Engine mit Platzhalter-Teilen im Hub, im Shop und im Profil (G4, E-031 bis E-034), Darstellung Wie Gerät · Hell · Dunkel im Profil (E-038), 196 Tests. Team, Liga und PWA offen |
+| 5.x | Tests, CI, Hetzner | 🟡 CI bei jedem Push (Pint, Backend-Tests gegen Postgres, Frontend-Tests und Build). Testpersonen und Testhandbuch (E-039), Playwright lokal für Anmelden und eine Lerneinheit, noch nicht in der CI. Hetzner offen |
 | — | Content-Import aus V1 | ✅ 7 Fächer, 32 Themen, 158 Theorieblöcke, 158 Fragen (lokal). Überschreibt keine gepflegten Themen |
 | — | Nutzer-Migration aus Supabase | entfällt, alle registrieren sich neu (E-011) |
 
@@ -66,7 +66,7 @@ Der kritische Pfad zum ersten echten Nutzer ist kürzer:
 
 ### Nächste Schritte (Stand 2026-10-17)
 
-1. **Ansehen:** Patsche prüft Hub-Zustände (G1) sowie Shop, EP-Booster und Streak (G2) in der laufenden App, auch bei Handy-Breite.
+1. **Testen:** Chromium für Playwright einrichten, Testhandbuch und Testzentrale ansehen (Patsche). Weitere Abläufe mit Playwright (registrieren, Level-Up, Prestige, Konto löschen), danach Playwright in die CI.
 2. **G4 weiter, sobald Patsche liefert:** Werkzeug je Fach und Starter-Kit je Abteilung festlegen, Teile mit KI-Hilfe entwerfen. Dann Abteilung in `/me`, Starter-Kits, Avatar speichern (Server prüft den Besitz), Antippen, Porträt, `celebrate` auf dem Ergebnis.
 3. **Danach** G3 Erfolge mit Herausforderung, G5 Shop, Werkhalle, G6 Rangliste. Team und Liga müssen zum Start fertig sein (E-035). M4 geht weiter, sobald die Schule antwortet.
 
