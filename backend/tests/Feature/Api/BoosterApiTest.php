@@ -22,7 +22,7 @@ class BoosterApiTest extends TestCase
         $this->withHeader('Origin', 'http://localhost:5173');
         $this->travelTo(CarbonImmutable::parse('2026-10-17 14:00', 'Europe/Vienna'));
 
-        $this->user = User::factory()->create(['brainpower_current' => 100, 'brainpower_refilled_on' => '2026-10-17']);
+        $this->user = User::factory()->brainpower(100)->create();
     }
 
     private function buy(string $kind): TestResponse
