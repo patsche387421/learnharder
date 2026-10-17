@@ -28,7 +28,7 @@ class NavigationTest extends TestCase
         $this->get('/admin')
             ->assertOk()
             ->assertSeeInOrder(['Inhalte', 'Fächer', 'Themen', 'Fragen'])
-            ->assertDontSee(['Schulen', 'Ausbildungsgänge']);
+            ->assertDontSee(['Schulen', 'Ausbildungsgänge', 'Erfolge']);
     }
 
     private function userWithRole(string $role): User

@@ -1,6 +1,6 @@
 # Handbuch für die Redaktion (Stand 2026-10-17)
 
-So pflegst du Fächer, Themen, Theorie und Fragen im CMS von learnharder.
+So pflegst du Fächer, Themen, Theorie und Fragen im CMS von learnharder, dazu als Admin die Erfolge.
 Für Autor:innen, Tester:innen und Admins. Konten und Schulstruktur stehen im Betriebshandbuch (`betrieb.md`).
 
 ## Anmelden
@@ -105,6 +105,29 @@ Ein Thema hat mehrere **Abschnitte**, jeder mit Titel, Reihenfolge und Text.
 | Reihenfolge | Position im Thema |
 
 Gut zu wissen: Pro Frage gibt es die EP nur einmal pro Tag (E-015). Wer dieselbe Frage am selben Tag wiederholt, übt weiter, bekommt aber 0 EP.
+In der Herausforderung kommen Fragen aus Themen, die jemand schon gelernt hat. Dort gibt es feste 5 EP je richtiger Antwort, unabhängig vom Feld „EP“ (E-045).
+
+## Erfolge (nur Admin)
+
+„Spiel“ → „Erfolge“. Erfolge sind Auszeichnungen wie „Eine Woche“ (E-040). Der Server vergibt sie nach jeder Lerneinheit und Herausforderung und beim Öffnen des Profils, jeden nur einmal.
+Sie bringen Trophäen und gehören damit zur Spiel-Ökonomie, deshalb pflegen sie nur Admins (E-042). Den ersten Katalog legt ein Seeder an (E-044), er überschreibt keine Änderung aus dem CMS.
+
+| Feld | Bedeutung |
+|---|---|
+| Titel | Kurz, steht auf der Kachel im Profil |
+| Kürzel | Fester Name für den Code, z. B. `streak-60`. Später nicht mehr ändern |
+| Bedingung | Steht auf der Kachel, solange der Erfolg fehlt, z. B. „30 Tage in Folge lernen“. Muss zu Typ und Schwellwert passen |
+| Typ | Was gezählt wird: Lerneinheiten, fehlerfreie Lerneinheiten (ab 5 Fragen), längster Streak, Level, Fach-Level, Herausforderungen, später richtig beantwortete Fehler, Fächer |
+| Schwellwert | Ab wie viel der Erfolg zählt. Über 1 steht die Zahl auf der Kachel |
+| Fach | Nur beim Fach-Level. Leer heißt: in irgendeinem Fach |
+| Icon | Erfolg, Streak, EP und Level, Herausforderung oder Trophäe. Beim Fach-Level mit Fach zeigt die App das Icon des Fachs |
+| Trophäen | Einmal bei der Vergabe. Eine Änderung gilt nur für neue Vergaben (E-043) |
+| Reihenfolge | Position im Raster, kleinere Zahlen zuerst |
+| Geheim | Bis zum Erreichen zeigt die App nur „Geheimer Erfolg“ |
+| Aktiv | Inaktive werden nicht mehr vergeben. Wer sie hat, behält sie |
+
+Gut zu wissen: Ein neuer Erfolg erreicht auch alle, die ihn schon erfüllen, sobald sie das nächste Mal lernen oder ihr Profil öffnen. Erfolge werden nie entzogen.
+Keine Erfolge für Uhrzeiten oder Pausen: Sie würden verraten, wann jemand lernt oder weg war (E-044).
 
 ## Löschen
 
@@ -116,6 +139,7 @@ Das CMS meldet dann „Nicht gelöscht“ und sagt, was stattdessen geht:
 | Fach mit Lernverlauf oder im Lehrplan | „Aktiv“ ausschalten |
 | Thema, mit dem schon gelernt wurde | Status auf Entwurf |
 | Frage, die schon beantwortet wurde | Status auf Entwurf |
+| Erfolg, den schon jemand hat | „Aktiv“ ausschalten |
 
 ## Meldungen im CMS
 
