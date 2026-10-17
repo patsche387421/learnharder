@@ -21,7 +21,7 @@ import time
 import urllib.error
 import urllib.request
 from collections import deque
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -49,6 +49,13 @@ POSTGRES_PROBLEMS = ('WARNING', 'ERROR', 'FATAL', 'PANIC', 'SLOW')
 # php artisan serve im Container: `  2026-10-16 18:40:20 /api/v1/me ....... ~ 0.12ms`. Die Dauer dort taugt nichts
 # (gemessen 50–120 ms, im Log 0,1 ms oder 500 ms), deshalb nur Zeit und Pfad. Echte Antwortzeit: health() von außen.
 REQUEST_LINE = re.compile(r'^\s*(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) (\S+) \.*\s*~ [\d.]+\s*m?s\s*$')
+# docs/AUFGABEN.md: `- [ ] Text @wer seit:JJJJ-MM-TT !fokus` unter einer Überschrift `## Gruppe`.
+# Zeichen davor muss Leerraum sein, sonst wäre `schueler@learnharder.app` ein @-Tag.
+TASK_LINE = re.compile(r'^- \[([ xX])\] (.+)$')
+TASK_OWNER = re.compile(r'(?<!\S)@(\w+)')
+TASK_SINCE = re.compile(r'(?<!\S)seit:(\S+)')
+TASK_FOCUS = re.compile(r'(?<!\S)!fokus(?!\S)')
+TASK_OWNERS = ('claude', 'patsche', 'schule')
 LOG_KEEP = 300
 ANSI = re.compile(r'\x1b\[[0-9;?]*[A-Za-z]')
 MIB_PER_UNIT = {'b': 1 / 1048576, 'kib': 1 / 1024, 'kb': 1 / 1024, 'mib': 1, 'mb': 1, 'gib': 1024, 'gb': 1024}
@@ -212,6 +219,49 @@ def failed_tests(output, limit=15):
         elif match := re.match(r'(?:FAILED|FAIL|×|⨯)\s+(.+)', line):
             names.append(re.sub(r'\s{2,}.*$', '', match.group(1)))
     return list(dict.fromkeys(names))[:limit]
+
+
+def parse_tasks(text):
+    """Aufgaben aus docs/AUFGABEN.md, nach Gruppen (`## …`). Formfehler landen in `problems`, die Testzentrale zeigt sie an."""
+    groups, problems, focus_lines = [], [], []
+    for number, line in enumerate(text.splitlines(), 1):
+        if line.startswith('## '):
+            groups.append({'title': line[3:].strip(), 'tasks': []})
+            continue
+        match = TASK_LINE.match(line.rstrip())
+        if not match:
+            continue
+        rest = match.group(2)
+        owners = TASK_OWNER.findall(rest)
+        since = TASK_SINCE.search(rest)
+        task = {
+            'text': ' '.join(TASK_FOCUS.sub('', TASK_SINCE.sub('', TASK_OWNER.sub('', rest))).split()),
+            'done': match.group(1) != ' ',
+            'owners': owners,
+            'since': since.group(1) if since else None,
+            'focus': bool(TASK_FOCUS.search(rest)),
+            'line': number,
+        }
+        if not owners:
+            problems.append(f'Zeile {number}: kein {", ".join("@" + owner for owner in TASK_OWNERS)}')
+        for owner in owners:
+            if owner not in TASK_OWNERS:
+                problems.append(f'Zeile {number}: unbekannt @{owner}')
+        if task['since']:
+            try:
+                date.fromisoformat(task['since'])
+            except ValueError:
+                problems.append(f'Zeile {number}: seit:{task["since"]} ist kein Datum JJJJ-MM-TT')
+                task['since'] = None
+        if task['focus'] and not task['done']:
+            focus_lines.append(number)
+        if not groups:
+            problems.append(f'Zeile {number}: Aufgabe vor der ersten Überschrift ##')
+            groups.append({'title': 'Ohne Gruppe', 'tasks': []})
+        groups[-1]['tasks'].append(task)
+    if len(focus_lines) > 1:
+        problems.append(f'Mehrere offene Aufgaben mit !fokus (Zeilen {", ".join(map(str, focus_lines))})')
+    return {'groups': groups, 'problems': problems}
 
 
 def parse_percent(text):
