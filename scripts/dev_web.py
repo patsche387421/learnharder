@@ -1,7 +1,7 @@
 """Testzentrale im Browser: `scripts/dev.py web` → http://localhost:8090.
 
-Gleiche Daten und Aktionen wie das Terminal-Dashboard (dev.py), dazu Grafiken, Mails im Volltext, der Testverlauf
-und die Logs getrennt nach Quelle: App, Anfragen, Datenbank, Tests und Vite.
+Gleiche Daten und Aktionen wie das Terminal-Dashboard (dev.py), dazu Grafiken, Mails im Volltext, der Testverlauf,
+die Logs getrennt nach Quelle (App, Anfragen, Datenbank, Tests, Vite) und der Projektstand aus docs/AUFGABEN.md.
 Nur Standardbibliothek. Die Seite ist dev_web.html, Farben und Schriften kommen aus dem Design-System der App.
 Hört nur auf 127.0.0.1. Host und Origin müssen zu dieser Adresse passen, Aktionen brauchen den Header `X-LH-Dev: 1`:
 So kann keine fremde Webseite im selben Browser die Datenbank neu aufsetzen.
@@ -32,6 +32,8 @@ TYPES = {'.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8',
 HISTORY_SIZE = 300  # Messpunkte für die Grafiken, bei etwa 2,5 s Abstand gut 12 Minuten
 MAIL_LIMIT = 25
 LOG_SOURCES = ('app', 'requests', 'database', 'tests', 'vite')
+CI_INTERVAL = 60  # Sekunden, GitHub erlaubt ohne Anmeldung 60 Anfragen pro Stunde
+CI_INTERVAL_ERROR = 600  # nach einem Fehler (meist das Limit) länger warten
 
 ACTIONS = {
     'start': ('Starten', dev.action_start),
@@ -73,6 +75,8 @@ class Center(dev.Runner):
         self.state = None
         self.logs = {source: [] for source in LOG_SOURCES}
         self.history = deque(maxlen=HISTORY_SIZE)
+        self.project = None
+        self.ci = None
 
     def collect(self):
         while True:
@@ -80,17 +84,27 @@ class Center(dev.Runner):
             state['problems'] = dev.log_problems(state.pop('log'), limit=8)
             logs = dev.read_logs()
             state['logs'] = dev.log_counts(logs)
+            project = dev.project()
             with self.lock:
                 self.state = state
                 self.logs = logs
+                self.project = project
                 self.history.append(sample(state, time.time()))
             time.sleep(1)
+
+    def watch_ci(self):
+        """Eigener Takt, damit eine langsame Antwort von GitHub die Übersicht nicht aufhält."""
+        while True:
+            ci = dev.ci_status()
+            with self.lock:
+                self.ci = ci
+            time.sleep(CI_INTERVAL_ERROR if 'error' in ci else CI_INTERVAL)
 
     def payload(self):
         with self.lock:
             return {
                 'state': self.state, 'history': list(self.history), 'activity': list(self.activity)[::-1],
-                'busy': self.busy, 'tests': dev.load_test_history()[::-1],
+                'busy': self.busy, 'tests': dev.load_test_history()[::-1], 'project': self.project, 'ci': self.ci,
             }
 
 
@@ -168,6 +182,7 @@ def make_handler(center):
 def serve(port=PORT):
     center = Center()
     threading.Thread(target=center.collect, daemon=True).start()
+    threading.Thread(target=center.watch_ci, daemon=True).start()
     server = ThreadingHTTPServer(('127.0.0.1', port), make_handler(center))
     url = f'http://localhost:{port}'
     print(f'Testzentrale: {url}  (Strg+C beendet sie, die Dienste laufen weiter)')

@@ -59,7 +59,7 @@ class ServerTest(unittest.TestCase):
 
         status, body = self.request('GET', '/api/state')
         self.assertEqual(200, status)
-        self.assertEqual({'state', 'history', 'activity', 'busy', 'tests'}, set(json.loads(body)))
+        self.assertEqual({'state', 'history', 'activity', 'busy', 'tests', 'project', 'ci'}, set(json.loads(body)))
 
         status, body = self.request('GET', '/styles/tokens.css')
         self.assertEqual((200, True), (status, b'--surface' in body))
