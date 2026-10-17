@@ -11,7 +11,7 @@ Regeln:
 - **Ehrlich vor dem Kauf.** Der Abschnitt EP-Booster sagt, dass der Faktor nur für Fragen gilt, die heute noch EP bringen. Bringt heute kein Thema mehr EP, steht das über den Angeboten: „Heute bringen deine Themen keine EP mehr. Morgen lohnt sich ein Booster wieder.“ Kaufen bleibt möglich.
 - **Kein Bestätigungsdialog.** Der Button sagt, was passiert und was es kostet („Starten · 40“). Ein Tipp startet sofort, die App wartet auf den Server und zeigt dann die neue Brainpower.
 - **Reicht die Brainpower nicht,** ist der Button `disabled` und darunter steht, wie viel fehlt (`lh-offer__why`: „Noch 30 Brainpower“). Keine graue Zeile ohne Grund.
-- **Läuft ein Booster,** steht über den Angeboten `lh-shop__running` („2× EP läuft · noch 23 Min.“) und alle Buttons sind `disabled` mit „Läuft schon einer“. Höchstens einer gleichzeitig.
+- **Läuft ein Booster,** steht über den Angeboten `lh-shop__running` („2× EP läuft · noch 23 Min.“, darunter `lh-shop__running-next`: „Danach kannst du den nächsten starten.“). Alle Buttons sind `disabled` und verweisen mit `aria-describedby` auf diesen Hinweis, darunter steht nichts. Der Grund steht einmal oben statt dreimal unter den Buttons. Höchstens einer gleichzeitig.
 - **Ruhig.** Kein Countdown in Sekunden, kein Leuchten, keine Rabatte, keine Zeitfenster. Beim Kauf jubelt der Roboter einmal (`celebrate`, unter 1 s, entfällt bei `prefers-reduced-motion`).
 
 **Laufender Booster außerhalb des Shops:**

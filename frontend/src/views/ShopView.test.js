@@ -71,8 +71,10 @@ describe('ShopView', () => {
     expect(fetch.mock.calls[1][0]).toMatch(/\/boosters$/)
     expect(JSON.parse(fetch.mock.calls[1][1].body)).toEqual({ kind: 'x2_30' })
     expect(wrapper.find('.lh-chip').attributes('aria-label')).toBe('20 Brainpower')
-    expect(wrapper.find('.lh-shop__running').text()).toBe('2× EP läuft · noch 30 Min.')
-    expect(offers(wrapper).every((o) => o.disabled && o.why === 'Läuft schon einer')).toBe(true)
+    expect(wrapper.find('.lh-shop__running').text()).toBe('2× EP läuft · noch 30 Min.Danach kannst du den nächsten starten.')
+    expect(offers(wrapper).every((o) => o.disabled && o.why === '')).toBe(true)
+    expect(wrapper.findAll('.lh-offer button').map((b) => b.attributes('aria-describedby'))).toEqual(Array(3).fill('shop-running'))
+    expect(wrapper.find('#shop-running').exists()).toBe(true)
     expect(useAuthStore().me.brainpower).toEqual({ current: 20, max: 100 })
     expect(useAuthStore().me.booster).toEqual(started.booster)
   })
@@ -80,13 +82,14 @@ describe('ShopView', () => {
   it('zählt die Restzeit in Minuten und gibt die Angebote nach Ablauf wieder frei', async () => {
     const { wrapper } = await show(shop({ booster: { multiplier: 1.5, ends_at: '2026-10-17T12:09:30+00:00' } }))
 
-    expect(wrapper.find('.lh-shop__running').text()).toBe('1,5× EP läuft · noch 3 Min.')
+    expect(wrapper.find('.lh-shop__running').text()).toContain('1,5× EP läuft · noch 3 Min.')
     await vi.advanceTimersByTimeAsync(60_000)
-    expect(wrapper.find('.lh-shop__running').text()).toBe('1,5× EP läuft · noch 2 Min.')
+    expect(wrapper.find('.lh-shop__running').text()).toContain('1,5× EP läuft · noch 2 Min.')
 
     await vi.advanceTimersByTimeAsync(3 * 60_000)
     expect(wrapper.find('.lh-shop__running').exists()).toBe(false)
     expect(offers(wrapper)[0]).toMatchObject({ disabled: false, why: '' })
+    expect(wrapper.find('.lh-offer button').attributes('aria-describedby')).toBeUndefined()
   })
 
   it('zeigt die Meldung des Servers, wenn der Kauf nicht klappt', async () => {

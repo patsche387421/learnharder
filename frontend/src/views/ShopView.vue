@@ -1,6 +1,7 @@
 <script setup>
 // Shop (E-037, docs/design/components/Shop.md): Brainpower einsetzen, zuerst Abschnitt „EP-Booster“.
 // Preise, Faktoren und Dauer kommen vom Server. Höchstens ein Booster läuft, die Restzeit zählt in Minuten.
+// Läuft einer, sagt das der Hinweis oben einmal, die Buttons verweisen darauf (aria-describedby).
 import { computed, onMounted, ref } from 'vue'
 import LoadError from '../components/LoadError.vue'
 import LhArt from '../components/ui/LhArt.vue'
@@ -22,8 +23,9 @@ const running = useBooster(() => shop.value?.booster)
 
 const brainpower = computed(() => shop.value?.brainpower.current ?? 0)
 
+// Grund unter dem Button, nur wenn die Brainpower nicht reicht. Läuft einer, steht der Grund oben im Hinweis
 function why(offer) {
-  if (running.value) return 'Läuft schon einer'
+  if (running.value) return ''
   const missing = offer.cost - brainpower.value
   return missing > 0 ? `Noch ${missing} Brainpower` : ''
 }
@@ -57,8 +59,9 @@ async function buy(offer) {
       <h2 id="shop-boost" class="lh-shop__title">EP-Booster</h2>
       <p class="lh-shop__intro">Mehr EP für richtige Antworten. Gilt für Fragen, die dir heute noch EP bringen. Einer zur Zeit.</p>
 
-      <div v-if="running" class="lh-shop__running" role="status">
-        <LhArt name="icon-booster" :size="24" />{{ running.factor }} EP läuft · noch {{ running.minutes }} Min.
+      <div v-if="running" id="shop-running" class="lh-shop__running" role="status">
+        <LhArt name="icon-booster" :size="24" />
+        <span>{{ running.factor }} EP läuft · noch {{ running.minutes }} Min.<span class="lh-shop__running-next">Danach kannst du den nächsten starten.</span></span>
       </div>
       <p v-if="buyError" class="shop__error" role="alert">{{ buyError }}</p>
 
@@ -69,7 +72,12 @@ async function buy(offer) {
           <span class="lh-offer__meta">{{ offer.minutes }} Min.</span>
         </span>
         <span class="lh-offer__buy">
-          <LhButton variant="secondary" :disabled="!!why(offer) || !!buying" @click="buy(offer)">
+          <LhButton
+            variant="secondary"
+            :disabled="!!running || !!why(offer) || !!buying"
+            :aria-describedby="running ? 'shop-running' : undefined"
+            @click="buy(offer)"
+          >
             {{ buying === offer.kind ? 'Startet …' : `Starten · ${offer.cost}` }}
           </LhButton>
           <span v-if="why(offer)" class="lh-offer__why">{{ why(offer) }}</span>
