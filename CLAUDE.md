@@ -9,6 +9,7 @@ Der alte Vanilla-JS/Supabase-Prototyp liegt nur noch im Archiv.
 | Thema | Quelle |
 |---|---|
 | Was wir bauen und in welcher Reihenfolge | `docs/plans/LEARNHARDER_V2_PROJEKTPLAN_PSP_RISIKEN.md` |
+| Was offen ist und wer dran ist | `docs/AUFGABEN.md` (auch im Tab „Projekt“ der Testzentrale) |
 | Hosting, Domains, Datenmigration, Versionen | `docs/plans/SETUP_DOMAIN_UND_DATENBANK_MIGRATION.md` |
 | XP, Level, Brainpower, Streaks | `docs/plans/GAMIFICATION_OEKONOMIE_MODELL.md` |
 | Getroffene und offene Entscheidungen | `docs/ENTSCHEIDUNGEN.md` |
@@ -52,7 +53,7 @@ Befehle: `backend/CLAUDE.md` und `frontend/CLAUDE.md`. Auf dem Host gibt es kein
 3. **Diff-Gate:** Erst ändern → rohen Diff zeigen → explizites OK → erst dann `git add`/Commit. Nie vorher stagen (auch kein `git mv`; Verschieben per `mv`).
 4. **Tempo:** Kleine Schritte, eine Entscheidung pro Rückfrage. Vor jeder Änderung ein Satz: was und warum.
 5. **Scope:** Nur Dateien anfassen, die zur Aufgabe gehören. Keine „hilfreichen“ Extras.
-6. **Session-Ende:** Eintrag in `agent/SESSION_REPORT.md` anhängen (nie überschreiben).
+6. **Session-Ende:** `docs/AUFGABEN.md` abgleichen (Erledigtes raus, Neues rein), dann Eintrag in `agent/SESSION_REPORT.md` anhängen (nie überschreiben).
 7. **Sicherheit:** Keine Secrets im Repo. `.env`-Dateien bleiben ungetrackt. Keine bekannten Passwörter in Seedern, die in Produktion laufen könnten.
 8. **Datenschutz:** Schülerdaten sind von Minderjährigen. Öffentlich nur Gamer-Tags, keine Klarnamen. Keine externen CDNs oder Fonts ohne Freigabe.
 

@@ -20,6 +20,7 @@ description: Regeln für Doku in learnharder.app – CLAUDE.md-Rollendateien, do
 | Regeln einer Rolle | `<ordner>/CLAUDE.md` | Zweck, Zuständigkeit, Regeln, Stand. Max. ~40 Zeilen. Kein Tutorial. |
 | Was/Warum, Reihenfolge | `docs/plans/*.md` | Widerspruch zum Code → in `docs/plans/README.md` „Widersprüche“ eintragen, Plan nicht still ändern |
 | Entscheidungen | `docs/ENTSCHEIDUNGEN.md` | Neue Nummer `E-NNN`: Datum, Entscheidung, Warum, Folgen. Offene Fragen als `O-NNN` |
+| Offene Aufgaben | `docs/AUFGABEN.md` | Format steht oben in der Datei. Erledigtes entfernen, nichts im Report wiederholen |
 | Session-Verlauf | `agent/SESSION_REPORT.md` | Nur unten anhängen, nie ändern (Vorlage unten) |
 | Einstieg für Menschen | `README.md` (Root) | Nur Aufbau + Start-Befehle |
 
@@ -41,5 +42,5 @@ description: Regeln für Doku in learnharder.app – CLAUDE.md-Rollendateien, do
 - **Commits:** `<hash>` (<kurz>), …
 - **Ergebnis:** <2–5 Punkte>
 - **Geprüft:** <was lief, was nicht>
-- **Offen:** <nächste Schritte>
+- **Offen:** <was diese Session neu in `docs/AUFGABEN.md` eingetragen hat>
 ```
