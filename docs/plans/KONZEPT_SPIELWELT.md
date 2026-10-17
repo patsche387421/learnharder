@@ -20,7 +20,7 @@ Alleinstellungsmerkmale: ein Hub, der auf die Person reagiert, ein eigener Avata
 
 - EP, Level, Rang, Prestige und Fach-Level rechnet der Server (`User::progression`), die App bekommt sie über `GET /api/v1/me`.
 - Spalten ohne Logik: `users.brainpower_current` und `brainpower_max` (schon in `/me`), `user_stats.trophies`, `current_streak`, `longest_streak`, `last_study_date`.
-- Der Hub (`/`) ist ein Platzhalter (`PlaceholderView`). Das Profil zeigt Gamer-Tag und Klasse.
+- Hub (`/`) und Profil nach §4, ohne Streak und Erfolge (Stand 2026-10-17).
 
 ## 4. Hub und Profil (G1)
 
@@ -30,9 +30,9 @@ Der Hub ist die Startseite und ändert sich mit dem, was die Person tut.
 - **Zustände:** erster Besuch, heute schon gelernt, zurück nach einer Pause, gerade aufgestiegen, alles erledigt (dann Wiederholen vorschlagen). Ab G2 auch Streak läuft oder ist in Gefahr, im Ton von `Sprache.md` („5 Min. reichen“), nie drohend.
 - **Tageszeit:** morgens, nachmittags, spät abends anders begrüßen.
 - **Später:** Avatar im Hub (G4), zuletzt erreichter Erfolg (G3).
-- **Profil:** EP gesamt, Level, Rang, Fach-Level je Fach, längster Streak. Später Erfolge und Avatar.
+- **Profil:** EP gesamt, Level, Rang, Fach-Level je Fach, ab G2 längster Streak. Später Erfolge und Avatar.
 
-Der Server liefert Fakten (letzter Lerntag, nächstes Thema, letzter Aufstieg), die App wählt Text und Bild.
+Der Server liefert Fakten (Ende der letzten Lerneinheit, nächstes Thema), die App wählt Text und Bild. Ob das heute war, rechnet sie nach Gerätezeit. Einen Aufstieg merkt sich die App aus dem Ergebnis der Lerneinheit und zeigt ihn im Hub einmal, der Server speichert dafür nichts.
 
 ## 5. Brainpower und Streaks (G2)
 
