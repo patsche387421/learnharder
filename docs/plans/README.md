@@ -20,7 +20,7 @@
 | 2.2 | Rollen | ✅ Policies für Fach, Thema, Theorie, Frage (autor ohne Löschen, tester nur lesen). Veröffentlichen nur Admin (E-014) |
 | 2.3 | CMS | ✅ redaktionstauglich auf Deutsch (E-012): Wertelisten, Antworten, Theorie, Veröffentlichen, Design-System. KI-Übersetzung offen (nach M5) |
 | 2.4–2.7 | Spiellogik, Klassen, API, Echtzeit | 🟡 EP, Level, Rang, Prestige und Fach-Level rechnet der Server (E-015, E-016, E-018), EP je Frage einmal pro Tag. Klassen mit Einschreibungen und Lehrkräften im CMS (M3b). Konten im CMS mit Sperren und Admin-Schutz (M4a, E-027). Brainpower, Streaks, Trophäen, Join-Codes und Echtzeit offen |
-| 3.x | Vue-Frontend | 🟡 Login, Fächer, Thema, Theorie, Lerneinheit mit Ergebnis (M3), Hinweis ohne Klasse (M3b), Registrierung, Passwort vergessen, Rechtstexte und Konto löschen (M4a), Hub mit Weiterlernen (G1), 135 Tests. Team, Liga und PWA offen |
+| 3.x | Vue-Frontend | 🟡 Login, Fächer, Thema, Theorie, Lerneinheit mit Ergebnis (M3), Hinweis ohne Klasse (M3b), Registrierung, Passwort vergessen, Rechtstexte und Konto löschen (M4a), Hub mit Weiterlernen (G1), Avatar-Engine mit Platzhalter-Teilen im Hub und im Profil (G4, E-031 bis E-034), 153 Tests. Team, Liga und PWA offen |
 | 5.x | Tests, CI, Hetzner | 🟡 CI bei jedem Push (Pint, Backend-Tests gegen Postgres, Frontend-Tests und Build). Hetzner offen |
 | — | Content-Import aus V1 | ✅ 7 Fächer, 32 Themen, 158 Theorieblöcke, 158 Fragen (lokal). Überschreibt keine gepflegten Themen |
 | — | Nutzer-Migration aus Supabase | entfällt, alle registrieren sich neu (E-011) |
@@ -63,6 +63,13 @@ Der kritische Pfad zum ersten echten Nutzer ist kürzer:
 | **G6** | Rangliste | Nach Entscheidung O-006, nur Gamer-Tags der eigenen Klasse (§8) |
 | **L1** | Landing Page | Ersetzt die Wartungsseite, Demo-Lerneinheit ohne Login, ohne Hetzner (§10) |
 | danach | | Lehrkraft-Dashboard → Englisch + KI-Übersetzung → PWA-Offline → Reverb |
+
+### Nächste Schritte (Stand 2026-10-17)
+
+1. **G1 fertig machen:** Der Server liefert Fakten für den Hub (letzter Lerntag, Tage weg, noch nicht gesehener Aufstieg). Daraus entstehen die Hub-Zustände und die Stimmung des Roboters in einem Schritt. Danach Tab-Leiste (E-022), nach dem Login zum Hub, Profil mit Statistik.
+2. **G4 weiter, sobald Patsche liefert:** Werkzeug je Fach und Starter-Kit je Abteilung festlegen, Teile mit KI-Hilfe entwerfen. Dann Abteilung in `/me`, Starter-Kits, Avatar speichern (Server prüft den Besitz), Antippen, Porträt, `celebrate` auf dem Ergebnis.
+3. **G2 Brainpower und Streaks:** Erst damit bekommt der Akku echte Werte und der Shop (G5) eine Währung.
+4. **Danach** G3 Erfolge, G5 Shop, Werkhalle, G6 Rangliste. M4 geht weiter, sobald die Schule antwortet.
 
 ### Größte Risiken jetzt
 
