@@ -259,4 +259,31 @@ describe('HubView', () => {
     expect(again.find('h1').text()).toBe('Hey lena42!')
     expect(again.find('.robot').classes()).toEqual(expect.arrayContaining(['robot--satisfied', 'robot--wave']))
   })
+
+  it.each([
+    [{ left_today: 2, open: null, locked: false }, '10 Fragen aus deinen Themen · noch 2 heute', false],
+    [{ left_today: 1, open: { id: 'c1', answered: 4, total: 10 }, locked: false }, 'Weitermachen · 4 von 10 · bis Mitternacht', true],
+    [{ left_today: 0, open: null, locked: false }, 'Morgen wieder', false],
+  ])('zeigt die Herausforderung als Zeile im Hub: %j', async (state, text, featured) => {
+    mockFetch({ status: 200, body: { data: { next_topic: NEXT, challenge: { cost: 25, questions: 10, ...state } } } })
+    const { wrapper } = await show()
+    await flushPromises()
+
+    const row = wrapper.find('.hub__challenge')
+    expect(row.attributes('href')).toBe('/challenge')
+    expect(row.find('.lh-card__title').text()).toBe('Herausforderung')
+    expect(row.find('.lh-card__text').text()).toBe(text)
+    expect(row.classes().includes('lh-card--featured')).toBe(featured)
+    expect(row.find('img').attributes('src')).toBe(icons['icon-challenge'])
+  })
+
+  it('ohne genug gelernte Themen ist die Herausforderung gesperrt und kein Link', async () => {
+    mockFetch({ status: 200, body: { data: { next_topic: NEXT, challenge: { cost: 25, questions: 10, left_today: 2, open: null, locked: true } } } })
+    const { wrapper } = await show()
+    await flushPromises()
+
+    const row = wrapper.find('.hub__challenge')
+    expect(row.element.tagName).toBe('DIV')
+    expect(row.text()).toContain('Schließe zuerst ein paar Themen ab.')
+  })
 })

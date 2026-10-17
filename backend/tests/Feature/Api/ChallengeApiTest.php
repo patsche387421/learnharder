@@ -240,7 +240,10 @@ class ChallengeApiTest extends TestCase
     public function test_hub_zeigt_den_stand_der_herausforderung(): void
     {
         $this->actingAs($this->user)->getJson('/api/v1/hub')->assertOk()
-            ->assertJsonPath('data.challenge', ['cost' => 25, 'questions' => 10, 'left_today' => 2, 'open' => null, 'locked' => false]);
+            ->assertJsonPath('data.challenge', [
+                'cost' => 25, 'questions' => 10, 'xp_per_correct' => 5, 'bonus' => [['from' => 8, 'xp' => 20], ['from' => 10, 'xp' => 50]],
+                'perfect_trophies' => 1, 'left_today' => 2, 'open' => null, 'locked' => false,
+            ]);
 
         $challenge = $this->start()->json('data');
         $this->answer($challenge['id'], $challenge['questions'][0]['id'], true);

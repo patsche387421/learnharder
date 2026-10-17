@@ -98,10 +98,11 @@ final class Challenge
     }
 
     /**
-     * Was der Hub zeigt (Design `Challenge`): Kosten, Starts heute übrig, die offene mit Stand,
-     * und ob sie gesperrt ist, weil es noch zu wenige gelernte Fragen gibt.
+     * Was Hub und Startbildschirm zeigen (Design `Challenge`): Kosten und Regeln aus der Config (die App kennt keine Werte
+     * selbst, E-037), Starts heute übrig, die offene mit Stand und ob sie gesperrt ist, weil es zu wenige gelernte Fragen gibt.
      *
-     * @return array{cost: int, questions: int, left_today: int, open: array{id: string, answered: int, total: int}|null, locked: bool}
+     * @return array{cost: int, questions: int, xp_per_correct: int, bonus: list<array{from: int, xp: int}>, perfect_trophies: int,
+     *     left_today: int, open: array{id: string, answered: int, total: int}|null, locked: bool}
      */
     public static function status(User $user): array
     {
@@ -111,6 +112,9 @@ final class Challenge
         return [
             'cost' => $config['cost'],
             'questions' => $config['questions'],
+            'xp_per_correct' => $config['xp_per_correct'],
+            'bonus' => collect($config['bonus'])->map(fn (int $xp, int $from) => ['from' => $from, 'xp' => $xp])->values()->all(),
+            'perfect_trophies' => $config['perfect_trophies'],
             'left_today' => max(0, $config['daily_limit'] - self::startedToday($user)),
             'open' => $open ? ['id' => $open->id, 'answered' => $open->answers()->count(), 'total' => $open->total_questions] : null,
             'locked' => ! $open && self::pool($user)->count() < $config['questions'],
