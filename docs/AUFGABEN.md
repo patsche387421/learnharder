@@ -37,9 +37,9 @@ Meilensteine und Reihenfolge: `plans/README.md`. Entscheidungen: `ENTSCHEIDUNGEN
 
 ## G3 — Erfolge
 
-- [ ] „Erfolge“ ins Glossar des Design-Artefakts, danach Kopie `design/Sprache.md` @claude
-- [ ] Erfolge: Katalog im CMS, Vergabe auf dem Server, Raster im Profil (Konzept Spielwelt §6) @claude
-- [ ] Herausforderung: zufällige Fragen aus allen Fächern für 25 Brainpower, Regeln vorher festlegen (Ökonomie-Modell §3.3, E-038) @claude
+- [ ] `feat/g3-erfolge` nach `dev` mergen und pushen @claude
+- [ ] Erfolge und Herausforderung in der laufenden App und im CMS ansehen (Testperson Herausforderer) @patsche
+- [ ] Eigene Bilder je Erfolg entwerfen, bis dahin Spiel-Icons je Art (E-044) @patsche
 
 ## G4 — Avatar
 
@@ -72,7 +72,7 @@ Meilensteine und Reihenfolge: `plans/README.md`. Entscheidungen: `ENTSCHEIDUNGEN
 - [ ] Unit-Test für die Weiterleitung nach einer Sperre in `main.js` @claude
 - [ ] Python-Tests aus `scripts/` in die CI @claude
 - [ ] Testhandbuch `handbuch/testen.md` gegenlesen, Testzentrale neu starten und Testpersonen und Testgruppen ansehen @patsche
-- [ ] Chromium für Playwright einrichten: `cd frontend && sudo npx playwright install-deps chromium`, danach `npx playwright install chromium` und `npm run e2e` @patsche
+- [ ] Chromium für Playwright einrichten: `cd frontend && sudo npx playwright install-deps chromium`, danach `npx playwright install chromium` und `npm run e2e` (`challenge.spec.js` lief noch nie im Browser) @patsche
 - [ ] Weitere Abläufe mit Playwright: registrieren, Level-Up, Prestige, Booster-EP, Konto löschen (Anmelden und eine Lerneinheit stehen, `frontend/e2e/`, E-039) @claude !fokus
 - [ ] Playwright in Testzentrale und CI (in der CI braucht es Sail, Seeder und Vite) @claude
 - [ ] Fach im CMS: Feld „Icon“ nutzt die App nicht, Bild und Farbe hängen am URL-Kürzel (`subject-<kürzel>`, `color_token` nicht im Formular). Klären, dann Formular und `handbuch/redaktion.md` anpassen @claude

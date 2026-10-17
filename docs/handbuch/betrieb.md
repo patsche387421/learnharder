@@ -3,7 +3,7 @@
 So verwaltest du Konten, Klassen und die Schulstruktur im CMS von learnharder.
 Inhalte pflegen und veröffentlichen: `redaktion.md`. Server, Backups und Deploy: `infra/` (kommt mit M4).
 
-Alles hier geht nur mit der Rolle **Admin**. Die Bereiche stehen im CMS unter „Schule“.
+Alles hier geht nur mit der Rolle **Admin**. Die Bereiche stehen im CMS unter „Schule“, die Erfolge unter „Spiel“.
 
 ## Rollen
 
@@ -97,6 +97,10 @@ Ein Fach erscheint, wenn es im Lehrplan des Ausbildungsgangs steht und „Ab Abs
 - Austragen löscht nichts, die Einschreibung bleibt mit Datum erhalten.
 - Für ein neues Schuljahr legst du neue Klassen an und trägst die Schüler:innen dort ein.
 - Die Zuordnung der Lehrkräfte nutzt die App noch nicht. Sie wird mit dem Lehrkraft-Dashboard nach dem Start wichtig.
+
+## Erfolge beim Einrichten
+
+Den ersten Katalog mit 12 Erfolgen legt `php artisan db:seed` an, auch in Produktion (dort mit `--force`, `AchievementSeeder`). Er legt nur fehlende an und überschreibt nichts, was du im CMS geändert hast. Danach pflegst du die Erfolge unter „Spiel“ → „Erfolge“ (siehe `redaktion.md`).
 
 ## Notfall: kein Admin mehr
 
