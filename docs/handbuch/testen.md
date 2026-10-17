@@ -52,6 +52,7 @@ Beim Arbeiten reichen die betroffenen Tests. **Vor jedem Commit laufen alle**, d
 - Laufen gegen den lokalen Stack: App auf http://localhost:5173, API auf http://localhost. Beides muss laufen, sonst bricht der Lauf mit einem Hinweis ab.
 - Daten: die Entwicklungs-Datenbank `laravel`. Vor jedem Lauf setzt `e2e/global-setup.js` die Testpersonen zurück, andere Konten bleiben.
 - Die Tests melden sich wie ein Mensch über das Formular an (`loginAs(page, 'Boosterfan')` aus `e2e/personas.js`) und prüfen, was auf dem Bildschirm steht. Gerät: ein Android-Handy (Pixel 7), Zeitzone Wien.
+- Bisher: `login.spec.js` (vier Testpersonen landen dort, wo ihr Zustand sie hinführt) und `lernen.spec.js` (Mittendrin lernt eine Einheit, danach Streak 7). Die Lerneinheit kennt die Antworten nicht vorher: Sie merkt sich nach einem Fehler die als „Richtig“ markierten Optionen für die Wiederholung.
 - Einmal pro Rechner braucht Chromium ein paar Systembibliotheken: `cd frontend && sudo npx playwright install-deps chromium`, danach `npx playwright install chromium`.
 - Schlägt ein Test fehl, liegt in `frontend/test-results/` eine Aufzeichnung (Trace). Ansehen mit `npx playwright show-trace <datei>`, den Bericht mit `npx playwright show-report`. Beide Ordner sind nicht im Git.
 
