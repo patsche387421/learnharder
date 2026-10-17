@@ -376,3 +376,17 @@ V1-Protokoll: `_archiv/agent/SESSION_REPORT.md` und `SESSION_REPORT_ARCHIVE.md`.
   - Projekt-Tab mit Probe-Server auf Port 8091 und Chrome ohne Fenster bei 1400 px und 375 px (im `iframe`), nur dunkel. Vor und nach dem neuen `AUFGABEN.md`. Auf- und Zuklappen nicht im Browser geklickt.
   - CI auf `dev` grün für `25c24fd` (Lauf `39011829130`). Den Lauf für `4249a4d` nicht abgewartet.
 - **Offen:** neu in `docs/AUFGABEN.md`: Gruppen G1–G6 und L1 mit ersten Aufgaben (Hub, Tab-Leiste, Hub-Zustände, Profil, Brainpower, Glossar „Erfolge“, Erfolge, Avatar-Stil und Avatar, Shop-Preise und Shop, O-006, Landing Page).
+
+## 2026-10-17 — Hub (G1)
+
+- **Branch:** `feat/hub`, mit `--no-ff` nach `dev` gemerged (`3494abd`). Dazu `docs/session-hub` mit diesem Eintrag. Nicht gepusht.
+- **Commits:** `b4483ff` (Hub-Endpunkt liefert das nächste offene Thema), `a942f21` (Hub mit Begrüßung, Level, Brainpower und Weiterlernen).
+- **Ergebnis:**
+  - `GET /api/v1/subjects` reicht fürs nächste Thema nicht: Es liefert je Fach nur Zahlen, kein Thema. Neu ist deshalb `GET /api/v1/hub` mit `next_topic`. Zuerst kommt das Fach der zuletzt abgeschlossenen Lerneinheit, danach die übrigen sichtbaren Fächer nach Reihenfolge. Es zählen nur veröffentlichte Themen mit Fragen, die nicht gesperrt und noch nicht abgeschlossen sind. Ist alles erledigt, kommt `null`. Die Antwort läuft über `TopicResource`, die dafür `subject` per `whenLoaded` bekommt.
+  - `HubView` auf `/`: Begrüßung nach Tageszeit (Morgen, Hey, Abend, „Noch wach?“), Level, Rang, EP-Leiste und Brainpower aus `auth.me`, „Weiterlernen“ als hervorgehobene Karte. Ist alles erledigt, schlägt sie Wiederholen vor. Ohne Klasse kommt ein Hinweis statt einer Abfrage. Platzhalter: Avatar neben der Begrüßung und das Raster „Bald“ (Streak, Herausforderung, Spielhalle, Liga-Platz, Shop, Erfolge).
+  - Begriffe nach dem Glossar: „Herausforderung“ statt „Challenge“, „Liga-Platz“ statt „Ranglistenplatz“.
+- **Geprüft:**
+  - Backend: 271 Tests grün (8 neu in `HubApiTest`), `pint --test` sauber.
+  - Frontend: 135 Tests grün (11 neu in `HubView.test.js`), `build` und `check:tokens` grün.
+  - Patsche hat den Hub im Browser angesehen. CI nicht abgewartet, weil nicht gepusht.
+- **Offen:** neu in `docs/AUFGABEN.md`: nach dem Login zum Hub statt zu `/learn`, Icons für Spielhalle und Shop. Kein `!fokus` gesetzt.
