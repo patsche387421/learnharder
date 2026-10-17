@@ -156,6 +156,21 @@ Jede Entscheidung: Nummer, Datum, was, warum, Folgen. Offene Fragen stehen unten
 - **Warum:** M4 hängt an einer Antwort von außen. Die Wartezeit lässt sich für das Frontend nutzen, das dem Backend weit hinterherhinkt, und für die Alleinstellungsmerkmale. Die Startbedingungen aus E-021 bleiben, damit der Start nicht vom Umfang abhängt (Risiko R4).
 - **Folgen:** Präzisiert E-021, hebt es nicht auf. M4 steht in `plans/README.md` als pausiert (⏸). Das Brainpower-Konzept wird trotzdem vor dem Start mit den Lehrkräften abgestimmt (M5), deshalb stehen die Werte gesammelt in `config/`. Avatar und Effekte halten sich an die ruhige Oberfläche aus `design/README.md`.
 
+### E-031 — Avatar: Roboter aus Slots, Starter-Kit je Abteilung (2026-10-17)
+- **Entscheidung:** Der Avatar ist ein Roboter. Alle Roboter teilen ein Skelett mit festen Steckplätzen und acht Slots: Kopf, Aufsatz, Rumpf, Arme, Antrieb, Werkzeug, Abzeichen, Lackierung. Jede Abteilung bekommt ein kostenloses Starter-Kit. Jedes Fach hat ein Werkzeug, das mit dem Fach-Level in Stufen aufgerüstet wird. Display-Gesicht, Akku und Animationen zeichnet die Engine. Claude zeichnet zuerst Platzhalter.
+- **Warum:** Ein Roboter passt zur HTL und braucht keine Hautfarben und kein Geschlecht, wichtig bei Minderjährigen. Ein gemeinsames Skelett hält Zeichenaufwand und Engine klein, eigene Grundmodelle je Abteilung bräuchten beides mehrfach. Varianten je Slot statt fertiger Skins ergeben viele Kombinationen aus wenigen Zeichnungen. Das Werkzeug macht sichtbar, was jemand gelernt hat.
+- **Folgen:** Details in `plans/KONZEPT_SPIELWELT.md` §7. Das endgültige Aussehen entscheidet das Design-Artefakt (E-006), offen ist noch, wer die Teile zeichnet. Die Werkzeug-Stufen stehen in `config/`.
+
+### E-032 — Avatar-Teile ohne Zufall (2026-10-17)
+- **Entscheidung:** Jedes Avatar-Teil hat eine feste, sichtbare Quelle (Fach-Level, Erfolg, Trophäen, Shop). Es gibt keine Lootboxen und keine Zufalls-Drops.
+- **Warum:** Die Nutzer:innen sind minderjährig, und Lootboxen gelten in Österreich und der EU rechtlich als heikel. Ein sichtbares Ziel ist fairer als Glück.
+- **Folgen:** Eine Bauplan-Ansicht zeigt alle Teile und ihre Bedingung. Auch Belohnungen aus Minispielen und Saisons sind fest.
+
+### E-033 — Avatar-Stimmungen nie negativ, für andere nur Pose (2026-10-17)
+- **Entscheidung:** Der Avatar zeigt nur positive oder ruhige Stimmungen (stolz, Wiedersehen, zufrieden, neugierig, müde), nie traurige, besorgte oder kaputte. Andere sehen nicht die Stimmung, sondern eine selbst gewählte Pose.
+- **Warum:** Lernen soll ohne schlechtes Gewissen funktionieren (Ton in `design/Sprache.md`). Die Stimmung verrät, wann jemand lernt, schläft oder weg war. Bei Minderjährigen bleibt das privat.
+- **Folgen:** Hinweise wie „Streak in Gefahr“ kommen nur als Text. Die App wählt die Stimmung aus Fakten des Servers und der Gerätezeit, der Server speichert sie nicht.
+
 ## Offen
 
 | Nr. | Frage | Empfehlung | Warum offen |

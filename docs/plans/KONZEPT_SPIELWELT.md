@@ -50,17 +50,56 @@ Erfolge sind benannte Abzeichen („Erste Lerneinheit“, „7 Tage in Folge“,
 
 ## 7. Avatar (G4) und Shop (G5)
 
-**Aufbau.** Eine Figur aus Teilen, als SVG-Ebenen übereinander: Körper und Farbe, Augen, Mund, Kopfbedeckung, Oberteil, Accessoire. Jedes Teil hat feste Ankerpunkte, damit alle Teile zusammenpassen.
+**Figur.** Ein Roboter (E-031). Er passt zur HTL, braucht keine Hautfarben und kein Geschlecht, und sein Display-Gesicht lässt sich leicht animieren.
 
-**Engine.** Eine eigene Vue-Komponente setzt die Ebenen zusammen. Animationen laufen als Zustände mit CSS und der Web Animations API: `idle` (atmen, blinzeln), `celebrate`, `wave`, `think`. Eine fremde Laufzeit (Lottie, Rive) erst prüfen, wenn das nicht reicht.
+**Aufbau.** Alle Roboter haben dasselbe Skelett mit festen Steckplätzen (Hals, Schultern, Hand, Hüfte). Jedes Teil sitzt an einem Steckplatz, deshalb passt jedes Teil zu jedem anderen. Die Teile sind SVG-Ebenen und färben sich über drei Lack-Variablen (`--paint-main`, `--paint-trim`, `--paint-accent`). Eine Zeichnung reicht so für jede Lackierung.
+
+| Slot | Pflicht | Varianten in G4 | Grundausstattung |
+|---|---|---|---|
+| Kopf | ja | 1 je Abteilung + 2 allgemeine | Kopf der Abteilung |
+| Aufsatz | nein | 4: Antenne, keiner, Kappe, Propeller | Antenne |
+| Rumpf | ja | 1 je Abteilung + 1 allgemeiner | Rumpf der Abteilung |
+| Arme | ja, einmal gezeichnet, gespiegelt | 1 je Abteilung + 1 allgemeine | Arme der Abteilung |
+| Antrieb | ja | 3: Beine, Räder, Ketten. Schweben später als Prestige-Teil | Beine |
+| Werkzeug | nein, rechte Hand | 1 je Fach, in Stufen | keins |
+| Abzeichen | nein, Brust | Abteilung, später Erfolge (G3) | Abzeichen der Abteilung |
+| Lackierung | ja, nur Farben | 8 Paletten | Farbe der Abteilung, Neutralgrau |
+
+Bei vier Abteilungen sind das etwa 31 Zeichnungen plus Werkzeuge.
+
+**Abteilungen.** Jede Abteilung hat ein kostenloses Starter-Kit, z. B. einen Bildschirm-Kopf für IT oder einen Platinen-Rumpf für Elektronik. Die Abteilung ergibt sich aus der Klasse (Klasse → Ausbildungsgang → Abteilung). Ohne Abteilung gibt es das allgemeine Kit. Teile anderer Abteilungen kann man sich später verdienen.
+
+**Werkzeug wächst mit dem Fach.** Jedes Fach hat ein eigenes Werkzeug, das mit dem Fach-Level aufgerüstet wird: Mk I ab Fach-Level 3, Mk II ab 10, Mk III ab 25, Gold ab 100. Die Werte stehen in `config/`. Die Hand ist am Anfang leer, damit sich der Roboter in den ersten Tagen durch Lernen sichtbar verändert.
+
+**Engine statt Slot.** Display-Gesicht (Stimmungen), Akku und die Animationen gehören keinem Slot, sie zeichnet die Engine. Eine eigene Vue-Komponente setzt die Ebenen zusammen. Animationen laufen als Zustände mit CSS und der Web Animations API: `idle` (atmen, blinzeln), `celebrate`, `wave`, `think`. Der Antrieb bestimmt die Bewegung im `idle`: Räder rollen, Beine federn. Eine fremde Laufzeit (Lottie, Rive) erst prüfen, wenn das nicht reicht. Zusätzliche Emotes sind bis G5 geparkt.
+
+**Akku.** Der Akku zeigt die Brainpower, die sich täglich auflädt. Ist sie niedrig, zeigt ein Blitz, dass er lädt. Keine rote Warnung.
+
+**Größen.** Ab 72 px (Platz im Hub) die ganze Figur, in Listen (32–40 px) nur ein Porträt aus Kopf, Aufsatz und Display.
+
+**Stimmungen.** Das Display zeigt eine Stimmung. Die App wählt sie aus Fakten des Servers (letzter Lerntag, Aufstieg, neue Erfolge) und der Uhrzeit des Geräts, passend zur Begrüßung im Hub. Es gilt die oberste, die zutrifft:
+
+| Stimmung | Auslöser | Display und Bewegung |
+|---|---|---|
+| Stolz | Aufstieg, Erfolg oder neue Werkzeug-Stufe, noch nicht gesehen | einmal `celebrate`, danach strahlende Augen |
+| Wiedersehen | zurück nach 3 oder mehr Tagen | `wave`, große Augen. Text „Schön, dass du da bist“, nie „Wo warst du?“ |
+| Zufrieden | heute schon gelernt | entspanntes Lächeln, ruhigeres `idle` |
+| Neugierig (Standard) | heute noch nicht gelernt, erster Besuch | Blick wandert ab und zu zu „Weiterlernen“ |
+| Müde | 22 bis 5 Uhr Gerätezeit | halb geschlossene Augen, „zZz“. Antippen weckt ihn mit Gähnen und `wave` |
+
+Kurze Reaktionen gehen vor: `think`, während eine Quiz-Antwort geprüft wird, Sternaugen nach einem fehlerfreien Quiz, ein „?“ auf der 404-Seite. Antippen löst eine kleine Reaktion aus (blinzeln, Räder drehen, Antenne wackeln). Am Jahrestag des Kontos trägt er einen Tag lang einen Partyhut.
+
+**Nie negativ, für andere nur Pose** (E-033). Der Roboter ist nie traurig, besorgt, kaputt oder hungrig. Hinweise wie „Streak in Gefahr“ (ab G2) stehen nur im Text, im Ton von `../design/Sprache.md`. Die Stimmung bleibt privat: Andere sehen den Roboter in einer selbst gewählten Pose, weil die Stimmung verraten würde, wann jemand lernt, schläft oder weg war.
 
 **Auftritte.** Im Hub, auf dem Ergebnis der Lerneinheit (`celebrate`) und ab und zu im Quiz: eine kleine Reaktion auf eine richtige Antwort, nicht bei jeder Frage und nie über dem Inhalt.
 
-**Freischalten, dann kaufen.** Jedes Teil und jede Animation hat eine Bedingung (Level, Erfolg, Fach-Level) und einen Preis in Brainpower. Kaufen kann man erst nach dem Freischalten. Eine Grundausstattung ist kostenlos.
+**Freischalten, dann kaufen.** Jedes Teil und jede Animation hat eine Bedingung (Level, Erfolg, Fach-Level) und einen Preis in Brainpower. Kaufen kann man erst nach dem Freischalten. Die Grundausstattung ist kostenlos. Werkzeug-Stufen gibt es direkt, sie zeigen, was man gelernt hat. Prestige-Teile kosten Trophäen statt Brainpower (Ökonomie-Modell §4).
+
+**Kein Zufall** (E-032). Jedes Teil hat eine sichtbare Quelle: Fach-Level, Erfolg, Trophäen oder der Shop, später Minispiele und eine Lackierung je Saison fürs Mitmachen, nicht für den Platz. Eine Bauplan-Ansicht zeigt alle Teile und wie man sie bekommt. Keine Lootboxen, keine Zufalls-Drops.
 
 **Ökonomie.** Der Shop ist eine neue Brainpower-Senke neben Booster und Challenge. Die Preise kommen vor G5 als §3.4 ins Ökonomie-Modell.
 
-**Stil.** Wie die Teile aussehen, entscheidet das Design-Artefakt (E-006), bevor das erste Teil gezeichnet wird.
+**Stil.** Wie die Teile endgültig aussehen, entscheidet das Design-Artefakt (E-006). Bis dahin zeichnet Claude einfache Platzhalter auf dem Raster der Steckplätze, damit Engine und Shop nicht warten (E-031).
 
 ## 8. Rangliste (G6)
 
@@ -98,6 +137,7 @@ Regeln aus §2.5 gelten. Töne nur, wenn die Person sie einschaltet.
 ## 12. Offen
 
 - O-006: Grundlage der Rangliste.
-- Stil der Avatar-Teile und wer sie zeichnet.
+- Wer die endgültigen Avatar-Teile zeichnet und wie sie aussehen (Design-Artefakt, E-006).
+- Soziale Momente des Avatars: Klassenseite, Posen, Reaktionen.
 - Shop-Preise (Ökonomie-Modell §3.4).
 - Abstimmung des Brainpower-Konzepts mit den Lehrkräften (M5).
