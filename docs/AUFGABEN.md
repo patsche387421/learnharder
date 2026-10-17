@@ -74,7 +74,6 @@ Meilensteine und Reihenfolge: `plans/README.md`. Entscheidungen: `ENTSCHEIDUNGEN
 - [ ] Testhandbuch `handbuch/testen.md` gegenlesen, Testzentrale neu starten und Testpersonen und Testgruppen ansehen @patsche
 - [ ] Chromium für Playwright einrichten: `cd frontend && sudo npx playwright install-deps chromium`, danach `npx playwright install chromium` und `npm run e2e` @patsche
 - [ ] Weitere Abläufe mit Playwright: registrieren, Level-Up, Prestige, Booster-EP, Konto löschen (Anmelden und eine Lerneinheit stehen, `frontend/e2e/`, E-039) @claude
-- [ ] Antworten mischen: Im importierten Inhalt ist bei allen 158 Fragen die erste Option die richtige, und die App mischt nicht. „A“ ist also immer richtig. Reihenfolge je Lerneinheit mischen (Server oder App), mit Test @claude
 - [ ] Playwright in Testzentrale und CI (in der CI braucht es Sail, Seeder und Vite) @claude
 - [ ] Fach im CMS: Feld „Icon“ nutzt die App nicht, Bild und Farbe hängen am URL-Kürzel (`subject-<kürzel>`, `color_token` nicht im Formular). Klären, dann Formular und `handbuch/redaktion.md` anpassen @claude
 - [ ] Testzentrale fertig durchklicken: Details, Suche, „Ältere ausblenden“ im Log @patsche

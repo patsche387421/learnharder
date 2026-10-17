@@ -45,7 +45,7 @@ Die Tests laufen gegen die Datenbank `testing` (`phpunit.xml`) und loggen nach `
 | `GET hub` | Fakten für den Hub: `next_topic` (zuerst im Fach der letzten Lerneinheit, sonst nach Reihenfolge; nur spielbar, nicht gesperrt, nicht erledigt) oder `null` |
 | `GET subjects`, `GET subjects/{slug}` | sichtbare Fächer mit Themen, Fortschritt und Fach-Level (E-018) |
 | `GET subjects/{slug}/topics/{slug}` | Thema mit Theorie als sicherem HTML (`Str::markdown` mit `html_input: escape`) |
-| `POST topics/{id}/attempts` | Lerneinheit starten, Fragen ohne Lösung |
+| `POST topics/{id}/attempts` | Lerneinheit starten, Fragen ohne Lösung, Antworten je Lerneinheit gemischt |
 | `POST attempts/{id}/answers` | eine Antwort prüfen, nur die erste pro Frage zählt |
 | `POST attempts/{id}/finish` | abschließen und EP vergeben, idempotent |
 
