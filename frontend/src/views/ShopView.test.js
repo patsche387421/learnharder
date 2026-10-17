@@ -12,7 +12,10 @@ const BOOSTERS = [
   { kind: 'x2_30', multiplier: 2, minutes: 30, cost: 40 },
   { kind: 'x2_60', multiplier: 2, minutes: 60, cost: 70 },
 ]
-const shop = (extra) => ({ status: 200, body: { data: { brainpower: { current: 60, max: 100 }, booster: null, boosters: BOOSTERS, ...extra } } })
+const shop = (extra) => ({
+  status: 200,
+  body: { data: { brainpower: { current: 60, max: 100 }, booster: null, boosters: BOOSTERS, xp_left_today: true, ...extra } },
+})
 
 async function show(...responses) {
   const fetch = mockFetch(...responses)
@@ -59,6 +62,14 @@ describe('ShopView', () => {
     ])
     expect(wrapper.find('.lh-offer img').attributes('src')).toBe(icons['icon-booster'])
     expect(wrapper.find('.lh-shop__running').exists()).toBe(false)
+    expect(wrapper.find('.shop__no-xp').exists()).toBe(false)
+  })
+
+  it('sagt ehrlich, wenn heute keine Frage mehr EP bringt, und lässt trotzdem kaufen', async () => {
+    const { wrapper } = await show(shop({ xp_left_today: false }))
+
+    expect(wrapper.find('.shop__no-xp').text()).toBe('Heute bringen deine Themen keine EP mehr. Morgen lohnt sich ein Booster wieder.')
+    expect(offers(wrapper)[0]).toMatchObject({ disabled: false, why: '' })
   })
 
   it('startet einen Booster und übernimmt Brainpower und Booster vom Server', async () => {

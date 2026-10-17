@@ -2,6 +2,7 @@
 // Shop (E-037, docs/design/components/Shop.md): Brainpower einsetzen, zuerst Abschnitt „EP-Booster“.
 // Preise, Faktoren und Dauer kommen vom Server. Höchstens ein Booster läuft, die Restzeit zählt in Minuten.
 // Läuft einer, sagt das der Hinweis oben einmal, die Buttons verweisen darauf (aria-describedby).
+// Bringt heute keine Frage mehr EP (xp_left_today vom Server), sagt das ein Satz über den Angeboten. Kaufen bleibt möglich.
 import { computed, onMounted, ref } from 'vue'
 import LoadError from '../components/LoadError.vue'
 import LhArt from '../components/ui/LhArt.vue'
@@ -58,6 +59,9 @@ async function buy(offer) {
     <section v-else-if="shop" class="lh-shop__section" aria-labelledby="shop-boost">
       <h2 id="shop-boost" class="lh-shop__title">EP-Booster</h2>
       <p class="lh-shop__intro">Mehr EP für richtige Antworten. Gilt für Fragen, die dir heute noch EP bringen. Einer zur Zeit.</p>
+      <p v-if="shop.xp_left_today === false" class="lh-shop__intro shop__no-xp">
+        Heute bringen deine Themen keine EP mehr. Morgen lohnt sich ein Booster wieder.
+      </p>
 
       <div v-if="running" id="shop-running" class="lh-shop__running" role="status">
         <LhArt name="icon-booster" :size="24" />
