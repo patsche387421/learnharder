@@ -260,6 +260,8 @@
 .lh-card__title { font: 700 16px/24px var(--font-text); }
 .lh-card__text { font: 400 14px/20px var(--font-text); color: var(--ink-muted); }
 .lh-card--featured { box-shadow: inset 0 0 0 2px var(--ink); }
+/* Karte als Zeile ohne Link: Icon · Text · rechts ein Wert (neuer Erfolg, gesperrte Herausforderung) */
+.lh-card--row { display: flex; align-items: center; gap: var(--space-3); }
 
 /* ---------- Währungs-Chip ---------- */
 .lh-chip--lg { height: 40px; padding: 0 var(--space-4) 0 var(--space-1); font-size: 16px; }
@@ -267,7 +269,7 @@
 /* Marke am Brainpower-Chip, solange ein EP-Booster läuft. Statisch: kein Leuchten, keine Bewegung */
 .lh-chip__boost { margin-left: var(--space-1); padding: 2px 6px; border-radius: var(--radius-full);
   background: var(--accent); color: var(--ink-inverse); font: 700 11px/1 var(--font-mono); }
-/* Chip-Zeile im Hub: unter der EP-Leiste, durch eine Linie abgesetzt. Streak, Brainpower, später Trophäen. Bricht um statt zu quetschen */
+/* Chip-Zeile im Hub: unter der EP-Leiste, durch eine Linie abgesetzt. Streak, Brainpower. Bricht um statt zu quetschen */
 .lh-chiprow { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); padding-top: var(--space-3);
   box-shadow: inset 0 1px 0 var(--line); }
 
@@ -295,6 +297,31 @@
 /* Marke für einen laufenden EP-Booster auf „Weiterlernen“ und neben den EP in der Lerneinheit */
 /* Umrandet statt auf surface-sunken: Bronze auf Beige hätte hell nur 4,4:1 */
 .lh-tag--boost { background: transparent; color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+
+/* ---------- Erfolge ---------- */
+/* Kopf über dem Raster: „Erfolge · 4 / 12“, rechts der Trophäen-Chip */
+.lh-achievements__head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+/* Raster im Profil: am Handy 3 Spalten, breiter mehr. Kacheln sind nur Anzeige, nicht antippbar */
+.lh-achievements { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: var(--space-2);
+  margin: 0; padding: 0; list-style: none; }
+.lh-achievement { display: grid; justify-items: center; align-content: start; gap: var(--space-1); padding: var(--space-3) var(--space-2);
+  border-radius: var(--radius-md); background: var(--surface-raised); box-shadow: inset 0 0 0 1px var(--line); text-align: center; }
+.lh-achievement__art { position: relative; width: 48px; height: 48px; margin-bottom: var(--space-1); }
+.lh-achievement__art img { display: block; width: 48px; height: 48px; }
+/* Stufe als Zahl an der Ecke des Icons (3, 7, 30): Stufen unterscheidet die Zahl, nicht die Farbe */
+.lh-achievement__level { position: absolute; right: -6px; bottom: -4px; min-width: 22px; height: 20px; padding: 0 5px;
+  border-radius: var(--radius-full); background: var(--ink); color: var(--ink-inverse); font: 700 12px/20px var(--font-mono); }
+.lh-achievement__title { font: 700 14px/18px var(--font-text); color: var(--ink); }
+.lh-achievement__text { font: 400 12px/16px var(--font-text); color: var(--ink-muted); }
+.lh-achievement__date { font: 400 12px/16px var(--font-mono); color: var(--ink-muted); }
+/* Noch nicht erreicht: wie ein gesperrtes Fach. Titel und Bedingung bleiben lesbar, das Ziel ist sichtbar */
+.lh-achievement--locked { background: var(--surface); }
+.lh-achievement--locked .lh-achievement__art img { filter: grayscale(1); opacity: .45; }
+.lh-achievement--locked .lh-achievement__level { background: var(--surface-sunken); color: var(--ink-muted); box-shadow: inset 0 0 0 1px var(--line-strong); }
+/* Geheim und noch nicht erreicht: „?“ statt Icon, kein Text */
+.lh-achievement--secret { background: var(--surface); }
+.lh-achievement__secret { display: grid; place-items: center; width: 48px; height: 48px; border-radius: var(--radius-full);
+  box-shadow: inset 0 0 0 1.5px var(--line-strong); font: 700 21px/1 var(--font-mono); color: var(--ink-muted); }
 
 /* =========================================================
    App-Rahmen: mobile first, Tablet = Rail, Desktop = Seitenleiste

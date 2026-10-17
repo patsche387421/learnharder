@@ -40,13 +40,33 @@ Formeln: Ökonomie-Modell §3. Das Brainpower-Konzept wird vor dem Start mit den
 
 ## 6. Erfolge (G3)
 
-Erfolge sind benannte Abzeichen („Erste Lerneinheit“, „7 Tage in Folge“, „Fach-Level 10“). Sie sind etwas anderes als **Trophäen**: Trophäen sind laut Glossar eine Belohnung, die man gegen Brainpower tauschen kann (Ökonomie-Modell §4).
+Erfolge sind benannte Auszeichnungen („Erste Lerneinheit“, „Eine Woche“, „Fach-Level 10“, E-040). Sie sind etwas anderes als **Trophäen**: Trophäen sind eine Währung für Kosmetik, die man mit Erfolgen und fehlerfreien Herausforderungen verdient (E-046, Ökonomie-Modell §4).
 
-- Katalog in der Datenbank: Schlüssel, Titel, Beschreibung, Bild, Bedingung, geheim ja/nein. Pflege im CMS.
-- Der Server prüft die Bedingungen nach Ereignissen (Lerneinheit fertig, Aufstieg, Streak), vergibt jeden Erfolg einmal und merkt sich das Datum.
-- Profil: Raster, nicht erreichte als Silhouette, geheime als „?“.
-- Erfolge schalten Avatar-Teile frei (§7).
-- Das Wort „Erfolge“ fehlt noch im Glossar. Es kommt zuerst ins Design-Artefakt (E-006).
+- **Katalog** in der Datenbank (`achievements`, E-041): Schlüssel, Titel, Beschreibung, Icon, Bedingung als Typ mit Schwellwert (E-042), geheim, aktiv, Reihenfolge, Trophäen. Pflege im CMS, nur Admins.
+- **Vergabe:** Der Server prüft nach jedem Abschluss einer Lerneinheit oder Herausforderung und beim Laden der Erfolge. Jeder Erfolg wird einmal vergeben, mit Datum, und nie entzogen. Neue Erfolge stehen im Ergebnis.
+- **Profil:** Raster, nicht erreichte als Silhouette, geheime als „?“ ohne Titel und Text (der Server schickt sie nicht).
+- **Bilder:** vorerst die vorhandenen Icons je Art, die Stufe als Zahl auf der Kachel (E-044).
+- **Herausforderung:** 10 Fragen aus schon gelernten Themen für 25 Brainpower, aus dem Hub erreichbar. Regeln: Ökonomie-Modell §3.3, E-045.
+- Später schalten Erfolge Avatar-Teile frei (§7, G5). Andere sehen Erfolge erst mit der Werkhalle (E-034).
+
+Erster Katalog (E-044). Die Trophäen sind ein Vorschlag, Patsche kann sie im CMS ändern:
+
+| Erfolg | Bedingung | Trophäen |
+|---|---|---|
+| Erste Lerneinheit | 1 Lerneinheit abgeschlossen | 1 |
+| Dranbleiben | 25 Lerneinheiten abgeschlossen | 3 |
+| Fehlerfrei | eine Lerneinheit mit mindestens 5 Fragen, alle beim ersten Mal richtig | 2 |
+| Drei Tage in Folge | Streak 3 | 1 |
+| Eine Woche | Streak 7 | 2 |
+| Ein Monat | Streak 30 | 5 |
+| Level 10 | Level 10 oder Prestige | 2 |
+| Silber | Level 25 oder Prestige | 3 |
+| Fach-Level 10 | Fach-Level 10 in einem Fach | 3 |
+| Herausforderung angenommen | 1 Herausforderung abgeschlossen | 1 |
+| Aus Fehlern gelernt (geheim) | eine Frage, die man in einer früheren Lerneinheit falsch hatte, später richtig | 2 |
+| Allrounder (geheim) | Lerneinheiten in 3 Fächern | 2 |
+
+Keine Erfolge nach Uhrzeit oder Pausen: Sie würden verraten, wann jemand lernt oder weg war (wie E-033).
 
 ## 7. Avatar (G4) und Shop (G5)
 
@@ -62,7 +82,7 @@ Erfolge sind benannte Abzeichen („Erste Lerneinheit“, „7 Tage in Folge“,
 | Arme | ja, einmal gezeichnet, gespiegelt | 1 je Abteilung + 1 allgemeine | Arme der Abteilung |
 | Antrieb | ja | 3: Beine, Räder, Ketten. Schweben später als Prestige-Teil | Beine |
 | Werkzeug | nein, rechte Hand | 1 je Fach, in Stufen | keins |
-| Abzeichen | nein, Brust | Abteilung, später Erfolge (G3) | Abzeichen der Abteilung |
+| Abzeichen | nein, Brust | Abteilung, später für Erfolge (nach G3) | Abzeichen der Abteilung |
 | Lackierung | ja, nur Farben | 8 Paletten | Farbe der Abteilung, Neutralgrau |
 
 Bei vier Abteilungen sind das etwa 31 Zeichnungen plus Werkzeuge.
@@ -101,7 +121,7 @@ Kurze Reaktionen gehen vor: `think`, während eine Quiz-Antwort geprüft wird, S
 
 **Auftritte.** Im Hub, auf dem Ergebnis der Lerneinheit (`celebrate`) und ab und zu im Quiz: eine kleine Reaktion auf eine richtige Antwort, nicht bei jeder Frage und nie über dem Inhalt.
 
-**Freischalten, dann kaufen.** Jedes Teil und jede Animation hat eine Bedingung (Level, Erfolg, Fach-Level) und einen Preis in Brainpower. Kaufen kann man erst nach dem Freischalten. Die Grundausstattung ist kostenlos. Werkzeug-Stufen gibt es direkt, sie zeigen, was man gelernt hat. Prestige-Teile kosten Trophäen statt Brainpower (Ökonomie-Modell §4).
+**Freischalten, dann kaufen.** Jedes Teil und jede Animation hat eine Bedingung (Level, Erfolg, Fach-Level) und einen Preis in Brainpower. Kaufen kann man erst nach dem Freischalten. Die Grundausstattung ist kostenlos. Werkzeug-Stufen gibt es direkt, sie zeigen, was man gelernt hat. Prestige-Teile kosten Trophäen statt Brainpower (Ökonomie-Modell §4). Trophäen lassen sich nicht in Brainpower tauschen (E-046).
 
 **Kein Zufall** (E-032). Jedes Teil hat eine sichtbare Quelle: Fach-Level, Erfolg, Trophäen oder der Shop, später Minispiele und eine Lackierung je Saison fürs Mitmachen, nicht für den Platz. Eine Bauplan-Ansicht zeigt alle Teile und wie man sie bekommt. Keine Lootboxen, keine Zufalls-Drops.
 

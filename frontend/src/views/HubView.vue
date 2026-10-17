@@ -5,6 +5,7 @@
 // last_study_at. Den Aufstieg merkt sich die App aus der Lerneinheit.
 // Neben der Begrüßung der Avatar (G4): winkt beim Öffnen, Stimmung passend zum Zustand, Akku zeigt die Brainpower.
 // Shop (E-037): eigene Zeile, dazu der Brainpower-Chip als Abkürzung. Ein laufender Booster steht auf „Weiterlernen“ und am Chip.
+// Herausforderung (E-045, Design `Challenge`): ruhige Zeile vor dem Shop, Stand aus /hub. Offen ist sie hervorgehoben, gesperrt kein Link.
 // Chip-Zeile unter der EP-Leiste (design/components/CurrencyChip.md): Streak, dann Brainpower. „Heute gelernt“ und den Streak
 // liefert der Server nach Wiener Tag (streak.today). Ist der Streak in Gefahr, sagt das nur der Text, nie der Roboter.
 import { computed, onMounted } from 'vue'
@@ -85,6 +86,15 @@ const levelBar = computed(() => {
   return xp ? { value: xp.total - xp.level_start, max: xp.next_level - xp.level_start, left: xp.next_level - xp.total } : null
 })
 
+const challenge = computed(() => hub.value?.challenge ?? null)
+const challengeText = computed(() => {
+  const c = challenge.value
+  if (c.open) return `Weitermachen · ${c.open.answered} von ${c.open.total} · bis Mitternacht`
+  if (c.locked) return 'Schließe zuerst ein paar Themen ab.'
+  if (!c.left_today) return 'Morgen wieder'
+  return `${c.questions} Fragen aus deinen Themen · noch ${c.left_today} heute`
+})
+
 // Nach Level 100 kommt das nächste Prestige, Level beginnt wieder bei 1
 const nextStep = computed(() => (auth.player.level < 100 ? `Level ${auth.player.level + 1}` : `Prestige ${auth.player.prestige + 1}`))
 </script>
@@ -152,6 +162,19 @@ const nextStep = computed(() => (auth.player.level < 100 ? `Level ${auth.player.
       text="Wiederhol ein Thema, dann sitzt es."
       to="/learn"
     />
+
+    <template v-if="challenge && !auth.waitingForClass">
+      <div v-if="challenge.locked" class="lh-card lh-card--row hub__challenge">
+        <LhArt name="icon-challenge" :size="40" />
+        <span class="lh-card__body">
+          <span class="lh-card__title">Herausforderung</span>
+          <span class="lh-card__text">{{ challengeText }}</span>
+        </span>
+      </div>
+      <LhCard v-else class="hub__challenge" title="Herausforderung" :text="challengeText" :featured="!!challenge.open" to="/challenge">
+        <template #icon><LhArt name="icon-challenge" :size="40" /></template>
+      </LhCard>
+    </template>
 
     <LhCard v-if="!auth.waitingForClass" title="Shop" text="Brainpower einsetzen" to="/shop">
       <template #icon><LhArt name="icon-booster" :size="40" /></template>

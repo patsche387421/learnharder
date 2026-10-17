@@ -6,13 +6,13 @@ Illustrierte Spiel-Icons im Stil der Fach-Icons. viewBox 48×48, bei 32px erkenn
 |---|---|---|
 | `icon-xp.svg` | EP / Erfahrungspunkte (Sechseck wie das Level-Badge) | Gold |
 | `icon-streak.svg` | Lerntage in Folge | Bronze |
-| `icon-brainpower.svg` | Brainpower (Währung, wird für Herausforderungen verbraucht) | Platin |
+| `icon-brainpower.svg` | Brainpower (Währung, wird für Herausforderungen und im Shop eingesetzt) | Platin |
 | `icon-trophy.svg` | Trophäen (Währung) | Gold |
 | `icon-league.svg` | Liga-Saison / monatliche Rangliste | Gold |
 | `icon-challenge.svg` | Herausforderung | Bronze |
 | `icon-campaign.svg` | Kampagne | Platin |
 | `icon-team-challenge.svg` | Team-Herausforderung | eigenes Rot-Orange |
-| `icon-achievement.svg` | Errungenschaft | Platin |
+| `icon-achievement.svg` | Erfolg (Standard-Icon, wenn keine Art passt) | Platin |
 | `icon-booster.svg` | EP-Booster (Rakete, steigt nach oben) | Bronze |
 
 Regeln:

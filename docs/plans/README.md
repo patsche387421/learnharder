@@ -16,12 +16,12 @@
 | PSP | Inhalt | Stand |
 |---|---|---|
 | 1.4 | Design-System | ✅ Tokens, `tokens.json`, Komponenten und beide Schriften da |
-| 2.1 | Laravel-Setup | 🟡 läuft lokal in WSL2, Postgres (E-007), API für Login, Registrierung, Passwort, Konto löschen, Rechtstexte, Fächer, Themen, Lerneinheiten, Hub, Shop und Booster (`/api/v1/…`), Sichtbarkeit nach Klasse (E-024), Mail lokal über Mailpit (E-026), 352 Backend-Tests |
+| 2.1 | Laravel-Setup | 🟡 läuft lokal in WSL2, Postgres (E-007), API für Login, Registrierung, Passwort, Konto löschen, Rechtstexte, Fächer, Themen, Lerneinheiten, Hub, Shop, Booster, Erfolge und Herausforderung (`/api/v1/…`), Sichtbarkeit nach Klasse (E-024), Mail lokal über Mailpit (E-026), 421 Backend-Tests |
 | 2.2 | Rollen | ✅ Policies für Fach, Thema, Theorie, Frage (autor ohne Löschen, tester nur lesen). Veröffentlichen nur Admin (E-014) |
 | 2.3 | CMS | ✅ redaktionstauglich auf Deutsch (E-012): Wertelisten, Antworten, Theorie, Veröffentlichen, Design-System. KI-Übersetzung offen (nach M5) |
-| 2.4–2.7 | Spiellogik, Klassen, API, Echtzeit | 🟡 EP, Level, Rang, Prestige und Fach-Level rechnet der Server (E-015, E-016, E-018), EP je Frage einmal pro Tag. Klassen mit Einschreibungen und Lehrkräften im CMS (M3b). Konten im CMS mit Sperren und Admin-Schutz (M4a, E-027). Streak, Brainpower und EP-Booster seit G2 (E-036, E-037). Trophäen, Join-Codes und Echtzeit offen |
-| 3.x | Vue-Frontend | 🟡 Login, Fächer, Thema, Theorie, Lerneinheit mit Ergebnis (M3), Hinweis ohne Klasse (M3b), Registrierung, Passwort vergessen, Rechtstexte und Konto löschen (M4a), Hub mit Weiterlernen und Streak (G1, G2), Shop mit EP-Boostern (G2), Avatar-Engine mit Platzhalter-Teilen im Hub, im Shop und im Profil (G4, E-031 bis E-034), Darstellung Wie Gerät · Hell · Dunkel im Profil (E-038), 196 Tests. Team, Liga und PWA offen |
-| 5.x | Tests, CI, Hetzner | 🟡 CI bei jedem Push (Pint, Backend-Tests gegen Postgres, Frontend-Tests und Build). Testpersonen und Testhandbuch (E-039), Playwright lokal für Anmelden und eine Lerneinheit, noch nicht in der CI. Hetzner offen |
+| 2.4–2.7 | Spiellogik, Klassen, API, Echtzeit | 🟡 EP, Level, Rang, Prestige und Fach-Level rechnet der Server (E-015, E-016, E-018), EP je Frage einmal pro Tag. Klassen mit Einschreibungen und Lehrkräften im CMS (M3b). Konten im CMS mit Sperren und Admin-Schutz (M4a, E-027). Streak, Brainpower und EP-Booster seit G2 (E-036, E-037). Erfolge mit Trophäen und die Herausforderung seit G3 (E-040 bis E-046). Join-Codes und Echtzeit offen |
+| 3.x | Vue-Frontend | 🟡 Login, Fächer, Thema, Theorie, Lerneinheit mit Ergebnis (M3), Hinweis ohne Klasse (M3b), Registrierung, Passwort vergessen, Rechtstexte und Konto löschen (M4a), Hub mit Weiterlernen und Streak (G1, G2), Shop mit EP-Boostern (G2), Erfolge im Profil und Herausforderung (G3), Avatar-Engine mit Platzhalter-Teilen im Hub, im Shop und im Profil (G4, E-031 bis E-034), Darstellung Wie Gerät · Hell · Dunkel im Profil (E-038), 217 Tests. Team, Liga und PWA offen |
+| 5.x | Tests, CI, Hetzner | 🟡 CI bei jedem Push (Pint, Backend-Tests gegen Postgres, Frontend-Tests und Build). Testpersonen und Testhandbuch (E-039), Playwright lokal für Anmelden, eine Lerneinheit und die Herausforderung, noch nicht in der CI. Hetzner offen |
 | — | Content-Import aus V1 | ✅ 7 Fächer, 32 Themen, 158 Theorieblöcke, 158 Fragen (lokal). Überschreibt keine gepflegten Themen |
 | — | Nutzer-Migration aus Supabase | entfällt, alle registrieren sich neu (E-011) |
 
@@ -35,7 +35,7 @@ Fachlich trägt der Plan: Der Server rechnet, Datenschutz und Rollen sind sauber
 
 **Schule antwortet → Hetzner (M4) → Abstimmung mit den Lehrkräften, Team und Liga (M5) → DNS umstellen.**
 
-Bis dahin entstehen die Spielwelt-Tracks lokal (E-030). G1 und G2 sind fertig.
+Bis dahin entstehen die Spielwelt-Tracks lokal (E-030). G1, G2 und G3 sind fertig.
 
 ### Meilensteine (Reihenfolge bestätigt 2026-10-16: M3b → M4a, parallel M4 → M5; Spielwelt-Tracks seit 2026-10-17, E-030)
 
@@ -51,7 +51,7 @@ Bis dahin entstehen die Spielwelt-Tracks lokal (E-030). G1 und G2 sind fertig.
 | **M5** | Start | Lernablauf, EP-Regeln und Brainpower-Konzept mit betreuenden Lehrkräften abgestimmt, Hub schlank (E-022), Team und Liga fertig (E-035), DNS umgestellt, Registrierung offen, Neuregistrierung angekündigt, V1-Supabase abgeschaltet → Tag `v2.0.0-alpha.1` (E-020) |
 | **G1** ✅ | Hub & Profil | Hub statt Platzhalter: Begrüßung nach Zustand und Tageszeit, Level, Brainpower, „Weiterlernen“. Profil mit Statistik, der längste Streak kommt mit G2 (Konzept Spielwelt §4) |
 | **G2** ✅ | Brainpower & Streaks | Streak (auch im Hub), Aufladen, EP-Booster im Shop mit Hinweis ohne EP, Werte in `config/` (E-036, E-037). Die Herausforderung kam nach G3 (E-038) |
-| **G3** | Erfolge | Katalog im CMS, Vergabe auf dem Server, Raster im Profil (§6), Herausforderung für 25 Brainpower (Ökonomie-Modell §3.3, E-038) |
+| **G3** ✅ | Erfolge | Katalog im CMS, Vergabe auf dem Server, Raster im Profil (§6), Herausforderung für 25 Brainpower (Ökonomie-Modell §3.3, E-040 bis E-046). Trophäen nur für Kosmetik, kein Tausch (E-046) |
 | **G4** | Avatar | Figur aus SVG-Teilen mit `idle`, `celebrate`, `wave`, `think`, im Hub und auf dem Ergebnis (§7) |
 | **G5** | Shop | Teile und Animationen freischalten, dann mit Brainpower kaufen. Preise im Ökonomie-Modell §3.4 (§7) |
 | **G6** | Rangliste | Nach Entscheidung O-006, nur Gamer-Tags der eigenen Klasse (§8) |
@@ -60,12 +60,12 @@ Bis dahin entstehen die Spielwelt-Tracks lokal (E-030). G1 und G2 sind fertig.
 
 ### Nächste Schritte (Stand 2026-10-17)
 
-1. **Testen:** Chromium für Playwright einrichten, Testhandbuch und Testzentrale ansehen (Patsche). Weitere Abläufe mit Playwright (registrieren, Level-Up, Prestige, Konto löschen), danach Playwright in die CI.
+1. **Testen:** Chromium für Playwright einrichten, danach läuft auch `challenge.spec.js` zum ersten Mal. Testhandbuch, Testzentrale, Erfolge und Herausforderung ansehen (Patsche). Weitere Abläufe mit Playwright (registrieren, Level-Up, Prestige, Konto löschen), danach Playwright in die CI.
 2. **G4 weiter, sobald Patsche liefert:** Werkzeug je Fach und Starter-Kit je Abteilung festlegen, Teile mit KI-Hilfe entwerfen. Dann Abteilung in `/me`, Starter-Kits, Avatar speichern (Server prüft den Besitz), Antippen, Porträt, `celebrate` auf dem Ergebnis.
-3. **Danach** G3 Erfolge mit Herausforderung, G5 Shop, Werkhalle, G6 Rangliste. Team und Liga müssen zum Start fertig sein (E-035). M4 geht weiter, sobald die Schule antwortet.
+3. **Danach** G5 Shop (Prestige-Teile für Trophäen), Werkhalle, G6 Rangliste. Team und Liga müssen zum Start fertig sein (E-035). M4 geht weiter, sobald die Schule antwortet.
 
 ### Größte Risiken jetzt
 
 1. **Warten auf die Schule.** Vertragspartner, Rechtstexte, Freigabe des Absenders, Klassen-Kürzel und ein zweiter Admin kommen von der Schule (Aufgaben mit `@schule` in `AUFGABEN.md`, in der Testzentrale unter „Wartet auf die Schule“). Bis dahin stehen M4 und M5.
 2. **Umfang.** Mit den Spielwelt-Tracks (E-030) wächst die Liste. Der Start wartet nicht auf sie, außer auf Team und Liga (E-035). Neue Wünsche kommen ins Konzept, nicht in M5.
-3. **Alles nur auf einem Rechner.** Seit dem letzten Push liegen gut 60 Commits nur lokal auf `dev`, und WSL hat schon einmal Git-Objekte beschädigt. `dev` nach jedem abgeschlossenen Schritt pushen (läuft dann auch durch die CI), `main` weiter nur beim Deployen.
+3. **Alles nur auf einem Rechner.** `dev` ist gepusht, die 12 Commits von `feat/g3-erfolge` liegen nur lokal (Stand 2026-10-17), und WSL hat schon einmal Git-Objekte beschädigt. `dev` nach jedem abgeschlossenen Schritt pushen (läuft dann auch durch die CI), `main` weiter nur beim Deployen.

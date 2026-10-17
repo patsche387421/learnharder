@@ -4,6 +4,7 @@ namespace Tests\Feature\Api;
 
 use App\Enums\ContentStatus;
 use App\Enums\QuestionType;
+use App\Models\Achievement;
 use App\Models\Subject;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -19,7 +20,7 @@ class DeleteAccountTest extends TestCase
 {
     use EnrollsStudents, RefreshDatabase;
 
-    private const TABLES = ['user_stats', 'quiz_attempts', 'question_answers', 'class_enrollments', 'sessions'];
+    private const TABLES = ['user_stats', 'quiz_attempts', 'question_answers', 'user_achievements', 'class_enrollments', 'sessions'];
 
     protected function setUp(): void
     {
@@ -100,5 +101,6 @@ class DeleteAccountTest extends TestCase
         $attemptId = $this->actingAs($user)->postJson("/api/v1/topics/{$topic->id}/attempts")->assertCreated()->json('data.id');
         $this->postJson("/api/v1/attempts/{$attemptId}/answers", ['question_id' => $question->id, 'option_ids' => [$richtig->id]])->assertOk();
         $this->postJson("/api/v1/attempts/{$attemptId}/finish")->assertOk();
+        $user->achievements()->attach(Achievement::factory()->create());
     }
 }

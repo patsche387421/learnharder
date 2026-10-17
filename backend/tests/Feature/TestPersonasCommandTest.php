@@ -36,7 +36,7 @@ class TestPersonasCommandTest extends TestCase
 
         $personas = collect($this->personas())->keyBy('gamer_tag');
 
-        $this->assertCount(7, $personas);
+        $this->assertCount(8, $personas);
         $this->assertSame([
             'gamer_tag' => 'Boosterfan', 'email' => 'boosterfan@test.learnharder.app', 'level' => 30, 'prestige' => 0, 'xp' => 1249,
             'streak' => ['current' => 3, 'longest' => 3, 'today' => true], 'brainpower' => ['current' => 60, 'max' => 130],

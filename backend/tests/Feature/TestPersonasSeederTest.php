@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\ContentStatus;
 use App\Models\QuizAttempt;
 use App\Models\Subject;
 use App\Models\User;
@@ -28,12 +29,15 @@ class TestPersonasSeederTest extends TestCase
         $this->travelTo(CarbonImmutable::parse('2026-10-17 14:00', 'Europe/Vienna'));
     }
 
-    /** Wie in der Entwicklung: Rollen und Demo-Konten, ein Fach statt des Imports, Demo-Schule, Testpersonen. */
+    /** Wie in der Entwicklung: Rollen und Demo-Konten, ein Fach mit 12 Fragen statt des Imports, Demo-Schule, Testpersonen. */
     private function seedAll(): void
     {
         $this->seed();
         $pos = Subject::create(['slug' => 'pos', 'name' => ['de' => 'POS']]);
-        $pos->topics()->create(['slug' => 'schleifen', 'title' => ['de' => 'Schleifen'], 'status' => 'published']);
+        $topic = $pos->topics()->create(['slug' => 'schleifen', 'title' => ['de' => 'Schleifen'], 'status' => 'published']);
+        foreach (range(1, 12) as $i) {
+            $topic->questions()->create(['question_text' => ['de' => "Frage {$i}"], 'status' => ContentStatus::Published]);
+        }
         $this->seed(DemoSchoolSeeder::class);
         $this->seed(TestPersonasSeeder::class);
     }
@@ -50,12 +54,12 @@ class TestPersonasSeederTest extends TestCase
         return $this->actingAs($this->persona($tag))->getJson('/api/v1/me');
     }
 
-    public function test_alle_sieben_mit_gamer_tag_ohne_namen_und_mit_passwort(): void
+    public function test_alle_acht_mit_gamer_tag_ohne_namen_und_mit_passwort(): void
     {
         $this->seedAll();
 
         $personas = User::where('email', 'like', '%@test.learnharder.app')->orderBy('id')->get();
-        $this->assertSame(['Neuling', 'Mittendrin', 'Boosterfan', 'FastPrestige', 'PrestigeProfi', 'OhneKlasse', 'Gesperrt'], $personas->pluck('gamer_tag')->all());
+        $this->assertSame(['Neuling', 'Mittendrin', 'Boosterfan', 'FastPrestige', 'PrestigeProfi', 'Herausforderer', 'OhneKlasse', 'Gesperrt'], $personas->pluck('gamer_tag')->all());
         $this->assertTrue($personas->every(fn (User $user) => $user->name === null && $user->hasRole('student')));
 
         $this->postJson('/api/v1/login', ['email' => 'neuling@test.learnharder.app', 'password' => 'learnharder123'])->assertOk();
@@ -94,6 +98,11 @@ class TestPersonasSeederTest extends TestCase
             ->assertJsonPath('data.brainpower.max', 200)
             ->assertJsonPath('data.streak', ['current' => 40, 'longest' => 55, 'today' => false]);
 
+        $this->me('Herausforderer')->assertOk()
+            ->assertJsonPath('data.level', 20)
+            ->assertJsonPath('data.brainpower.current', 100)
+            ->assertJsonPath('data.trophies', 0);
+
         $this->me('OhneKlasse')->assertOk()->assertJsonPath('data.school_class', null);
 
         $this->me('Gesperrt')->assertForbidden()->assertJsonPath('reason', 'account_deactivated');
@@ -117,8 +126,23 @@ class TestPersonasSeederTest extends TestCase
 
         // Ohne Streak kein Verlauf, der Hub sieht den ersten Besuch
         $hub('Neuling')->assertJsonPath('data.last_study_at', null);
-        $this->assertSame(4, QuizAttempt::whereHas('user', fn ($users) => $users->where('email', 'like', '%@test.learnharder.app'))->count());
+        $streakLessons = QuizAttempt::whereHas('user', fn ($users) => $users->where('email', 'like', '%@test.learnharder.app')->where('gamer_tag', '!=', 'Herausforderer'));
+        $this->assertSame(4, $streakLessons->count());
         $this->assertTrue(QuizAttempt::all()->every(fn (QuizAttempt $attempt) => $attempt->topic->slug === 'schleifen' && $attempt->xp_earned === 0));
+    }
+
+    public function test_herausforderer_kann_die_herausforderung_starten_und_ist_knapp_vor_dranbleiben(): void
+    {
+        $this->seedAll();
+        $user = $this->persona('Herausforderer');
+
+        // 24 Lerneinheiten an den Tagen vor heute, die letzte gestern um 17 Uhr in Wien
+        $this->assertSame(24, QuizAttempt::where('user_id', $user->id)->whereNotNull('finished_at')->count());
+        $this->actingAs($user)->getJson('/api/v1/hub')->assertOk()
+            ->assertJsonPath('data.last_study_at', '2026-10-16T15:00:00+00:00')
+            ->assertJsonPath('data.challenge.locked', false)
+            ->assertJsonPath('data.challenge.left_today', 2);
+        $this->postJson('/api/v1/challenges')->assertCreated()->assertJsonPath('data.brainpower.current', 75);
     }
 
     public function test_neuer_lauf_setzt_zurueck(): void
@@ -130,7 +154,7 @@ class TestPersonasSeederTest extends TestCase
 
         $this->seed(TestPersonasSeeder::class);
 
-        $this->assertSame(7, User::where('email', 'like', '%@test.learnharder.app')->count());
+        $this->assertSame(8, User::where('email', 'like', '%@test.learnharder.app')->count());
         $this->me('Neuling')->assertJsonPath('data.booster', null)->assertJsonPath('data.brainpower.current', 100);
     }
 

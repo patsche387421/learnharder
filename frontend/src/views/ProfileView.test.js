@@ -99,14 +99,15 @@ describe('ProfileView', () => {
 
   it('ohne Klasse fragt das Profil keine Fächer ab und lässt Prestige 0 weg', async () => {
     useAuthStore().me = { gamer_tag: 'lena42', roles: ['student'], level: 3, rank: 'bronze', prestige: 0, xp: { total: 11 } }
-    const fetch = mockFetch()
+    const fetch = mockFetch({ status: 200, body: { data: [] } })
     const router = testRouter()
     router.push('/profile')
     await router.isReady()
     const wrapper = mount(ProfileView, { global: { plugins: [router] } })
     await flushPromises()
 
-    expect(fetch).not.toHaveBeenCalled()
+    // Nur die Erfolge, die gibt es auch ohne Klasse
+    expect(fetch.mock.calls.map(([url]) => new URL(url).pathname)).toEqual(['/api/v1/achievements'])
     expect(wrapper.find('.profile__stats').text()).toContain('Level 3 · Bronze')
     expect(wrapper.find('.profile__stats').text()).not.toContain('Prestige')
     expect(wrapper.find('.profile__xp').text()).toBe('11 EP gesamt')
@@ -129,7 +130,8 @@ describe('ProfileView', () => {
 
   it('lässt die Fach-Level nach einem Fehler neu laden', async () => {
     useAuthStore().me = { gamer_tag: 'lena42', roles: ['student'], school_class: { name: '2AHIT' } }
-    mockFetch(new TypeError('offline'), { status: 200, body: { data: [{ code: 'pos', name: 'Programmieren', level: 4 }] } })
+    // Fächer, Erfolge (leer), dann die Fächer noch einmal
+    mockFetch(new TypeError('offline'), { status: 200, body: { data: [] } }, { status: 200, body: { data: [{ code: 'pos', name: 'Programmieren', level: 4 }] } })
     const router = testRouter()
     router.push('/profile')
     await router.isReady()
@@ -173,5 +175,48 @@ describe('ProfileView', () => {
     await group.findAll('input')[2].setValue()
     expect(document.documentElement.getAttribute('data-theme')).toBe('dark')
     expect(localStorage.getItem('lh-theme')).toBe('dark')
+  })
+
+  it('zeigt die Erfolge als Raster und danach die Trophäen frisch vom Server', async () => {
+    useAuthStore().me = { gamer_tag: 'lena42', roles: ['student'], trophies: 0 }
+    const fetch = mockFetch(
+      { status: 200, body: { data: [
+        { id: 'a', secret: false, title: 'Eine Woche', description: '7 Tage in Folge lernen', icon_name: 'streak', subject: null, level: 7, trophies: 2, unlocked_at: '2026-10-12T08:00:00+00:00' },
+        { id: 'b', secret: false, title: 'Ein Monat', description: '30 Tage in Folge lernen', icon_name: 'streak', subject: null, level: 30, trophies: 5, unlocked_at: null },
+        { id: 'c', secret: true, title: null, description: null, icon_name: null, subject: null, level: null, trophies: null, unlocked_at: null },
+      ] } },
+      { status: 200, body: { data: { gamer_tag: 'lena42', roles: ['student'], trophies: 2 } } },
+    )
+    const router = testRouter()
+    router.push('/profile')
+    await router.isReady()
+    const wrapper = mount(ProfileView, { global: { plugins: [router] } })
+    await flushPromises()
+
+    expect(fetch.mock.calls.map(([url]) => new URL(url).pathname)).toEqual(['/api/v1/achievements', '/api/v1/me'])
+    const section = wrapper.find('.profile__achievements')
+    expect(section.find('h2').text()).toBe('Erfolge · 1 / 3')
+    expect(section.find('.lh-chip').attributes('aria-label')).toBe('2 Trophäen')
+    const tiles = section.findAll('.lh-achievement')
+    expect(tiles.map((tile) => tile.attributes('aria-label'))).toEqual([
+      'Eine Woche, erreicht am 12. Oktober',
+      'Ein Monat, noch nicht erreicht: 30 Tage in Folge lernen',
+      'Geheimer Erfolg',
+    ])
+  })
+
+  it('lässt die Erfolge nach einem Fehler neu laden und blendet sie ohne Katalog aus', async () => {
+    useAuthStore().me = { gamer_tag: 'lena42', roles: ['student'] }
+    mockFetch(new TypeError('offline'), { status: 200, body: { data: [] } })
+    const router = testRouter()
+    router.push('/profile')
+    await router.isReady()
+    const wrapper = mount(ProfileView, { global: { plugins: [router] } })
+    await flushPromises()
+
+    expect(wrapper.find('.profile__achievements').text()).toContain('Prüf deine Verbindung')
+    await wrapper.find('.profile__achievements .lh-empty button').trigger('click')
+    await flushPromises()
+    expect(wrapper.find('.profile__achievements').exists()).toBe(false)
   })
 })

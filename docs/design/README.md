@@ -76,7 +76,7 @@ Regeln:
 | Social | Team / Team | Team, Team-Herausforderungen |
 | **Hub** (Startseite) | *das eigene Level-Badge* | Streak, Weiterlernen, Prüfung, Herausforderung, Kampagne, Shop |
 | Ranglisten | Liga / League | Monatliche Liga |
-| Profil | Profil / Profile | Errungenschaften, Einstellungen |
+| Profil | Profil / Profile | Erfolge, Einstellungen |
 
 - Handy: Tab-Leiste unten, **Hub in der Mitte**. Ab 768px: Leiste links, **Hub oben**. Details in `AppLayout`.
 - Labels sind ein Wort mit höchstens 7 Zeichen. Der aktive Tab ist an Icon *und* Label erkennbar.
@@ -105,6 +105,8 @@ Dateinamen sind englisch (`subject-pos`, `icon-xp`, `ui-learn`). Patina kommt in
 | `SubjectCard` | Fach mit Fortschritt oder gesperrt |
 | `AnswerOption` | Antwort im Quiz: ausgewählt, richtig, falsch |
 | `Shop` | Brainpower einsetzen: Abschnitte mit Angeboten, zuerst EP-Booster |
+| `Achievement` | Erfolge: Raster im Profil, neue Erfolge im Ergebnis |
+| `Challenge` | Herausforderung: Zeile im Hub, Start, Frage mit Fach, Ergebnis mit Bonus |
 | `LearnFlow` | Hub (Alltag und Prüfung) → Thema → Fragen mit Feedback → Ergebnis; Theorie-Modus |
 
 ## Qualitätscheck vor dem Release

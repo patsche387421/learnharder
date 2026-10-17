@@ -204,6 +204,41 @@ Jede Entscheidung: Nummer, Datum, was, warum, Folgen. Offene Fragen stehen unten
 - **Warum:** Alte Tests für ein Verhalten, das es nicht mehr gibt, prüfen nichts und bremsen jede Änderung. Ein Test im selben Commit zeigt im Diff, was sich am Verhalten ändert. Eine Rangfolge lohnt sich erst, wenn ein Lauf deutlich länger als 5 Minuten dauert (Stand: Backend etwa 75 s, Frontend etwa 2 Min.). Testpersonen haben ein bekanntes Passwort und dürfen nie in Produktion landen (Regel 7 in `CLAUDE.md`).
 - **Folgen:** Anleitung für Menschen in `handbuch/testen.md`. Bausteine für Testnutzer:innen in `UserFactory` und `SchoolClassFactory`. Die Testzentrale zeigt Datenbanken, Testpersonen und Testgruppen. Übersprungene Tests nur mit Aufgabe in `AUFGABEN.md`.
 
+### E-040 — Begriff „Erfolg“ (2026-10-17)
+- **Entscheidung:** Benannte Auszeichnungen heißen in der App „Erfolg“, im Code `achievement`. Nicht verwenden: Errungenschaft, Achievement, Badge, Abzeichen.
+- **Warum:** Kurz genug für Kacheln und das Ergebnis, und Konzept, Meilensteine und Aufgaben sagen schon „Erfolge“. „Errungenschaft“ ist lang und klingt übersetzt. „Abzeichen“ ist schon ein Slot des Avatars (`plans/KONZEPT_SPIELWELT.md` §7).
+- **Folgen:** Glossar zuerst im Design-Artefakt (E-006), danach Kopie `design/Sprache.md`.
+
+### E-041 — Erfolge in eigenen Tabellen `achievements` und `user_achievements` (2026-10-17)
+- **Entscheidung:** Eine neue Migration löscht die leeren Tabellen `trophies` und `user_trophies` und legt `achievements` (Katalog) und `user_achievements` (Vergaben) neu an. `user_stats.trophies` bleibt die Währung.
+- **Warum:** Die Tabelle `trophies` war eigentlich der Katalog der Erfolge und hieß wie die Währung (Schema-Lücke 1). Neu anlegen statt umbenennen, weil Postgres beim Umbenennen die Namen von Indizes und Fremdschlüsseln nicht mitnimmt. Nichts schreibt in die alten Tabellen, und noch lief keine Migration auf einem Server.
+- **Folgen:** `achievement_id` mit `restrictOnDelete` (Verlauf bleibt), Cascade nur über `user_id` (Konto löschen, E-027). `user_achievements` merkt sich die vergebenen Trophäen (`trophies_awarded`), weil es kein Log für EP und Trophäen gibt. `down()` stellt die alten Tabellen wieder her.
+
+### E-042 — Bedingungen der Erfolge als feste Typen mit Schwellwert (2026-10-17)
+- **Entscheidung:** Die Arten von Bedingungen stehen als Enum im Code (z. B. abgeschlossene Lerneinheiten, fehlerfreie Lerneinheiten, Streak, Level, Fach-Level, Herausforderungen). Im CMS wählt man Typ und Schwellwert, beim Fach-Level wahlweise ein Fach. Pflegen dürfen nur Admins. Ein Erfolg mit Vergaben lässt sich nicht löschen, nur deaktivieren. Erfolge werden nie entzogen.
+- **Warum:** Neue Stufen (z. B. 60 Tage Streak) gehen ohne Code, neue Arten bleiben getestet und laufen nur auf dem Server (Konzept Spielwelt §2). Erfolge beeinflussen die Trophäen, deshalb gehören sie zur Spiel-Ökonomie und nicht zur Redaktion.
+- **Folgen:** Der Server prüft nach jedem Abschluss einer Lerneinheit oder Herausforderung und beim Laden der Erfolge. So bekommen bestehende Konten auch neue Erfolge aus dem CMS. Der Streak zählt über `longest_streak`. Level-Erfolge gelten auch ab Prestige 1. Wer einen deaktivierten Erfolg hat, sieht ihn weiter.
+
+### E-043 — Erfolge bringen Trophäen, keine Brainpower (2026-10-17)
+- **Entscheidung:** Jeder Erfolg hat im CMS einen Wert `trophy_reward` (0 oder mehr), der bei der Vergabe einmal gutgeschrieben wird. Erfolge geben keine Brainpower.
+- **Warum:** Brainpower soll sich nur täglich aufladen. Mehr Brainpower hieße mehr Booster, mehr EP und ein Vorteil in der Rangliste (Begründung wie E-036), dazu käme die Frage, was über dem Maximum passiert.
+- **Folgen:** `trophies.bp_reward` entfällt mit E-041. Ändert man den Wert im CMS, bleiben frühere Vergaben gleich.
+
+### E-044 — Erster Katalog: 12 Erfolge, 2 davon geheim (2026-10-17)
+- **Entscheidung:** G3 startet mit 12 Erfolgen (`plans/KONZEPT_SPIELWELT.md` §6), davon „Aus Fehlern gelernt“ und „Allrounder“ geheim. Keine Erfolge nach Uhrzeit oder nach Pausen. Bilder: Im CMS wählt man ein vorhandenes Icon (Streak, EP, Fach, Herausforderung, Trophäe, Erfolg), die Stufe steht als Zahl auf der Kachel.
+- **Warum:** Andere sollen später Erfolge sehen (Werkhalle, E-034). Ein Erfolg für nächtliches Lernen oder ein „Comeback“ würde verraten, wann jemand lernt oder weg war (wie E-033). Eigene Bilder gibt es noch nicht, und das Design-Artefakt hat Icons für jede Art.
+- **Folgen:** Ein Seeder legt den Katalog in allen Umgebungen an, ohne Änderungen aus dem CMS zu überschreiben. Geheime, noch nicht erreichte Erfolge schickt der Server ohne Titel und Beschreibung. Eigene Bilder je Erfolg später nach Patsches Entwürfen.
+
+### E-045 — Regeln der Herausforderung (2026-10-17)
+- **Entscheidung:** Die Herausforderung kostet beim Start 25 Brainpower und hat 10 zufällige Fragen aus Themen, in denen man schon eine Lerneinheit abgeschlossen hat (nur sichtbare Fächer, Level reicht). Jede richtige erste Antwort bringt 5 EP, dazu kommt ein Bonus von +20 ab 8 von 10 und +50 bei 10 von 10. Fehlerfrei gibt es +1 Trophäe. Höchstens 2 Starts je Tag in Wien. Falsche Fragen kommen nicht noch einmal. Wer abbricht, kann bis Mitternacht weitermachen, danach verfällt die Herausforderung ohne EP. Die Brainpower bleibt ausgegeben.
+- **Warum:** Wiederholen wie vor einer Prüfung, nichts Unbekanntes für 25 Brainpower. Die Tagesregel E-015 gilt hier nicht und sperrt umgekehrt keine Fragen in Lerneinheiten, sonst zahlte man nach dem Lernen 25 Brainpower für 0 EP. Gebremst wird die Herausforderung durch Brainpower und das Tageslimit. Ein Booster wirkt nicht, sonst stapeln sich zwei Ausgaben zu einem Vorteil in der Rangliste. Fortsetzen bis Mitternacht verzeiht einen Netzfehler, ohne dass man Fragen gratis ansehen kann.
+- **Folgen:** Werte in `config/gamification.php` unter `challenge`. Weniger als 10 Fragen im Pool sperrt den Start mit Grund. Der Bonus zählt zu den Gesamt-EP, nicht zum Fach-Level. Der Abschluss zählt als Lerntag und prüft Erfolge. Ökonomie-Modell §3.3, Glossar „Herausforderung“ im Design-Artefakt.
+
+### E-046 — Trophäen nur für Kosmetik, kein Tausch in Brainpower (2026-10-17)
+- **Entscheidung:** Trophäen lassen sich nicht in Brainpower tauschen. Ab G5 kauft man damit Prestige-Teile für den Roboter. Trophäen gibt es für Erfolge und für eine fehlerfreie Herausforderung, nicht für Lerneinheiten.
+- **Warum:** In V1 gab es +1 Trophäe je richtige Antwort, auch beim freien Üben, und 50 Trophäen ergaben einen Energydrink (BUG-011: Tausch über den Deckel). Das ging nur, weil Energie hart gedeckelt war. In V2 kauft Brainpower Booster, die EP bringen. Trophäen aus kostenlosen Lerneinheiten wären mit Tausch ein zweites tägliches Aufladen, also Farming mit Vorsprung in der Rangliste. Ohne Tausch bleibt es bei „Kosmetik, kein Vorteil“ (Konzept Spielwelt §2), und die Abstimmung mit den Lehrkräften (M5) wird einfacher.
+- **Folgen:** Ökonomie-Modell §4 neu (kein Kurs, kein Deckel, Szenario C ohne Tausch). Glossar „Trophäen“ im Design-Artefakt ändern. Preise der Prestige-Teile kommen mit §3.4 vor G5.
+
 ## Offen
 
 | Nr. | Frage | Empfehlung | Warum offen |

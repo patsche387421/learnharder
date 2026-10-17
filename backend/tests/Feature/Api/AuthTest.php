@@ -84,6 +84,7 @@ class AuthTest extends TestCase
                 'streak' => ['current' => 0, 'longest' => 0, 'today' => false],
                 'brainpower' => ['current' => 80, 'max' => 200],
                 'booster' => null,
+                'trophies' => 0,
             ]]);
     }
 

@@ -38,16 +38,18 @@ Die Tests laufen gegen die Datenbank `testing` (`phpunit.xml`) und loggen nach `
 | `GET legal/{slug}` | Rechtstexte ohne Login (E-023): `datenschutz`, `impressum`, `nutzungsregeln`, `einwilligung-eltern` aus `resources/legal/`, Fassung aus `config/legal.php`. Neue Spalte mit Personendaten → `LegalTest` schlägt an, Datenschutzerklärung ergänzen |
 | `POST register/code`, `POST register/verify`, `POST register` | Registrierung (E-025): Code an die Schul-Mail (nur freigegebene Domain, `App\Support\EmailCode`), Code gegen Einmal-Token, Konto als `student` anlegen und anmelden. Limits je E-Mail, IP und Tag (`config/accounts.php`) |
 | `POST password/code`, `POST password/reset` | Passwort vergessen: Code nur für aktive Konten (Antwort immer gleich), neues Passwort beendet alle Anmeldungen (`Accounts::logoutEverywhere`). Auch der Weg zum ersten Passwort für Konten aus dem CMS |
-| `POST login`, `POST logout`, `GET me` | Login per Session, `me` liefert Gamer-Tag, eigene Klasse, Fortschritt (Level, Rang, Prestige, EP), Streak (`current`, `longest`, `today`: heute in Wien gelernt), Brainpower und den laufenden Booster. `login` und `me` laden Brainpower vorher auf (`App\Support\Brainpower`, E-036) |
+| `POST login`, `POST logout`, `GET me` | Login per Session, `me` liefert Gamer-Tag, eigene Klasse, Fortschritt (Level, Rang, Prestige, EP), Streak (`current`, `longest`, `today`: heute in Wien gelernt), Brainpower, Trophäen (`trophies`) und den laufenden Booster. `login` und `me` laden Brainpower vorher auf (`App\Support\Brainpower`, E-036) |
 | `DELETE me` | Eigenes Konto mit Passwort löschen, sofort und vollständig, nur Schüler:innen (E-027). Danach nicht `logout()` aufrufen: Das speichert das Remember-Token und legt das Konto neu an |
 | `GET shop` | Shop (E-037): Brainpower (vorher aufgeladen), laufender Booster und die Booster-Angebote aus `config/gamification.php`. Die App kennt keine Preise selbst. `xp_left_today`: ob heute noch eine spielbare Frage EP bringt (`DailyXp::anyLeft`, eine `EXISTS`-Abfrage, ohne Klasse sofort `false`) |
 | `POST boosters` | XP-Booster mit Brainpower kaufen (E-010): `kind` aus `config/gamification.php`, 409 wenn schon einer läuft, 422 ohne genug Brainpower. Am Konto steht nur der laufende Booster, jede Antwort merkt sich ihren Faktor (`App\Support\Booster`) |
-| `GET hub` | Fakten für den Hub: `next_topic` (zuerst im Fach der letzten Lerneinheit, sonst nach Reihenfolge; nur spielbar, nicht gesperrt, nicht erledigt) oder `null` |
+| `GET hub` | Fakten für den Hub: `next_topic` (zuerst im Fach der letzten Lerneinheit, sonst nach Reihenfolge; nur spielbar, nicht gesperrt, nicht erledigt) oder `null`, dazu `challenge` (`Challenge::status`: Kosten und Regeln aus der Config, heute übrig, offene, gesperrt) |
+| `GET achievements` | Erfolge (E-040 bis E-044): prüft vorher nach (`App\Support\Achievements::check`), alle aktiven plus eigene deaktivierte. Geheime unerreichte ohne Titel, Text und Bild |
+| `POST challenges`, `GET challenges/current` | Herausforderung (E-045, `App\Support\Challenge`): 10 Fragen aus gelernten Themen für 25 Brainpower, unter Sperre auf `users`. 409 bei offener oder am Tageslimit, 422 ohne Pool oder Brainpower. `current` liefert die offene von heute mit `answered`, sonst `null` |
 | `GET subjects`, `GET subjects/{slug}` | sichtbare Fächer mit Themen, Fortschritt und Fach-Level (E-018) |
 | `GET subjects/{slug}/topics/{slug}` | Thema mit Theorie als sicherem HTML (`Str::markdown` mit `html_input: escape`) |
 | `POST topics/{id}/attempts` | Lerneinheit starten, Fragen ohne Lösung, Antworten je Lerneinheit gemischt |
-| `POST attempts/{id}/answers` | eine Antwort prüfen, nur die erste pro Frage zählt |
-| `POST attempts/{id}/finish` | abschließen und EP vergeben, idempotent |
+| `POST attempts/{id}/answers` | eine Antwort prüfen, nur die erste pro Frage zählt. Gilt auch für die Herausforderung (nach Mitternacht 409) |
+| `POST attempts/{id}/finish` | abschließen und EP vergeben, idempotent. Antwortet mit `xp_bonus`, `achievements_unlocked` und `trophies_earned` |
 
 Alles außer `login` braucht `auth:sanctum` und ein nicht gesperrtes Konto (`EnsureAccountActive`, sonst 403). Sichtbar ist nur `published` (Thema und Frage) in einem aktiven Fach, sonst 404. Dazu filtert `Subject::visibleTo()`: Schüler:innen sehen den Lehrplan ihrer Klasse, admin, autor, tester und teacher alles (E-024). API-Tests mit Schüler:innen brauchen deshalb eine Klasse (`Tests\Concerns\EnrollsStudents`).
 
@@ -61,7 +63,8 @@ Alles außer `login` braucht `auth:sanctum` und ein nicht gesperrtes Konto (`Ens
 
 - Spiellogik (XP, Brainpower, Streaks, Trophäen) läuft **nur serverseitig**. Der Client schickt Antworten, der Server rechnet.
 - Quiz-Abschlüsse brauchen einen Idempotency-Key, damit doppelte Requests nicht doppelt XP geben. Bei Lerneinheiten ist das die Attempt-ID.
-- EP vergibt nur `QuizAttempt::finish()`: erst `lockForUpdate` auf `user_stats`, dann die Tagesregel (E-015, Tag in `Europe/Vienna`, `App\Support\DailyXp`). Level, Rang und Prestige rechnet `App\Support\Progression` aus den Gesamt-EP, gespeichert wird nur `total_xp`.
+- EP vergibt nur `QuizAttempt::finish()`: erst `lockForUpdate` auf `user_stats`, dann die Tagesregel (E-015, Tag in `Europe/Vienna`, `App\Support\DailyXp`). Level, Rang und Prestige rechnet `App\Support\Progression` aus den Gesamt-EP, gespeichert wird nur `total_xp`. Danach prüft `Achievements::check` unter derselben Sperre die Erfolge. `DailyXp` zählt nur `standard`-Lerneinheiten, die Herausforderung ist ausgenommen und ohne Booster (E-045).
+- Antworten mischt `Question::shuffledOptions($seed)` mit festem Seed (Mt19937): `Collection::shuffle()` nimmt seit Laravel 13 keinen Seed mehr.
 - API-Routen kommen nach `routes/api.php`, versioniert unter `/api/v1/…`.
 - Die Vue-App holt vor dem Login `GET /sanctum/csrf-cookie` und schickt Cookies mit. Ihr Host muss in `SANCTUM_STATEFUL_DOMAINS` stehen, ihre Origin in `CORS_ALLOWED_ORIGINS` (`.env`).
 - API-Antworten über Resources (`app/Http/Resources`). Über Schüler:innen nie E-Mail oder Klarnamen ausgeben, nur den Gamer-Tag.

@@ -94,26 +94,24 @@ $$\text{Tägliche Regeneration} = \text{Basis (50 BP)} + \min(\text{Streak-Tage}
 | Aktion / Aktivität | BP-Kosten | Belohnung / Ertrag | Didaktischer Nutzen |
 | :--- | :---: | :--- | :--- |
 | **Theorie lesen & Basisaufgaben** | **0 BP** | $2\text{ XP}$ pro richtiger Antwort, je Frage einmal pro Tag (E-015) | Hürdenfreies Lernen |
-| **Prüfungs-Challenge (Schwer)** | **25 BP** | $5\text{ XP}$/Frage + bis zu $+50\text{ XP}$ Bonus + Trophäen | Klausurvorbereitung |
+| **Herausforderung** | **25 BP** | $5\text{ XP}$ je richtiger Antwort, Bonus $+20\text{ XP}$ ab 8/10, $+50\text{ XP}$ bei 10/10, $+1$ Trophäe bei 10/10 | Klausurvorbereitung |
 | **XP-Booster 1,5× (30 Min)** | **20 BP** | $1{,}5\times$ XP auf richtige Antworten für 30 Minuten | Kurze Session zwischendurch |
 | **XP-Booster 2× (30 Min)** | **40 BP** | $2\times$ XP auf richtige Antworten für 30 Minuten | Gezielte Lern-Sessions |
 | **XP-Booster 2× (60 Min)** | **70 BP** | $2\times$ XP auf richtige Antworten für 60 Minuten | Prüfungsvorbereitung |
 | **1v1 Duell (Phase 2)** | **15 BP** | Sieger: $+30\text{ XP}$ + Ranglistenpunkte; Verlierer: $+10\text{ XP}$ | Synchroner Wettbewerb |
 
-Die Prüfungs-Challenge (in der App „Herausforderung“) kommt mit G3, zusammen mit den Erfolgen (E-038).
+Herausforderung (G3, E-045): 10 zufällige Fragen aus Themen mit mindestens einer abgeschlossenen Lerneinheit (sichtbare Fächer, Level reicht), abwechselnd aus verschiedenen Fächern. Bei weniger als 10 Fragen im Pool ist der Start gesperrt. Die 25 BP werden beim Start abgebucht, höchstens 2 Starts je Wiener Tag. Es zählt nur die erste Antwort, falsche Fragen kommen nicht noch einmal. Die Tagesregel (E-015) gilt nicht und sperrt umgekehrt keine Fragen in Lerneinheiten. Ein laufender Booster wirkt nicht. Der Bonus zählt zu den Gesamt-XP, nicht zum Fach-Level. Bei einem Abbruch bleiben die BP ausgegeben, bis Mitternacht in Wien lässt sie sich fortsetzen, danach verfällt sie ohne XP. Werte in `config/gamification.php` unter `challenge`.
 
 Booster-Regeln (E-010): Der Server rechnet, der Client zeigt nur die Restzeit. Höchstens ein Booster gleichzeitig, solange einer läuft, ist kein Kauf möglich. Die Zeit läuft in Echtzeit weiter, auch bei geschlossener App. Es zählt der Booster beim Antworten, nicht beim Abschluss der Lerneinheit, aber nur, wenn Antwort und Abschluss am selben Wiener Tag liegen (sonst ließen sich Antworten unter einem Booster für den nächsten Tag sammeln). Halbe EP werden aufgerundet. Gespeichert wird nur der laufende Booster, kein Kaufverlauf (Stand 2026-10-17). Ob es für Shop und Herausforderungen ein gemeinsames Brainpower-Konto mit Verlauf braucht, klärt G5.
 
 ---
 
-## 4. Trophäen-Konvertierung (Tausch-Ökonomie)
+## 4. Trophäen (E-043, E-046)
 
-Trophäen belohnen dauerhafte Exzellenz (fehlerfreie Quizdurchläufe):
-* **Erhalt:** $+1\text{ Trophäe}$ pro fehlerfreier Aufgabenserie (mind. 5 Fragen).
-* **Tauschkurs in Brainpower:**
-  $$50\text{ Trophäen} \longrightarrow 25\text{ BP}$$
-* **Sicherheits-Deckel:** Maximal 2 Tauschvorgänge pro Kalendertag ($50\text{ BP}$ maximaler Zukauf pro Tag), um Infinite-Loop-Exploits durch Vorrats-Grinding auszuschließen.
-* **Prestige-Kosmetik (Phase 3):** Ab Phase 3 können Trophäen alternativ gespart werden, um exklusive Avatar-Skins oder Titel freizuschalten.
+Trophäen belohnen besondere Leistungen und sind nur für Kosmetik da:
+* **Erhalt:** einmalig für Erfolge (Wert je Erfolg im CMS) und $+1\text{ Trophäe}$ für eine fehlerfreie Herausforderung (§3.3). Lerneinheiten geben keine Trophäen.
+* **Kein Tausch in Brainpower.** Jede Brainpower aus einem Tausch hieße mehr Booster, mehr XP und einen Vorsprung in der Rangliste. Mit Trophäen aus kostenlosen Lerneinheiten wäre das Farming (in V1: $+1$ je richtiger Antwort, 50 Trophäen = 1 Energydrink).
+* **Prestige-Kosmetik (G5):** Mit Trophäen kauft man Prestige-Teile für den Roboter (Konzept Spielwelt §7). Preise kommen mit §3.4.
 
 ---
 
@@ -140,5 +138,5 @@ Trophäen belohnen dauerhafte Exzellenz (fehlerfreie Quizdurchläufe):
 * **Verhalten:** 60 Minuten intensiv vor einer Schulaufgabe / Schularbeit.
 * **Ablauf:** Aktiviert 2x XP Booster ($40\text{ BP}$), absolviert 2 Challenges ($50\text{ BP}$).
 * **Tages-XP:** Bis zu $350\text{ XP}$ an einem Tag.
-* **BP-Bilanz:** Verbraucht $90\text{ BP}$. Nutzt $50\text{ Trophäen}$ für $+25\text{ BP}$ Notreserve.
+* **BP-Bilanz:** Verbraucht $90\text{ BP}$, die Reserve kommt nur aus dem täglichen Aufladen (kein Trophäen-Tausch, E-046).
 * **Ergebnis:** Hochgradig belohnend für Klausurvorbereitung ohne Erschöpfung des Kontos vor dem Prüfungstag.

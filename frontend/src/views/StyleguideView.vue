@@ -4,6 +4,7 @@
 import { ref } from 'vue'
 import tokens from '../styles/tokens.json'
 import { icons } from '../components/ui/icons.js'
+import LhAchievement from '../components/ui/LhAchievement.vue'
 import LhAnswerOption from '../components/ui/LhAnswerOption.vue'
 import LhArt from '../components/ui/LhArt.vue'
 import LhButton from '../components/ui/LhButton.vue'
@@ -108,7 +109,7 @@ function check() {
       <LhCard eyebrow="Fr, 17. Okt">
         <p class="body">Inhalt ohne Link. Eine Karte, ein Thema.</p>
       </LhCard>
-      <LhCard to="/" title="Herausforderung" text="Zufällige Fragen aus allen Fächern">
+      <LhCard to="/" title="Herausforderung" text="10 Fragen aus deinen Themen · noch 2 heute">
         <template #icon><LhArt name="icon-challenge" :size="40" /></template>
       </LhCard>
       <LhCard to="/" featured eyebrow="in 3 Tagen" title="DBI-Test" text="2 Themen sind noch schwach.">
@@ -117,6 +118,16 @@ function check() {
       <LhCard button title="Als Button" text="Löst etwas aus, statt zu verlinken">
         <template #icon><LhArt name="icon-campaign" :size="40" /></template>
       </LhCard>
+    </section>
+
+    <section class="sg__section">
+      <h2 class="h2">LhAchievement</h2>
+      <ul class="lh-achievements">
+        <LhAchievement title="Eine Woche" description="7 Tage in Folge lernen" icon="streak" :level="7" unlocked-at="2026-10-12T08:00:00+00:00" />
+        <LhAchievement title="Ein Monat" description="30 Tage in Folge lernen" icon="streak" :level="30" />
+        <LhAchievement title="Fach-Level 10" description="In POS Level 10" subject="pos" :level="10" />
+        <LhAchievement secret />
+      </ul>
     </section>
 
     <section class="sg__section">

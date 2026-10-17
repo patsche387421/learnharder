@@ -52,7 +52,7 @@ Beim Arbeiten reichen die betroffenen Tests. **Vor jedem Commit laufen alle**, d
 - Laufen gegen den lokalen Stack: App auf http://localhost:5173, API auf http://localhost. Beides muss laufen, sonst bricht der Lauf mit einem Hinweis ab.
 - Daten: die Entwicklungs-Datenbank `laravel`. Vor jedem Lauf setzt `e2e/global-setup.js` die Testpersonen zurück, andere Konten bleiben.
 - Die Tests melden sich wie ein Mensch über das Formular an (`loginAs(page, 'Boosterfan')` aus `e2e/personas.js`) und prüfen, was auf dem Bildschirm steht. Gerät: ein Android-Handy (Pixel 7), Zeitzone Wien.
-- Bisher: `login.spec.js` (vier Testpersonen landen dort, wo ihr Zustand sie hinführt) und `lernen.spec.js` (Mittendrin lernt eine Einheit, danach Streak 7). Die Lerneinheit kennt die Antworten nicht vorher: Sie merkt sich nach einem Fehler die als „Richtig“ markierten Optionen für die Wiederholung.
+- Bisher: `login.spec.js` (vier Testpersonen landen dort, wo ihr Zustand sie hinführt), `lernen.spec.js` (Mittendrin lernt eine Einheit, danach Streak 7) und `challenge.spec.js` (Herausforderer spielt eine Herausforderung, danach 75 Brainpower und der Erfolg „Herausforderung angenommen“ im Profil, Neuling sieht sie gesperrt). Die Lerneinheit kennt die Antworten nicht vorher: Sie merkt sich nach einem Fehler die als „Richtig“ markierten Optionen für die Wiederholung. Die Herausforderung tippt immer die letzte Option und rechnet EP und Bonus aus den Rückmeldungen nach.
 - Einmal pro Rechner braucht Chromium ein paar Systembibliotheken: `cd frontend && sudo npx playwright install-deps chromium`, danach `npx playwright install chromium`.
 - Schlägt ein Test fehl, liegt in `frontend/test-results/` eine Aufzeichnung (Trace). Ansehen mit `npx playwright show-trace <datei>`, den Bericht mit `npx playwright show-report`. Beide Ordner sind nicht im Git.
 
@@ -64,7 +64,7 @@ Beim Arbeiten reichen die betroffenen Tests. **Vor jedem Commit laufen alle**, d
 
 ## Testpersonen (von Hand prüfen)
 
-Sieben feste Konten in der Demo-Klasse 2AHIT, nur lokal. Anmelden in der App mit `<name>@test.learnharder.app` und dem Passwort der Demo-Konten (`learnharder123`).
+Acht feste Konten in der Demo-Klasse 2AHIT, nur lokal. Anmelden in der App mit `<name>@test.learnharder.app` und dem Passwort der Demo-Konten (`learnharder123`).
 
 | Anmeldung | Zustand | Damit prüfst du |
 |---|---|---|
@@ -73,6 +73,7 @@ Sieben feste Konten in der Demo-Klasse 2AHIT, nur lokal. Anmelden in der App mit
 | `boosterfan@…` | Level 30 (Silber), Streak 3 heute, 2×-Booster für 25 Min. | Marken in Hub und Shop, „Danach kannst du den nächsten starten“ |
 | `fastprestige@…` | Level 100, 10 EP vor Prestige 1 | Prestige-Aufstieg mit einer Lerneinheit |
 | `prestigeprofi@…` | Prestige 2, Level 10, Streak 40 | Prestige-Ring, Brainpower-Maximum 200 |
+| `herausforderer@…` | Level 20, 100 Brainpower, 24 Lerneinheiten in POS und DBI (die letzte gestern) | Herausforderung starten, fortsetzen, Ergebnis mit Bonus, Erfolge im Profil, mit der 25. Lerneinheit „Dranbleiben“ |
 | `ohneklasse@…` | Schüler:in ohne Klasse | Hinweis „Noch keiner Klasse zugeordnet“ |
 | `gesperrt@…` | gesperrtes Konto | Weiterleitung nach dem Login |
 

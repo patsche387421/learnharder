@@ -53,8 +53,8 @@ class AdminPanelProvider extends PanelProvider
                 'gray' => Color::Stone,
             ])
             ->font('Atkinson Hyperlegible Next', url: asset('fonts/atkinson-hyperlegible-next/index.css'), provider: LocalFontProvider::class)
-            // Reihenfolge im Menü: erst die Redaktion, dann die Schulstruktur
-            ->navigationGroups(['Inhalte', 'Schule'])
+            // Reihenfolge im Menü: erst die Redaktion, dann die Schulstruktur, zuletzt das Spiel (Erfolge)
+            ->navigationGroups(['Inhalte', 'Schule', 'Spiel'])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([

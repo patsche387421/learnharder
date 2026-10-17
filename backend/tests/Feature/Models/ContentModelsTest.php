@@ -36,6 +36,21 @@ class ContentModelsTest extends TestCase
         $this->assertSame('In Prüfung', ContentStatus::Review->getLabel());
     }
 
+    public function test_antworten_mischen_sich_je_startwert_immer_gleich(): void
+    {
+        $question = $this->topic->questions()->create(['question_text' => ['de' => 'Frage?']]);
+        foreach (['a', 'b', 'c', 'd'] as $i => $text) {
+            $question->options()->create(['option_text' => ['de' => $text], 'is_correct' => $i === 0, 'order_index' => $i]);
+        }
+        $order = fn (string $seed) => $question->fresh()->shuffledOptions($seed)->pluck('option_text')->all();
+
+        // Fortsetzen zeigt dieselbe Reihenfolge, andere Lerneinheiten mischen anders
+        $this->assertSame($order('lerneinheit-1'), $order('lerneinheit-1'));
+        $this->assertEqualsCanonicalizing(['a', 'b', 'c', 'd'], $order('lerneinheit-1'));
+        $orders = collect(range(1, 20))->map(fn (int $i) => implode($order("lerneinheit-{$i}")))->unique();
+        $this->assertGreaterThan(1, $orders->count());
+    }
+
     public function test_jeder_enum_wert_passt_zur_datenbankregel(): void
     {
         // Enums und CHECK-Regeln in der Migration dürfen nicht auseinanderlaufen

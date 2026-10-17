@@ -20,7 +20,7 @@ bis nach M5 nur auf Deutsch (E-012). Workflow: `draft` → `review` → `publish
 - Filament siezt im Deutschen. Texte, die das CMS zeigt, stehen in du-Form in `lang/vendor/filament-*/de/` (nur die geänderten Schlüssel). Kommt eine Funktion dazu (Profil, Passwort zurücksetzen …), ihre Texte dort ergänzen.
 - Was Postgres ablehnt (Eindeutigkeit, auch ohne Groß-/Kleinschreibung), prüft auch das Formular. Löschen nur anbieten, wenn kein `RESTRICT` greift, sonst gibt es einen Serverfehler. Fächer, Themen und Fragen mit Lernverlauf verweigern das Löschen im Model (`BlocksDeletionWhileInUse`), das CMS sagt dann, was stattdessen geht (`DeletesOnlyUnused`).
 
-## Stand (2026-10-16)
+## Stand (2026-10-17)
 
 Die Ressourcen `SubjectResource`, `TopicResource` und `QuestionResource` haben deutsche Feldnamen, Sprachfelder schreiben auf `.de`,
 Fach und Thema erscheinen auf Deutsch. Status, Typ und Schwierigkeit sind Enums (`ContentStatus`, `QuestionType`, `Difficulty`), neue Inhalte starten als Entwurf.
@@ -32,3 +32,5 @@ Theorie pflegt das Thema im Relation Manager „Theorie“ (Markdown, ohne Uploa
 Schulstruktur (Gruppe „Schule“, nur Admin über `SchoolStructurePolicy`): `SchoolResource` mit Mail-Domains, Abteilungen und Schuljahren als Relation Manager, `ProgramResource` mit dem Lehrplan, `SchoolClassResource` mit den Relation Managern „Schüler:innen“ (eintragen, austragen statt löschen, eine aktive Klasse pro Schuljahr) und „Lehrkräfte“ (Fach, Lehrkraft, Semester).
 
 Konten (`UserResource`, nur Admin über `UserPolicy`, E-025/E-027): Personal und Schüler:innen unter 14 (nur mit bestätigtem Elternformular) anlegen, ohne Passwort. Rollen ändern, sperren, entsperren, Gamer-Tag zurücksetzen und Schüler:innen löschen laufen über `App\Support\Accounts`. Lehnt eine Schutzregel ab, meldet das CMS „Nicht gespeichert“ mit dem Grund. Gamer-Tag-Regeln stehen in `App\Support\GamerTag`. In der Liste liegen „Gamer-Tag zurücksetzen“ und „Löschen“ im ⋮-Menü, sonst passt die Zeile nicht.
+
+Erfolge (Gruppe „Spiel“, nur Admin über `AchievementPolicy`, E-042): `AchievementResource` mit Typ, Schwelle, Fach nur bei `subject_level`, Icon aus den Spiel-Icons, geheim, aktiv, Trophäen und Spalte „vergeben an“. Mit Vergaben nur deaktivieren, nicht löschen (`BlocksDeletionWhileInUse`).
