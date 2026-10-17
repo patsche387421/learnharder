@@ -29,6 +29,8 @@ Meilensteine und Reihenfolge: `plans/README.md`. Entscheidungen: `ENTSCHEIDUNGEN
 - [ ] Löschlauf nach 12 Monaten und Hinweis-Mail 30 Tage vorher per Scheduler (E-028) @claude
 - [ ] Erneute Zustimmung bei neuer `terms_version` @claude
 - [ ] DNS umstellen, Neuregistrierung ankündigen, V1-Supabase abschalten @patsche
+- [ ] CMS-Handbuch für die Redaktion: Fächer, Themen, Fragen anlegen, Prüfen und Veröffentlichen (E-014), warum manches nicht löschbar ist @claude
+- [ ] Betriebshandbuch für Admins: Konten, Sperren, Löschfristen (E-027, E-028), Notfall-Befehl `learnharder:make-admin` @claude
 
 ## Nebenbei
 
@@ -38,6 +40,15 @@ Meilensteine und Reihenfolge: `plans/README.md`. Entscheidungen: `ENTSCHEIDUNGEN
 - [ ] Unit-Test für die Weiterleitung nach einer Sperre in `main.js` @claude
 - [ ] Python-Tests aus `scripts/` in die CI @claude
 - [ ] Testzentrale fertig durchklicken: Details, Suche, „Ältere ausblenden“ im Log @patsche
+
+## Übergabe (E-029)
+
+- [ ] API-Referenz mit Scramble, Version gepinnt, nur lokal @claude
+- [ ] Architektur-Überblick auf einer Seite mit Grafik: App, API, CMS, Datenbank, Mail, Server @claude
+- [ ] Klassen-Docblocks für Models, Policies und Controller (28 Klassen ohne) @claude
+- [ ] Statische Analyse mit Larastan in der CI, niedrig anfangen und Stufe für Stufe anheben @claude
+- [ ] ESLint im Frontend und in der CI @claude
+- [ ] Einstieg für neue Entwickler:innen im README prüfen: frisches Setup nach Anleitung durchspielen @patsche
 
 ## Später (nach dem Start, E-021)
 
