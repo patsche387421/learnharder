@@ -50,6 +50,7 @@ public/assets/fonts/   selbst gehostete Schriften (keine CDNs)
 - **Store:** `stores/auth.js` hält `me`, daraus Level, Rang und Prestige für den Rahmen. `register()` und `deleteAccount()` für M4a. `isStaff`: Personal-Rolle. `waitingForClass`: keine Klasse und kein Personal (E-024). `applyProgress` übernimmt den Fortschritt nach einer Lerneinheit.
 - **Lernen:** `/learn` → `LearnView` (Fächer mit Fach-Level) → `SubjectView` (Themen) → `TopicView` → `TheoryView` und `LessonView` (beide `meta.focus`, ohne Tab-Leiste). Laden und Fehler über `composables/useLoad.js` und `LoadError`. Ohne Klasse zeigt `LearnView` „Noch keiner Klasse zugeordnet.“
 - **Profil:** `ProfileView` zeigt Gamer-Tag, Klasse, „Abmelden“ und die Rechtstexte, dazu für Schüler:innen „Konto löschen“ (`/profile/delete`, `meta.focus`, nur mit Passwort).
-- **Offen:** Hub, Team und Liga sind noch `PlaceholderView`.
+- **Hub (G1):** `/` → `HubView`: Begrüßung nach Tageszeit, Level, EP und Brainpower aus `auth.me`, „Weiterlernen“ aus `GET /hub` (`api/hub.js`). Avatar und kommende Spiel-Elemente sind Platzhalter („Bald“).
+- **Offen:** Team und Liga sind noch `PlaceholderView`.
 
-14 `Lh`-Bausteine in `src/components/ui/` (seit M4a mit `LhCheckbox` und `LhButton variant="danger"`, Design-Artefakt Version 29), jeder mit Test. `/styleguide` zeigt alle Tokens, Icons und Bausteine (nur in der Entwicklung). Beide Schriften liegen selbst gehostet in `public/assets/fonts/`. In WSL2 sind 124 Tests, `build` und `check:tokens` grün.
+14 `Lh`-Bausteine in `src/components/ui/` (seit M4a mit `LhCheckbox` und `LhButton variant="danger"`, Design-Artefakt Version 29), jeder mit Test. `/styleguide` zeigt alle Tokens, Icons und Bausteine (nur in der Entwicklung). Beide Schriften liegen selbst gehostet in `public/assets/fonts/`. In WSL2 sind 135 Tests, `build` und `check:tokens` grün.
