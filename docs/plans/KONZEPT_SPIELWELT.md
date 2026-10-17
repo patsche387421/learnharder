@@ -71,11 +71,11 @@ Bei vier Abteilungen sind das etwa 31 Zeichnungen plus Werkzeuge.
 
 **Werkzeug wächst mit dem Fach.** Jedes Fach hat ein eigenes Werkzeug, das mit dem Fach-Level aufgerüstet wird: Mk I ab Fach-Level 3, Mk II ab 10, Mk III ab 25, Gold ab 100. Die Werte stehen in `config/`. Die Hand ist am Anfang leer, damit sich der Roboter in den ersten Tagen durch Lernen sichtbar verändert.
 
-**Engine statt Slot.** Display-Gesicht (Stimmungen), Akku und die Animationen gehören keinem Slot, sie zeichnet die Engine. Eine eigene Vue-Komponente setzt die Ebenen zusammen. Animationen laufen als Zustände mit CSS und der Web Animations API: `idle` (atmen, blinzeln), `celebrate`, `wave`, `think`. Der Antrieb bestimmt die Bewegung im `idle`: Räder rollen, Beine federn. Eine fremde Laufzeit (Lottie, Rive) erst prüfen, wenn das nicht reicht. Zusätzliche Emotes sind bis G5 geparkt.
+**Engine statt Slot.** Display-Gesicht (Stimmungen), Akku und die Animationen gehören keinem Slot, sie zeichnet die Engine. Eine eigene Vue-Komponente setzt die Ebenen zusammen. Animationen laufen als Zustände mit CSS und der Web Animations API: `idle` (atmen, blinzeln), `celebrate`, `wave`, `think`. Der Antrieb bestimmt die Bewegung im `idle`: Räder rollen, Beine federn. Animiert werden nur `transform` und `opacity`, ohne Filter. Roboter außerhalb des Bildes pausieren. Eine fremde Laufzeit (Lottie, Rive) oder Canvas/WebGL erst prüfen, wenn das nicht reicht. Zusätzliche Emotes sind bis G5 geparkt.
 
 **Akku.** Der Akku zeigt die Brainpower, die sich täglich auflädt. Ist sie niedrig, zeigt ein Blitz, dass er lädt. Keine rote Warnung.
 
-**Größen.** Ab 72 px (Platz im Hub) die ganze Figur, in Listen (32–40 px) nur ein Porträt aus Kopf, Aufsatz und Display.
+**Größen.** Ab 72 px (Platz im Hub) die ganze Figur, in Listen (32–40 px) nur ein Porträt aus Kopf, Aufsatz und Display, als statisches Bild ohne Animation.
 
 **Stimmungen.** Das Display zeigt eine Stimmung. Die App wählt sie aus Fakten des Servers (letzter Lerntag, Aufstieg, neue Erfolge) und der Uhrzeit des Geräts, passend zur Begrüßung im Hub. Es gilt die oberste, die zutrifft:
 
@@ -91,7 +91,7 @@ Kurze Reaktionen gehen vor: `think`, während eine Quiz-Antwort geprüft wird, S
 
 **Nie negativ, für andere nur Pose** (E-033). Der Roboter ist nie traurig, besorgt, kaputt oder hungrig. Hinweise wie „Streak in Gefahr“ (ab G2) stehen nur im Text, im Ton von `../design/Sprache.md`. Die Stimmung bleibt privat: Andere sehen den Roboter in einer selbst gewählten Pose, weil die Stimmung verraten würde, wann jemand lernt, schläft oder weg war.
 
-**Mit der Klasse** (E-034). Sichtbar nur in der eigenen Klasse (E-024), nur mit Gamer-Tag.
+**Mit der Klasse** (E-034). Sichtbar nur in der eigenen Klasse (E-024), nur mit Gamer-Tag. Der Akku bleibt wie die Stimmung privat. Die Grundausstattung sieht so gut aus wie verdiente Teile, damit niemand als Anfänger:in auffällt.
 
 - **Werkhalle:** Klassenseite, auf der alle Roboter der Klasse in ihrer Pose stehen, mit Gamer-Tag und Level. Antippen zeigt eine Karte mit Roboter, Level, Erfolgen und längstem Streak, aber ohne laufenden Streak und ohne „zuletzt online“. Die Werkhalle kann später den ausgeblendeten Tab „Team“ füllen (E-022).
 - **Klassenprojekt:** Die Klasse baut gemeinsam eine große Maschine in der Werkhalle (z. B. Rakete, Roboterarm, Brücke). Jede abgeschlossene Lerneinheit der Klasse bringt sie ein Stück weiter. Gezeigt wird nur die Summe der Klasse, nie, wer wie viel beigetragen hat. Ist sie fertig, bekommen alle mit mindestens einer Lerneinheit eine Klassen-Lackierung oder ein Abzeichen. Am Ende der Saison gibt es ein Klassenfoto aller Roboter vor der Maschine.
@@ -107,7 +107,9 @@ Kurze Reaktionen gehen vor: `think`, während eine Quiz-Antwort geprüft wird, S
 
 **Ökonomie.** Der Shop ist eine neue Brainpower-Senke neben Booster und Challenge. Die Preise kommen vor G5 als §3.4 ins Ökonomie-Modell.
 
-**Stil.** Wie die Teile endgültig aussehen, entscheidet das Design-Artefakt (E-006). Bis dahin zeichnet Claude einfache Platzhalter auf dem Raster der Steckplätze, damit Engine und Shop nicht warten (E-031).
+**Stil.** Ein Schulprojekt aus der HTL-Werkstatt: sichtbare Schrauben, Klebeband, Kabelbinder, Aufkleber, eine Sechskantmutter auf der Antenne. Das Display ist eine LED-Punktmatrix. Flach, gleichmäßige dunkle Kontur, ohne Verlauf, Schatten und Leuchten. Warme Farben aus dem Design-System, der Akzent ist die Farbe der Abteilung, nie Patina (nur Prestige) und nie Grün (richtig).
+
+**Wer zeichnet.** Patsche entwirft die Teile mit KI-Hilfe, Claude überträgt sie als SVG auf das Raster der Steckplätze. Bis dahin zeichnet Claude Platzhalter, damit Engine und Shop nicht warten (E-031). Der erste KI-Entwurf (`avatar-referenz-v1.webp`, Stand 2026-10-17) ist die vorläufige Referenz und austauschbar. Das endgültige Aussehen kommt ins Design-Artefakt (E-006).
 
 ## 8. Rangliste (G6)
 
@@ -145,6 +147,6 @@ Regeln aus §2.5 gelten. Töne nur, wenn die Person sie einschaltet.
 ## 12. Offen
 
 - O-006: Grundlage der Rangliste.
-- Wer die endgültigen Avatar-Teile zeichnet und wie sie aussehen (Design-Artefakt, E-006).
+- Endgültiges Aussehen der Avatar-Teile (Design-Artefakt, E-006).
 - Shop-Preise (Ökonomie-Modell §3.4).
 - Abstimmung des Brainpower-Konzepts mit den Lehrkräften (M5).

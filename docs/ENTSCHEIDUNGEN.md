@@ -160,6 +160,7 @@ Jede Entscheidung: Nummer, Datum, was, warum, Folgen. Offene Fragen stehen unten
 - **Entscheidung:** Der Avatar ist ein Roboter. Alle Roboter teilen ein Skelett mit festen Steckplätzen und acht Slots: Kopf, Aufsatz, Rumpf, Arme, Antrieb, Werkzeug, Abzeichen, Lackierung. Jede Abteilung bekommt ein kostenloses Starter-Kit. Jedes Fach hat ein Werkzeug, das mit dem Fach-Level in Stufen aufgerüstet wird. Display-Gesicht, Akku und Animationen zeichnet die Engine. Claude zeichnet zuerst Platzhalter.
 - **Warum:** Ein Roboter passt zur HTL und braucht keine Hautfarben und kein Geschlecht, wichtig bei Minderjährigen. Ein gemeinsames Skelett hält Zeichenaufwand und Engine klein, eigene Grundmodelle je Abteilung bräuchten beides mehrfach. Varianten je Slot statt fertiger Skins ergeben viele Kombinationen aus wenigen Zeichnungen. Das Werkzeug macht sichtbar, was jemand gelernt hat.
 - **Folgen:** Details in `plans/KONZEPT_SPIELWELT.md` §7. Das endgültige Aussehen entscheidet das Design-Artefakt (E-006), offen ist noch, wer die Teile zeichnet. Die Werkzeug-Stufen stehen in `config/`.
+- **Präzisierung (2026-10-17):** Stil wie ein Schulprojekt aus der HTL-Werkstatt, Display als LED-Punktmatrix, Akzent in der Farbe der Abteilung. Patsche entwirft die Teile mit KI-Hilfe, Claude überträgt sie als SVG. Der erste Entwurf ist vorläufig. Animiert werden nur `transform` und `opacity`.
 
 ### E-032 — Avatar-Teile ohne Zufall (2026-10-17)
 - **Entscheidung:** Jedes Avatar-Teil hat eine feste, sichtbare Quelle (Fach-Level, Erfolg, Trophäen, Shop). Es gibt keine Lootboxen und keine Zufalls-Drops.
@@ -175,6 +176,7 @@ Jede Entscheidung: Nummer, Datum, was, warum, Folgen. Offene Fragen stehen unten
 - **Entscheidung:** Die Klassenseite „Werkhalle“ zeigt die Roboter der Klasse in ihrer Pose. Die Klasse baut gemeinsam an einem Klassenprojekt, sichtbar ist nur die Summe, am Saisonende gibt es ein Klassenfoto. Meilensteine erscheinen dort nur nach Opt-in. Reaktionen gibt es nur auf Meilensteine, aus einer festen positiven Auswahl, und wer sie bekommt, sieht nur die Anzahl.
 - **Warum:** Datenschutz durch Voreinstellung (DSGVO Art. 25) bei Minderjährigen: Meilensteine verraten Aktivität. Gemeinsam bauen statt vergleichen, ohne Einzelbeiträge, damit niemand bloßgestellt wird. Ohne freien Text und ohne Namen bei Reaktionen gibt es nichts zu moderieren, keinen Druck und keine sichtbaren Grüppchen.
 - **Folgen:** Details in `plans/KONZEPT_SPIELWELT.md` §7. Die Werkhalle kann später den Tab „Team“ füllen (E-022). Podest und Porträts in der Rangliste hängen an O-006.
+- **Präzisierung (2026-10-17):** Der Akku ist für andere unsichtbar, er verrät Aktivität wie die Stimmung. Die Grundausstattung sieht so gut aus wie verdiente Teile, damit niemand als Anfänger:in auffällt.
 
 ## Offen
 
