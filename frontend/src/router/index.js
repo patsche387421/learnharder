@@ -15,7 +15,7 @@ const routes = [
   { path: '/impressum', component: legal, props: { slug: 'impressum' }, meta: { title: 'Impressum', layout: false, public: true } },
   { path: '/nutzungsregeln', component: legal, props: { slug: 'nutzungsregeln' }, meta: { title: 'Nutzungsregeln', layout: false, public: true } },
   { path: '/einwilligung-eltern', component: legal, props: { slug: 'einwilligung-eltern' }, meta: { title: 'Einwilligung der Eltern', layout: false, public: true } },
-  { path: '/', component: placeholder, meta: { title: 'Hub' } },
+  { path: '/', component: () => import('../views/HubView.vue'), meta: { title: 'Hub' } },
   // Verschachtelt, damit der Tab „Lernen“ auch auf Fach, Thema und in der Lerneinheit aktiv bleibt
   {
     path: '/learn',
