@@ -111,7 +111,7 @@ function next() {
 function finish() {
   return run(async () => {
     result.value = await finishLesson(attemptId.value)
-    auth.applyProgress(result.value.progress)
+    auth.applyProgress(result.value.progress, result.value.level_up)
     phase.value = 'result'
     // Nächstes Thema im Fach für den Primär-Button. Klappt das nicht, bleibt „Zum Fach“.
     const subject = await getSubject(route.params.subject).catch(() => null)

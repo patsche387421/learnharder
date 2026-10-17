@@ -28,6 +28,16 @@ function at(hour) {
   vi.setSystemTime(new Date(2026, 9, 17, hour, 30))
 }
 
+/** Zeitpunkt im Oktober 2026 nach Gerätezeit, so wie der Server ihn als ISO-Text schickt */
+const localIso = (day, hour, minute = 0) => new Date(2026, 9, day, hour, minute).toISOString()
+
+async function hubWith(lastStudyAt) {
+  mockFetch({ status: 200, body: { data: { next_topic: NEXT, last_study_at: lastStudyAt } } })
+  const { wrapper } = await show()
+  await flushPromises()
+  return wrapper
+}
+
 describe('HubView', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
@@ -66,7 +76,8 @@ describe('HubView', () => {
   })
 
   it('„Weiterlernen“ führt zum nächsten offenen Thema', async () => {
-    const fetch = mockFetch({ status: 200, body: { data: { next_topic: NEXT } } })
+    at(14)
+    const fetch = mockFetch({ status: 200, body: { data: { next_topic: NEXT, last_study_at: localIso(16, 9) } } })
     const { wrapper } = await show()
     await flushPromises()
 
@@ -123,6 +134,59 @@ describe('HubView', () => {
     expect(robot.attributes('aria-label')).toBe('Dein Roboter')
     expect(robot.classes()).toEqual(expect.arrayContaining(['robot--sleepy', 'robot--wave']))
     expect(robot.find('.robot__charge').attributes('width')).toBe(String(28 * 0.8))
+  })
+
+  it('beim ersten Besuch lädt der Hub zum ersten Thema ein', async () => {
+    at(14)
+    const wrapper = await hubWith(null)
+
+    expect(wrapper.find('h1').text()).toBe('Hey lena42!')
+    expect(wrapper.find('.hub__sub').text()).toBe('Fang mit Schleifen an. 5 Min. reichen.')
+    expect(wrapper.find('.robot').classes()).toContain('robot--curious')
+  })
+
+  it('wer heute schon gelernt hat, bekommt ein Angebot statt einer Erinnerung', async () => {
+    at(14)
+    const wrapper = await hubWith(localIso(17, 6))
+
+    expect(wrapper.find('h1').text()).toBe('Hey lena42!')
+    expect(wrapper.find('.hub__sub').text()).toBe('Heute schon gelernt. Noch eine Runde Schleifen?')
+    expect(wrapper.find('.robot').classes()).toContain('robot--satisfied')
+  })
+
+  it('zählt Kalendertage nach Gerätezeit: kurz vor Mitternacht ist gestern', async () => {
+    at(7)
+    const wrapper = await hubWith(localIso(16, 23, 50))
+
+    expect(wrapper.find('h1').text()).toBe('Guten Morgen, lena42!')
+    expect(wrapper.find('.hub__sub').text()).toBe('Weiter mit Schleifen? 5 Min. reichen.')
+    expect(wrapper.find('.robot').classes()).toContain('robot--curious')
+  })
+
+  it.each([
+    [2, 'Hey lena42!', 'robot--curious'],
+    [3, 'Schön, dass du da bist, lena42!', 'robot--happy'],
+  ])('nach %i Tagen Pause: „%s“', async (days, text, mood) => {
+    at(14)
+    const wrapper = await hubWith(localIso(17 - days, 15))
+
+    expect(wrapper.find('h1').text()).toBe(text)
+    expect(wrapper.find('.hub__sub').text()).toBe('Weiter mit Schleifen? 5 Min. reichen.')
+    expect(wrapper.find('.robot').classes()).toContain(mood)
+  })
+
+  it('zeigt einen Aufstieg aus der Lerneinheit einmal, mit Jubel', async () => {
+    at(14)
+    useAuthStore().applyProgress({ level: 8 }, true)
+    const first = await hubWith(localIso(17, 14))
+
+    expect(first.find('h1').text()).toBe('Level 8!')
+    expect(first.find('.hub__sub').text()).toBe('Weiter mit Schleifen? 5 Min. reichen.')
+    expect(first.find('.robot').classes()).toEqual(expect.arrayContaining(['robot--proud', 'robot--celebrate']))
+
+    const again = await hubWith(localIso(17, 14))
+    expect(again.find('h1').text()).toBe('Hey lena42!')
+    expect(again.find('.robot').classes()).toEqual(expect.arrayContaining(['robot--satisfied', 'robot--wave']))
   })
 
   it('hält Platz für kommende Spiel-Elemente frei', async () => {
