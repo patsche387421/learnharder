@@ -10,13 +10,13 @@ Der Kern-Flow von learnharder als Storyboard in acht Momenten: Hub (Alltag und P
 
 ## Die acht Momente
 
-1. **Hub im Alltag:** Oben steht die Fortschritts-Karte mit Level, EP-Leiste und der Chip-Zeile: Streak, dann Brainpower (siehe `CurrencyChip`). Ist der Streak in Gefahr, sagt die Begrüßung „Noch nichts gelernt heute. 5 Min. reichen.“ Darunter steht *ein* großer Button „Weiterlernen“ mit Thema und Dauer, danach Herausforderung, Liga und Shop als ruhige Zeilen. Läuft ein EP-Booster, trägt „Weiterlernen“ die Marke `lh-tag--boost` („2× EP · 23 Min.“), denn genau dort lohnt er sich.
+1. **Hub im Alltag:** Oben steht die Fortschritts-Karte mit Level, EP-Leiste und der Chip-Zeile: Streak, dann Brainpower (siehe `CurrencyChip`). Ist der Streak in Gefahr, sagt die Begrüßung „Noch nichts gelernt heute. 5 Min. reichen.“ Darunter steht *ein* großer Button „Weiterlernen“ mit Thema und Dauer, danach Herausforderung, Liga und Shop als ruhige Zeilen (Herausforderung: siehe `Challenge`). Läuft ein EP-Booster, trägt „Weiterlernen“ die Marke `lh-tag--boost` („2× EP · 23 Min.“), denn genau dort lohnt er sich.
 2. **Hub mit Prüfung:** Die Prüfungskarte (`lh-exam`) steht oben. Sie zeigt Fach, Datum und Tage bis zur Prüfung, wie viel Prozent man vorbereitet ist (Leiste in `accent`) und welche Themen schwach oder sicher sind. Der große Button heißt „Für den Test üben“. Die Fortschritts-Karte rückt darunter, Weiterlernen wird zur kleinen Zeile.
 3. **Thema starten:** Was man lernt, wie viele Fragen, wie lange es dauert und wie viele EP es bringt. Dazu zwei Wege: **Los geht’s** (primär) und **Nur Theorie lesen** (sekundär).
 4. **Frage:** Fokus-Modus ohne Tab-Leiste. Oben stehen Schließen und die Schritt-Leiste. Erst nach dem Auswählen wird „Prüfen“ aktiv. Es gibt keinen Zeitdruck.
 5. **Feedback:** Ein Sheet von unten mit richtig/falsch, Icon und **Begründung**. Falsche Antworten kosten nichts und kommen am Ende der Einheit noch einmal („Kommt am Ende noch einmal“).
 6. **Merke-Karte:** Nach einem neuen Konzept oder einem Fehler kommt ein Satz und ein Beispiel (`lh-note`).
-7. **Ergebnis:** EP, Statistik (richtig, Streak, geübte Fehler) und die EP-Leiste. Hat ein EP-Booster mitgezählt, steht unter den EP „davon +4 durch Booster“. Beim Level-Up springt das große Badge auf. Der primäre Button führt direkt zum **nächsten Thema**, „Zum Hub“ ist der Nebenweg.
+7. **Ergebnis:** EP, Statistik (richtig, Streak, geübte Fehler) und die EP-Leiste. Hat ein EP-Booster mitgezählt, steht unter den EP „davon +4 durch Booster“. Neue Erfolge stehen als Karte unter der Statistik (siehe `Achievement`). Beim Level-Up springt das große Badge auf. Der primäre Button führt direkt zum **nächsten Thema**, „Zum Hub“ ist der Nebenweg.
 8. **Theorie-Modus:** Das Thema als kurzer Artikel mit Lesedauer, Code und Merke-Box. Am Ende steht ein Button direkt ins Quiz.
 
 ## Regeln

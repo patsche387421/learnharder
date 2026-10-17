@@ -24,6 +24,10 @@ learnharder klingt **locker und direkt**, wie jemand aus der Klasse, der schon e
 | Thema fertig | Schleifen geschafft · 4 von 5 richtig | Quiz abgeschlossen. Ergebnis: 80 %. |
 | Leerer Zustand | Noch keine Themen gelernt. Fang mit POS an. | – / Keine Daten vorhanden. |
 | Gesperrt | Wird nach „Schleifen“ freigeschaltet. | Gesperrt. |
+| Neuer Erfolg | Neuer Erfolg: Eine Woche · +2 Trophäen | ACHIEVEMENT UNLOCKED! |
+| Geheimer Erfolg | Geheimer Erfolg | ??? |
+| Herausforderung gesperrt | Schließe zuerst ein paar Themen ab. | Gesperrt. |
+| Herausforderung offen | Weitermachen · 4 von 10 · bis Mitternacht | Läuft ab! |
 | Booster läuft | 2× EP · noch 23 Min. | BOOST AKTIV! Nur noch 23 Minuten! |
 | Zu wenig Brainpower | Noch 30 Brainpower. Morgen lädt sie sich wieder auf. | Nicht genug Brainpower! |
 | Technischer Fehler | Das hat nicht geklappt. Prüf deine Verbindung und versuch’s nochmal. | Error 500 / Ein unerwarteter Fehler ist aufgetreten. |
@@ -59,15 +63,15 @@ Diese Begriffe sind fix. Spiel-Begriffe, die man aus Games kennt, bleiben englis
 | **Frage** | Question | Eine Aufgabe in der Lerneinheit | Aufgabe, Übung |
 | **Merke** | Key point | Mini-Theorie zwischen Fragen | Info, Tipp |
 | **Theorie** | Theory | Das Thema zum Durchlesen | Skript, Lernstoff |
-| **Herausforderung** | Challenge | Zufällige Fragen aus allen Fächern | Tages-Quiz, Challenge (im Deutschen) |
+| **Herausforderung** | Challenge | 10 zufällige Fragen aus Themen, die man schon gelernt hat. Kostet Brainpower | Tages-Quiz, Challenge (im Deutschen), Prüfungs-Challenge |
 | **Kampagne** | Campaign | Zusammenhängender Lernweg über mehrere Themen | Story-Modus |
 | **Prüfung** | Exam | Test, den die Lehrkraft für die Klasse einträgt | Test (als Begriff im UI), Schularbeit |
 | **Liga** | League | Monatliche Rangliste | Rangliste, Leaderboard |
 | **Team** | Team | Gruppe mit gemeinsamen Herausforderungen | Gruppe, Clan |
 | **Team-Herausforderung** | Team challenge | Herausforderung, die ein Team gemeinsam spielt | Team-Challenge |
-| **Errungenschaft** | Achievement | Auszeichnung für besondere Leistungen | Achievement, Badge |
+| **Erfolg** | Achievement | Auszeichnung für etwas Erreichtes, z. B. „Eine Woche“ | Errungenschaft, Achievement, Badge, Abzeichen |
 | **Brainpower** | Brainpower | Wird für Herausforderungen und im Shop eingesetzt | Energie, Akku, Leben |
-| **Trophäen** | Trophies | Belohnung, gegen Brainpower tauschbar | Pokale, Münzen |
+| **Trophäen** | Trophies | Belohnung für Erfolge und fehlerfreie Herausforderungen. Später für besondere Roboter-Teile | Pokale, Münzen |
 | **Shop** | Shop | Hier setzt man Brainpower ein: EP-Booster, später Roboter-Teile | Laden, Store, Markt |
 | **EP-Booster** | XP booster | Mehr EP für richtige Antworten, eine Zeit lang. Kostet Brainpower | XP-Booster, Boost, Power-up |
 | **Hub** | Hub | Startseite (nur intern; im UI ist der Hub das Level-Badge) | Dashboard |
