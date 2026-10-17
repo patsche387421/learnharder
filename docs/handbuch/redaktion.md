@@ -1,7 +1,7 @@
 # Handbuch für die Redaktion (Stand 2026-10-17)
 
 So pflegst du Fächer, Themen, Theorie und Fragen im CMS von learnharder.
-Für Autor:innen, Tester:innen und Admins. Konten und Schulstruktur stehen im Betriebshandbuch.
+Für Autor:innen, Tester:innen und Admins. Konten und Schulstruktur stehen im Betriebshandbuch (`betrieb.md`).
 
 ## Anmelden
 
