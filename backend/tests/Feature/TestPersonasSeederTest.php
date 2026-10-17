@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\QuizAttempt;
 use App\Models\Subject;
 use App\Models\User;
 use Carbon\CarbonImmutable;
@@ -96,6 +97,28 @@ class TestPersonasSeederTest extends TestCase
         $this->me('OhneKlasse')->assertOk()->assertJsonPath('data.school_class', null);
 
         $this->me('Gesperrt')->assertForbidden()->assertJsonPath('reason', 'account_deactivated');
+    }
+
+    public function test_wer_einen_streak_hat_hat_am_letzten_lerntag_eine_lerneinheit_abgeschlossen(): void
+    {
+        $this->seedAll();
+
+        $hub = function (string $tag) {
+            $this->flushSession();
+
+            return $this->actingAs($this->persona($tag))->getJson('/api/v1/hub')->assertOk();
+        };
+
+        // Streak seit gestern: gestern 17 Uhr in Wien (gespeichert in UTC). Heute gelernt: gerade eben
+        $hub('Mittendrin')->assertJsonPath('data.last_study_at', '2026-10-16T15:00:00+00:00');
+        $hub('PrestigeProfi')->assertJsonPath('data.last_study_at', '2026-10-16T15:00:00+00:00');
+        $hub('Boosterfan')->assertJsonPath('data.last_study_at', '2026-10-17T12:00:00+00:00');
+        $hub('FastPrestige')->assertJsonPath('data.last_study_at', '2026-10-17T12:00:00+00:00');
+
+        // Ohne Streak kein Verlauf, der Hub sieht den ersten Besuch
+        $hub('Neuling')->assertJsonPath('data.last_study_at', null);
+        $this->assertSame(4, QuizAttempt::whereHas('user', fn ($users) => $users->where('email', 'like', '%@test.learnharder.app'))->count());
+        $this->assertTrue(QuizAttempt::all()->every(fn (QuizAttempt $attempt) => $attempt->topic->slug === 'schleifen' && $attempt->xp_earned === 0));
     }
 
     public function test_neuer_lauf_setzt_zurueck(): void
