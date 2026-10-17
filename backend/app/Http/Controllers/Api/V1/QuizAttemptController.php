@@ -107,6 +107,8 @@ class QuizAttemptController extends Controller
             'correct_option_ids' => $correctIds,
             'explanation' => $question->explanation,
             'xp' => $xp,
+            // Faktor des Boosters, der beim ersten Antworten lief (1 ohne). Die App zeigt „2×“ nur, wenn es EP gab.
+            'multiplier' => $answer->xp_multiplier,
             'repeat' => $repeat,
         ]]);
     }
@@ -125,9 +127,13 @@ class QuizAttemptController extends Controller
         $user = $attempt->user()->first();
         $after = $user->progression();
         $before = Progression::fromTotalXp($after->total - $attempt->xp_earned);
+        // Anteil des Boosters: vergebene EP minus die EP der Fragen ohne Faktor
+        $fromBooster = $attempt->answers()->with('question:id,xp_reward')->get()
+            ->sum(fn (QuestionAnswer $answer) => $answer->xp_awarded > 0 ? $answer->xp_awarded - $answer->question->xp_reward : 0);
 
         return response()->json(['data' => [
             'xp_earned' => $attempt->xp_earned,
+            'xp_from_booster' => $fromBooster,
             'correct_count' => $attempt->correct_count,
             'total_questions' => $attempt->total_questions,
             'level_up' => $after->level !== $before->level || $after->prestige !== $before->prestige,

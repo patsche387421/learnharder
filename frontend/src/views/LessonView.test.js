@@ -143,6 +143,44 @@ describe('LessonView', () => {
     expect(back.attributes('href')).toBe('/learn/pos')
   })
 
+  it('zeigt „2×“ neben den EP, wenn ein Booster mitgezählt hat, und den Anteil im Ergebnis', async () => {
+    const { wrapper } = await show(
+      ok(answer({ correct_option_ids: ['o1'], xp: 4, multiplier: 2 })),
+      ok(answer({ correct: false, correct_option_ids: ['o3', 'o4'], multiplier: 2 })),
+      ok(answer({ correct_option_ids: ['o3', 'o4'], repeat: true })),
+      ok({ ...finished, xp_earned: 4, xp_from_booster: 2 }),
+      ok(subject),
+    )
+
+    await click(options(wrapper)[0])
+    await click(primary(wrapper))
+    expect(wrapper.find('.lh-feedback .lesson__xp').text()).toBe('+4 EP')
+    expect(wrapper.find('.lh-feedback .lh-tag--boost').text()).toBe('2×')
+    expect(wrapper.find('.lh-feedback').text()).not.toContain('Min.')
+
+    await click(primary(wrapper))
+    await click(options(wrapper)[0])
+    await click(options(wrapper)[1])
+    await click(primary(wrapper))
+    expect(wrapper.find('.lh-feedback .lh-tag--boost').exists()).toBe(false)
+
+    await click(primary(wrapper))
+    await click(options(wrapper)[0])
+    await click(options(wrapper)[1])
+    await click(primary(wrapper))
+    await click(primary(wrapper))
+    expect(wrapper.find('.lh-result__gain').text()).toBe('+4 EP')
+    expect(wrapper.find('.lh-result').text()).toContain('davon +2 durch Booster')
+  })
+
+  it('ohne Booster keine Marke und kein Anteil', async () => {
+    const { wrapper } = await show(ok(answer({ correct_option_ids: ['o1'], xp: 2, multiplier: 1 })))
+
+    await click(options(wrapper)[0])
+    await click(primary(wrapper))
+    expect(wrapper.find('.lh-tag--boost').exists()).toBe(false)
+  })
+
   it('heute schon gesammelte EP werden ehrlich angezeigt', async () => {
     const { wrapper } = await show(ok(answer({ correct_option_ids: ['o1'], xp: 0 })))
 

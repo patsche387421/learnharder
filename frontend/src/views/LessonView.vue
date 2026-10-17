@@ -11,6 +11,7 @@ import LhIcon from '../components/ui/LhIcon.vue'
 import LhLevelBadge from '../components/ui/LhLevelBadge.vue'
 import LhXpBar from '../components/ui/LhXpBar.vue'
 import { answerQuestion, finishLesson, getSubject, getTopic, startLesson } from '../api/learn.js'
+import { formatFactor } from '../composables/useBooster.js'
 import { useAuthStore } from '../stores/auth.js'
 
 const LETTERS = 'ABCDEF'
@@ -139,6 +140,11 @@ const feedbackXp = computed(() => {
   return feedback.value.xp > 0 ? `+${feedback.value.xp} EP` : 'Heute schon gesammelt'
 })
 
+// Hat ein EP-Booster mitgezählt, steht „2×“ neben den EP, ohne Restzeit (Fokus ohne Zeitdruck, E-037)
+const feedbackBoost = computed(() =>
+  feedbackXp.value && feedback.value.xp > 0 && feedback.value.multiplier > 1 ? formatFactor(feedback.value.multiplier) : '',
+)
+
 const levelBar = computed(() => {
   const xp = result.value?.progress.xp
   return xp ? { value: xp.total - xp.level_start, max: xp.next_level - xp.level_start, left: xp.next_level - xp.total } : null
@@ -186,6 +192,7 @@ const levelBar = computed(() => {
         </template>
         <p class="lesson__done">{{ topic.title }} geschafft · {{ result.correct_count }} von {{ result.total_questions }} richtig</p>
         <p class="lh-result__gain">+{{ result.xp_earned }} EP</p>
+        <p v-if="result.xp_from_booster > 0" class="lesson__muted">davon +{{ result.xp_from_booster }} durch Booster</p>
         <div class="lh-stats">
           <div class="lh-stat"><b>{{ result.correct_count }}/{{ result.total_questions }}</b><span>richtig</span></div>
           <div class="lh-stat"><b>{{ result.xp_earned }}</b><span>EP</span></div>
@@ -204,7 +211,7 @@ const levelBar = computed(() => {
     <div v-if="phase === 'feedback'" class="lh-feedback" :class="feedback.correct ? 'lh-feedback--correct' : 'lh-feedback--wrong'" aria-live="polite">
       <p class="lh-feedback__title">
         <LhIcon :name="feedback.correct ? 'ui-correct' : 'ui-wrong'" />
-        <template v-if="feedback.correct">Richtig!<span v-if="feedbackXp" class="lesson__xp">{{ feedbackXp }}</span></template>
+        <template v-if="feedback.correct">Richtig!<span v-if="feedbackXp" class="lesson__xp">{{ feedbackXp }}</span><span v-if="feedbackBoost" class="lh-tag lh-tag--boost lesson__boost">{{ feedbackBoost }}</span></template>
         <template v-else>Nicht ganz. Richtig ist {{ correctLetters }}.</template>
       </p>
       <p v-if="feedback.explanation" class="lh-feedback__text lesson__pre">{{ feedback.explanation }}</p>
@@ -234,6 +241,7 @@ const levelBar = computed(() => {
 .lesson__pre { white-space: pre-line; }
 .lesson__muted { margin: 0; font: 400 14px/20px var(--font-text); color: var(--ink-muted); }
 .lesson__xp { margin-left: auto; font: 700 16px/24px var(--font-mono); }
+.lesson__boost { margin-left: var(--space-2); }
 .lesson__error { margin: 0 0 var(--space-3); font: 400 14px/20px var(--font-text); color: var(--wrong); }
 .lesson__done { margin: 0; font: 700 18px/24px var(--font-text); color: var(--ink); }
 .lesson__levelup { margin: 0; font: 800 32px/38px var(--font-text); color: var(--accent); }

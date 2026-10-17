@@ -403,9 +403,9 @@ class LessonApiTest extends TestCase
         $this->boost('x2_30');
 
         $id = $this->start()->json('data.id');
-        $this->answer($id, $this->einfach, 'richtig')->assertJsonPath('data.xp', 4);
+        $this->answer($id, $this->einfach, 'richtig')->assertJsonPath('data.xp', 4)->assertJsonPath('data.multiplier', 2);
         $this->answer($id, $this->mehrfach, 'a')->assertJsonPath('data.xp', 0);
-        $this->finish($id)->assertJsonPath('data.xp_earned', 4);
+        $this->finish($id)->assertJsonPath('data.xp_earned', 4)->assertJsonPath('data.xp_from_booster', 2);
 
         $this->assertSame(4, $this->totalXp());
     }
@@ -417,7 +417,7 @@ class LessonApiTest extends TestCase
 
         $id = $this->start()->json('data.id');
         $this->answer($id, $this->einfach, 'richtig')->assertJsonPath('data.xp', 5);
-        $this->finish($id)->assertJsonPath('data.xp_earned', 5);
+        $this->finish($id)->assertJsonPath('data.xp_earned', 5)->assertJsonPath('data.xp_from_booster', 2);
     }
 
     public function test_es_zaehlt_der_booster_beim_antworten_nicht_beim_abschluss(): void
@@ -431,8 +431,8 @@ class LessonApiTest extends TestCase
 
         // Nach Ablauf: diese Antwort ohne Faktor, der Abschluss behält den Faktor der ersten
         $this->travelTo(CarbonImmutable::parse('2026-10-16 10:31', 'Europe/Vienna'));
-        $this->answer($id, $this->mehrfach, 'a', 'b')->assertJsonPath('data.xp', 2);
-        $this->finish($id)->assertJsonPath('data.xp_earned', 6);
+        $this->answer($id, $this->mehrfach, 'a', 'b')->assertJsonPath('data.xp', 2)->assertJsonPath('data.multiplier', 1);
+        $this->finish($id)->assertJsonPath('data.xp_earned', 6)->assertJsonPath('data.xp_from_booster', 2);
     }
 
     public function test_booster_hebt_die_tagesregel_nicht_auf(): void
@@ -442,7 +442,14 @@ class LessonApiTest extends TestCase
 
         $id = $this->start()->json('data.id');
         $this->answer($id, $this->einfach, 'richtig')->assertJsonPath('data.xp', 0);
-        $this->finish($id)->assertJsonPath('data.xp_earned', 0);
+        $this->finish($id)->assertJsonPath('data.xp_earned', 0)->assertJsonPath('data.xp_from_booster', 0);
+    }
+
+    public function test_ohne_booster_ist_der_faktor_1_und_der_anteil_0(): void
+    {
+        $id = $this->start()->json('data.id');
+        $this->answer($id, $this->einfach, 'richtig')->assertJsonPath('data.multiplier', 1);
+        $this->finish($id)->assertJsonPath('data.xp_earned', 2)->assertJsonPath('data.xp_from_booster', 0);
     }
 
     public function test_zwei_offene_lerneinheiten_mit_derselben_frage_nur_die_erste_bekommt_ep(): void
