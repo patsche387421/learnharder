@@ -37,16 +37,14 @@ Meilensteine und Reihenfolge: `plans/README.md`. Entscheidungen: `ENTSCHEIDUNGEN
 
 ## G2 — Brainpower & Streaks
 
-- [ ] Shop, EP-Booster, Streak und Brainpower in der laufenden App ansehen @patsche
-- [ ] Shop: Hinweis „Heute bringen deine Themen keine EP mehr“, dafür eine Angabe vom Server (E-037) @claude
-- [ ] Streak im Hub zeigen, auch „läuft“ und „in Gefahr“ im Ton von `design/Sprache.md` (Konzept Spielwelt §4) @claude
-- [ ] Herausforderung: zufällige Fragen aus allen Fächern für 25 Brainpower (Ökonomie-Modell §3.3) @claude
-- [ ] Roboter jubelt beim Kauf eines Boosters (`celebrate`, `design/components/Shop.md`) @claude
+- [ ] Shop, EP-Booster, Streak und Brainpower in der laufenden App ansehen, auch bei 320 und 360 px Breite @patsche
 
 ## G3 — Erfolge
 
 - [ ] „Erfolge“ ins Glossar des Design-Artefakts, danach Kopie `design/Sprache.md` @claude
 - [ ] Erfolge: Katalog im CMS, Vergabe auf dem Server, Raster im Profil (Konzept Spielwelt §6) @claude
+- [ ] Herausforderung: zufällige Fragen aus allen Fächern für 25 Brainpower, Regeln vorher festlegen (Ökonomie-Modell §3.3, E-038) @claude
+- [ ] LearnFlow-Storyboard im Design-Artefakt: Hub noch mit alter Streak-Karte, auf die Chip-Zeile umstellen @claude
 
 ## G4 — Avatar
 
@@ -81,6 +79,7 @@ Meilensteine und Reihenfolge: `plans/README.md`. Entscheidungen: `ENTSCHEIDUNGEN
 - [ ] Fach im CMS: Feld „Icon“ nutzt die App nicht, Bild und Farbe hängen am URL-Kürzel (`subject-<kürzel>`, `color_token` nicht im Formular). Klären, dann Formular und `handbuch/redaktion.md` anpassen @claude
 - [ ] Testzentrale fertig durchklicken: Details, Suche, „Ältere ausblenden“ im Log @patsche
 - [ ] Testzentrale bei Handy-Breite breiter als der Bildschirm (Kopfzeile, Übersicht) @claude
+- [ ] Theme-Umschalter System · Hell · Dunkel im Profil, gespeichert nur auf dem Gerät (E-038) @claude
 - [ ] Handbücher im laufenden CMS gegenlesen: Namen der Knöpfe und Bereiche (`docs/handbuch/`) @patsche
 
 ## Übergabe (E-029)
