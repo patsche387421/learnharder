@@ -151,8 +151,15 @@ Jede Entscheidung: Nummer, Datum, was, warum, Folgen. Offene Fragen stehen unten
 - **Warum:** Das Projekt soll übergeben werden können (CMS, Betrieb, Entwicklung). Eine API-Doku, die aus dem Code entsteht, kann nicht veralten. DocFX erzeugt API-Doku nur für .NET und bräuchte die .NET-Werkzeuge. VitePress passt zum Frontend (Vue, Vite), lohnt sich aber erst mit Publikum. Bis dahin zeigt GitHub das Markdown gut an.
 - **Folgen:** Scramble ist eine 0.x-Version (Stand 2026-10-17: 0.13.48, unterstützt Laravel 13). Die Version wird deshalb fest gepinnt und in Produktion nicht ausgeliefert. Die Schritte stehen in `AUFGABEN.md` unter „Übergabe“.
 
+### E-030 — Spielwelt lokal bauen, solange M4 wartet (2026-10-17)
+- **Entscheidung:** Solange M4 auf die Antwort der Schule wartet, entstehen die Tracks der Spielwelt lokal auf eigenen Branches: G1 Hub und Profil, G2 Brainpower und Streaks, G3 Erfolge, G4 Avatar, G5 Shop, G6 Rangliste, L1 Landing Page (`plans/KONZEPT_SPIELWELT.md`). Der Start (M5) wartet nicht auf sie. Was beim Start fertig und getestet ist, geht mit. Der Rest bleibt in der App unsichtbar.
+- **Warum:** M4 hängt an einer Antwort von außen. Die Wartezeit lässt sich für das Frontend nutzen, das dem Backend weit hinterherhinkt, und für die Alleinstellungsmerkmale. Die Startbedingungen aus E-021 bleiben, damit der Start nicht vom Umfang abhängt (Risiko R4).
+- **Folgen:** Präzisiert E-021, hebt es nicht auf. M4 steht in `plans/README.md` als pausiert (⏸). Das Brainpower-Konzept wird trotzdem vor dem Start mit den Lehrkräften abgestimmt (M5), deshalb stehen die Werte gesammelt in `config/`. Avatar und Effekte halten sich an die ruhige Oberfläche aus `design/README.md`.
+
 ## Offen
 
 | Nr. | Frage | Empfehlung | Warum offen |
 |---|---|---|---|
-| – | Derzeit keine offenen Grundsatzfragen. Offene Fakten zur Schule: `plans/DATENMODELL_SCHULE.md` §7 | | |
+| O-006 | Wonach richtet sich die Rangliste (G6)? | EP pro Saison (Monat) in der eigenen Klasse, dazu Ranglisten je Fach. Brainpower nicht, weil sie sich täglich auflädt und beim Ausgeben sinkt (`plans/KONZEPT_SPIELWELT.md` §8) | Erst vor G6 nötig, Patsche entscheidet |
+
+Offene Fakten zur Schule: `plans/DATENMODELL_SCHULE.md` §7.
