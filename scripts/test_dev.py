@@ -190,5 +190,62 @@ class TestHistoryTest(unittest.TestCase):
         self.assertEqual(['Backend-Tests laufen …', 'Backend: ROT · Tests: 1 failed, 9 passed (20 assertions)'], messages)
 
 
+class TasksTest(unittest.TestCase):
+    def test_gruppen_tags_und_erledigt(self):
+        text = '\n'.join([
+            '# Aufgaben',
+            '- Wer handelt: `@claude`, `@patsche`',
+            '## M4 — Hetzner läuft',
+            '- [ ] Antwort der Lehrkraft @schule seit:2026-10-16',
+            '- [x] Logs rotieren (`LOG_STACK=daily`) @claude',
+            '## M5 — Start',
+            '- [ ] Hub schlank (E-022) @claude !fokus',
+            '- [ ] Absprache @patsche @schule',
+        ])
+        result = dev.parse_tasks(text)
+        self.assertEqual([], result['problems'])
+        self.assertEqual(['M4 — Hetzner läuft', 'M5 — Start'], [group['title'] for group in result['groups']])
+        waiting, done = result['groups'][0]['tasks']
+        self.assertEqual({'text': 'Antwort der Lehrkraft', 'done': False, 'owners': ['schule'], 'since': '2026-10-16',
+                          'focus': False, 'line': 4}, waiting)
+        self.assertEqual(('Logs rotieren (`LOG_STACK=daily`)', True), (done['text'], done['done']))
+        focus, shared = result['groups'][1]['tasks']
+        self.assertEqual(('Hub schlank (E-022)', True), (focus['text'], focus['focus']))
+        self.assertEqual(['patsche', 'schule'], shared['owners'])
+
+    def test_mailadresse_und_code_sind_keine_tags(self):
+        task = dev.parse_tasks('## A\n- [ ] Konto `schueler@learnharder.app` und `seit:x` prüfen @claude')['groups'][0]['tasks'][0]
+        self.assertEqual(['claude'], task['owners'])
+        self.assertIsNone(task['since'])
+        self.assertEqual('Konto `schueler@learnharder.app` und `seit:x` prüfen', task['text'])
+
+    def test_formfehler(self):
+        text = '\n'.join([
+            '- [ ] Vor der Überschrift @claude',
+            '## A',
+            '- [ ] Ohne Zuständigkeit',
+            '- [ ] Tippfehler @patshe',
+            '- [ ] Falsches Datum @schule seit:2026-13-01',
+            '- [ ] Erster Fokus @claude !fokus',
+            '- [ ] Zweiter Fokus @claude !fokus',
+            '- [x] Erledigter Fokus zählt nicht @claude !fokus',
+        ])
+        result = dev.parse_tasks(text)
+        self.assertEqual([
+            'Zeile 1: Aufgabe vor der ersten Überschrift ##',
+            'Zeile 3: kein @claude, @patsche, @schule',
+            'Zeile 4: unbekannt @patshe',
+            'Zeile 5: seit:2026-13-01 ist kein Datum JJJJ-MM-TT',
+            'Mehrere offene Aufgaben mit !fokus (Zeilen 6, 7)',
+        ], result['problems'])
+        self.assertEqual(['Ohne Gruppe', 'A'], [group['title'] for group in result['groups']])
+        self.assertIsNone(result['groups'][1]['tasks'][2]['since'])
+
+    def test_aufgabenliste_im_repo_ohne_formfehler(self):
+        result = dev.parse_tasks((dev.ROOT / 'docs' / 'AUFGABEN.md').read_text(encoding='utf-8'))
+        self.assertEqual([], result['problems'])
+        self.assertTrue(all(group['tasks'] for group in result['groups']))
+
+
 if __name__ == '__main__':
     unittest.main()
