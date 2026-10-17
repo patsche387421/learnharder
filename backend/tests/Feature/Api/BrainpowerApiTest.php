@@ -3,7 +3,6 @@
 namespace Tests\Feature\Api;
 
 use App\Models\User;
-use App\Models\UserStat;
 use App\Support\Brainpower;
 use App\Support\Progression;
 use Carbon\CarbonImmutable;
@@ -25,7 +24,7 @@ class BrainpowerApiTest extends TestCase
         $this->withHeader('Origin', 'http://localhost:5173');
         $this->travelTo(CarbonImmutable::parse('2026-10-17 10:00', 'Europe/Vienna'));
 
-        $this->user = User::factory()->create(['brainpower_current' => 30, 'brainpower_refilled_on' => '2026-10-17']);
+        $this->user = User::factory()->brainpower(30)->create();
     }
 
     /** @return array{current: int, max: int} */
@@ -75,7 +74,7 @@ class BrainpowerApiTest extends TestCase
 
     public function test_me_liefert_stand_und_maximum_aus_dem_level(): void
     {
-        UserStat::create(['user_id' => $this->user->id, 'total_xp' => self::xpFor(25)]);
+        $this->user = User::factory()->level(25)->brainpower(30)->create();
 
         $this->assertSame(['current' => 30, 'max' => 125], $this->brainpower());
     }
@@ -98,8 +97,7 @@ class BrainpowerApiTest extends TestCase
 
     public function test_verpasste_tage_zaehlen_mit_bis_zum_maximum(): void
     {
-        $this->user->update(['brainpower_current' => 0]);
-        UserStat::create(['user_id' => $this->user->id, 'total_xp' => self::xpFor(50)]);
+        $this->user = User::factory()->level(50)->brainpower(0)->create();
 
         $this->travelTo(CarbonImmutable::parse('2026-10-19 08:00', 'Europe/Vienna'));
         $this->assertSame(['current' => 100, 'max' => 150], $this->brainpower());
@@ -110,7 +108,7 @@ class BrainpowerApiTest extends TestCase
 
     public function test_der_laufende_streak_bringt_den_bonus(): void
     {
-        UserStat::create(['user_id' => $this->user->id, 'current_streak' => 7, 'longest_streak' => 7, 'last_study_date' => '2026-10-17']);
+        $this->user = User::factory()->streak(7, today: true)->brainpower(30)->create();
 
         $this->travelTo(CarbonImmutable::parse('2026-10-18 08:00', 'Europe/Vienna'));
 
@@ -119,8 +117,8 @@ class BrainpowerApiTest extends TestCase
 
     public function test_ohne_bisheriges_aufladen_ist_der_akku_voll(): void
     {
-        $this->user->update(['brainpower_current' => 10, 'brainpower_refilled_on' => null]);
-        UserStat::create(['user_id' => $this->user->id, 'total_xp' => self::xpFor(25)]);
+        // Ohne brainpower(): noch nie aufgeladen
+        $this->user = User::factory()->level(25)->create(['brainpower_current' => 10]);
 
         $this->assertSame(['current' => 125, 'max' => 125], $this->brainpower());
         $this->assertSame('2026-10-17', $this->user->fresh()->brainpower_refilled_on->toDateString());

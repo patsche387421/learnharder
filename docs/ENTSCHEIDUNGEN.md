@@ -199,6 +199,11 @@ Jede Entscheidung: Nummer, Datum, was, warum, Folgen. Offene Fragen stehen unten
 - **Warum:** Die Herausforderung braucht eigene Regeln (Fragen-Pool, EP-Bonus, Verhältnis zur Tagesregel E-015) und vergibt Trophäen, gehört also zu den Erfolgen. Hell ist im Design-Artefakt nur der Standard ohne Geräte-Einstellung. Wer am Gerät Dunkel eingestellt hat, sieht die App dunkel, das ist gewollt.
 - **Folgen:** Aufgabe in `AUFGABEN.md` unter G3, Umschalter unter „Nebenbei“. Im Hub stehen Streak und Brainpower als Chip-Zeile unter der EP-Leiste (Design-Artefakt Version 34, ändert die Regel „Streak hat einen eigenen Platz“ in `CurrencyChip`). Ein Booster zählt nur, wenn Antwort und Abschluss am selben Wiener Tag liegen (Ökonomie-Modell §3.3).
 
+### E-039 — Tests beschreiben das jetzige Verhalten, Testpersonen nur lokal (2026-10-17)
+- **Entscheidung:** Ein Test beschreibt, wie die App sich jetzt verhalten soll. Wird eine Funktion bewusst geändert oder entfernt, wird ihr Test im selben Commit angepasst oder gelöscht. Tests zu behobenen Fehlern bleiben für immer. Ein roter Test ohne gewollte Änderung wird nie gelöscht oder abgeschwächt, um grün zu werden. Vor jedem Commit laufen alle Tests, ohne Rangfolge. Für Handtests gibt es sieben feste Testpersonen (`TestPersonasSeeder`), nur in `local` und `testing`.
+- **Warum:** Alte Tests für ein Verhalten, das es nicht mehr gibt, prüfen nichts und bremsen jede Änderung. Ein Test im selben Commit zeigt im Diff, was sich am Verhalten ändert. Eine Rangfolge lohnt sich erst, wenn ein Lauf deutlich länger als 5 Minuten dauert (Stand: Backend etwa 75 s, Frontend etwa 2 Min.). Testpersonen haben ein bekanntes Passwort und dürfen nie in Produktion landen (Regel 7 in `CLAUDE.md`).
+- **Folgen:** Anleitung für Menschen in `handbuch/testen.md`. Bausteine für Testnutzer:innen in `UserFactory` und `SchoolClassFactory`. Die Testzentrale zeigt Datenbanken, Testpersonen und Testgruppen. Übersprungene Tests nur mit Aufgabe in `AUFGABEN.md`.
+
 ## Offen
 
 | Nr. | Frage | Empfehlung | Warum offen |

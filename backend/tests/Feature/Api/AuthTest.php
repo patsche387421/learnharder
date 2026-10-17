@@ -3,7 +3,6 @@
 namespace Tests\Feature\Api;
 
 use App\Models\User;
-use App\Models\UserStat;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -21,15 +20,12 @@ class AuthTest extends TestCase
         config(['sanctum.stateful' => ['localhost:5173']]);
         $this->withHeader('Origin', 'http://localhost:5173');
 
-        $this->user = User::factory()->create([
+        // 8.450 EP: Prestige 1, im Zyklus 450 EP = Level 15 (ab 419, Level 16 ab 465)
+        $this->user = User::factory()->brainpower(80)->xp(8450)->create([
             'email' => 'lena@htl.at',
             'gamer_tag' => 'lena42',
             'name' => 'Lena Huber',
-            'brainpower_current' => 80,
-            'brainpower_refilled_on' => now('Europe/Vienna')->toDateString(),
         ]);
-        // 8.450 EP: Prestige 1, im Zyklus 450 EP = Level 15 (ab 419, Level 16 ab 465)
-        UserStat::create(['user_id' => $this->user->id, 'total_xp' => 8450]);
     }
 
     public function test_login_mit_richtigem_passwort(): void

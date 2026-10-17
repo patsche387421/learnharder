@@ -13,7 +13,7 @@ Pläne, Entscheidungen und Produktkonzepte für V2. Allgemeine Regeln: `../CLAUD
 | `plans/KONZEPT_SPIELWELT.md` | Hub, Erfolge, Avatar, Shop, Rangliste, Landing Page (Entwurf) |
 | `plans/DATENMODELL_SCHULE.md` | Schule, Abteilungen, Klassen, Lehrkräfte, Registrierung |
 | `ENTSCHEIDUNGEN.md` | Entscheidungslog: was entschieden ist, was offen ist |
-| `handbuch/` | Anleitungen für Menschen, die mit learnharder arbeiten (`redaktion.md`, `betrieb.md`) |
+| `handbuch/` | Anleitungen für Menschen, die mit learnharder arbeiten (`redaktion.md`, `betrieb.md`, `testen.md`) |
 | `AUFGABEN.md` | Alle offenen Aufgaben mit Zuständigkeit, Quelle für den Projekt-Tab der Testzentrale |
 | `design/` | Brand Book, Sprache & Glossar, Komponenten-Anleitungen. Kopie aus dem Design-System-Artefakt, Änderungen dort machen (siehe `frontend/src/styles/CLAUDE.md`) |
 
