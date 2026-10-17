@@ -47,8 +47,10 @@ Meilensteine und Reihenfolge: `plans/README.md`. Entscheidungen: `ENTSCHEIDUNGEN
 
 ## G4 — Avatar
 
-- [ ] Stil der Avatar-Teile festlegen und klären, wer sie zeichnet @patsche
-- [ ] Avatar aus SVG-Ebenen mit `idle`, `celebrate`, `wave`, `think` (Konzept Spielwelt §7) @claude
+- [ ] Klären, wer die endgültigen Avatar-Teile zeichnet. Aussehen im Design-Artefakt (E-031) @patsche
+- [ ] Werkzeug je Fach und Starter-Kit je Abteilung festlegen (Konzept Spielwelt §7) @patsche
+- [ ] Avatar-Engine mit Platzhalter-Teilen: Skelett, 8 Slots, Lackierung, Stimmungen, Posen (Konzept Spielwelt §7, E-031, E-033) @claude
+- [ ] Werkhalle: Klassenseite mit Posen, Klassenprojekt, Meilensteine (Opt-in) und Reaktionen (E-034) @claude
 
 ## G5 — Shop
 

@@ -171,6 +171,11 @@ Jede Entscheidung: Nummer, Datum, was, warum, Folgen. Offene Fragen stehen unten
 - **Warum:** Lernen soll ohne schlechtes Gewissen funktionieren (Ton in `design/Sprache.md`). Die Stimmung verrät, wann jemand lernt, schläft oder weg war. Bei Minderjährigen bleibt das privat.
 - **Folgen:** Hinweise wie „Streak in Gefahr“ kommen nur als Text. Die App wählt die Stimmung aus Fakten des Servers und der Gerätezeit, der Server speichert sie nicht.
 
+### E-034 — Avatar in der Klasse: Werkhalle, Klassenprojekt, Reaktionen nur gezählt (2026-10-17)
+- **Entscheidung:** Die Klassenseite „Werkhalle“ zeigt die Roboter der Klasse in ihrer Pose. Die Klasse baut gemeinsam an einem Klassenprojekt, sichtbar ist nur die Summe, am Saisonende gibt es ein Klassenfoto. Meilensteine erscheinen dort nur nach Opt-in. Reaktionen gibt es nur auf Meilensteine, aus einer festen positiven Auswahl, und wer sie bekommt, sieht nur die Anzahl.
+- **Warum:** Datenschutz durch Voreinstellung (DSGVO Art. 25) bei Minderjährigen: Meilensteine verraten Aktivität. Gemeinsam bauen statt vergleichen, ohne Einzelbeiträge, damit niemand bloßgestellt wird. Ohne freien Text und ohne Namen bei Reaktionen gibt es nichts zu moderieren, keinen Druck und keine sichtbaren Grüppchen.
+- **Folgen:** Details in `plans/KONZEPT_SPIELWELT.md` §7. Die Werkhalle kann später den Tab „Team“ füllen (E-022). Podest und Porträts in der Rangliste hängen an O-006.
+
 ## Offen
 
 | Nr. | Frage | Empfehlung | Warum offen |

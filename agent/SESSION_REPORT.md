@@ -390,3 +390,14 @@ V1-Protokoll: `_archiv/agent/SESSION_REPORT.md` und `SESSION_REPORT_ARCHIVE.md`.
   - Frontend: 135 Tests grün (11 neu in `HubView.test.js`), `build` und `check:tokens` grün.
   - Patsche hat den Hub im Browser angesehen. CI nicht abgewartet, weil nicht gepusht.
 - **Offen:** neu in `docs/AUFGABEN.md`: nach dem Login zum Hub statt zu `/learn`, Icons für Spielhalle und Shop. Kein `!fokus` gesetzt.
+
+## 2026-10-17 — Avatar-Konzept (G4)
+
+- **Branch:** `dev`. Nicht gepusht.
+- **Commits:** `7722065` (Avatar-Konzept mit Roboter, Slots und Stimmungen), dazu ein Commit mit Klassen-Teil, Aufgaben und diesem Eintrag.
+- **Ergebnis:**
+  - Reine Planung, kein Code. Der Avatar ist ein Roboter aus einem gemeinsamen Skelett mit acht Slots (Kopf, Aufsatz, Rumpf, Arme, Antrieb, Werkzeug, Abzeichen, Lackierung), Starter-Kit je Abteilung und einem Werkzeug je Fach in Stufen (Fach-Level 3, 10, 25, 100). Display-Gesicht, Akku (Brainpower) und Animationen zeichnet die Engine. Claude zeichnet zuerst Platzhalter (E-031).
+  - Kein Zufall bei Avatar-Teilen, keine Lootboxen (E-032). Stimmungen nie negativ, andere sehen nur eine Pose (E-033).
+  - Klasse: Werkhalle, Klassenprojekt mit Klassenfoto, Meilensteine nur nach Opt-in, Reaktionen nur gezählt (E-034). Alles in `plans/KONZEPT_SPIELWELT.md` §7.
+- **Geprüft:** Nur Doku. Abteilung über Klasse → Ausbildungsgang → Abteilung im Schema nachgesehen. Keine Tests gelaufen.
+- **Offen:** neu in `docs/AUFGABEN.md` unter G4: wer die endgültigen Teile zeichnet, Werkzeug je Fach und Starter-Kit je Abteilung, Avatar-Engine mit Platzhaltern, Werkhalle.

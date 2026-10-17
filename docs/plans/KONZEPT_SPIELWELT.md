@@ -91,6 +91,14 @@ Kurze Reaktionen gehen vor: `think`, während eine Quiz-Antwort geprüft wird, S
 
 **Nie negativ, für andere nur Pose** (E-033). Der Roboter ist nie traurig, besorgt, kaputt oder hungrig. Hinweise wie „Streak in Gefahr“ (ab G2) stehen nur im Text, im Ton von `../design/Sprache.md`. Die Stimmung bleibt privat: Andere sehen den Roboter in einer selbst gewählten Pose, weil die Stimmung verraten würde, wann jemand lernt, schläft oder weg war.
 
+**Mit der Klasse** (E-034). Sichtbar nur in der eigenen Klasse (E-024), nur mit Gamer-Tag.
+
+- **Werkhalle:** Klassenseite, auf der alle Roboter der Klasse in ihrer Pose stehen, mit Gamer-Tag und Level. Antippen zeigt eine Karte mit Roboter, Level, Erfolgen und längstem Streak, aber ohne laufenden Streak und ohne „zuletzt online“. Die Werkhalle kann später den ausgeblendeten Tab „Team“ füllen (E-022).
+- **Klassenprojekt:** Die Klasse baut gemeinsam eine große Maschine in der Werkhalle (z. B. Rakete, Roboterarm, Brücke). Jede abgeschlossene Lerneinheit der Klasse bringt sie ein Stück weiter. Gezeigt wird nur die Summe der Klasse, nie, wer wie viel beigetragen hat. Ist sie fertig, bekommen alle mit mindestens einer Lerneinheit eine Klassen-Lackierung oder ein Abzeichen. Am Ende der Saison gibt es ein Klassenfoto aller Roboter vor der Maschine.
+- **Posen:** feste Haltungen (Arme verschränkt, winken, Daumen hoch, Werkzeug heben, sitzen). Drei sind kostenlos, weitere sind Kosmetik. Technisch gedrehte Arme an den Steckplätzen, ohne neue Zeichnungen. Die Pose erscheint in der Werkhalle, auf der Karte und in der Rangliste: die drei Besten der Saison ganz auf einem Podest, alle anderen als Porträt.
+- **Meilensteine:** Aufstieg, Erfolg oder neue Werkzeug-Stufe erscheinen in der Werkhalle nur, wenn die Person das einschaltet (Opt-in), und nur mit Tag, ohne Uhrzeit.
+- **Reaktionen:** nur auf Meilensteine und nur aus einer festen, positiven Auswahl (High Five, Applaus, „Starker Bau“). Kein freier Text, keine negativen Reaktionen, eine Reaktion je Meilenstein und Person. Wer eine bekommt, sieht nur die Anzahl („5 High Fives aus deiner Klasse“), keine Namen. Empfangen lässt sich abschalten.
+
 **Auftritte.** Im Hub, auf dem Ergebnis der Lerneinheit (`celebrate`) und ab und zu im Quiz: eine kleine Reaktion auf eine richtige Antwort, nicht bei jeder Frage und nie über dem Inhalt.
 
 **Freischalten, dann kaufen.** Jedes Teil und jede Animation hat eine Bedingung (Level, Erfolg, Fach-Level) und einen Preis in Brainpower. Kaufen kann man erst nach dem Freischalten. Die Grundausstattung ist kostenlos. Werkzeug-Stufen gibt es direkt, sie zeigen, was man gelernt hat. Prestige-Teile kosten Trophäen statt Brainpower (Ökonomie-Modell §4).
@@ -138,6 +146,5 @@ Regeln aus §2.5 gelten. Töne nur, wenn die Person sie einschaltet.
 
 - O-006: Grundlage der Rangliste.
 - Wer die endgültigen Avatar-Teile zeichnet und wie sie aussehen (Design-Artefakt, E-006).
-- Soziale Momente des Avatars: Klassenseite, Posen, Reaktionen.
 - Shop-Preise (Ökonomie-Modell §3.4).
 - Abstimmung des Brainpower-Konzepts mit den Lehrkräften (M5).
