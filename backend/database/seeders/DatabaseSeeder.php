@@ -22,6 +22,9 @@ class DatabaseSeeder extends Seeder
         $teacherRole = Role::firstOrCreate(['name' => 'teacher']);
         $studentRole = Role::firstOrCreate(['name' => 'student']);
 
+        // Erster Katalog der Erfolge, in jeder Umgebung (E-044)
+        $this->call(AchievementSeeder::class);
+
         // Demo-Accounts haben ein bekanntes Passwort und dürfen nie in Produktion landen.
         // Den echten Admin dort per `php artisan learnharder:make-admin <email> --name="…"` anlegen.
         if (! app()->environment(['local', 'testing'])) {

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\AchievementController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\BoosterController;
 use App\Http\Controllers\Api\V1\HubController;
@@ -40,6 +41,9 @@ Route::prefix('v1')->group(function () {
         // Shop (E-037) und XP-Booster mit Brainpower kaufen (E-010)
         Route::get('shop', [ShopController::class, 'show']);
         Route::post('boosters', [BoosterController::class, 'store']);
+
+        // Erfolge für das Profil, prüft vorher nach (E-042)
+        Route::get('achievements', [AchievementController::class, 'index']);
 
         Route::get('subjects', [SubjectController::class, 'index']);
         Route::get('subjects/{subject}', [SubjectController::class, 'show']);

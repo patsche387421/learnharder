@@ -30,6 +30,7 @@ class MeResource extends JsonResource
             'streak' => $this->streak(),
             'brainpower' => $this->brainpower(),
             'booster' => Booster::current($this->resource),
+            'trophies' => $this->stats->trophies ?? 0, // aus Erfolgen und fehlerfreien Herausforderungen (E-046)
         ];
     }
 }
