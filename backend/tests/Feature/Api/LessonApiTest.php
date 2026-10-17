@@ -12,8 +12,10 @@ use App\Models\Topic;
 use App\Models\User;
 use App\Models\UserStat;
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Events\TransactionBeginning;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Testing\TestResponse;
 use Spatie\Permission\Models\Role;
 use Tests\Concerns\EnrollsStudents;
@@ -239,6 +241,23 @@ class LessonApiTest extends TestCase
             ->assertJsonPath('data.xp_earned', 2)
             ->assertJsonPath('data.correct_count', 1);
         $this->assertSame(1, QuestionAnswer::where('question_id', $this->einfach->id)->count());
+    }
+
+    public function test_wiederholung_versucht_kein_zweites_einfuegen(): void
+    {
+        $id = $this->start()->json('data.id');
+        $this->answer($id, $this->einfach, 'falsch');
+
+        // Ein Einfügen auf Verdacht läuft in einem Savepoint und scheitert am Unique-Index, das steht als ERROR im
+        // Postgres-Log. Gescheiterte Abfragen melden kein QueryExecuted, der Savepoint aber ein TransactionBeginning.
+        $savepoints = 0;
+        Event::listen(TransactionBeginning::class, function () use (&$savepoints) {
+            $savepoints++;
+        });
+        $this->answer($id, $this->einfach, 'richtig')->assertOk()->assertJsonPath('data.repeat', true);
+
+        $this->assertSame(0, $savepoints);
+        $this->assertSame(1, QuestionAnswer::where('quiz_attempt_id', $id)->count());
     }
 
     public function test_dieselbe_erste_antwort_nochmal_ist_keine_wiederholung(): void

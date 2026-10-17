@@ -62,6 +62,12 @@ class AuthTest extends TestCase
         $this->getJson('/api/v1/me')->assertUnauthorized();
     }
 
+    public function test_api_ohne_login_und_ohne_json_header_gibt_401_statt_serverfehler(): void
+    {
+        // z. B. /api/v1/me direkt im Browser: kein Umleiten auf eine Login-Seite, die es für die API nicht gibt
+        $this->get('/api/v1/me')->assertUnauthorized()->assertJsonPath('message', 'Unauthenticated.');
+    }
+
     public function test_me_liefert_nur_gamer_tag_und_spielwerte(): void
     {
         $this->actingAs($this->user)
