@@ -156,26 +156,45 @@
   .toast--show { opacity: 1; transform: none; }
 
   /* Projekt */
-  .focus { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-2) var(--space-4); }
-  .focus__text { font-size: 20px; line-height: 28px; font-weight: 700; }
-  .facts { margin: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px var(--space-4); font-size: 14px; }
-  .facts dt { color: var(--ink-muted); }
-  .facts dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
-  .milestones { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: var(--space-4) 0; }
-  .ms { display: flex; flex-direction: column; min-width: 92px; padding: 6px 12px; border: 1px solid var(--line); border-radius: var(--radius-sm); font-size: 13px; }
-  .ms strong { font: 700 14px/20px var(--font-mono); }
+  .project { display: grid; gap: var(--space-4); max-width: 880px; }
+  .project > * { min-width: 0; }
+  .pbar { display: flex; flex-wrap: wrap; align-items: center; gap: 4px var(--space-4); font-size: 14px; color: var(--ink-muted); }
+  .pbar b { font-weight: 400; color: var(--ink); }
+  .milestones { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .ms { display: flex; flex-direction: column; min-width: 84px; padding: 4px 10px; border: 1px solid var(--line); border-radius: var(--radius-sm); font-size: 13px; line-height: 18px; }
+  .ms strong { font: 700 13px/18px var(--font-mono); }
   .ms--done { color: var(--ink-muted); }
   .ms--done strong { color: var(--correct); }
+  .ms--paused { color: var(--ink-muted); border-style: dashed; }
   .ms--now { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
-  .board { display: grid; gap: var(--space-4); grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  @media (max-width: 900px) { .board { grid-template-columns: 1fr; } }
+  .waiting { display: grid; gap: 2px; padding: var(--space-2) var(--space-4);
+             border-left: 3px solid var(--rank-gold); background: var(--surface-raised); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-size: 14px; }
+  .waiting > strong { font: 700 12px/18px var(--font-mono); text-transform: uppercase; letter-spacing: .06em; color: var(--ink-muted); }
+  .waiting ul { display: grid; gap: 2px; margin: 0; padding: 0; list-style: none; }
+  .waiting li { min-width: 0; overflow-wrap: anywhere; }
   .tasks { margin: 0; padding: 0; list-style: none; }
-  .task { padding: 8px 0; border-top: 1px solid var(--line); font-size: 14px; }
+  .task { display: flex; align-items: baseline; gap: var(--space-3); padding: 7px 0; border-top: 1px solid var(--line); font-size: 14px; }
   .task:first-child { border-top: 0; }
-  .task--done { color: var(--ink-muted); text-decoration: line-through; }
-  .task--focus { padding-left: 8px; border-left: 3px solid var(--accent); border-radius: 0; }
-  .task__meta { display: flex; flex-wrap: wrap; gap: 4px var(--space-2); margin-top: 4px; font-size: 12px; color: var(--ink-muted); }
-  .chip { padding: 0 8px; border-radius: var(--radius-full); background: var(--surface-sunken); font: 700 11px/18px var(--font-mono); }
+  .task__text { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+  .task__meta { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px; font-size: 12px; color: var(--ink-muted); }
+  .hint { padding: 7px 0; border-top: 1px solid var(--line); font-size: 13px; color: var(--ink-muted); }
+  .task--done .task__text { color: var(--ink-muted); text-decoration: line-through; }
+  .task--focus { margin: 0 calc(-1 * var(--space-4)); padding-left: calc(var(--space-4) - 3px); padding-right: var(--space-4);
+                 border-left: 3px solid var(--accent); background: color-mix(in srgb, var(--accent) 8%, transparent); }
+  .task--focus .task__text { font-weight: 700; }
+  .chip { padding: 0 8px; border-radius: var(--radius-full); background: var(--surface-sunken); font: 700 11px/18px var(--font-mono); white-space: nowrap; }
+  .chip--patsche { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+  .folds { display: grid; gap: var(--space-2); }
+  .fold { border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface-raised); }
+  .fold summary { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-3) var(--space-4); cursor: pointer;
+                  font: 700 12px/18px var(--font-mono); text-transform: uppercase; letter-spacing: .06em; color: var(--ink-muted); }
+  .fold summary::-webkit-details-marker { display: none; }
+  .fold summary::before { content: '▸'; display: inline-block; transition: transform .15s; }
+  .fold[open] summary::before { transform: rotate(90deg); }
+  .fold summary .badge { margin-left: auto; }
+  .fold__body { padding: 0 var(--space-4) var(--space-3); }
+  .fold h3 { margin: var(--space-3) 0 2px; font-size: 13px; color: var(--ink-muted); }
+  .fold h3:first-child { margin-top: 0; }
   .problems { margin: 0 0 var(--space-4); padding: var(--space-3) var(--space-4); border: 1px solid var(--wrong); border-radius: var(--radius-sm); color: var(--wrong); font-size: 14px; }
   .problems ul { margin: 4px 0 0; padding-left: 18px; font: 400 13px/20px var(--font-mono); }
   [hidden] { display: none !important; }
@@ -252,23 +271,14 @@
 
   <!-- Projekt -->
   <section class="tab" id="tab-project" role="tabpanel" hidden>
-    <div class="grid">
-      <article class="card span-2"><h2>Fokus</h2><div id="focus"></div></article>
-      <article class="card"><h2>Stand</h2><dl class="facts" id="project-facts"></dl></article>
-    </div>
-    <div class="milestones" id="milestones"></div>
-    <div class="toolbar">
-      <div class="seg" id="task-scope">
-        <button data-scope="start" aria-pressed="true">Bis zum Start</button>
-        <button data-scope="all" aria-pressed="false">Alles</button>
-      </div>
-      <span class="muted">Aus <code>docs/AUFGABEN.md</code>, Änderungen dort. Format steht oben in der Datei.</span>
-    </div>
-    <div class="problems" id="task-problems" hidden></div>
-    <div class="board">
-      <article class="card"><h2>Wartet auf andere <span class="badge" id="count-schule">0</span></h2><ul class="tasks" id="tasks-schule"></ul></article>
-      <article class="card"><h2>Patsche <span class="badge" id="count-patsche">0</span></h2><ul class="tasks" id="tasks-patsche"></ul></article>
-      <article class="card"><h2>Claude <span class="badge" id="count-claude">0</span></h2><ul class="tasks" id="tasks-claude"></ul></article>
+    <div class="project">
+      <div class="pbar" id="project-facts"></div>
+      <div class="milestones" id="milestones"></div>
+      <div class="problems" id="task-problems" hidden></div>
+      <div class="waiting" id="waiting" hidden></div>
+      <article class="card"><h2 id="now-title">Jetzt</h2><ul class="tasks" id="now"></ul></article>
+      <div class="folds" id="folds"></div>
+      <p class="muted">Aus <code>docs/AUFGABEN.md</code> und der Meilenstein-Tabelle in <code>docs/plans/README.md</code>, Änderungen dort.</p>
     </div>
   </section>
 
@@ -365,7 +375,6 @@ let codeShown = false
 let logSource = LOG_SOURCES[store.get('lh-dev-log-source')] ? store.get('lh-dev-log-source') : 'app'
 let logFilter = 'problems'
 let logEntries = []
-let taskScope = store.get('lh-dev-task-scope') === 'all' ? 'all' : 'start'
 
 async function api(path, options = {}) {
   const response = await fetch(path, { ...options, headers: { 'X-LH-Dev': '1' } })
@@ -613,12 +622,22 @@ function renderTests(tests) {
 
 /* ---------- Projekt ---------- */
 
-const OWNERS = ['schule', 'patsche', 'claude']
-// „Bis zum Start“ blendet die Gruppe „Später …“ aus (docs/AUFGABEN.md)
-const isLater = (group) => /^Später/.test(group.title)
 // Erst escapen, dann `Code` als <code>: So kommt kein HTML aus der Datei durch
 const inline = (text) => esc(text).replace(/`([^`]+)`/g, '<code>$1</code>')
 const groupChip = (title) => title.split(/\s/)[0]
+// Nur @schule: steht oben unter „Wartet auf“, nicht noch einmal in den Abschnitten
+const waitsOnly = (task) => task.owners.length > 0 && task.owners.every((o) => o === 'schule')
+const visible = (group) => group.tasks.filter((t) => !waitsOnly(t))
+const openCount = (tasks) => tasks.filter((t) => !t.done).length
+// Aufgeklappte Abschnitte überstehen das Neuzeichnen und den nächsten Besuch
+const openFolds = new Set((() => { try { return JSON.parse(store.get('lh-dev-folds') || '[]') } catch { return [] } })())
+
+// Nur neu schreiben, wenn sich etwas geändert hat: Die Seite fragt jede Sekunde nach, sonst springen Auswahl und Klicks
+function setHtml(element, html) {
+  if (element.dataset.html === html) return
+  element.innerHTML = html
+  element.dataset.html = html
+}
 
 function waitingFor(since) {
   const days = Math.floor((new Date().setHours(0, 0, 0, 0) - new Date(`${since}T00:00:00`)) / 86400000)
@@ -626,11 +645,10 @@ function waitingFor(since) {
   return `<span class="${days >= 7 ? 'warn' : ''}">${text}</span>`
 }
 
-function taskItem(task, group) {
-  const others = task.owners.length > 1 ? `<span>mit ${task.owners.map((o) => `@${esc(o)}`).join(', ')}</span>` : ''
-  return `<li class="task ${task.done ? 'task--done' : ''} ${task.focus && !task.done ? 'task--focus' : ''}">${inline(task.text)}
-    <div class="task__meta"><span class="chip">${esc(groupChip(group.title))}</span>${task.since ? waitingFor(task.since) : ''}${others}
-    <span title="Zeile in docs/AUFGABEN.md">Z. ${task.line}</span></div></li>`
+function taskItem(task) {
+  const classes = ['task', task.done && 'task--done', task.focus && !task.done && 'task--focus'].filter(Boolean).join(' ')
+  return `<li class="${classes}" title="Zeile ${task.line} in docs/AUFGABEN.md"><span class="task__text">${inline(task.text)}</span>
+    <span class="task__meta">${task.since ? waitingFor(task.since) : ''}${task.owners.map((o) => `<span class="chip chip--${esc(o)}">${esc(o)}</span>`).join('')}</span></li>`
 }
 
 function ciText(ci, project) {
@@ -651,39 +669,55 @@ function renderProject(project, ci) {
   badge.className = `badge ${tasks.problems.length ? 'badge--bad' : ''}`
   if (tab !== 'project') return
 
-  const focusGroup = tasks.groups.find((g) => g.tasks.some((t) => t.focus && !t.done))
-  const focus = focusGroup?.tasks.find((t) => t.focus && !t.done)
-  $('#focus').innerHTML = focus
-    ? `<div class="focus"><span class="focus__text">${inline(focus.text)}</span>
-        <span class="muted"><span class="chip">${esc(groupChip(focusGroup.title))}</span> ${focus.owners.map((o) => `@${esc(o)}`).join(', ')}</span></div>`
-    : '<div class="muted">Kein Fokus gesetzt. In <code>docs/AUFGABEN.md</code> eine Aufgabe mit <code>!fokus</code> markieren.</div>'
-
+  // Stand in einer Zeile
+  const changes = data.state?.changes ? ` <span class="warn">${data.state.changes} Änderungen</span>` : ''
   const facts = [
-    ['Branch', `<span class="mono">${esc(data.state?.branch ?? '?')}</span>${data.state?.changes ? ` <span class="warn">${data.state.changes} Änderungen</span>` : ''}`],
-    ['dev', project.unpushed == null ? '<span class="muted">kein origin/dev</span>'
-      : project.unpushed ? `<span class="warn">${project.unpushed} ${project.unpushed === 1 ? 'Commit' : 'Commits'} nicht gepusht</span>` : '<span class="ok">gepusht</span>'],
-    ['CI dev', ciText(ci, project)],
-    ['Offen', project.unmerged.length ? project.unmerged.map((b) => `<span class="mono">${esc(b)}</span>`).join(', ') : '<span class="muted">alle Branches in dev</span>'],
-    ['Session', project.session ? esc(project.session) : '<span class="muted">–</span>'],
+    `<b class="mono">${esc(data.state?.branch ?? '?')}</b>${changes}`,
+    `dev ${project.unpushed == null ? '<span class="muted">ohne origin/dev</span>'
+      : project.unpushed ? `<span class="warn">${project.unpushed} ${project.unpushed === 1 ? 'Commit' : 'Commits'} nicht gepusht</span>` : '<span class="ok">gepusht</span>'}`,
+    `CI ${ciText(ci, project)}`,
+    project.unmerged.length ? `<span class="warn">nicht in dev: ${project.unmerged.map((b) => `<span class="mono">${esc(b)}</span>`).join(', ')}</span>` : 'alle Branches in dev',
+    project.session ? `<span title="Letzte Session: ${esc(project.session)}">Session ${esc(project.session.slice(0, 10))}</span>` : '',
   ]
-  $('#project-facts').innerHTML = facts.map(([label, value]) => `<dt>${label}</dt><dd>${value}</dd>`).join('')
+  setHtml($('#project-facts'), facts.filter(Boolean).map((f) => `<span>${f}</span>`).join(''))
 
-  const now = milestones.find((m) => !m.done)?.id
-  const openIn = (id) => tasks.groups.filter((g) => groupChip(g.title) === id).flatMap((g) => g.tasks).filter((t) => !t.done).length
-  $('#milestones').innerHTML = milestones.map((m) => `<div class="ms ${m.done ? 'ms--done' : ''} ${m.id === now ? 'ms--now' : ''}" title="${esc(m.goal)}">
-      <strong>${m.done ? '✓ ' : ''}${esc(m.id)}</strong><span>${esc(m.goal)}</span>${!m.done ? `<span class="muted">${openIn(m.id)} offen</span>` : ''}</div>`).join('')
+  // Jetzt: Gruppe mit !fokus, sonst der erste offene Meilenstein (pausierte zählen nicht)
+  const focusGroup = tasks.groups.find((g) => g.tasks.some((t) => t.focus && !t.done))
+  const now = focusGroup ? groupChip(focusGroup.title) : milestones.find((m) => m.status === 'open')?.id
+  const status = Object.fromEntries(milestones.map((m) => [m.id, m.status]))
+  const inGroup = (id) => tasks.groups.filter((g) => groupChip(g.title) === id)
+
+  // Fertige Meilensteine in einem Kästchen, damit die Leiste mit den Tracks kurz bleibt
+  const done = milestones.filter((m) => m.status === 'done')
+  const doneBox = done.length ? `<div class="ms ms--done" title="${esc(done.map((m) => `${m.id} ${m.goal}`).join('\n'))}">
+      <strong>✓ ${esc(done[0].id)}${done.length > 1 ? `–${esc(done.at(-1).id)}` : ''}</strong><span>${done.length} fertig</span></div>` : ''
+  setHtml($('#milestones'), doneBox + milestones.filter((m) => m.status !== 'done').map((m) => `<div class="ms ms--${m.status} ${m.id === now ? 'ms--now' : ''}"
+      title="${esc(m.goal)}${m.status === 'paused' ? ' (pausiert)' : ''}"><strong>${m.status === 'paused' ? '⏸ ' : ''}${esc(m.id)}</strong>
+      <span>${esc(m.goal)}</span><span class="muted">${openCount(inGroup(m.id).flatMap((g) => g.tasks))} offen</span></div>`).join(''))
 
   const problems = $('#task-problems')
   problems.hidden = !tasks.problems.length
-  problems.innerHTML = `Formfehler in <code>docs/AUFGABEN.md</code>:<ul>${tasks.problems.map((p) => `<li>${esc(p)}</li>`).join('')}</ul>`
+  setHtml(problems, `Formfehler in <code>docs/AUFGABEN.md</code>:<ul>${tasks.problems.map((p) => `<li>${esc(p)}</li>`).join('')}</ul>`)
 
-  document.querySelectorAll('#task-scope button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.scope === taskScope))
-  const groups = tasks.groups.filter((g) => taskScope === 'all' || !isLater(g))
-  for (const owner of OWNERS) {
-    const items = groups.flatMap((g) => g.tasks.filter((t) => t.owners.includes(owner)).map((t) => [t, g]))
-    $(`#count-${owner}`).textContent = items.filter(([t]) => !t.done).length
-    $(`#tasks-${owner}`).innerHTML = items.length ? items.map(([t, g]) => taskItem(t, g)).join('') : '<li class="empty">Nichts offen.</li>'
-  }
+  const waiting = tasks.groups.flatMap((g) => g.tasks.filter((t) => !t.done && waitsOnly(t)).map((t) => [t, g]))
+  $('#waiting').hidden = !waiting.length
+  setHtml($('#waiting'), `<strong>Wartet auf die Schule</strong><ul>${waiting.map(([t, g]) => `<li title="${esc(groupChip(g.title))} · Zeile ${t.line}">${inline(t.text)}${
+    t.since ? ` <span class="muted">· ${waitingFor(t.since)}</span>` : ''}</li>`).join('')}</ul>`)
+
+  const nowGroups = inGroup(now)
+  const nowTasks = nowGroups.flatMap(visible).sort((a, b) => (b.focus && !b.done) - (a.focus && !a.done))
+  setHtml($('#now-title'), `Jetzt${nowGroups.length ? ` · ${esc(nowGroups[0].title)}` : ''} <span class="badge">${openCount(nowTasks)}</span>`)
+  setHtml($('#now'), (nowTasks.length ? nowTasks.map(taskItem).join('') : '<li class="empty">Nichts offen.</li>')
+    + (focusGroup ? '' : '<li class="hint">Kein Fokus gesetzt. In <code>docs/AUFGABEN.md</code> eine Aufgabe mit <code>!fokus</code> markieren.</li>'))
+
+  // Der Rest zugeklappt: andere Meilensteine und Tracks unter „Danach“, jede übrige Gruppe für sich
+  const rest = tasks.groups.filter((g) => !nowGroups.includes(g) && visible(g).length)
+  const later = rest.filter((g) => status[groupChip(g.title)])
+  const fold = (key, title, groups, headings) => `<details class="fold" data-fold="${esc(key)}" ${openFolds.has(key) ? 'open' : ''}>
+    <summary>${esc(title)}<span class="badge">${openCount(groups.flatMap(visible))}</span></summary><div class="fold__body">${groups.map((g) =>
+      `${headings ? `<h3>${status[groupChip(g.title)] === 'paused' ? '⏸ ' : ''}${esc(g.title)}</h3>` : ''}<ul class="tasks">${visible(g).map(taskItem).join('')}</ul>`).join('')}</div></details>`
+  setHtml($('#folds'), [later.length ? fold('danach', 'Danach', later, true) : '',
+    ...rest.filter((g) => !status[groupChip(g.title)]).map((g) => fold(groupChip(g.title), g.title, [g], false))].join(''))
 }
 
 function renderActivity(activity) {
@@ -826,7 +860,7 @@ async function showOutput(id) {
 }
 
 document.addEventListener('click', (event) => {
-  const target = event.target.closest('[data-action],[data-tab],[data-tab-link],[data-log-link],[data-source],[data-copy],[data-mail],[data-output],[data-filter],[data-scope]')
+  const target = event.target.closest('[data-action],[data-tab],[data-tab-link],[data-log-link],[data-source],[data-copy],[data-mail],[data-output],[data-filter]')
   if (!target) return
   if (target.dataset.copy) { event.stopPropagation(); copy(target.dataset.copy) }
   else if (target.dataset.action) runAction(target)
@@ -836,16 +870,18 @@ document.addEventListener('click', (event) => {
   else if (target.dataset.source) selectLogSource(target.dataset.source)
   else if (target.dataset.mail) showMail(target.dataset.mail)
   else if (target.dataset.output) showOutput(target.dataset.output)
-  else if (target.dataset.scope) {
-    taskScope = target.dataset.scope
-    store.set('lh-dev-task-scope', taskScope)
-    if (data) render()
-  }
   else if (target.dataset.filter) {
     logFilter = target.dataset.filter
     renderLog()
   }
 })
+document.addEventListener('toggle', (event) => {
+  const key = event.target.dataset?.fold
+  if (!key) return
+  if (event.target.open) openFolds.add(key)
+  else openFolds.delete(key)
+  store.set('lh-dev-folds', JSON.stringify([...openFolds]))
+}, true)
 $('#log-search').addEventListener('input', renderLog)
 $('#log-since').addEventListener('click', () => {
   const key = `lh-dev-since-${logSource}`

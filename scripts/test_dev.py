@@ -253,11 +253,15 @@ class ProjectTest(unittest.TestCase):
             '| M | Ziel | Fertig, wenn … |',
             '|---|---|---|',
             '| **M3b** ✅ | Klassen und Sichtbarkeit | Klassen in Filament |',
-            '| **M4** | Hetzner läuft | Prod-Stack in `infra/` |',
+            '| **M4** ⏸ | Hetzner läuft | Prod-Stack in `infra/` |',
+            '| **M5** | Start | DNS umgestellt |',
+            '| **G1** | Hub & Profil | Hub statt Platzhalter |',
             '| danach | | Brainpower |',
         ])
-        self.assertEqual([{'id': 'M3b', 'done': True, 'goal': 'Klassen und Sichtbarkeit'},
-                          {'id': 'M4', 'done': False, 'goal': 'Hetzner läuft'}], dev.parse_milestones(text))
+        self.assertEqual([{'id': 'M3b', 'status': 'done', 'goal': 'Klassen und Sichtbarkeit'},
+                          {'id': 'M4', 'status': 'paused', 'goal': 'Hetzner läuft'},
+                          {'id': 'M5', 'status': 'open', 'goal': 'Start'},
+                          {'id': 'G1', 'status': 'open', 'goal': 'Hub & Profil'}], dev.parse_milestones(text))
 
     def test_meilensteine_im_repo(self):
         milestones = dev.parse_milestones(dev.PLANS_README.read_text(encoding='utf-8'))

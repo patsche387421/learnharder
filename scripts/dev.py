@@ -60,8 +60,9 @@ TASK_OWNER = re.compile(r'(?<!\S)@(\w+)')
 TASK_SINCE = re.compile(r'(?<!\S)seit:(\S+)')
 TASK_FOCUS = re.compile(r'(?<!\S)!fokus(?!\S)')
 TASK_OWNERS = ('claude', 'patsche', 'schule')
-# Meilenstein-Tabelle in docs/plans/README.md: `| **M4a** ✅ | Ankommen | … |`
-MILESTONE_ROW = re.compile(r'^\| \*\*(M\w+)\*\*( ✅)? \| ([^|]+) \|', re.M)
+# Meilenstein-Tabelle in docs/plans/README.md: `| **M4a** ✅ | Ankommen | … |`, pausiert `| **M4** ⏸ | …`, Tracks `| **G1** | …`
+MILESTONE_ROW = re.compile(r'^\| \*\*([A-Z]\w*)\*\*(?: (✅|⏸))? \| ([^|]+) \|', re.M)
+MILESTONE_STATUS = {'✅': 'done', '⏸': 'paused'}
 LOG_KEEP = 300
 ANSI = re.compile(r'\x1b\[[0-9;?]*[A-Za-z]')
 MIB_PER_UNIT = {'b': 1 / 1048576, 'kib': 1 / 1024, 'kb': 1 / 1024, 'mib': 1, 'mb': 1, 'gib': 1024, 'gb': 1024}
@@ -271,8 +272,9 @@ def parse_tasks(text):
 
 
 def parse_milestones(text):
-    """Meilensteine in der Reihenfolge der Tabelle: Kürzel, fertig (✅) und Ziel."""
-    return [{'id': match.group(1), 'done': bool(match.group(2)), 'goal': match.group(3).strip()} for match in MILESTONE_ROW.finditer(text)]
+    """Meilensteine und Tracks in der Reihenfolge der Tabelle: Kürzel, Status (done, paused, open) und Ziel."""
+    return [{'id': match.group(1), 'status': MILESTONE_STATUS.get(match.group(2), 'open'), 'goal': match.group(3).strip()}
+            for match in MILESTONE_ROW.finditer(text)]
 
 
 def last_session(text):
