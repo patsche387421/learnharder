@@ -2,10 +2,8 @@
 
 namespace Tests\Concerns;
 
-use App\Enums\ProgramForm;
 use App\Enums\ProgramUnit;
 use App\Models\CurriculumEntry;
-use App\Models\School;
 use App\Models\SchoolClass;
 use App\Models\Subject;
 use App\Models\User;
@@ -13,20 +11,15 @@ use Spatie\Permission\Models\Role;
 
 /**
  * Schüler:innen mit Klasse und Lehrplan für API-Tests. Ohne Klasse sehen sie nichts (E-024).
+ * Baut auf SchoolClassFactory auf. Neue Tests nehmen besser gleich User::factory()->inClass().
  */
 trait EnrollsStudents
 {
     /** Eigene Schule, Ausbildungsgang und Schuljahr 2026/27 (2. Semester ab 2027-02-08), Person darin als Schüler:in. */
     protected function enrollStudent(User $user, int $stage = 2, ProgramUnit $unit = ProgramUnit::Year): SchoolClass
     {
-        $school = School::create(['name' => 'Test-HTL '.(School::count() + 1)]);
-        $program = $school->departments()->create(['code' => 'IT', 'name' => 'Informationstechnologie'])->programs()->create([
-            'code' => 'HIT', 'name' => 'Informationstechnologie',
-            'form' => $unit === ProgramUnit::Year ? ProgramForm::HigherTechnical : ProgramForm::College,
-            'unit' => $unit, 'duration' => 5,
-        ]);
-        $year = $school->schoolYears()->create(['name' => '2026/27', 'starts_on' => '2026-09-07', 'second_term_starts_on' => '2027-02-08', 'ends_on' => '2027-07-02']);
-        $class = SchoolClass::create(['program_id' => $program->id, 'school_year_id' => $year->id, 'name' => $stage.'AHIT', 'stage' => $stage]);
+        $classes = SchoolClass::factory()->stage($stage);
+        $class = ($unit === ProgramUnit::Semester ? $classes->semester() : $classes)->create();
 
         $user->assignRole(Role::findOrCreate('student', 'web'));
         $class->enrollments()->create(['user_id' => $user->id]);

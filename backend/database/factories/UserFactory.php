@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\SchoolClass;
 use App\Models\User;
 use App\Models\UserStat;
 use App\Support\DailyXp;
@@ -48,6 +49,18 @@ class UserFactory extends Factory
     public function student(): static
     {
         return $this->afterCreating(fn (User $user) => $user->assignRole(Role::findOrCreate('student', 'web')));
+    }
+
+    /**
+     * Schüler:in mit aktiver Einschreibung in $class. Ohne Angabe eine neue Klasse mit eigener Schule
+     * (SchoolClassFactory). Für mehrere Personen in einer Klasse dieselbe Klasse übergeben.
+     */
+    public function inClass(?SchoolClass $class = null): static
+    {
+        return $this->student()->afterCreating(function (User $user) use ($class) {
+            ($class ?? SchoolClass::factory()->create())->enrollments()->create(['user_id' => $user->id]);
+            $user->unsetRelation('activeEnrollment');
+        });
     }
 
     /**
