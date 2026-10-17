@@ -54,6 +54,12 @@ class UserStat extends Model
             : 0;
     }
 
+    /** Schon gelernt am Tag $day? Dann ist der Streak für heute sicher, sonst ist er in Gefahr (Hub, Konzept Spielwelt §4). */
+    public function studiedOn(string $day): bool
+    {
+        return $this->last_study_date?->toDateString() === $day;
+    }
+
     private static function dayBefore(string $day): string
     {
         return CarbonImmutable::parse($day)->subDay()->toDateString();

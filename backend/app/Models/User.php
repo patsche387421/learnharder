@@ -130,15 +130,19 @@ class User extends Authenticatable implements FilamentUser
     }
 
     /**
-     * Laufender und längster Streak, Tag in Wien wie bei den EP (E-015).
+     * Laufender und längster Streak, Tag in Wien wie bei den EP (E-015). today: heute schon gelernt (Wiener Tag),
+     * damit die App nicht mit der Gerätezeit rechnen muss.
      *
-     * @return array{current: int, longest: int}
+     * @return array{current: int, longest: int, today: bool}
      */
     public function streak(): array
     {
+        $today = DailyXp::today();
+
         return [
-            'current' => $this->stats?->currentStreak(DailyXp::today()) ?? 0,
+            'current' => $this->stats?->currentStreak($today) ?? 0,
             'longest' => $this->stats->longest_streak ?? 0,
+            'today' => $this->stats?->studiedOn($today) ?? false,
         ];
     }
 
