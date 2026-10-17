@@ -97,7 +97,9 @@ class QuizAttemptController extends Controller
         $isCorrect = $selected === $correctIds;
 
         // Nur die erste Antwort zählt. Spätere Antworten auf dieselbe Frage sind die Wiederholung am Ende (0 EP).
-        $answer = QuestionAnswer::createOrFirst(
+        // Erst lesen, dann anlegen: Ein Einfügen auf Verdacht ließe Postgres bei jeder Wiederholung einen Fehler loggen.
+        // Kommen zwei Anfragen gleichzeitig, fängt createOrFirst darin die Verletzung des Unique-Index ab.
+        $answer = QuestionAnswer::firstOrCreate(
             ['quiz_attempt_id' => $attempt->id, 'question_id' => $question->id],
             ['user_id' => $attempt->user_id, 'selected_option_ids' => $selected, 'is_correct' => $isCorrect,
                 'xp_multiplier' => Booster::multiplier($request->user())],
