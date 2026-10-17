@@ -3,7 +3,8 @@
 > **Status:** Genehmigter Konzept- & Architekturplan (V2 Neuausrichtung)  
 > **Datum:** 11. Oktober 2026  
 > **Zielgruppe:** Entwicklungsteam, Schulleitung, betreuende Professoren, Autoren, Lehrkräfte  
-> **Architektur-Entscheidung:** Headless Laravel 11 + Filament Admin/CMS (Backend) & Vue 3 + Vite PWA (Frontend) + Nuxt/Astro (SEO Landing Page)
+> **Architektur-Entscheidung:** Headless Laravel 11 + Filament Admin/CMS (Backend) & Vue 3 + Vite PWA (Frontend) + Nuxt/Astro (SEO Landing Page)  
+> **Stand 2026-10-17:** Laravel 13 mit Filament 5 (E-008), nur PostgreSQL (E-007). MVP gekürzt (E-021), Spielwelt-Tracks G1–G6 und L1 (E-030), Landing Page offen (L1). Fortschritt und nächste Schritte: `README.md`. Die Stellen sind unten mit *Stand:* markiert.
 
 ---
 
@@ -68,7 +69,7 @@ Das bisherige Energydrink-Konzept weicht dem didaktisch anerkannten **Brainpower
 
 ### 2.3 Mehrsprachigkeit (i18n), Content-Workflow & KI-Übersetzungshilfe
 
-* **Technik:** Feld-basierte Lokalisierung via `spatie/laravel-translatable` in PostgreSQL / MariaDB.
+* **Technik:** Feld-basierte Lokalisierung via `spatie/laravel-translatable` in PostgreSQL / MariaDB. *Stand: nur PostgreSQL (E-007), CMS vorerst nur Deutsch (E-012).*
 * **Unterstützte Sprachen:** Standard: `de` (Deutsch), Sekundär: `en` (Englisch), erweiterbar für weitere Sprachen.
 * **KI-Übersetzungs-Plugin in Filament:**
   * Autoren verfassen Fragen, Antwortoptionen, Erklärungen und Theorie primär auf Deutsch.
@@ -199,8 +200,8 @@ erDiagram
 ├── 1.4 Designsystem-Definition (Tokens, Farben, Mobile-First Komponenten mit Claude)
 └── 1.5 Gamification-Ökonomie & Simulationsmodell (Level 1–100, XP/BP-Kurven, Streak-Formeln)
 
-2.0 BACKEND & CMS-PLATTFORM (Laravel 11 + Filament)
-├── 2.1 Laravel Core Setup (PostgreSQL/MariaDB, Sanctum Auth, Eloquent)
+2.0 BACKEND & CMS-PLATTFORM (Laravel 11 + Filament)          Stand: Laravel 13, Filament 5 (E-008)
+├── 2.1 Laravel Core Setup (PostgreSQL/MariaDB, Sanctum Auth, Eloquent)   Stand: nur PostgreSQL (E-007)
 ├── 2.2 Rollen- & Berechtigungssystem (Spatie Permission / Filament Shield)
 ├── 2.3 Redaktions-CMS (Fächer-, Themen-, Fragenverwaltung, i18n & DeepL/OpenAI-Übersetzung)
 ├── 2.4 Gamification-Engine (XP-Kurve, Level 1-100, Brainpower-Regeneration, Streaks)
@@ -284,8 +285,10 @@ erDiagram
 
 ## 7. Sofortige nächste Schritte
 
+*Stand 2026-10-17: Punkte 2 bis 5 sind erledigt (`/landing` gibt es noch nicht, kommt mit L1). Punkt 1 steht als Aufgabe unter M5. Die aktuellen nächsten Schritte stehen in `README.md`.*
+
 1. **Abstimmung:** Vorlage dieses Dokuments bei betreuenden Professoren/Lehrkräften zur Bestätigung von ERD und Brainpower-Konzept.
-2. **Ökonomie-Modellierung:** Fertigstellung des Simulationsdokuments [GAMIFICATION_OEKONOMIE_MODELL.md](file:///c:/v/learnharder.app/docs/plans/GAMIFICATION_OEKONOMIE_MODELL.md) zur Abstimmung der XP-Kurven (Level 1–100) und BP-Balancierung.
+2. **Ökonomie-Modellierung:** Fertigstellung des Simulationsdokuments [GAMIFICATION_OEKONOMIE_MODELL.md](GAMIFICATION_OEKONOMIE_MODELL.md) zur Abstimmung der XP-Kurven (Level 1–100) und BP-Balancierung.
 3. **Design-Token Extraktion:** Übernahme der Tokens aus dem mit Claude erstellten Designsystem in die zentrale CSS-Token-Datei.
 4. **Repository-Struktur vorbereiten:**
    * `/backend` (Laravel 11 API + Filament + Reverb)

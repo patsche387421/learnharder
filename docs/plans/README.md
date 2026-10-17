@@ -4,8 +4,8 @@
 
 | Plan | Status |
 |---|---|
-| `LEARNHARDER_V2_PROJEKTPLAN_PSP_RISIKEN.md` | **gültig**: Zielbild, PSP, Releases, Risiken |
-| `SETUP_DOMAIN_UND_DATENBANK_MIGRATION.md` | **gültig**: Hetzner, Domains. §2 Datenmigration entfällt (E-011) |
+| `LEARNHARDER_V2_PROJEKTPLAN_PSP_RISIKEN.md` | **gültig**: Zielbild, PSP, Releases, Risiken. Technik-Stand oben im Plan, alte Stellen mit *Stand:* markiert |
+| `SETUP_DOMAIN_UND_DATENBANK_MIGRATION.md` | **gültig**: Hetzner, Domains, DNS-Umstellung. Nutzer-Migration (§2) und `v0.x`-Tags (§4) gelten nicht, im Plan mit *Stand:* markiert (E-007, E-011, E-019, E-020) |
 | `GAMIFICATION_OEKONOMIE_MODELL.md` | **gültig**: Level-Tabelle seit E-010 korrigiert |
 | `KONZEPT_SPIELWELT.md` | **Entwurf**: Hub, Erfolge, Avatar, Shop, Rangliste, Landing Page (E-030) |
 | `DATENMODELL_SCHULE.md` | **gültig**: Abteilungen, Ausbildungsgänge, Klassen, Lehrkräfte, Registrierung (E-013). §8 Schritte 1–4 umgesetzt (bis M4a), offen nur §7.2 |
@@ -27,21 +27,15 @@
 
 ## Widersprüche in den Plänen
 
-1. **Laravel 11** steht in beiden Plänen. Installiert ist **Laravel 13.36**.
-2. **Datenbank:** „PostgreSQL / MariaDB“. Sail und `.env.example` nutzen Postgres (`pgsql`). Die Pläne nennen noch beides. → entschieden: Postgres (`ENTSCHEIDUNGEN.md` E-007)
-3. **Versionen:** Der Setup-Plan nennt `v2.0.0-alpha.1` als Ziel, §4 nennt `v0.1.0`/`v0.2.0`. Beide Tags `v0.1.0` und `v2.0.0-plan` existieren mit derselben Beschreibung. Vorschlag: nur noch `v2.0.0-alpha.N` weiterführen. → entschieden: nur `v2.0.0-alpha.N`, `v0.1.0` gibt es nicht mehr (`ENTSCHEIDUNGEN.md` E-020)
-4. **Ökonomie-Modell §2:** Die Formel `round(n^1.5 × 8)` passt zu Level 5/10/25/50/100, aber nicht zu Level 1 (Formel ergibt 8, Tabelle sagt 0) und Level 2 (Formel 23, Tabelle 8). Die Spalte „XP zum nächsten Level“ ist dadurch auch falsch. Vor der Umsetzung festlegen, ob die Schwelle für Level n `(n−1)` oder `n` verwendet. → entschieden: `(n−1)` wie in V1, Tabelle korrigiert (`ENTSCHEIDUNGEN.md` E-010)
-5. **Schritt 1 des Plans** („Abstimmung mit Professoren/Lehrkräften“) ist nirgends als erledigt vermerkt. → noch nicht passiert, wird vor dem Start nachgeholt (Patsche, 2026-10-16, siehe M5)
-6. **Setup-Plan §2:** beschreibt die Übernahme der Supabase-Nutzer samt bcrypt-Hashes. → entfällt, alle registrieren sich neu (`ENTSCHEIDUNGEN.md` E-011)
-7. **Setup-Plan §3:** Die App spricht mit `api.learnharder.app`, Staging liegt unter `staging.app…` und `staging.api…`. → entschieden: App und API unter einer Adresse, Staging unter `staging.learnharder.app` (`ENTSCHEIDUNGEN.md` E-019)
+Keine offenen. Was in den alten Plänen nicht mehr gilt (Laravel 11, MariaDB, Nutzer-Migration, getrennte Adressen für App und API, `v0.x`-Tags), steht dort mit *Stand:* und der Entscheidung dazu. Neue Widersprüche zwischen Plan und Code kommen hierher (Regel in `docs/CLAUDE.md`).
 
-## Einschätzung (Projektleitung)
+## Einschätzung (Projektleitung, Stand 2026-10-17)
 
-Der Plan ist fachlich gut (Server-Autorität, Datenschutz, saubere Rollen), aber **das MVP ist für ein Ein-Personen-Projekt zu groß**.
-Es enthält Landing Page mit Newsletter, KI-Übersetzung, PWA-Offline, Brainpower-Ökonomie, CI/CD und Staging.
-Der kritische Pfad zum ersten echten Nutzer ist kürzer:
+Fachlich trägt der Plan: Der Server rechnet, Datenschutz und Rollen sind sauber. Das MVP ist seit E-021 schlank, Lernen, Klassen, Registrierung und Rechtliches stehen (M0 bis M4a). Was bis zum Start fehlt, hängt vor allem an der Schule:
 
-**Hetzner-Server steht → API mit Login → Lern-Screens → Klassen und Registrierung → DNS umgestellt.** (Keine Nutzer-Migration, E-011.)
+**Schule antwortet → Hetzner (M4) → Abstimmung mit den Lehrkräften, Team und Liga (M5) → DNS umstellen.**
+
+Bis dahin entstehen die Spielwelt-Tracks lokal (E-030). G1 und G2 sind fertig.
 
 ### Meilensteine (Reihenfolge bestätigt 2026-10-16: M3b → M4a, parallel M4 → M5; Spielwelt-Tracks seit 2026-10-17, E-030)
 
@@ -72,6 +66,6 @@ Der kritische Pfad zum ersten echten Nutzer ist kürzer:
 
 ### Größte Risiken jetzt
 
-1. **Umfang.** MVP gekürzt (E-021). Mit den Spielwelt-Tracks (E-030) wächst die Liste wieder. Der Start wartet deshalb nicht auf sie, außer auf Team und Liga (E-035), und neue Wünsche kommen ins Konzept, nicht in M5.
-2. **Prod-Daten aus Supabase.** Seit 2026-10-15 gesichert (E-009). Kein Import, V2 startet ohne V1-Nutzer (E-011).
-3. **Framework-Versionen.** Entschieden: Filament 5 (E-008). Translatable-Plugin geprüft, vorerst keins, CMS nur Deutsch (E-012).
+1. **Warten auf die Schule.** Vertragspartner, Rechtstexte, Freigabe des Absenders, Klassen-Kürzel und ein zweiter Admin kommen von der Schule (Aufgaben mit `@schule` in `AUFGABEN.md`, in der Testzentrale unter „Wartet auf die Schule“). Bis dahin stehen M4 und M5.
+2. **Umfang.** Mit den Spielwelt-Tracks (E-030) wächst die Liste. Der Start wartet nicht auf sie, außer auf Team und Liga (E-035). Neue Wünsche kommen ins Konzept, nicht in M5.
+3. **Alles nur auf einem Rechner.** Seit dem letzten Push liegen gut 60 Commits nur lokal auf `dev`, und WSL hat schon einmal Git-Objekte beschädigt. `dev` nach jedem abgeschlossenen Schritt pushen (läuft dann auch durch die CI), `main` weiter nur beim Deployen.
