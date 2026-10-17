@@ -247,5 +247,42 @@ class TasksTest(unittest.TestCase):
         self.assertTrue(all(group['tasks'] for group in result['groups']))
 
 
+class ProjectTest(unittest.TestCase):
+    def test_meilensteine_aus_der_tabelle(self):
+        text = '\n'.join([
+            '| M | Ziel | Fertig, wenn … |',
+            '|---|---|---|',
+            '| **M3b** ✅ | Klassen und Sichtbarkeit | Klassen in Filament |',
+            '| **M4** | Hetzner läuft | Prod-Stack in `infra/` |',
+            '| danach | | Brainpower |',
+        ])
+        self.assertEqual([{'id': 'M3b', 'done': True, 'goal': 'Klassen und Sichtbarkeit'},
+                          {'id': 'M4', 'done': False, 'goal': 'Hetzner läuft'}], dev.parse_milestones(text))
+
+    def test_meilensteine_im_repo(self):
+        milestones = dev.parse_milestones(dev.PLANS_README.read_text(encoding='utf-8'))
+        self.assertEqual(['M0', 'M1', 'M2', 'M3'], [milestone['id'] for milestone in milestones][:4])
+        self.assertIn('M5', [milestone['id'] for milestone in milestones])
+
+    def test_letzte_session(self):
+        text = '# Report\n\n## 2026-10-15 — M3\n- x\n## Vorlage\n## 2026-10-16 — Testwerkzeuge\n- y\n'
+        self.assertEqual('2026-10-16 — Testwerkzeuge', dev.last_session(text))
+        self.assertIsNone(dev.last_session('# leer'))
+
+    def test_github_repo_aus_https_und_ssh(self):
+        self.assertEqual('patsche387421/learnharder', dev.github_repo('https://github.com/patsche387421/learnharder.git\n'))
+        self.assertEqual('patsche387421/learnharder', dev.github_repo('git@github.com:patsche387421/learnharder.git'))
+        self.assertEqual('a/b', dev.github_repo('https://github.com/a/b'))
+        self.assertIsNone(dev.github_repo('https://gitlab.com/a/b.git'))
+        self.assertIsNone(dev.github_repo(''))
+
+    def test_ci_lauf_limit_und_leer(self):
+        run_ = {'status': 'completed', 'conclusion': 'success', 'head_sha': 'b6a3657', 'html_url': 'https://github.com/x', 'created_at': '2026-10-17T05:59:58Z'}
+        self.assertEqual({'status': 'completed', 'conclusion': 'success', 'sha': 'b6a3657', 'url': 'https://github.com/x', 'time': '2026-10-17T05:59:58Z'},
+                         dev.parse_ci({'workflow_runs': [run_]}))
+        self.assertEqual({'error': 'API rate limit exceeded for 1.2.3.4.'}, dev.parse_ci({'message': 'API rate limit exceeded for 1.2.3.4.'}))
+        self.assertEqual({'error': 'Noch kein CI-Lauf.'}, dev.parse_ci({'workflow_runs': []}))
+
+
 if __name__ == '__main__':
     unittest.main()

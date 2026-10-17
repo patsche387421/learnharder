@@ -35,6 +35,10 @@ VITE_LOG = STATE_DIR / 'vite.log'
 TEST_HISTORY = STATE_DIR / 'test-history.json'
 TEST_HISTORY_LIMIT = 50
 VITE_PORT = 5173
+TASKS = ROOT / 'docs' / 'AUFGABEN.md'
+PLANS_README = ROOT / 'docs' / 'plans' / 'README.md'
+SESSION_REPORT = ROOT / 'agent' / 'SESSION_REPORT.md'
+CI_BRANCH = 'dev'
 
 SERVICES = ['laravel.test', 'pgsql', 'redis', 'mailpit']
 URLS = {'1': ('App', 'http://localhost:5173'), '2': ('CMS', 'http://localhost/admin'), '3': ('Mailpit', 'http://localhost:8025')}
@@ -56,6 +60,8 @@ TASK_OWNER = re.compile(r'(?<!\S)@(\w+)')
 TASK_SINCE = re.compile(r'(?<!\S)seit:(\S+)')
 TASK_FOCUS = re.compile(r'(?<!\S)!fokus(?!\S)')
 TASK_OWNERS = ('claude', 'patsche', 'schule')
+# Meilenstein-Tabelle in docs/plans/README.md: `| **M4a** ✅ | Ankommen | … |`
+MILESTONE_ROW = re.compile(r'^\| \*\*(M\w+)\*\*( ✅)? \| ([^|]+) \|', re.M)
 LOG_KEEP = 300
 ANSI = re.compile(r'\x1b\[[0-9;?]*[A-Za-z]')
 MIB_PER_UNIT = {'b': 1 / 1048576, 'kib': 1 / 1024, 'kb': 1 / 1024, 'mib': 1, 'mb': 1, 'gib': 1024, 'gb': 1024}
@@ -264,6 +270,35 @@ def parse_tasks(text):
     return {'groups': groups, 'problems': problems}
 
 
+def parse_milestones(text):
+    """Meilensteine in der Reihenfolge der Tabelle: Kürzel, fertig (✅) und Ziel."""
+    return [{'id': match.group(1), 'done': bool(match.group(2)), 'goal': match.group(3).strip()} for match in MILESTONE_ROW.finditer(text)]
+
+
+def last_session(text):
+    """Überschrift des letzten Eintrags im Session-Report, z. B. `2026-10-16 — Testwerkzeuge`."""
+    headings = re.findall(r'^## (\d{4}-\d{2}-\d{2} .+)$', text, re.M)
+    return headings[-1].strip() if headings else None
+
+
+def github_repo(url):
+    """`owner/repo` aus der Adresse von origin (https oder ssh), None bei anderen Anbietern."""
+    match = re.match(r'^(?:https://github\.com/|git@github\.com:)([\w.-]+/[\w.-]+?)(?:\.git)?/?$', url.strip())
+    return match.group(1) if match else None
+
+
+def parse_ci(data):
+    """Letzter Lauf aus der GitHub-API (`actions/runs`). Bei Limit oder Fehler fehlt `workflow_runs`, dann {'error': …}."""
+    runs = data.get('workflow_runs')
+    if runs is None:
+        return {'error': data.get('message') or 'Keine Antwort von GitHub.'}
+    if not runs:
+        return {'error': 'Noch kein CI-Lauf.'}
+    latest = runs[0]
+    return {'status': latest.get('status'), 'conclusion': latest.get('conclusion'), 'sha': latest.get('head_sha', ''),
+            'url': latest.get('html_url', ''), 'time': latest.get('created_at', '')}
+
+
 def parse_percent(text):
     try:
         return float(text.rstrip('%'))
@@ -460,6 +495,49 @@ def tail(path, max_bytes=65536):
             return lines[1:] if size > max_bytes else lines
     except OSError:
         return []
+
+
+def read_text(path):
+    try:
+        return path.read_text(encoding='utf-8')
+    except OSError:
+        return ''
+
+
+def project():
+    """Für den Tab „Projekt“: Aufgaben, Meilensteine, letzte Session, nicht gemergte Branches, ungepushte Commits auf dev."""
+    _, unmerged, _ = run(['git', 'for-each-ref', f'--no-merged={CI_BRANCH}', '--format=%(refname:short)', 'refs/heads'], timeout=5)
+    code, unpushed, _ = run(['git', 'rev-list', '--count', f'origin/{CI_BRANCH}..{CI_BRANCH}'], timeout=5)
+    _, sha, _ = run(['git', 'rev-parse', CI_BRANCH], timeout=5)
+    return {
+        'tasks': parse_tasks(read_text(TASKS)),
+        'milestones': parse_milestones(read_text(PLANS_README)),
+        'session': last_session(read_text(SESSION_REPORT)),
+        # main ist der Prod-Stand im Worktree, hinkt dev absichtlich hinterher
+        'unmerged': [branch for branch in unmerged.split() if branch != 'main'],
+        'unpushed': int(unpushed) if code == 0 else None,
+        'sha': sha.strip(),
+    }
+
+
+def ci_status():
+    """Letzter CI-Lauf auf dev. Ohne Anmeldung erlaubt GitHub 60 Anfragen pro Stunde, deshalb fragt dev_web höchstens einmal pro Minute."""
+    _, url, _ = run(['git', 'remote', 'get-url', 'origin'], timeout=5)
+    repo = github_repo(url)
+    if not repo:
+        return {'error': 'origin liegt nicht auf GitHub.'}
+    request = urllib.request.Request(f'https://api.github.com/repos/{repo}/actions/runs?branch={CI_BRANCH}&per_page=1',
+                                     headers={'Accept': 'application/vnd.github+json', 'User-Agent': 'learnharder-dev'})
+    try:
+        with urllib.request.urlopen(request, timeout=5) as response:
+            return parse_ci(json.load(response))
+    except urllib.error.HTTPError as error:
+        try:
+            return parse_ci(json.load(error))
+        except ValueError:
+            return {'error': f'GitHub antwortet {error.code}.'}
+    except (OSError, ValueError):
+        return {'error': 'GitHub nicht erreichbar.'}
 
 
 def mails(limit=3):

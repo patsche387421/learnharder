@@ -154,6 +154,30 @@
            border-radius: var(--radius-sm); background: var(--ink); color: var(--ink-inverse); box-shadow: 0 8px 24px rgb(0 0 0 / .35);
            opacity: 0; transform: translateY(8px); transition: .2s; pointer-events: none; }
   .toast--show { opacity: 1; transform: none; }
+
+  /* Projekt */
+  .focus { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-2) var(--space-4); }
+  .focus__text { font-size: 20px; line-height: 28px; font-weight: 700; }
+  .facts { margin: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px var(--space-4); font-size: 14px; }
+  .facts dt { color: var(--ink-muted); }
+  .facts dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+  .milestones { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: var(--space-4) 0; }
+  .ms { display: flex; flex-direction: column; min-width: 92px; padding: 6px 12px; border: 1px solid var(--line); border-radius: var(--radius-sm); font-size: 13px; }
+  .ms strong { font: 700 14px/20px var(--font-mono); }
+  .ms--done { color: var(--ink-muted); }
+  .ms--done strong { color: var(--correct); }
+  .ms--now { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+  .board { display: grid; gap: var(--space-4); grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  @media (max-width: 900px) { .board { grid-template-columns: 1fr; } }
+  .tasks { margin: 0; padding: 0; list-style: none; }
+  .task { padding: 8px 0; border-top: 1px solid var(--line); font-size: 14px; }
+  .task:first-child { border-top: 0; }
+  .task--done { color: var(--ink-muted); text-decoration: line-through; }
+  .task--focus { padding-left: 8px; border-left: 3px solid var(--accent); border-radius: 0; }
+  .task__meta { display: flex; flex-wrap: wrap; gap: 4px var(--space-2); margin-top: 4px; font-size: 12px; color: var(--ink-muted); }
+  .chip { padding: 0 8px; border-radius: var(--radius-full); background: var(--surface-sunken); font: 700 11px/18px var(--font-mono); }
+  .problems { margin: 0 0 var(--space-4); padding: var(--space-3) var(--space-4); border: 1px solid var(--wrong); border-radius: var(--radius-sm); color: var(--wrong); font-size: 14px; }
+  .problems ul { margin: 4px 0 0; padding-left: 18px; font: 400 13px/20px var(--font-mono); }
   [hidden] { display: none !important; }
 </style>
 </head>
@@ -181,6 +205,7 @@
 
 <nav class="tabs" role="tablist">
   <button class="tab-btn" role="tab" data-tab="overview">Übersicht</button>
+  <button class="tab-btn" role="tab" data-tab="project">Projekt <span class="badge" id="badge-project">–</span></button>
   <button class="tab-btn" role="tab" data-tab="mails">Mails <span class="badge" id="badge-mails">0</span></button>
   <button class="tab-btn" role="tab" data-tab="tests">Tests <span class="badge" id="badge-tests">–</span></button>
   <button class="tab-btn" role="tab" data-tab="log">Log <span class="badge" id="badge-log">0</span></button>
@@ -222,6 +247,28 @@
         <h2>Logs <button class="btn btn--small" data-tab-link="log">Öffnen</button></h2>
         <div id="log-summary"></div>
       </article>
+    </div>
+  </section>
+
+  <!-- Projekt -->
+  <section class="tab" id="tab-project" role="tabpanel" hidden>
+    <div class="grid">
+      <article class="card span-2"><h2>Fokus</h2><div id="focus"></div></article>
+      <article class="card"><h2>Stand</h2><dl class="facts" id="project-facts"></dl></article>
+    </div>
+    <div class="milestones" id="milestones"></div>
+    <div class="toolbar">
+      <div class="seg" id="task-scope">
+        <button data-scope="start" aria-pressed="true">Bis zum Start</button>
+        <button data-scope="all" aria-pressed="false">Alles</button>
+      </div>
+      <span class="muted">Aus <code>docs/AUFGABEN.md</code>, Änderungen dort. Format steht oben in der Datei.</span>
+    </div>
+    <div class="problems" id="task-problems" hidden></div>
+    <div class="board">
+      <article class="card"><h2>Wartet auf andere <span class="badge" id="count-schule">0</span></h2><ul class="tasks" id="tasks-schule"></ul></article>
+      <article class="card"><h2>Patsche <span class="badge" id="count-patsche">0</span></h2><ul class="tasks" id="tasks-patsche"></ul></article>
+      <article class="card"><h2>Claude <span class="badge" id="count-claude">0</span></h2><ul class="tasks" id="tasks-claude"></ul></article>
     </div>
   </section>
 
@@ -318,6 +365,7 @@ let codeShown = false
 let logSource = LOG_SOURCES[store.get('lh-dev-log-source')] ? store.get('lh-dev-log-source') : 'app'
 let logFilter = 'problems'
 let logEntries = []
+let taskScope = store.get('lh-dev-task-scope') === 'all' ? 'all' : 'start'
 
 async function api(path, options = {}) {
   const response = await fetch(path, { ...options, headers: { 'X-LH-Dev': '1' } })
@@ -563,6 +611,81 @@ function renderTests(tests) {
     : '<tr><td colspan="7" class="empty">Noch keine Testläufe. Starte oben einen.</td></tr>'
 }
 
+/* ---------- Projekt ---------- */
+
+const OWNERS = ['schule', 'patsche', 'claude']
+// „Bis zum Start“ blendet die Gruppe „Später …“ aus (docs/AUFGABEN.md)
+const isLater = (group) => /^Später/.test(group.title)
+// Erst escapen, dann `Code` als <code>: So kommt kein HTML aus der Datei durch
+const inline = (text) => esc(text).replace(/`([^`]+)`/g, '<code>$1</code>')
+const groupChip = (title) => title.split(/\s/)[0]
+
+function waitingFor(since) {
+  const days = Math.floor((new Date().setHours(0, 0, 0, 0) - new Date(`${since}T00:00:00`)) / 86400000)
+  const text = days <= 0 ? 'seit heute' : days === 1 ? 'seit 1 Tag' : `seit ${days} Tagen`
+  return `<span class="${days >= 7 ? 'warn' : ''}">${text}</span>`
+}
+
+function taskItem(task, group) {
+  const others = task.owners.length > 1 ? `<span>mit ${task.owners.map((o) => `@${esc(o)}`).join(', ')}</span>` : ''
+  return `<li class="task ${task.done ? 'task--done' : ''} ${task.focus && !task.done ? 'task--focus' : ''}">${inline(task.text)}
+    <div class="task__meta"><span class="chip">${esc(groupChip(group.title))}</span>${task.since ? waitingFor(task.since) : ''}${others}
+    <span title="Zeile in docs/AUFGABEN.md">Z. ${task.line}</span></div></li>`
+}
+
+function ciText(ci, project) {
+  if (!ci) return '<span class="muted">wird abgefragt …</span>'
+  if (ci.error) return `<span class="muted">${esc(ci.error)}</span>`
+  const pill = ci.status !== 'completed' ? '<span class="pill">läuft</span>'
+    : ci.conclusion === 'success' ? '<span class="pill pill--ok">grün</span>' : `<span class="pill pill--bad">${esc(ci.conclusion)}</span>`
+  const current = project && ci.sha === project.sha ? 'aktueller Stand' : `für <span class="mono">${esc(ci.sha.slice(0, 7))}</span>`
+  return `${pill} <a href="${esc(ci.url)}" target="_blank" rel="noopener">${current} ↗</a> <span class="muted">${ci.time ? ago(ci.time) : ''}</span>`
+}
+
+function renderProject(project, ci) {
+  const badge = $('#badge-project')
+  if (!project) { badge.textContent = '–'; return }
+  const { tasks, milestones } = project
+  const open = tasks.groups.flatMap((g) => g.tasks).filter((t) => !t.done)
+  badge.textContent = tasks.problems.length || open.length
+  badge.className = `badge ${tasks.problems.length ? 'badge--bad' : ''}`
+  if (tab !== 'project') return
+
+  const focusGroup = tasks.groups.find((g) => g.tasks.some((t) => t.focus && !t.done))
+  const focus = focusGroup?.tasks.find((t) => t.focus && !t.done)
+  $('#focus').innerHTML = focus
+    ? `<div class="focus"><span class="focus__text">${inline(focus.text)}</span>
+        <span class="muted"><span class="chip">${esc(groupChip(focusGroup.title))}</span> ${focus.owners.map((o) => `@${esc(o)}`).join(', ')}</span></div>`
+    : '<div class="muted">Kein Fokus gesetzt. In <code>docs/AUFGABEN.md</code> eine Aufgabe mit <code>!fokus</code> markieren.</div>'
+
+  const facts = [
+    ['Branch', `<span class="mono">${esc(data.state?.branch ?? '?')}</span>${data.state?.changes ? ` <span class="warn">${data.state.changes} Änderungen</span>` : ''}`],
+    ['dev', project.unpushed == null ? '<span class="muted">kein origin/dev</span>'
+      : project.unpushed ? `<span class="warn">${project.unpushed} ${project.unpushed === 1 ? 'Commit' : 'Commits'} nicht gepusht</span>` : '<span class="ok">gepusht</span>'],
+    ['CI dev', ciText(ci, project)],
+    ['Offen', project.unmerged.length ? project.unmerged.map((b) => `<span class="mono">${esc(b)}</span>`).join(', ') : '<span class="muted">alle Branches in dev</span>'],
+    ['Session', project.session ? esc(project.session) : '<span class="muted">–</span>'],
+  ]
+  $('#project-facts').innerHTML = facts.map(([label, value]) => `<dt>${label}</dt><dd>${value}</dd>`).join('')
+
+  const now = milestones.find((m) => !m.done)?.id
+  const openIn = (id) => tasks.groups.filter((g) => groupChip(g.title) === id).flatMap((g) => g.tasks).filter((t) => !t.done).length
+  $('#milestones').innerHTML = milestones.map((m) => `<div class="ms ${m.done ? 'ms--done' : ''} ${m.id === now ? 'ms--now' : ''}" title="${esc(m.goal)}">
+      <strong>${m.done ? '✓ ' : ''}${esc(m.id)}</strong><span>${esc(m.goal)}</span>${!m.done ? `<span class="muted">${openIn(m.id)} offen</span>` : ''}</div>`).join('')
+
+  const problems = $('#task-problems')
+  problems.hidden = !tasks.problems.length
+  problems.innerHTML = `Formfehler in <code>docs/AUFGABEN.md</code>:<ul>${tasks.problems.map((p) => `<li>${esc(p)}</li>`).join('')}</ul>`
+
+  document.querySelectorAll('#task-scope button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.scope === taskScope))
+  const groups = tasks.groups.filter((g) => taskScope === 'all' || !isLater(g))
+  for (const owner of OWNERS) {
+    const items = groups.flatMap((g) => g.tasks.filter((t) => t.owners.includes(owner)).map((t) => [t, g]))
+    $(`#count-${owner}`).textContent = items.filter(([t]) => !t.done).length
+    $(`#tasks-${owner}`).innerHTML = items.length ? items.map(([t, g]) => taskItem(t, g)).join('') : '<li class="empty">Nichts offen.</li>'
+  }
+}
+
 function renderActivity(activity) {
   if (tab !== 'activity') return
   $('#activity').innerHTML = activity.length
@@ -586,6 +709,7 @@ function render() {
   renderLogSummary(state)
   renderMails(state)
   renderTests(tests)
+  renderProject(data.project, data.ci)
   renderActivity(activity)
   renderBusy(busy)
 }
@@ -702,7 +826,7 @@ async function showOutput(id) {
 }
 
 document.addEventListener('click', (event) => {
-  const target = event.target.closest('[data-action],[data-tab],[data-tab-link],[data-log-link],[data-source],[data-copy],[data-mail],[data-output],[data-filter]')
+  const target = event.target.closest('[data-action],[data-tab],[data-tab-link],[data-log-link],[data-source],[data-copy],[data-mail],[data-output],[data-filter],[data-scope]')
   if (!target) return
   if (target.dataset.copy) { event.stopPropagation(); copy(target.dataset.copy) }
   else if (target.dataset.action) runAction(target)
@@ -712,6 +836,11 @@ document.addEventListener('click', (event) => {
   else if (target.dataset.source) selectLogSource(target.dataset.source)
   else if (target.dataset.mail) showMail(target.dataset.mail)
   else if (target.dataset.output) showOutput(target.dataset.output)
+  else if (target.dataset.scope) {
+    taskScope = target.dataset.scope
+    store.set('lh-dev-task-scope', taskScope)
+    if (data) render()
+  }
   else if (target.dataset.filter) {
     logFilter = target.dataset.filter
     renderLog()
@@ -731,7 +860,7 @@ $('#theme').addEventListener('click', () => {
 })
 
 document.documentElement.dataset.theme = store.get('lh-dev-theme') || 'dark'
-const tabs = ['overview', 'mails', 'tests', 'log', 'activity']
+const tabs = ['overview', 'project', 'mails', 'tests', 'log', 'activity']
 // Adresse wie #tests oder #log:database öffnet Tab und Log-Quelle direkt
 const [hashTab, hashSource] = location.hash.slice(1).split(':')
 if (LOG_SOURCES[hashSource]) logSource = hashSource
