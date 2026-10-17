@@ -1,37 +1,24 @@
 <script setup>
 // Shop (E-037, docs/design/components/Shop.md): Brainpower einsetzen, zuerst Abschnitt „EP-Booster“.
 // Preise, Faktoren und Dauer kommen vom Server. Höchstens ein Booster läuft, die Restzeit zählt in Minuten.
-import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import LoadError from '../components/LoadError.vue'
 import LhArt from '../components/ui/LhArt.vue'
 import LhButton from '../components/ui/LhButton.vue'
 import LhCurrencyChip from '../components/ui/LhCurrencyChip.vue'
 import { getShop, startBooster } from '../api/shop.js'
+import { formatFactor, useBooster } from '../composables/useBooster.js'
 import { useLoad } from '../composables/useLoad.js'
 import { useAuthStore } from '../stores/auth.js'
-
-const factor = new Intl.NumberFormat('de', { maximumFractionDigits: 1 })
 
 const auth = useAuthStore()
 const { data: shop, error, loading, load } = useLoad(getShop)
 const buying = ref(null)
 const buyError = ref('')
 
-// Restzeit in Minuten, einmal pro Minute neu gerechnet. Kein Countdown in Sekunden (kein Zeitdruck).
-const now = ref(Date.now())
-let timer
-onMounted(() => {
-  load()
-  timer = setInterval(() => (now.value = Date.now()), 60_000)
-})
-onUnmounted(() => clearInterval(timer))
+onMounted(load)
 
-const running = computed(() => {
-  const booster = shop.value?.booster
-  if (!booster) return null
-  const left = Math.ceil((Date.parse(booster.ends_at) - now.value) / 60_000)
-  return left > 0 ? { multiplier: booster.multiplier, minutes: left } : null
-})
+const running = useBooster(() => shop.value?.booster)
 
 const brainpower = computed(() => shop.value?.brainpower.current ?? 0)
 
@@ -71,14 +58,14 @@ async function buy(offer) {
       <p class="lh-shop__intro">Mehr EP für richtige Antworten. Gilt für Fragen, die dir heute noch EP bringen. Einer zur Zeit.</p>
 
       <div v-if="running" class="lh-shop__running" role="status">
-        <LhArt name="icon-booster" :size="24" />{{ factor.format(running.multiplier) }}× EP läuft · noch {{ running.minutes }} Min.
+        <LhArt name="icon-booster" :size="24" />{{ running.factor }} EP läuft · noch {{ running.minutes }} Min.
       </div>
       <p v-if="buyError" class="shop__error" role="alert">{{ buyError }}</p>
 
       <div v-for="offer in shop.boosters" :key="offer.kind" class="lh-offer">
         <LhArt name="icon-booster" :size="40" />
         <span class="lh-offer__body">
-          <span class="lh-offer__name">{{ factor.format(offer.multiplier) }}× EP</span>
+          <span class="lh-offer__name">{{ formatFactor(offer.multiplier) }} EP</span>
           <span class="lh-offer__meta">{{ offer.minutes }} Min.</span>
         </span>
         <span class="lh-offer__buy">

@@ -40,6 +40,18 @@ describe('LhCard', () => {
     expect(clicks).toBe(1)
   })
 
+  it('nimmt im Slot eyebrow mehr als Text auf', async () => {
+    const router = testRouter()
+    const w = mount(LhCard, {
+      props: { to: '/learn', title: 'Schleifen' },
+      slots: { eyebrow: 'Weiterlernen <span class="lh-tag">2× EP</span>' },
+      global: { plugins: [router] },
+    })
+    await router.isReady()
+    expect(w.find('.lh-card__eyebrow .lh-tag').text()).toBe('2× EP')
+    expect(mount(LhCard, { props: { to: '/learn', title: 'x' }, global: { plugins: [router] } }).find('.lh-card__eyebrow').exists()).toBe(false)
+  })
+
   it('markiert die hervorgehobene Karte', () => {
     const w = mount(LhCard, { props: { featured: true } })
     expect(w.classes()).toContain('lh-card--featured')

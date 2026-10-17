@@ -109,6 +109,7 @@ describe('HubView', () => {
     const { wrapper } = await show()
     await flushPromises()
 
+    expect(wrapper.findAll('.lh-card__title').map((t) => t.text())).not.toContain('Shop')
     expect(fetch).not.toHaveBeenCalled()
     expect(wrapper.find('.lh-empty').text()).toContain('Noch keiner Klasse zugeordnet.')
     expect(wrapper.find('.lh-card--featured').exists()).toBe(false)
@@ -134,6 +135,38 @@ describe('HubView', () => {
     expect(robot.attributes('aria-label')).toBe('Dein Roboter')
     expect(robot.classes()).toEqual(expect.arrayContaining(['robot--sleepy', 'robot--wave']))
     expect(robot.find('.robot__charge').attributes('width')).toBe(String(28 * 0.8))
+  })
+
+  it('führt über eine eigene Zeile und den Brainpower-Chip in den Shop', async () => {
+    const wrapper = await hubWith(null)
+
+    const row = wrapper.findAll('a.lh-card--link').find((card) => card.find('.lh-card__title').text() === 'Shop')
+    expect(row.attributes('href')).toBe('/shop')
+    expect(row.find('.lh-card__text').text()).toBe('Brainpower einsetzen')
+    expect(row.find('img').attributes('src')).toBe(icons['icon-booster'])
+    const chip = wrapper.find('.lh-chip')
+    expect(chip.attributes('href')).toBe('/shop')
+    expect(chip.find('.lh-chip__boost').exists()).toBe(false)
+    expect(wrapper.find('.lh-tag--boost').exists()).toBe(false)
+  })
+
+  it('zeigt einen laufenden Booster auf „Weiterlernen“ und am Chip, in Minuten', async () => {
+    at(14)
+    useAuthStore().me = { ...ME, booster: { multiplier: 2, ends_at: new Date(2026, 9, 17, 14, 53).toISOString() } }
+    const wrapper = await hubWith(null)
+
+    expect(wrapper.find('.lh-card--featured .lh-card__eyebrow').text()).toBe('Weiterlernen2× EP · 23 Min.')
+    expect(wrapper.find('.lh-chip .lh-chip__boost').text()).toBe('2×')
+    expect(wrapper.find('.lh-chip').attributes('aria-label')).toBe('80 Brainpower, 2× EP läuft')
+  })
+
+  it('zeigt einen abgelaufenen Booster nicht mehr', async () => {
+    at(14)
+    useAuthStore().me = { ...ME, booster: { multiplier: 2, ends_at: new Date(2026, 9, 17, 14, 30).toISOString() } }
+    const wrapper = await hubWith(null)
+
+    expect(wrapper.find('.lh-tag--boost').exists()).toBe(false)
+    expect(wrapper.find('.lh-chip__boost').exists()).toBe(false)
   })
 
   it('beim ersten Besuch lädt der Hub zum ersten Thema ein', async () => {

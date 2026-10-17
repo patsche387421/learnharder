@@ -1,7 +1,7 @@
 <script setup>
 // Karte. Ohne to/href/button: reiner Inhalt (Slot). Mit to/href: als Ganzes antippbarer Link, mit Icon-Slot, Titel,
 // Text und Pfeil. Mit button: gleich aufgebaut, aber ein Button, der etwas auslöst (@click), statt zu einer Seite zu führen.
-// featured: 2px-Rahmen für das eine wichtigste Element am Screen.
+// featured: 2px-Rahmen für das eine wichtigste Element am Screen. Slot eyebrow: Eyebrow mit mehr als Text (z. B. Booster-Marke).
 import { computed } from 'vue'
 import { linkProps, useLink } from './link.js'
 import LhIcon from './LhIcon.vue'
@@ -29,7 +29,7 @@ const tappable = computed(() => link.value ?? (props.button ? { tag: 'button', a
   >
     <slot name="icon" />
     <span class="lh-card__body">
-      <span v-if="eyebrow" class="lh-card__eyebrow">{{ eyebrow }}</span>
+      <span v-if="eyebrow || $slots.eyebrow" class="lh-card__eyebrow"><slot name="eyebrow">{{ eyebrow }}</slot></span>
       <span class="lh-card__title">{{ title }}</span>
       <span v-if="text" class="lh-card__text">{{ text }}</span>
     </span>

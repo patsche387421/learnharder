@@ -3,6 +3,7 @@
 // Zustände in dieser Reihenfolge: gerade aufgestiegen, zurück nach 3 oder mehr Tagen, heute schon gelernt, erster Besuch.
 // Ob „heute“, rechnet die App nach Gerätezeit aus last_study_at. Den Aufstieg merkt sich die App aus der Lerneinheit.
 // Neben der Begrüßung der Avatar (G4): winkt beim Öffnen, Stimmung passend zum Zustand, Akku zeigt die Brainpower.
+// Shop (E-037): eigene Zeile, dazu der Brainpower-Chip als Abkürzung. Ein laufender Booster steht auf „Weiterlernen“ und am Chip.
 import { computed, onMounted } from 'vue'
 import LoadError from '../components/LoadError.vue'
 import LhArt from '../components/ui/LhArt.vue'
@@ -14,6 +15,7 @@ import LhXpBar from '../components/ui/LhXpBar.vue'
 import { getHub } from '../api/hub.js'
 import { pickMood } from '../avatar/mood.js'
 import RobotAvatar from '../avatar/RobotAvatar.vue'
+import { useBooster } from '../composables/useBooster.js'
 import { useLoad } from '../composables/useLoad.js'
 import { useAuthStore } from '../stores/auth.js'
 
@@ -21,6 +23,7 @@ const RANKS = { bronze: 'Bronze', silver: 'Silber', gold: 'Gold', platin: 'Plati
 
 const auth = useAuthStore()
 const { data: hub, error, loading, load } = useLoad(getHub)
+const booster = useBooster(() => auth.me?.booster)
 
 onMounted(() => {
   if (!auth.waitingForClass) load()
@@ -95,7 +98,14 @@ const nextStep = computed(() => (auth.player.level < 100 ? `Level ${auth.player.
       <div class="hub__level">
         <LhLevelBadge v-bind="auth.player" large />
         <span class="hub__levelname">Level {{ auth.player.level }} · {{ RANKS[auth.player.rank] }}</span>
-        <LhCurrencyChip v-if="auth.me?.brainpower" icon="icon-brainpower" :value="auth.me.brainpower.current" label="Brainpower" />
+        <LhCurrencyChip
+          v-if="auth.me?.brainpower"
+          icon="icon-brainpower"
+          :value="auth.me.brainpower.current"
+          label="Brainpower"
+          :boost="booster?.factor"
+          to="/shop"
+        />
       </div>
       <LhXpBar v-if="levelBar" :value="levelBar.value" :max="levelBar.max">
         <template #bottom>
@@ -115,11 +125,13 @@ const nextStep = computed(() => (auth.player.level < 100 ? `Level ${auth.player.
     <LhCard
       v-else-if="next"
       featured
-      eyebrow="Weiterlernen"
       :title="next.title"
       :text="next.subject.name"
       :to="`/learn/${next.subject.code}/${next.slug}`"
     >
+      <template #eyebrow>
+        <span class="hub__eyebrow">Weiterlernen<span v-if="booster" class="lh-tag lh-tag--boost">{{ booster.factor }} EP · {{ booster.minutes }} Min.</span></span>
+      </template>
       <template #icon><LhArt :name="`subject-${next.subject.code}`" :size="40" /></template>
     </LhCard>
     <LhCard
@@ -130,6 +142,10 @@ const nextStep = computed(() => (auth.player.level < 100 ? `Level ${auth.player.
       text="Wiederhol ein Thema, dann sitzt es."
       to="/learn"
     />
+
+    <LhCard v-if="!auth.waitingForClass" title="Shop" text="Brainpower einsetzen" to="/shop">
+      <template #icon><LhArt name="icon-booster" :size="40" /></template>
+    </LhCard>
   </div>
 </template>
 
@@ -144,4 +160,5 @@ const nextStep = computed(() => (auth.player.level < 100 ? `Level ${auth.player.
 .hub__level { display: flex; align-items: center; gap: var(--space-3); }
 .hub__levelname { flex: 1; font: 700 16px/24px var(--font-text); color: var(--ink); }
 .hub__loading { margin: 0; color: var(--ink-muted); }
+.hub__eyebrow { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); }
 </style>
