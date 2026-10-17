@@ -33,8 +33,8 @@ describe('authGuard', () => {
   it('wer eingeloggt ist, sieht Login und Registrierung nicht mehr, Rechtstexte aber schon', async () => {
     mockFetch({ status: 200, body: { data: { gamer_tag: 'x' } } })
 
-    expect(await authGuard(route('/login', { public: true, guest: true }))).toBe('/learn')
-    expect(await authGuard(route('/registrieren', { public: true, guest: true }))).toBe('/learn')
+    expect(await authGuard(route('/login', { public: true, guest: true }))).toBe('/')
+    expect(await authGuard(route('/registrieren', { public: true, guest: true }))).toBe('/')
     expect(await authGuard(route('/datenschutz', { public: true }))).toBe(true)
   })
 

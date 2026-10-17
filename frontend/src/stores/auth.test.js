@@ -82,6 +82,28 @@ describe('auth-Store', () => {
     expect(auth.me.gamer_tag).toBe('lena42')
   })
 
+  it('merkt sich einen Aufstieg, bis der Hub ihn einmal abholt', async () => {
+    mockFetch({ status: 200, body: { data: me } })
+    const auth = useAuthStore()
+    await auth.fetchMe()
+
+    auth.applyProgress({ level: 25 })
+    expect(auth.takeLevelUp()).toBe(false)
+    auth.applyProgress({ level: 26 }, true)
+    expect(auth.takeLevelUp()).toBe(true)
+    expect(auth.takeLevelUp()).toBe(false)
+  })
+
+  it('vergisst einen ungesehenen Aufstieg beim Abmelden', async () => {
+    mockFetch({ status: 200, body: { data: me } }, { status: 204 })
+    const auth = useAuthStore()
+    await auth.fetchMe()
+
+    auth.applyProgress({ level: 26 }, true)
+    await auth.logout()
+    expect(auth.takeLevelUp()).toBe(false)
+  })
+
   it('register legt das Konto an und merkt sich die Person', async () => {
     const fetch = mockFetch({ status: 201, body: { data: me } })
     const auth = useAuthStore()

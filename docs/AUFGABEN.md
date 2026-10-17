@@ -31,14 +31,12 @@ Meilensteine und Reihenfolge: `plans/README.md`. Entscheidungen: `ENTSCHEIDUNGEN
 
 ## G1 — Hub & Profil
 
-- [ ] Team und Liga aus der Tab-Leiste (E-022) @claude
-- [ ] Hub-Zustände: erster Besuch, Pause, Aufstieg, alles erledigt, Tageszeit @claude !fokus
-- [ ] Profil mit Statistik: EP, Level, Rang, Fach-Level, längster Streak @claude
-- [ ] Nach dem Login zum Hub statt zu `/learn` (`meta.guest` im Router-Guard) @claude
+- [ ] Hub-Zustände und Profil-Fortschritt in der laufenden App ansehen @patsche
 
 ## G2 — Brainpower & Streaks
 
 - [ ] Brainpower und Streaks nach Ökonomie-Modell §3, Werte in `config/` (Konzept Spielwelt §5) @claude
+- [ ] Längsten Streak im Profil zeigen, sobald G2 ihn füllt @claude
 
 ## G3 — Erfolge
 
@@ -52,7 +50,6 @@ Meilensteine und Reihenfolge: `plans/README.md`. Entscheidungen: `ENTSCHEIDUNGEN
 - [ ] Werkzeug je Fach und Starter-Kit je Abteilung festlegen (Konzept Spielwelt §7) @patsche
 - [ ] Avatar: Starter-Kit je Abteilung, dafür die Abteilung in `/me` @claude
 - [ ] Avatar speichern: Teile, Pose und Lackierung am Konto, der Server prüft den Besitz (E-031) @claude
-- [ ] Avatar-Stimmung: Fakten vom Server (letzter Lerntag, Tage weg, noch nicht gesehener Aufstieg), zusammen mit den Hub-Zuständen (G1) @claude
 - [ ] Avatar: Reaktion beim Antippen, Porträt für Listen, `celebrate` auf dem Ergebnis der Lerneinheit (Konzept Spielwelt §7) @claude
 - [ ] Werkhalle: Klassenseite mit Posen, Klassenprojekt, Meilensteine (Opt-in) und Reaktionen (E-034) @claude
 
@@ -73,7 +70,6 @@ Meilensteine und Reihenfolge: `plans/README.md`. Entscheidungen: `ENTSCHEIDUNGEN
 
 - [ ] Verschlüsselte Zweitkopie des Supabase-Dumps (E-009) @patsche
 - [ ] Design-Artefakt: Häkchen und Gefahr-Button in die Komponententabelle der README, `lastChange` im Index, danach Kopie `design/README.md` @claude
-- [ ] Design-Artefakt: Icons für Spielhalle und Shop. Der Hub nutzt vorläufig `icon-campaign` und `icon-trophy` @claude
 - [ ] `DemoSchoolSeeder`: prüfen, warum MEDT keine Themen bekommt @claude
 - [ ] Unit-Test für die Weiterleitung nach einer Sperre in `main.js` @claude
 - [ ] Python-Tests aus `scripts/` in die CI @claude

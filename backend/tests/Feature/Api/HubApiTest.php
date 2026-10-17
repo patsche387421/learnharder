@@ -153,4 +153,26 @@ class HubApiTest extends TestCase
             ->getJson('/api/v1/hub')
             ->assertJsonPath('data.next_topic.slug', 'schleifen');
     }
+
+    public function test_vor_der_ersten_lerneinheit_ist_last_study_at_null(): void
+    {
+        QuizAttempt::create(['user_id' => $this->user->id, 'topic_id' => $this->topic($this->dbi, 'sql', 1)->id]);
+
+        $this->actingAs($this->user)
+            ->getJson('/api/v1/hub')
+            ->assertJsonPath('data.last_study_at', null);
+    }
+
+    public function test_last_study_at_ist_das_ende_der_letzten_eigenen_lerneinheit(): void
+    {
+        Carbon::setTestNow('2026-10-17 12:00:00');
+        $sql = $this->topic($this->dbi, 'sql', 1);
+        $this->finish($sql, at: now()->subDays(5));
+        $this->finish($this->topic($this->pos, 'schleifen', 1), at: now()->subDays(2));
+        $this->finish($sql, User::factory()->create(), now());
+
+        $this->actingAs($this->user)
+            ->getJson('/api/v1/hub')
+            ->assertJsonPath('data.last_study_at', '2026-10-15T12:00:00+00:00');
+    }
 }

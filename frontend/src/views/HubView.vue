@@ -1,7 +1,8 @@
 <script setup>
-// Hub (Startseite, Konzept Spielwelt §4): Begrüßung nach Tageszeit, Level und Brainpower aus /me, „Weiterlernen“ aus /hub.
-// Neben der Begrüßung der Avatar (G4): winkt beim Öffnen, Stimmung nach Gerätezeit, Akku zeigt die Brainpower.
-// Platz für später: Spielhalle und die anderen Spiel-Elemente im Raster „Bald“.
+// Hub (Startseite, Konzept Spielwelt §4): Begrüßung nach Zustand und Tageszeit, Level und Brainpower aus /me, „Weiterlernen“ aus /hub.
+// Zustände in dieser Reihenfolge: gerade aufgestiegen, zurück nach 3 oder mehr Tagen, heute schon gelernt, erster Besuch.
+// Ob „heute“, rechnet die App nach Gerätezeit aus last_study_at. Den Aufstieg merkt sich die App aus der Lerneinheit.
+// Neben der Begrüßung der Avatar (G4): winkt beim Öffnen, Stimmung passend zum Zustand, Akku zeigt die Brainpower.
 import { computed, onMounted } from 'vue'
 import LoadError from '../components/LoadError.vue'
 import LhArt from '../components/ui/LhArt.vue'
@@ -18,16 +19,6 @@ import { useAuthStore } from '../stores/auth.js'
 
 const RANKS = { bronze: 'Bronze', silver: 'Silber', gold: 'Gold', platin: 'Platin' }
 
-// Kommt nach und nach mit G2–G6. Icons vorläufig, bis es eigene für Spielhalle und Shop gibt.
-const SOON = [
-  { icon: 'icon-streak', name: 'Streak' },
-  { icon: 'icon-challenge', name: 'Herausforderung' },
-  { icon: 'icon-campaign', name: 'Spielhalle' },
-  { icon: 'icon-league', name: 'Liga-Platz' },
-  { icon: 'icon-trophy', name: 'Shop' },
-  { icon: 'icon-achievement', name: 'Erfolge' },
-]
-
 const auth = useAuthStore()
 const { data: hub, error, loading, load } = useLoad(getHub)
 
@@ -35,9 +26,26 @@ onMounted(() => {
   if (!auth.waitingForClass) load()
 })
 
+// Einmal beim Öffnen abholen, danach gilt der Aufstieg als gesehen
+const levelUp = auth.takeLevelUp()
+const now = new Date()
+
+// Kalendertage seit der letzten Lerneinheit nach Gerätezeit, null vor der ersten
+const daysAway = computed(() => {
+  const last = hub.value?.last_study_at
+  if (!last) return null
+  const day = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate())
+  return Math.max(0, Math.round((day(now) - day(new Date(last))) / 86_400_000))
+})
+const firstVisit = computed(() => !!hub.value && daysAway.value === null)
+const learnedToday = computed(() => daysAway.value === 0)
+const backAfterBreak = computed(() => daysAway.value >= 3)
+
 const greeting = computed(() => {
   const tag = auth.me?.gamer_tag
-  const hour = new Date().getHours()
+  if (levelUp) return `Level ${auth.player.level}!`
+  if (backAfterBreak.value) return `Schön, dass du da bist, ${tag}!`
+  const hour = now.getHours()
   if (hour >= 5 && hour < 11) return `Guten Morgen, ${tag}!`
   if (hour >= 11 && hour < 18) return `Hey ${tag}!`
   if (hour >= 18 && hour < 22) return `Guten Abend, ${tag}!`
@@ -46,8 +54,17 @@ const greeting = computed(() => {
 
 const next = computed(() => hub.value?.next_topic ?? null)
 
-// Weitere Fakten für die Stimmung (letzter Lerntag, Aufstieg) liefert der Server noch nicht
-const mood = pickMood({ now: new Date() })
+const nudge = computed(() => {
+  const title = next.value?.title
+  if (!title) return ''
+  if (firstVisit.value) return `Fang mit ${title} an. 5 Min. reichen.`
+  if (learnedToday.value && !levelUp) return `Heute schon gelernt. Noch eine Runde ${title}?`
+  return `Weiter mit ${title}? 5 Min. reichen.`
+})
+
+const mood = computed(() =>
+  pickMood({ now, unseenMilestone: levelUp, daysAway: daysAway.value ?? 0, learnedToday: learnedToday.value }),
+)
 const battery = computed(() => {
   const bp = auth.me?.brainpower
   return bp?.max ? bp.current / bp.max : null
@@ -67,10 +84,10 @@ const nextStep = computed(() => (auth.player.level < 100 ? `Level ${auth.player.
     <header class="hub__head">
       <div class="hub__hello">
         <h1 class="hub__title">{{ greeting }}</h1>
-        <p v-if="next" class="hub__sub">Weiter mit {{ next.title }}? 5 Min. reichen.</p>
+        <p v-if="nudge" class="hub__sub">{{ nudge }}</p>
       </div>
       <div class="hub__avatar">
-        <RobotAvatar :mood="mood" action="wave" :battery="battery" label="Dein Roboter" />
+        <RobotAvatar :mood="mood" :action="levelUp ? 'celebrate' : 'wave'" :battery="battery" label="Dein Roboter" />
       </div>
     </header>
 
@@ -113,16 +130,6 @@ const nextStep = computed(() => (auth.player.level < 100 ? `Level ${auth.player.
       text="Wiederhol ein Thema, dann sitzt es."
       to="/learn"
     />
-
-    <section class="hub__soon" aria-labelledby="hub-soon">
-      <h2 id="hub-soon" class="hub__soontitle">Bald</h2>
-      <ul class="hub__soonlist">
-        <li v-for="item in SOON" :key="item.name" class="hub__soonitem">
-          <LhArt :name="item.icon" :size="32" />
-          <span>{{ item.name }}</span>
-        </li>
-      </ul>
-    </section>
   </div>
 </template>
 
@@ -137,14 +144,4 @@ const nextStep = computed(() => (auth.player.level < 100 ? `Level ${auth.player.
 .hub__level { display: flex; align-items: center; gap: var(--space-3); }
 .hub__levelname { flex: 1; font: 700 16px/24px var(--font-text); color: var(--ink); }
 .hub__loading { margin: 0; color: var(--ink-muted); }
-.hub__soon { display: grid; gap: var(--space-2); }
-.hub__soontitle { margin: 0; font: 400 13px/16px var(--font-mono); color: var(--ink-muted); }
-.hub__soonlist { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-2); }
-.hub__soonitem {
-  display: flex; align-items: center; gap: var(--space-2); padding: var(--space-3); border-radius: var(--radius-md);
-  box-shadow: inset 0 0 0 1px var(--line); font: 400 14px/20px var(--font-text); color: var(--ink-muted);
-}
-@media (min-width: 768px) {
-  .hub__soonlist { grid-template-columns: repeat(3, 1fr); }
-}
 </style>

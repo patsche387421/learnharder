@@ -413,3 +413,17 @@ V1-Protokoll: `_archiv/agent/SESSION_REPORT.md` und `SESSION_REPORT_ARCHIVE.md`.
   - Hub: Roboter neben der Begrüßung (96 px statt 72, sonst ist das Display nicht lesbar). Profil: Roboter mit Slot-Liste, Pose und Lackierung als Vorschau ohne Speichern.
 - **Geprüft:** Frontend 153 Tests grün (18 neu), `build` und `check:tokens` grün. Varianten als statisches SVG gerendert und mit Chrome ohne Fenster angesehen. In der laufenden App nicht angesehen.
 - **Offen:** neu in `docs/AUFGABEN.md` unter G4: Starter-Kit je Abteilung, Avatar speichern, Stimmungs-Fakten vom Server, Antippen, Porträt und `celebrate` auf dem Ergebnis.
+
+## 2026-10-17 — G1 fertig: Hub-Zustände, Login zum Hub, Profil
+
+- **Branch:** `feat/hub-g1`. Nicht gepusht, noch nicht nach `dev` gemergt.
+- **Commits:** `1b53982` (E-035 Tab-Leiste), `77ce685` (Login zum Hub), `5277d25` (`last_study_at` in `/hub`), `c1c873e` (Hub-Zustände), `e503174` (Profil), `8f80e3a` (Raster „Bald“ entfernt), dazu dieser Doku-Commit.
+- **Ergebnis:**
+  - E-035: Die Tab-Leiste behält fünf Tabs wie im Design-Artefakt. Team und Liga werden Startbedingung statt ausgeblendet (ersetzt diesen Teil von E-022).
+  - Nach Login und Registrierung geht es zum Hub, `meta.guest` leitet auch dorthin.
+  - `GET /hub` liefert `last_study_at`. Der Hub zeigt Aufstieg, Pause ab 3 Tagen, heute gelernt und ersten Besuch, die Stimmung des Roboters passt dazu. Den Aufstieg merkt sich die App aus der Lerneinheit, der Server speichert nichts (weniger Daten über Minderjährige, kein neuer Endpunkt).
+  - Profil: Level, Rang, Prestige, EP gesamt, Fach-Level. Der längste Streak kommt mit G2.
+  - Raster „Bald“ aus dem Hub entfernt, Funktionen erscheinen, sobald es sie gibt.
+  - `.git` war durch einen abgebrochenen Schreibvorgang beschädigt (8 leere Objekte, Branch auf leerem Commit). Repariert, `fsck` sauber, Sicherung im Scratchpad der Session.
+- **Geprüft:** Backend 273 Tests grün, `pint --test` sauber. Frontend 163 Tests grün, `build` und `check:tokens` grün. In der laufenden App nicht angesehen.
+- **Offen:** neu in `docs/AUFGABEN.md`: Hub und Profil in der App ansehen (Patsche), längster Streak im Profil (G2). Die Zuordnung Rang → Name steht dreimal im Code (`LhLevelBadge`, Hub, Profil), nicht als Aufgabe eingetragen.

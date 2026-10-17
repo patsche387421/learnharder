@@ -1,6 +1,6 @@
 // Eingeloggte Person und ihr Fortschritt. Level, Rang und Prestige rechnet der Server, der Store merkt sie sich nur.
 import { defineStore } from 'pinia'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { api, refreshCsrf } from '../api/client.js'
 
 // Diese Rollen sehen alle Fächer, alle anderen nur den Lehrplan ihrer Klasse (E-024, entscheidet der Server)
@@ -10,6 +10,12 @@ export const useAuthStore = defineStore('auth', () => {
   const me = ref(null)
   // true, sobald einmal geprüft wurde, ob eine Session besteht
   const loaded = ref(false)
+  // Aufstieg aus der letzten Lerneinheit, den der Hub noch nicht gezeigt hat. Nur im Speicher der App, der Server merkt sich nichts.
+  const unseenLevelUp = ref(false)
+
+  watch(me, (person) => {
+    if (!person) unseenLevelUp.value = false
+  }, { flush: 'sync' })
 
   const player = computed(() => ({
     level: me.value?.level ?? 1,
@@ -61,13 +67,21 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   /** Nach dem Abschluss einer Lerneinheit: neuer Fortschritt vom Server (level, rank, prestige, xp). */
-  function applyProgress(progress) {
+  function applyProgress(progress, levelUp = false) {
     if (me.value) me.value = { ...me.value, ...progress }
+    if (levelUp) unseenLevelUp.value = true
+  }
+
+  /** Der Hub zeigt einen Aufstieg einmal. Danach gilt er als gesehen. */
+  function takeLevelUp() {
+    const seen = unseenLevelUp.value
+    unseenLevelUp.value = false
+    return seen
   }
 
   function clear() {
     me.value = null
   }
 
-  return { me, loaded, player, isStaff, waitingForClass, fetchMe, login, register, deleteAccount, logout, applyProgress, clear }
+  return { me, loaded, player, isStaff, waitingForClass, fetchMe, login, register, deleteAccount, logout, applyProgress, takeLevelUp, clear }
 })

@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '../stores/auth.js'
 
 // meta.title: Seitentitel. meta.focus: ohne Navigation (Lerneinheit, Quiz, Theorie). meta.layout: false = ohne App-Rahmen.
-// meta.public: ohne Login erreichbar. meta.guest: nur ohne Login (sonst weiter zu Lernen). Alles andere braucht eine Session.
+// meta.public: ohne Login erreichbar. meta.guest: nur ohne Login (sonst weiter zum Hub). Alles andere braucht eine Session.
 const placeholder = () => import('../views/PlaceholderView.vue')
 const legal = () => import('../views/LegalView.vue')
 
@@ -45,7 +45,7 @@ export async function authGuard(to) {
   // Ist der Server nicht erreichbar, geht es zum Login. Dort erscheint dann der Verbindungsfehler.
   if (!auth.loaded) await auth.fetchMe().catch(() => {})
 
-  if (to.meta.public) return to.meta.guest && auth.me ? '/learn' : true
+  if (to.meta.public) return to.meta.guest && auth.me ? '/' : true
   if (!auth.me) return { path: '/login', query: to.fullPath === '/' ? {} : { redirect: to.fullPath } }
   return true
 }

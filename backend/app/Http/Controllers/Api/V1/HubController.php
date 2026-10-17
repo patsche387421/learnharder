@@ -19,10 +19,14 @@ class HubController extends Controller
 {
     public function show(Request $request): JsonResponse
     {
-        $topic = $this->nextTopic($request->user());
+        $user = $request->user();
+        $last = QuizAttempt::finished()->where('user_id', $user->id)->latest('finished_at')->first();
+        $topic = $this->nextTopic($user, $last?->topic?->subject_id);
 
+        // Ende der letzten Lerneinheit, null vor der ersten. Ob das heute war, entscheidet die App nach Gerätezeit.
         return response()->json(['data' => [
             'next_topic' => $topic ? new TopicResource($topic) : null,
+            'last_study_at' => $last?->finished_at?->toIso8601String(),
         ]]);
     }
 
@@ -31,13 +35,8 @@ class HubController extends Controller
      * sichtbaren Fächern (E-024) nach Reihenfolge. Offen heißt veröffentlicht, mit Fragen, nicht gesperrt
      * und noch nicht abgeschlossen. Null, wenn alles erledigt ist.
      */
-    private function nextTopic(User $user): ?Topic
+    private function nextTopic(User $user, ?string $lastSubjectId): ?Topic
     {
-        $lastSubjectId = QuizAttempt::finished()
-            ->where('user_id', $user->id)
-            ->latest('finished_at')
-            ->first()?->topic?->subject_id;
-
         $subjects = Subject::visibleTo($user)->orderBy('order_index')->get();
         $subjects = $subjects->where('id', $lastSubjectId)->concat($subjects->where('id', '!=', $lastSubjectId));
 

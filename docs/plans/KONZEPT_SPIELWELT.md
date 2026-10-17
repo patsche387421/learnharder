@@ -20,7 +20,7 @@ Alleinstellungsmerkmale: ein Hub, der auf die Person reagiert, ein eigener Avata
 
 - EP, Level, Rang, Prestige und Fach-Level rechnet der Server (`User::progression`), die App bekommt sie über `GET /api/v1/me`.
 - Spalten ohne Logik: `users.brainpower_current` und `brainpower_max` (schon in `/me`), `user_stats.trophies`, `current_streak`, `longest_streak`, `last_study_date`.
-- Der Hub (`/`) ist ein Platzhalter (`PlaceholderView`). Das Profil zeigt Gamer-Tag und Klasse.
+- Hub (`/`) und Profil nach §4, ohne Streak und Erfolge (Stand 2026-10-17).
 
 ## 4. Hub und Profil (G1)
 
@@ -30,9 +30,9 @@ Der Hub ist die Startseite und ändert sich mit dem, was die Person tut.
 - **Zustände:** erster Besuch, heute schon gelernt, zurück nach einer Pause, gerade aufgestiegen, alles erledigt (dann Wiederholen vorschlagen). Ab G2 auch Streak läuft oder ist in Gefahr, im Ton von `Sprache.md` („5 Min. reichen“), nie drohend.
 - **Tageszeit:** morgens, nachmittags, spät abends anders begrüßen.
 - **Später:** Avatar im Hub (G4), zuletzt erreichter Erfolg (G3).
-- **Profil:** EP gesamt, Level, Rang, Fach-Level je Fach, längster Streak. Später Erfolge und Avatar.
+- **Profil:** EP gesamt, Level, Rang, Fach-Level je Fach, ab G2 längster Streak. Später Erfolge und Avatar.
 
-Der Server liefert Fakten (letzter Lerntag, nächstes Thema, letzter Aufstieg), die App wählt Text und Bild.
+Der Server liefert Fakten (Ende der letzten Lerneinheit, nächstes Thema), die App wählt Text und Bild. Ob das heute war, rechnet sie nach Gerätezeit. Einen Aufstieg merkt sich die App aus dem Ergebnis der Lerneinheit und zeigt ihn im Hub einmal, der Server speichert dafür nichts.
 
 ## 5. Brainpower und Streaks (G2)
 
@@ -93,7 +93,7 @@ Kurze Reaktionen gehen vor: `think`, während eine Quiz-Antwort geprüft wird, S
 
 **Mit der Klasse** (E-034). Sichtbar nur in der eigenen Klasse (E-024), nur mit Gamer-Tag. Der Akku bleibt wie die Stimmung privat. Die Grundausstattung sieht so gut aus wie verdiente Teile, damit niemand als Anfänger:in auffällt.
 
-- **Werkhalle:** Klassenseite, auf der alle Roboter der Klasse in ihrer Pose stehen, mit Gamer-Tag und Level. Antippen zeigt eine Karte mit Roboter, Level, Erfolgen und längstem Streak, aber ohne laufenden Streak und ohne „zuletzt online“. Die Werkhalle kann später den ausgeblendeten Tab „Team“ füllen (E-022).
+- **Werkhalle:** Klassenseite, auf der alle Roboter der Klasse in ihrer Pose stehen, mit Gamer-Tag und Level. Antippen zeigt eine Karte mit Roboter, Level, Erfolgen und längstem Streak, aber ohne laufenden Streak und ohne „zuletzt online“. Die Werkhalle kann den Tab „Team“ füllen, der zum Start fertig sein muss (E-035).
 - **Klassenprojekt:** Die Klasse baut gemeinsam eine große Maschine in der Werkhalle (z. B. Rakete, Roboterarm, Brücke). Jede abgeschlossene Lerneinheit der Klasse bringt sie ein Stück weiter. Gezeigt wird nur die Summe der Klasse, nie, wer wie viel beigetragen hat. Ist sie fertig, bekommen alle mit mindestens einer Lerneinheit eine Klassen-Lackierung oder ein Abzeichen. Am Ende der Saison gibt es ein Klassenfoto aller Roboter vor der Maschine.
 - **Posen:** feste Haltungen (Arme verschränkt, winken, Daumen hoch, Werkzeug heben, sitzen). Drei sind kostenlos, weitere sind Kosmetik. Technisch gedrehte Arme an den Steckplätzen, ohne neue Zeichnungen. Die Pose erscheint in der Werkhalle, auf der Karte und in der Rangliste: die drei Besten der Saison ganz auf einem Podest, alle anderen als Porträt.
 - **Meilensteine:** Aufstieg, Erfolg oder neue Werkzeug-Stufe erscheinen in der Werkhalle nur, wenn die Person das einschaltet (Opt-in), und nur mit Tag, ohne Uhrzeit.
@@ -118,7 +118,7 @@ Offen als O-006. Empfehlung:
 - **EP pro Saison (Monat) in der eigenen Klasse**, daneben Ranglisten je Fach.
 - **Nicht nach Brainpower:** Brainpower lädt sich täglich auf und sinkt beim Ausgeben. Wer im Shop kauft, fiele zurück, und „verdiente Brainpower“ zählt fast nur die Tage. EP messen das Lernen, die Tagesregel (E-015) bremst Farming.
 - **Transparent:** Die Seite zeigt die Formel und die eigenen Punkte.
-- **Datenschutz:** nur Gamer-Tags, nur die eigene Klasse (Projektplan R1). Bis dahin bleibt die Liga ausgeblendet (E-022).
+- **Datenschutz:** nur Gamer-Tags, nur die eigene Klasse (Projektplan R1). Die Liga ist zum Start fertig (E-035).
 
 ## 9. Wow-Momente
 

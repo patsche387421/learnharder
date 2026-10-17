@@ -54,8 +54,8 @@ Der kritische Pfad zum ersten echten Nutzer ist kürzer:
 | **M3b** ✅ | Klassen und Sichtbarkeit | Klassen und Einschreibungen in Filament, App zeigt nur Fächer der eigenen Klasse (Plan Schule §8 Schritte 2–3, E-024) |
 | **M4a** ✅ | Ankommen | Registrierung mit Mail-Code (Plan Schule §8 Schritt 4, E-025), „Passwort vergessen“, Datenschutzerklärung, Impressum, Nutzungsregeln und Elternformular als Entwurf und von der Schule geprüft (E-023), eigenes Konto löschen. Benutzerverwaltung im CMS mit Sperren und Schutz des letzten Admins (E-027), `last_login_at` für die Frist (E-028). Mail lokal über Mailpit (E-026). Offen: Rechtstexte von der Schule prüfen lassen (Platzhalter `[[…]]`) |
 | **M4** ⏸ | Hetzner läuft | Prod-Stack in `infra/` (Caddy nach E-019), TLS, tägliche Backups mit Restore-Test, Staging, Mailversand aus der EU. Patsche führt am Server aus. Pausiert, bis die Schule den Vertragspartner nennt (Stand 2026-10-17) |
-| **M5** | Start | Lernablauf, EP-Regeln und Brainpower-Konzept mit betreuenden Lehrkräften abgestimmt, Hub schlank, Team und Liga ausgeblendet (E-022), DNS umgestellt, Registrierung offen, Neuregistrierung angekündigt, V1-Supabase abgeschaltet → Tag `v2.0.0-alpha.1` (E-020) |
-| **G1** | Hub & Profil | Hub statt Platzhalter: Begrüßung nach Zustand und Tageszeit, Level, Brainpower, „Weiterlernen“. Team und Liga aus der Tab-Leiste (E-022). Profil mit Statistik (Konzept Spielwelt §4) |
+| **M5** | Start | Lernablauf, EP-Regeln und Brainpower-Konzept mit betreuenden Lehrkräften abgestimmt, Hub schlank (E-022), Team und Liga fertig (E-035), DNS umgestellt, Registrierung offen, Neuregistrierung angekündigt, V1-Supabase abgeschaltet → Tag `v2.0.0-alpha.1` (E-020) |
+| **G1** ✅ | Hub & Profil | Hub statt Platzhalter: Begrüßung nach Zustand und Tageszeit, Level, Brainpower, „Weiterlernen“. Profil mit Statistik, der längste Streak kommt mit G2 (Konzept Spielwelt §4) |
 | **G2** | Brainpower & Streaks | Aufladen, Streak, Booster und Challenge nach Ökonomie-Modell §3, Werte in `config/` (§5) |
 | **G3** | Erfolge | Katalog im CMS, Vergabe auf dem Server, Raster im Profil (§6) |
 | **G4** | Avatar | Figur aus SVG-Teilen mit `idle`, `celebrate`, `wave`, `think`, im Hub und auf dem Ergebnis (§7) |
@@ -66,13 +66,13 @@ Der kritische Pfad zum ersten echten Nutzer ist kürzer:
 
 ### Nächste Schritte (Stand 2026-10-17)
 
-1. **G1 fertig machen:** Der Server liefert Fakten für den Hub (letzter Lerntag, Tage weg, noch nicht gesehener Aufstieg). Daraus entstehen die Hub-Zustände und die Stimmung des Roboters in einem Schritt. Danach Tab-Leiste (E-022), nach dem Login zum Hub, Profil mit Statistik.
+1. **G1 ansehen:** Code fertig (Stand 2026-10-17), Patsche prüft Hub-Zustände und Profil in der laufenden App.
 2. **G4 weiter, sobald Patsche liefert:** Werkzeug je Fach und Starter-Kit je Abteilung festlegen, Teile mit KI-Hilfe entwerfen. Dann Abteilung in `/me`, Starter-Kits, Avatar speichern (Server prüft den Besitz), Antippen, Porträt, `celebrate` auf dem Ergebnis.
 3. **G2 Brainpower und Streaks:** Erst damit bekommt der Akku echte Werte und der Shop (G5) eine Währung.
-4. **Danach** G3 Erfolge, G5 Shop, Werkhalle, G6 Rangliste. M4 geht weiter, sobald die Schule antwortet.
+4. **Danach** G3 Erfolge, G5 Shop, Werkhalle, G6 Rangliste. Team und Liga müssen zum Start fertig sein (E-035). M4 geht weiter, sobald die Schule antwortet.
 
 ### Größte Risiken jetzt
 
-1. **Umfang.** MVP gekürzt (E-021). Mit den Spielwelt-Tracks (E-030) wächst die Liste wieder. Der Start wartet deshalb nicht auf sie, und neue Wünsche kommen ins Konzept, nicht in M5.
+1. **Umfang.** MVP gekürzt (E-021). Mit den Spielwelt-Tracks (E-030) wächst die Liste wieder. Der Start wartet deshalb nicht auf sie, außer auf Team und Liga (E-035), und neue Wünsche kommen ins Konzept, nicht in M5.
 2. **Prod-Daten aus Supabase.** Seit 2026-10-15 gesichert (E-009). Kein Import, V2 startet ohne V1-Nutzer (E-011).
 3. **Framework-Versionen.** Entschieden: Filament 5 (E-008). Translatable-Plugin geprüft, vorerst keins, CMS nur Deutsch (E-012).

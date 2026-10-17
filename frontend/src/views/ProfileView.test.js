@@ -34,6 +34,7 @@ describe('ProfileView', () => {
 
   it('zeigt die eigene Klasse, wenn es eine gibt', async () => {
     useAuthStore().me = { gamer_tag: 'lena42', school_class: { name: '2AHIT' } }
+    mockFetch({ status: 200, body: { data: [] } })
     const router = testRouter()
     router.push('/profile')
     await router.isReady()
@@ -67,6 +68,63 @@ describe('ProfileView', () => {
     expect(section.text()).toContain('Graphit')
   })
 
+  it('zeigt Level, Rang, EP gesamt und die Fach-Level', async () => {
+    useAuthStore().me = {
+      gamer_tag: 'lena42', roles: ['student'], school_class: { name: '2AHIT' },
+      level: 25, rank: 'silver', prestige: 1, xp: { total: 8941, level_start: 8941, next_level: 9000 },
+    }
+    const fetch = mockFetch({ status: 200, body: { data: [
+      { code: 'pos', name: 'Programmieren', level: 4 },
+      { code: 'dbi', name: 'Datenbanken', level: 1 },
+    ] } })
+    const router = testRouter()
+    router.push('/profile')
+    await router.isReady()
+    const wrapper = mount(ProfileView, { global: { plugins: [router] } })
+    await flushPromises()
+
+    expect(fetch.mock.calls[0][0]).toMatch(/\/subjects$/)
+    const stats = wrapper.find('.profile__stats')
+    expect(stats.find('h2').text()).toBe('Fortschritt')
+    expect(stats.find('.lh-badge').attributes('data-rank')).toBe('silver')
+    expect(stats.text()).toContain('Level 25 · Silber · Prestige 1')
+    expect(stats.find('.profile__xp').text()).toBe('8.941 EP gesamt')
+    const rows = stats.findAll('.profile__slot').map((row) => [row.find('dt').text(), row.find('dd').text()])
+    expect(rows).toEqual([['Programmieren', 'Fach-Level 4'], ['Datenbanken', 'Fach-Level 1']])
+    expect(stats.text()).not.toContain('Streak')
+  })
+
+  it('ohne Klasse fragt das Profil keine Fächer ab und lässt Prestige 0 weg', async () => {
+    useAuthStore().me = { gamer_tag: 'lena42', roles: ['student'], level: 3, rank: 'bronze', prestige: 0, xp: { total: 11 } }
+    const fetch = mockFetch()
+    const router = testRouter()
+    router.push('/profile')
+    await router.isReady()
+    const wrapper = mount(ProfileView, { global: { plugins: [router] } })
+    await flushPromises()
+
+    expect(fetch).not.toHaveBeenCalled()
+    expect(wrapper.find('.profile__stats').text()).toContain('Level 3 · Bronze')
+    expect(wrapper.find('.profile__stats').text()).not.toContain('Prestige')
+    expect(wrapper.find('.profile__xp').text()).toBe('11 EP gesamt')
+    expect(wrapper.find('.profile__stats dl').exists()).toBe(false)
+  })
+
+  it('lässt die Fach-Level nach einem Fehler neu laden', async () => {
+    useAuthStore().me = { gamer_tag: 'lena42', roles: ['student'], school_class: { name: '2AHIT' } }
+    mockFetch(new TypeError('offline'), { status: 200, body: { data: [{ code: 'pos', name: 'Programmieren', level: 4 }] } })
+    const router = testRouter()
+    router.push('/profile')
+    await router.isReady()
+    const wrapper = mount(ProfileView, { global: { plugins: [router] } })
+    await flushPromises()
+
+    expect(wrapper.find('.profile__stats').text()).toContain('Prüf deine Verbindung')
+    await wrapper.find('.profile__stats .lh-empty button').trigger('click')
+    await flushPromises()
+    expect(wrapper.find('.profile__slot').text()).toContain('Fach-Level 4')
+  })
+
   it('Konto löschen nur für Schüler:innen, Rechtstexte für alle', async () => {
     const router = testRouter()
     router.push('/profile')
@@ -77,6 +135,7 @@ describe('ProfileView', () => {
     expect(links).toEqual(expect.arrayContaining(['/profile/delete', '/datenschutz', '/nutzungsregeln', '/impressum']))
 
     useAuthStore().me = { gamer_tag: 'ProfMuster', roles: ['teacher'] }
+    mockFetch({ status: 200, body: { data: [] } })
     links = mount(ProfileView, { global: { plugins: [router] } }).findAll('a').map((a) => a.attributes('href'))
     expect(links).not.toContain('/profile/delete')
     expect(links).toContain('/datenschutz')
