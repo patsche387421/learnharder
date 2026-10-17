@@ -1,6 +1,7 @@
 import { flushPromises, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { icons } from '../components/ui/icons.js'
 import { useAuthStore } from '../stores/auth.js'
 import { mockFetch, setXsrfCookie } from '../test/api.js'
 import { mountRoute } from '../test/router.js'
@@ -171,6 +172,34 @@ describe('LessonView', () => {
     await click(primary(wrapper))
     expect(wrapper.find('.lh-result__gain').text()).toBe('+4 EP')
     expect(wrapper.find('.lh-result').text()).toContain('davon +2 durch Booster')
+    expect(wrapper.find('.new-achievements').exists()).toBe(false)
+  })
+
+  it('zeigt neue Erfolge mit ihren Trophäen im Ergebnis', async () => {
+    const { wrapper } = await show(
+      ok(answer({ correct_option_ids: ['o1'], xp: 2 })),
+      ok(answer({ correct_option_ids: ['o3', 'o4'], xp: 2 })),
+      ok({ ...finished, trophies_earned: 1, achievements_unlocked: [
+        { slug: 'first-lesson', title: 'Erste Lerneinheit', icon_name: 'xp', trophies: 1 },
+        { slug: 'ohne', title: 'Ohne Trophäen', icon_name: 'achievement', trophies: 0 },
+      ] }),
+      ok(subject),
+    )
+
+    await click(options(wrapper)[0])
+    await click(primary(wrapper))
+    await click(primary(wrapper))
+    await click(options(wrapper)[0])
+    await click(options(wrapper)[1])
+    await click(primary(wrapper))
+    await click(primary(wrapper))
+
+    const cards = wrapper.findAll('.new-achievements li')
+    expect(cards.map((card) => card.find('.lh-card__title').text())).toEqual(['Erste Lerneinheit', 'Ohne Trophäen'])
+    expect(cards[0].find('.lh-card__eyebrow').text()).toBe('Neuer Erfolg')
+    expect(cards[0].find('img').attributes('src')).toBe(icons['icon-xp'])
+    expect(cards[0].find('.lh-chip').attributes('aria-label')).toBe('1 Trophäe')
+    expect(cards[1].find('.lh-chip').exists()).toBe(false)
   })
 
   it('ohne Booster keine Marke und kein Anteil', async () => {

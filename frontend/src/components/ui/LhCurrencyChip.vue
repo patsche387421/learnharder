@@ -1,7 +1,7 @@
 <script setup>
 // Spielwert kompakt: illustriertes Icon plus Zahl in Space Mono (Brainpower, Trophäen, Streak, EP).
 // Ab 10.000 wird abgekürzt (12,4k). Der Screenreader bekommt immer die volle Zahl.
-// Mit to/href antippbar (nur wenn es dazu eine Seite gibt, z. B. Trophäen tauschen), dann mit 48px-Tap-Fläche.
+// Mit to/href antippbar (nur wenn es dazu eine Seite gibt, z. B. Brainpower → Shop), dann mit 48px-Tap-Fläche.
 // boost („2×“): statische Marke, solange ein EP-Booster läuft (E-037), auch im aria-label.
 import { computed } from 'vue'
 import { linkProps, useLink } from './link.js'

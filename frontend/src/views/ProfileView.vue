@@ -1,6 +1,7 @@
 <script setup>
-// Profil: Gamer-Tag, Klasse, Fortschritt, Roboter, Darstellung, Abmelden, Rechtstexte und „Konto löschen“ (nur Schüler:innen, E-027).
+// Profil: Gamer-Tag, Klasse, Fortschritt, Erfolge, Roboter, Darstellung, Abmelden, Rechtstexte und „Konto löschen“ (nur Schüler:innen, E-027).
 // Fortschritt: Level, Rang, EP und längster Streak aus /me, Fach-Level aus /subjects (E-018).
+// Erfolge aus /achievements (Konzept Spielwelt §6). Beim Laden vergibt der Server nachträglich, danach kommen die Trophäen neu aus /me.
 // Klarnamen und E-Mail zeigt die App nie. Pose und Lackierung sind nur Vorschau, gespeichert wird noch nichts.
 import { computed, onMounted, ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
@@ -9,10 +10,13 @@ import { pickMood } from '../avatar/mood.js'
 import { PAINTS } from '../avatar/paints.js'
 import { POSES } from '../avatar/poses.js'
 import RobotAvatar from '../avatar/RobotAvatar.vue'
+import { getAchievements } from '../api/achievements.js'
 import { getSubjects } from '../api/learn.js'
 import LoadError from '../components/LoadError.vue'
+import LhAchievement from '../components/ui/LhAchievement.vue'
 import LhButton from '../components/ui/LhButton.vue'
 import LhCard from '../components/ui/LhCard.vue'
+import LhCurrencyChip from '../components/ui/LhCurrencyChip.vue'
 import LhLevelBadge from '../components/ui/LhLevelBadge.vue'
 import LhSegmented from '../components/ui/LhSegmented.vue'
 import { useLoad } from '../composables/useLoad.js'
@@ -25,12 +29,22 @@ const number = new Intl.NumberFormat('de')
 const auth = useAuthStore()
 const router = useRouter()
 const { data: subjects, error: subjectsError, load: loadSubjects } = useLoad(getSubjects)
+const { data: achievements, error: achievementsError, load: loadAchievements } = useLoad(getAchievements)
 const theme = useTheme()
 
-// Ohne Klasse liefert der Server keine Fächer (E-024)
+// Ohne Klasse liefert der Server keine Fächer (E-024). Erfolge gibt es auch ohne Klasse.
 onMounted(() => {
   if (!auth.waitingForClass) loadSubjects()
+  loadAchievementsAndTrophies()
 })
+
+async function loadAchievementsAndTrophies() {
+  await loadAchievements()
+  // Ohne Katalog vergibt der Server nichts, dann bleiben auch die Trophäen gleich
+  if (achievements.value?.length) await auth.fetchMe().catch(() => {})
+}
+
+const unlockedCount = computed(() => achievements.value?.filter((a) => a.unlocked_at).length ?? 0)
 
 const longestStreak = computed(() => {
   const days = auth.me?.streak?.longest ?? 0
@@ -92,6 +106,28 @@ async function logout() {
         </div>
       </dl>
     </section>
+    <section v-if="achievements?.length || achievementsError" class="profile__achievements lh-card" aria-labelledby="profile-achievements">
+      <div class="lh-achievements__head">
+        <h2 id="profile-achievements" class="lh-card__eyebrow profile__heading">
+          Erfolge<span v-if="achievements" class="profile__num"> · {{ unlockedCount }} / {{ achievements.length }}</span>
+        </h2>
+        <LhCurrencyChip icon="icon-trophy" :value="auth.me?.trophies ?? 0" :label="auth.me?.trophies === 1 ? 'Trophäe' : 'Trophäen'" />
+      </div>
+      <LoadError v-if="achievementsError" :error="achievementsError" @retry="loadAchievementsAndTrophies" />
+      <ul v-else class="lh-achievements">
+        <LhAchievement
+          v-for="achievement in achievements"
+          :key="achievement.id"
+          :title="achievement.title"
+          :description="achievement.description"
+          :icon="achievement.icon_name ?? undefined"
+          :subject="achievement.subject"
+          :level="achievement.level"
+          :secret="achievement.secret"
+          :unlocked-at="achievement.unlocked_at"
+        />
+      </ul>
+    </section>
     <section class="profile__robot lh-card" aria-labelledby="profile-robot">
       <h2 id="profile-robot" class="lh-card__eyebrow profile__heading">Dein Roboter</h2>
       <div class="profile__stage">
@@ -146,7 +182,7 @@ async function logout() {
 <style scoped>
 .profile { display: grid; gap: var(--space-4); }
 .profile__tag { margin: 0; font: 700 18px/24px var(--font-text); color: var(--ink); }
-.profile__stats, .profile__robot { display: grid; gap: var(--space-3); }
+.profile__stats, .profile__achievements, .profile__robot { display: grid; gap: var(--space-3); }
 .profile__heading { margin: 0; }
 .profile__level { display: flex; align-items: center; gap: var(--space-3); }
 .profile__xp { margin: 0; font: 400 14px/20px var(--font-mono); color: var(--ink-muted); }

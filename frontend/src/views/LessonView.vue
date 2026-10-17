@@ -4,6 +4,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 import LoadError from '../components/LoadError.vue'
+import NewAchievements from '../components/NewAchievements.vue'
 import LhAnswerOption from '../components/ui/LhAnswerOption.vue'
 import LhButton from '../components/ui/LhButton.vue'
 import LhEmptyState from '../components/ui/LhEmptyState.vue'
@@ -198,6 +199,7 @@ const levelBar = computed(() => {
           <div class="lh-stat"><b>{{ result.xp_earned }}</b><span>EP</span></div>
           <div class="lh-stat"><b>{{ repeated }}</b><span>Fehler geübt</span></div>
         </div>
+        <NewAchievements v-if="result.achievements_unlocked?.length" :achievements="result.achievements_unlocked" />
         <LhXpBar v-if="levelBar" class="lesson__bar" :value="levelBar.value" :max="levelBar.max">
           <template #bottom>
             <span><b>Level {{ result.progress.level }}</b></span>
