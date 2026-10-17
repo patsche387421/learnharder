@@ -1,9 +1,12 @@
 <script setup>
 // Hub (Startseite, Konzept Spielwelt §4): Begrüßung nach Zustand und Tageszeit, Level und Brainpower aus /me, „Weiterlernen“ aus /hub.
-// Zustände in dieser Reihenfolge: gerade aufgestiegen, zurück nach 3 oder mehr Tagen, heute schon gelernt, erster Besuch.
-// Ob „heute“, rechnet die App nach Gerätezeit aus last_study_at. Den Aufstieg merkt sich die App aus der Lerneinheit.
+// Zustände in dieser Reihenfolge: gerade aufgestiegen, zurück nach 3 oder mehr Tagen, heute schon gelernt, Streak in Gefahr, erster Besuch.
+// Ob heute gelernt wurde, sagt der Server (streak.today), Tage seit der Pause rechnet die App nach Gerätezeit aus
+// last_study_at. Den Aufstieg merkt sich die App aus der Lerneinheit.
 // Neben der Begrüßung der Avatar (G4): winkt beim Öffnen, Stimmung passend zum Zustand, Akku zeigt die Brainpower.
 // Shop (E-037): eigene Zeile, dazu der Brainpower-Chip als Abkürzung. Ein laufender Booster steht auf „Weiterlernen“ und am Chip.
+// Chip-Zeile unter der EP-Leiste (design/components/CurrencyChip.md): Streak, dann Brainpower. „Heute gelernt“ und den Streak
+// liefert der Server nach Wiener Tag (streak.today). Ist der Streak in Gefahr, sagt das nur der Text, nie der Roboter.
 import { computed, onMounted } from 'vue'
 import LoadError from '../components/LoadError.vue'
 import LhArt from '../components/ui/LhArt.vue'
@@ -41,7 +44,10 @@ const daysAway = computed(() => {
   return Math.max(0, Math.round((day(now) - day(new Date(last))) / 86_400_000))
 })
 const firstVisit = computed(() => !!hub.value && daysAway.value === null)
-const learnedToday = computed(() => daysAway.value === 0)
+// Der Server weiß es nach Wiener Tag, die Gerätezeit ist nur der Notnagel, falls /me noch keinen Streak hat
+const learnedToday = computed(() => auth.me?.streak?.today ?? daysAway.value === 0)
+const streak = computed(() => auth.me?.streak?.current ?? 0)
+const streakAtRisk = computed(() => streak.value > 0 && !learnedToday.value)
 const backAfterBreak = computed(() => daysAway.value >= 3)
 
 const greeting = computed(() => {
@@ -62,6 +68,7 @@ const nudge = computed(() => {
   if (!title) return ''
   if (firstVisit.value) return `Fang mit ${title} an. 5 Min. reichen.`
   if (learnedToday.value && !levelUp) return `Heute schon gelernt. Noch eine Runde ${title}?`
+  if (streakAtRisk.value && !levelUp) return 'Noch nichts gelernt heute. 5 Min. reichen.'
   return `Weiter mit ${title}? 5 Min. reichen.`
 })
 
@@ -98,6 +105,15 @@ const nextStep = computed(() => (auth.player.level < 100 ? `Level ${auth.player.
       <div class="hub__level">
         <LhLevelBadge v-bind="auth.player" large />
         <span class="hub__levelname">Level {{ auth.player.level }} · {{ RANKS[auth.player.rank] }}</span>
+      </div>
+      <LhXpBar v-if="levelBar" :value="levelBar.value" :max="levelBar.max">
+        <template #bottom>
+          <span>{{ levelBar.value }} / {{ levelBar.max }} EP</span>
+          <span>{{ levelBar.left }} EP bis {{ nextStep }}</span>
+        </template>
+      </LhXpBar>
+      <div v-if="streak || auth.me?.brainpower" class="lh-chiprow">
+        <LhCurrencyChip v-if="streak" icon="icon-streak" :value="streak" :label="streak === 1 ? 'Tag Streak' : 'Tage Streak'" />
         <LhCurrencyChip
           v-if="auth.me?.brainpower"
           icon="icon-brainpower"
@@ -107,12 +123,6 @@ const nextStep = computed(() => (auth.player.level < 100 ? `Level ${auth.player.
           to="/shop"
         />
       </div>
-      <LhXpBar v-if="levelBar" :value="levelBar.value" :max="levelBar.max">
-        <template #bottom>
-          <span>{{ levelBar.value }} / {{ levelBar.max }} EP</span>
-          <span>{{ levelBar.left }} EP bis {{ nextStep }}</span>
-        </template>
-      </LhXpBar>
     </section>
 
     <LhEmptyState
