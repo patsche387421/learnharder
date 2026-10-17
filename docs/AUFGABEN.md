@@ -72,6 +72,9 @@ Meilensteine und Reihenfolge: `plans/README.md`. Entscheidungen: `ENTSCHEIDUNGEN
 - [ ] `DemoSchoolSeeder`: prüfen, warum MEDT keine Themen bekommt @claude
 - [ ] Unit-Test für die Weiterleitung nach einer Sperre in `main.js` @claude
 - [ ] Python-Tests aus `scripts/` in die CI @claude
+- [ ] Testhandbuch `handbuch/testen.md` gegenlesen, Testzentrale neu starten und Testpersonen und Testgruppen ansehen @patsche
+- [ ] Abläufe im echten Browser mit Playwright: registrieren, lernen, Level-Up, Prestige, Konto löschen, mit den Testpersonen (E-039) @claude
+- [ ] Frontend-Tests beschleunigen: jsdom wird je Datei neu erzeugt (Vitest-Hinweis `pool: 'vmThreads'` oder `isolate: false`), ein Lauf dauert gut 2 Min. @claude
 - [ ] Fach im CMS: Feld „Icon“ nutzt die App nicht, Bild und Farbe hängen am URL-Kürzel (`subject-<kürzel>`, `color_token` nicht im Formular). Klären, dann Formular und `handbuch/redaktion.md` anpassen @claude
 - [ ] Testzentrale fertig durchklicken: Details, Suche, „Ältere ausblenden“ im Log @patsche
 - [ ] Testzentrale bei Handy-Breite breiter als der Bildschirm (Kopfzeile, Übersicht) @claude

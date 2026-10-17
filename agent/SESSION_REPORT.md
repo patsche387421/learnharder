@@ -456,3 +456,17 @@ V1-Protokoll: `_archiv/agent/SESSION_REPORT.md` und `SESSION_REPORT_ARCHIVE.md`.
 - **Geprüft:** Backend 324 Tests grün, `pint --test` sauber. Frontend 186 Tests grün, `build` und `check:tokens` grün. Kontrast der neuen Zeile im Shop nachgerechnet (5,51:1 hell, 7,59:1 dunkel). Layout ohne Browser nicht angesehen, in der laufenden App nicht geprüft.
 - **Offen:** in `docs/AUFGABEN.md`: G2 in der App bei 320 und 360 px ansehen (Patsche), Herausforderung unter G3, LearnFlow-Storyboard auf die Chip-Zeile umstellen, Theme-Umschalter.
 - **Nachtrag:** Patsche hat Hub und Shop in der laufenden App bei Handy-Breite angesehen, Chip-Zeile und Booster-Marke passen. Aufgabe aus `docs/AUFGABEN.md` entfernt. Die App blieb nach dem Umstellen von Windows auf Hell dunkel: Der Code folgt nur `prefers-color-scheme`, die Ursache liegt im Browser (Einstellung „Website-Darstellung“ in Firefox, App-Modus von Windows oder die Farbschema-Simulation der Entwicklertools).
+
+## 2026-10-17 — Testen: Testnutzer, Testpersonen, Testzentrale, Testhandbuch
+
+- **Branch:** `feat/testpersonen` von `dev`, danach mit `--no-ff` nach `dev`. Nicht gepusht.
+- **Commits:** `d31bb22` (Bausteine in der `UserFactory`), `1dedf42` (`SchoolClassFactory` und `inClass()`), `27502be` (`TestPersonasSeeder`), `e3c35ca` (Tests nutzen die Bausteine), `d2b1ae9` (Testzentrale: Datenbanken, Testpersonen, Testgruppen), dazu dieser Doku-Commit.
+- **Ergebnis:**
+  - `UserFactory`: `student()`, `inClass()`, `level()` mit Prestige, `xp()`, `streak()` (in Gefahr oder heute), `brainpower()` (heute aufgeladen), `booster()`. `SchoolClassFactory` baut die Kette Schule → Abteilung → Ausbildungsgang → Schuljahr, mit `stage()`, `semester()`, `withSubjects()`. `EnrollsStudents` nutzt sie, die alten Tests blieben unverändert.
+  - Sieben Testpersonen (`<name>@test.learnharder.app`, nur `local`/`testing`) in der Demo-Klasse: Neuling, Mittendrin, Boosterfan, FastPrestige, PrestigeProfi, OhneKlasse, Gesperrt. Jeder Seeder-Lauf setzt sie zurück. `artisan learnharder:test-personas` liest ihren Stand als JSON, ohne etwas zu ändern.
+  - Tests mit festem Startzustand nutzen die Bausteine (`AuthTest`, `BoosterApiTest`, `BrainpowerApiTest`). Sechs Stellen, die den Zustand mitten im Test ändern, blieben bewusst.
+  - Testzentrale: Karte „Datenbanken“ (App `laravel`, Tests `testing`, Produktion noch keine, Warnung bei gleicher Datenbank), Testpersonen mit Stand und „Zurücksetzen“, acht Testgruppen mit je einem Klick, Häkchen „Danach Testpersonen zurücksetzen“. „Neu aufsetzen“ legt die Testpersonen mit an.
+  - E-039: Tests beschreiben das jetzige Verhalten, Fehler-Tests bleiben, kein Löschen, um grün zu werden, Testpersonen nur lokal. Anleitung für Menschen: `docs/handbuch/testen.md`.
+  - Die laufende Testzentrale mit altem Code hat die Entwicklungs-Datenbank zweimal neu aufgesetzt (16:42 und 16:55), ohne Testpersonen. Danach neu angelegt.
+- **Geprüft:** Backend 348 Tests grün, `pint --test` sauber, Python 36 Tests grün. Gruppen „Testnutzer“ und „Hub und Shop“ einzeln laufen lassen. Daten der Testzentrale über ihre API auf einem freien Port geprüft, das Skript der Seite mit `node --check`. Die Seite selbst im Browser nicht angesehen.
+- **Offen:** neu in `docs/AUFGABEN.md` unter „Nebenbei“: Testhandbuch gegenlesen und Testzentrale ansehen (Patsche), Playwright für ganze Abläufe, Frontend-Tests beschleunigen.
