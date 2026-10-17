@@ -1,11 +1,12 @@
 <script setup>
 // Lerneinheit (LearnFlow, Momente 4–7): Frage → Prüfen → Feedback → … → Ergebnis. Fokus-Modus ohne Tab-Leiste.
 // Falsch beantwortete Fragen kommen am Ende einmal wieder. Richtig/falsch und EP liefert nur der Server.
+// Frage und Rückmeldung zeichnet LessonQuestion, die Seite führt die Reihenfolge, den Abschluss und das Ergebnis.
 import { computed, onMounted, ref } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
+import LessonQuestion from '../components/LessonQuestion.vue'
 import LoadError from '../components/LoadError.vue'
 import NewAchievements from '../components/NewAchievements.vue'
-import LhAnswerOption from '../components/ui/LhAnswerOption.vue'
 import LhButton from '../components/ui/LhButton.vue'
 import LhEmptyState from '../components/ui/LhEmptyState.vue'
 import LhIcon from '../components/ui/LhIcon.vue'
@@ -14,8 +15,6 @@ import LhXpBar from '../components/ui/LhXpBar.vue'
 import { answerQuestion, finishLesson, getSubject, getTopic, startLesson } from '../api/learn.js'
 import { formatFactor } from '../composables/useBooster.js'
 import { useAuthStore } from '../stores/auth.js'
-
-const LETTERS = 'ABCDEF'
 
 const route = useRoute()
 const auth = useAuthStore()
@@ -32,13 +31,11 @@ const topic = ref(null)
 const attemptId = ref(null)
 const queue = ref([]) // { question, repeat }
 const index = ref(0)
-const selected = ref([])
 const feedback = ref(null)
 const result = ref(null)
 const nextTopic = ref(null)
 
 const current = computed(() => queue.value[index.value])
-const isMultiple = computed(() => current.value?.question.type === 'multiple_choice')
 const isLast = computed(() => index.value === queue.value.length - 1)
 const repeated = computed(() => queue.value.filter((item) => item.repeat).length)
 
@@ -68,17 +65,6 @@ const lockedText = computed(() => {
   return topic.value.theory.length ? `${level} Die Theorie kannst du schon lesen.` : level
 })
 
-function toggle(optionId) {
-  if (phase.value !== 'question') return
-  if (!isMultiple.value) {
-    selected.value = [optionId]
-  } else {
-    selected.value = selected.value.includes(optionId)
-      ? selected.value.filter((id) => id !== optionId)
-      : [...selected.value, optionId]
-  }
-}
-
 async function run(action) {
   busy.value = true
   actionError.value = ''
@@ -91,9 +77,9 @@ async function run(action) {
   }
 }
 
-function check() {
+function check(optionIds) {
   return run(async () => {
-    feedback.value = await answerQuestion(attemptId.value, current.value.question.id, selected.value)
+    feedback.value = await answerQuestion(attemptId.value, current.value.question.id, optionIds)
     // Erste Runde falsch: kommt am Ende noch einmal (nur einmal, keine Schleife)
     if (!feedback.value.correct && !current.value.repeat) {
       queue.value.push({ question: current.value.question, repeat: true })
@@ -105,7 +91,6 @@ function check() {
 function next() {
   if (isLast.value) return finish()
   index.value++
-  selected.value = []
   feedback.value = null
   phase.value = 'question'
 }
@@ -122,19 +107,6 @@ function finish() {
     nextTopic.value = topics.slice(at + 1).find((t) => !t.locked) ?? null
   })
 }
-
-function optionResult(optionId) {
-  if (phase.value !== 'feedback') return null
-  if (feedback.value.correct_option_ids.includes(optionId)) return 'correct'
-  return selected.value.includes(optionId) ? 'wrong' : null
-}
-
-const correctLetters = computed(() =>
-  current.value?.question.options
-    .map((option, i) => (feedback.value?.correct_option_ids.includes(option.id) ? LETTERS[i] : null))
-    .filter(Boolean)
-    .join(' und '),
-)
 
 const feedbackXp = computed(() => {
   if (!feedback.value?.correct || current.value?.repeat) return ''
@@ -161,30 +133,30 @@ const levelBar = computed(() => {
       </div>
     </div>
 
-    <div class="lh-screen__body">
+    <LessonQuestion
+      v-if="phase === 'question' || phase === 'feedback'"
+      :key="index"
+      :question="current.question"
+      :feedback="feedback"
+      :busy="busy"
+      :error="actionError"
+      :xp="feedbackXp"
+      :boost="feedbackBoost"
+      :hint="current.repeat ? '' : 'Kommt am Ende noch einmal.'"
+      :next-label="isLast ? 'Ergebnis ansehen' : 'Weiter'"
+      @check="check"
+      @next="next"
+    >
+      <template #before><p v-if="current.repeat" class="lesson__muted">Noch einmal</p></template>
+    </LessonQuestion>
+
+    <div v-else class="lh-screen__body">
       <LhEmptyState v-if="locked" title="Noch gesperrt." :text="lockedText">
         <LhButton v-if="topic.theory.length" variant="secondary" :to="`${base}/theory`">Theorie lesen</LhButton>
         <LhButton v-else variant="secondary" :to="base">Zum Thema</LhButton>
       </LhEmptyState>
       <p v-else-if="phase === 'loading' && !loadError" class="lesson__muted" aria-live="polite">Lädt …</p>
       <LoadError v-else-if="loadError" :error="loadError" @retry="start" />
-
-      <template v-else-if="phase === 'question' || phase === 'feedback'">
-        <p v-if="current.repeat" class="lesson__muted">Noch einmal</p>
-        <p class="question lesson__question lesson__pre">{{ current.question.text }}</p>
-        <p v-if="isMultiple" class="lesson__muted">Mehrere richtig</p>
-        <div class="lesson__options">
-          <LhAnswerOption
-            v-for="(option, i) in current.question.options"
-            :key="option.id"
-            :letter="LETTERS[i]"
-            :selected="selected.includes(option.id)"
-            :result="optionResult(option.id)"
-            :disabled="phase === 'feedback' || busy"
-            @click="toggle(option.id)"
-          ><span class="lesson__pre">{{ option.text }}</span></LhAnswerOption>
-        </div>
-      </template>
 
       <div v-else-if="phase === 'result'" class="lh-result">
         <template v-if="result.level_up">
@@ -210,24 +182,7 @@ const levelBar = computed(() => {
       </div>
     </div>
 
-    <div v-if="phase === 'feedback'" class="lh-feedback" :class="feedback.correct ? 'lh-feedback--correct' : 'lh-feedback--wrong'" aria-live="polite">
-      <p class="lh-feedback__title">
-        <LhIcon :name="feedback.correct ? 'ui-correct' : 'ui-wrong'" />
-        <template v-if="feedback.correct">Richtig!<span v-if="feedbackXp" class="lesson__xp">{{ feedbackXp }}</span><span v-if="feedbackBoost" class="lh-tag lh-tag--boost lesson__boost">{{ feedbackBoost }}</span></template>
-        <template v-else>Nicht ganz. Richtig ist {{ correctLetters }}.</template>
-      </p>
-      <p v-if="feedback.explanation" class="lh-feedback__text lesson__pre">{{ feedback.explanation }}</p>
-      <p v-if="!feedback.correct && !current.repeat" class="lh-feedback__text lesson__muted">Kommt am Ende noch einmal.</p>
-      <p v-if="actionError" class="lesson__error" role="alert">{{ actionError }}</p>
-      <LhButton block :disabled="busy" @click="next">{{ isLast ? 'Ergebnis ansehen' : 'Weiter' }}</LhButton>
-    </div>
-
-    <div v-else-if="phase === 'question'" class="lh-screen__foot">
-      <p v-if="actionError" class="lesson__error" role="alert">{{ actionError }}</p>
-      <LhButton block :disabled="!selected.length || busy" @click="check">{{ actionError ? 'Nochmal versuchen' : 'Prüfen' }}</LhButton>
-    </div>
-
-    <div v-else-if="phase === 'result'" class="lh-screen__foot lesson__actions">
+    <div v-if="phase === 'result'" class="lh-screen__foot lesson__actions">
       <LhButton v-if="nextTopic" block :to="`${subjectPath}/${nextTopic.slug}`">Nächstes Thema</LhButton>
       <LhButton block :variant="nextTopic ? 'secondary' : 'primary'" :to="subjectPath">Zum Fach</LhButton>
     </div>
@@ -237,14 +192,7 @@ const levelBar = computed(() => {
 <style scoped>
 /* Buttons unten in Daumenreichweite: Bildschirmhöhe abzüglich Innenabstand des App-Rahmens */
 .lesson { min-height: calc(100dvh - 2 * var(--space-4)); }
-.lesson__question { margin: 0; font: 400 18px/27px var(--font-text); color: var(--ink); }
-.lesson__options { display: grid; gap: var(--space-3); }
-/* Fragen mit Code kommen mehrzeilig aus dem CMS, ohne Markdown: Zeilenumbrüche behalten */
-.lesson__pre { white-space: pre-line; }
 .lesson__muted { margin: 0; font: 400 14px/20px var(--font-text); color: var(--ink-muted); }
-.lesson__xp { margin-left: auto; font: 700 16px/24px var(--font-mono); }
-.lesson__boost { margin-left: var(--space-2); }
-.lesson__error { margin: 0 0 var(--space-3); font: 400 14px/20px var(--font-text); color: var(--wrong); }
 .lesson__done { margin: 0; font: 700 18px/24px var(--font-text); color: var(--ink); }
 .lesson__levelup { margin: 0; font: 800 32px/38px var(--font-text); color: var(--accent); }
 .lesson__bar { width: 100%; }
