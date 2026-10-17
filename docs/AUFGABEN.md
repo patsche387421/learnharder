@@ -30,7 +30,7 @@ Meilensteine und Reihenfolge: `plans/README.md`. Entscheidungen: `ENTSCHEIDUNGEN
 - [ ] Erneute Zustimmung bei neuer `terms_version` @claude
 - [ ] DNS umstellen, Neuregistrierung ankündigen, V1-Supabase abschalten @patsche
 - [x] CMS-Handbuch für die Redaktion: Fächer, Themen, Fragen anlegen, Prüfen und Veröffentlichen (E-014), warum manches nicht löschbar ist @claude
-- [ ] Betriebshandbuch für Admins: Konten, Sperren, Löschfristen (E-027, E-028), Notfall-Befehl `learnharder:make-admin` @claude
+- [x] Betriebshandbuch für Admins: Konten, Sperren, Löschfristen (E-027, E-028), Notfall-Befehl `learnharder:make-admin` @claude
 
 ## Nebenbei
 
