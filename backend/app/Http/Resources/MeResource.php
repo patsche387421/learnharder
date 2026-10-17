@@ -3,7 +3,6 @@
 namespace App\Http\Resources;
 
 use App\Models\User;
-use App\Support\DailyXp;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -26,10 +25,7 @@ class MeResource extends JsonResource
             'school_class' => ($class = $this->activeEnrollment?->schoolClass) ? ['name' => $class->name] : null,
             'roles' => $this->getRoleNames(),
             ...$this->progression()->toArray(),
-            'streak' => [
-                'current' => $this->stats?->currentStreak(DailyXp::today()) ?? 0,
-                'longest' => $this->stats->longest_streak ?? 0,
-            ],
+            'streak' => $this->streak(),
             'brainpower' => [
                 'current' => $this->brainpower_current,
                 'max' => $this->brainpower_max,

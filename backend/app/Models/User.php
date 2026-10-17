@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\DailyXp;
 use App\Support\Progression;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
@@ -108,6 +109,19 @@ class User extends Authenticatable implements FilamentUser
     public function progression(): Progression
     {
         return Progression::fromTotalXp($this->stats->total_xp ?? 0);
+    }
+
+    /**
+     * Laufender und längster Streak, Tag in Wien wie bei den EP (E-015).
+     *
+     * @return array{current: int, longest: int}
+     */
+    public function streak(): array
+    {
+        return [
+            'current' => $this->stats?->currentStreak(DailyXp::today()) ?? 0,
+            'longest' => $this->stats->longest_streak ?? 0,
+        ];
     }
 
     /**

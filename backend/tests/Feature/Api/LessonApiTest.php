@@ -372,6 +372,14 @@ class LessonApiTest extends TestCase
         $this->assertSame(['current' => 2, 'longest' => 2], $this->streak());
     }
 
+    public function test_abschluss_meldet_den_neuen_streak(): void
+    {
+        $this->playOn('2026-10-16 10:00');
+        $this->travelTo(CarbonImmutable::parse('2026-10-17 10:00', 'Europe/Vienna'));
+
+        $this->playPerfect()->assertJsonPath('data.streak', ['current' => 2, 'longest' => 2]);
+    }
+
     public function test_doppelter_abschluss_zaehlt_den_tag_nur_einmal(): void
     {
         $id = $this->start()->json('data.id');

@@ -120,7 +120,8 @@ class QuizAttemptController extends Controller
         $attempt->finish();
 
         // Vorher-Werte aus den EP dieser Lerneinheit, damit ein wiederholter Abschluss dasselbe zeigt
-        $after = $attempt->user()->first()->progression();
+        $user = $attempt->user()->first();
+        $after = $user->progression();
         $before = Progression::fromTotalXp($after->total - $attempt->xp_earned);
 
         return response()->json(['data' => [
@@ -130,6 +131,7 @@ class QuizAttemptController extends Controller
             'level_up' => $after->level !== $before->level || $after->prestige !== $before->prestige,
             'before' => $before->toArray(),
             'progress' => $after->toArray(),
+            'streak' => $user->streak(),
         ]]);
     }
 }

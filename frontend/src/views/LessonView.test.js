@@ -19,6 +19,7 @@ const finished = {
   xp_earned: 2, correct_count: 1, total_questions: 2, level_up: true,
   before: { level: 1, rank: 'bronze', prestige: 0, xp: { total: 7, level_start: 0, next_level: 8 } },
   progress: { level: 2, rank: 'bronze', prestige: 0, xp: { total: 9, level_start: 8, next_level: 23 } },
+  streak: { current: 3, longest: 5 },
 }
 const subject = { code: 'pos', name: 'POS', topics: [{ slug: 'schleifen', locked: false }, { slug: 'arrays', locked: false }] }
 
@@ -135,6 +136,7 @@ describe('LessonView', () => {
     expect(wrapper.find('.lh-xp').attributes('aria-valuenow')).toBe('1')
     expect(wrapper.find('.lh-xp').attributes('aria-valuemax')).toBe('15')
     expect(useAuthStore().player.level).toBe(2)
+    expect(useAuthStore().me.streak).toEqual({ current: 3, longest: 5 })
     const [next, back] = wrapper.findAll('.lesson__actions .lh-btn')
     expect(next.text()).toBe('Nächstes Thema')
     expect(next.attributes('href')).toBe('/learn/pos/arrays')
