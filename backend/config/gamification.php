@@ -17,4 +17,12 @@ return [
         'streak_bonus_max' => 30,
     ],
 
+    // XP-Booster (E-010, Ökonomie-Modell §3.3): Faktor auf richtige Antworten, Dauer in Minuten, Kosten in Brainpower.
+    // Höchstens einer gleichzeitig, die Zeit läuft in Echtzeit.
+    'boosters' => [
+        'x1_5_30' => ['multiplier' => 1.5, 'minutes' => 30, 'cost' => 20],
+        'x2_30' => ['multiplier' => 2.0, 'minutes' => 30, 'cost' => 40],
+        'x2_60' => ['multiplier' => 2.0, 'minutes' => 60, 'cost' => 70],
+    ],
+
 ];

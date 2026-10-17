@@ -391,6 +391,60 @@ class LessonApiTest extends TestCase
         $this->assertSame(['current' => 1, 'longest' => 1], $this->streak());
     }
 
+    private function boost(string $kind): void
+    {
+        $this->user->update(['brainpower_current' => 100, 'brainpower_refilled_on' => now('Europe/Vienna')->toDateString()]);
+        $this->actingAs($this->user)->postJson('/api/v1/boosters', ['kind' => $kind])->assertCreated();
+        $this->user->refresh();
+    }
+
+    public function test_booster_vervielfacht_die_ep_richtiger_antworten(): void
+    {
+        $this->boost('x2_30');
+
+        $id = $this->start()->json('data.id');
+        $this->answer($id, $this->einfach, 'richtig')->assertJsonPath('data.xp', 4);
+        $this->answer($id, $this->mehrfach, 'a')->assertJsonPath('data.xp', 0);
+        $this->finish($id)->assertJsonPath('data.xp_earned', 4);
+
+        $this->assertSame(4, $this->totalXp());
+    }
+
+    public function test_halbe_punkte_werden_aufgerundet(): void
+    {
+        $this->einfach->update(['xp_reward' => 3]);
+        $this->boost('x1_5_30');
+
+        $id = $this->start()->json('data.id');
+        $this->answer($id, $this->einfach, 'richtig')->assertJsonPath('data.xp', 5);
+        $this->finish($id)->assertJsonPath('data.xp_earned', 5);
+    }
+
+    public function test_es_zaehlt_der_booster_beim_antworten_nicht_beim_abschluss(): void
+    {
+        // Um 10:00 gekauft, läuft bis 10:30
+        $this->boost('x2_30');
+
+        $this->travelTo(CarbonImmutable::parse('2026-10-16 10:29', 'Europe/Vienna'));
+        $id = $this->start()->json('data.id');
+        $this->answer($id, $this->einfach, 'richtig');
+
+        // Nach Ablauf: diese Antwort ohne Faktor, der Abschluss behält den Faktor der ersten
+        $this->travelTo(CarbonImmutable::parse('2026-10-16 10:31', 'Europe/Vienna'));
+        $this->answer($id, $this->mehrfach, 'a', 'b')->assertJsonPath('data.xp', 2);
+        $this->finish($id)->assertJsonPath('data.xp_earned', 6);
+    }
+
+    public function test_booster_hebt_die_tagesregel_nicht_auf(): void
+    {
+        $this->playPerfect()->assertJsonPath('data.xp_earned', 4);
+        $this->boost('x2_30');
+
+        $id = $this->start()->json('data.id');
+        $this->answer($id, $this->einfach, 'richtig')->assertJsonPath('data.xp', 0);
+        $this->finish($id)->assertJsonPath('data.xp_earned', 0);
+    }
+
     public function test_zwei_offene_lerneinheiten_mit_derselben_frage_nur_die_erste_bekommt_ep(): void
     {
         $erste = $this->start()->json('data.id');

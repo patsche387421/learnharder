@@ -81,6 +81,7 @@ class AuthTest extends TestCase
                 'xp' => ['total' => 8450, 'level_start' => 8419, 'next_level' => 8465],
                 'streak' => ['current' => 0, 'longest' => 0],
                 'brainpower' => ['current' => 80, 'max' => 200],
+                'booster' => null,
             ]]);
     }
 

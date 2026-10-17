@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\User;
+use App\Support\Booster;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -28,6 +29,7 @@ class MeResource extends JsonResource
             ...$this->progression()->toArray(),
             'streak' => $this->streak(),
             'brainpower' => $this->brainpower(),
+            'booster' => Booster::current($this->resource),
         ];
     }
 }

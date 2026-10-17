@@ -34,6 +34,8 @@ class User extends Authenticatable implements FilamentUser
         'gamer_tag',
         'brainpower_current',
         'brainpower_refilled_on',
+        'booster_multiplier',
+        'booster_ends_at',
         'last_active_at',
         'password',
     ];
@@ -59,6 +61,8 @@ class User extends Authenticatable implements FilamentUser
             'email_verified_at' => 'datetime',
             'last_active_at' => 'datetime',
             'brainpower_refilled_on' => 'date',
+            'booster_multiplier' => 'float',
+            'booster_ends_at' => 'datetime',
             'consented_at' => 'datetime',
             'parental_consent_at' => 'datetime',
             'deactivated_at' => 'datetime',

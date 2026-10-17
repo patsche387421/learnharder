@@ -9,6 +9,7 @@ use App\Models\Question;
 use App\Models\QuestionAnswer;
 use App\Models\QuizAttempt;
 use App\Models\Topic;
+use App\Support\Booster;
 use App\Support\DailyXp;
 use App\Support\Progression;
 use Illuminate\Http\JsonResponse;
@@ -90,14 +91,15 @@ class QuizAttemptController extends Controller
         // Nur die erste Antwort zählt. Spätere Antworten auf dieselbe Frage sind die Wiederholung am Ende (0 EP).
         $answer = QuestionAnswer::createOrFirst(
             ['quiz_attempt_id' => $attempt->id, 'question_id' => $question->id],
-            ['user_id' => $attempt->user_id, 'selected_option_ids' => $selected, 'is_correct' => $isCorrect],
+            ['user_id' => $attempt->user_id, 'selected_option_ids' => $selected, 'is_correct' => $isCorrect,
+                'xp_multiplier' => Booster::multiplier($request->user())],
         );
         // Dieselbe erste Antwort noch einmal (z. B. nach einem Netzfehler) ist keine Wiederholung
         $repeat = ! $answer->wasRecentlyCreated && $answer->selected_option_ids !== $selected;
 
         $xp = ! $repeat && $answer->is_correct
             && ! in_array($question->id, DailyXp::alreadyEarned($attempt->user_id, [$question->id]), true)
-            ? $question->xp_reward
+            ? Booster::apply($question->xp_reward, $answer->xp_multiplier)
             : 0;
 
         return response()->json(['data' => [

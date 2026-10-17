@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\BoosterController;
 use App\Http\Controllers\Api\V1\HubController;
 use App\Http\Controllers\Api\V1\LegalController;
 use App\Http\Controllers\Api\V1\PasswordResetController;
@@ -34,6 +35,9 @@ Route::prefix('v1')->group(function () {
         Route::delete('me', [AuthController::class, 'destroy'])->middleware('throttle:5,1');
 
         Route::get('hub', [HubController::class, 'show']);
+
+        // XP-Booster mit Brainpower kaufen (E-010)
+        Route::post('boosters', [BoosterController::class, 'store']);
 
         Route::get('subjects', [SubjectController::class, 'index']);
         Route::get('subjects/{subject}', [SubjectController::class, 'show']);
