@@ -78,6 +78,7 @@ Sieben feste Konten in der Demo-Klasse 2AHIT, nur lokal. Anmelden in der App mit
 - **Zurücksetzen:** Button in der Testzentrale oder `./vendor/bin/sail artisan db:seed --class=TestPersonasSeeder`. Das löscht die Testpersonen samt Lernverlauf und legt sie im Ausgangszustand neu an. Andere Konten bleiben.
 - „Neu aufsetzen“ in der Testzentrale legt sie nach Import und Demo-Klasse ebenfalls an.
 - Der Stand jeder Testperson steht in der Testzentrale (alle 10 Sekunden, `artisan learnharder:test-personas`).
+- Wer einen Streak hat, hat am letzten Lerntag eine Lerneinheit im ersten sichtbaren Thema abgeschlossen (ohne EP). Sonst hielte der Hub den Besuch für den ersten.
 - Die Personen stehen in `backend/database/seeders/TestPersonasSeeder.php`. Eine neue Testperson kommt dort und in den Test `TestPersonasSeederTest` dazu.
 
 ## Einen Test schreiben

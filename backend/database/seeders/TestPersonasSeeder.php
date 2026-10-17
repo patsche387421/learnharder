@@ -2,10 +2,14 @@
 
 namespace Database\Seeders;
 
+use App\Models\QuizAttempt;
 use App\Models\SchoolClass;
+use App\Models\Subject;
 use App\Models\User;
 use App\Support\Accounts;
+use App\Support\DailyXp;
 use App\Support\Progression;
+use Carbon\CarbonImmutable;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -14,7 +18,8 @@ use Illuminate\Support\Facades\Hash;
  * Feste Testpersonen in der Demo-Klasse, um Zustände in der App von Hand zu prüfen (Level, Prestige, Streak, Brainpower,
  * Booster, ohne Klasse, gesperrt). Anmelden mit <gamer-tag>@test.learnharder.app und dem Passwort der Demo-Konten.
  * Jeder Lauf löscht die Testpersonen samt Lernverlauf und legt sie neu an, so kommt alles in den Ausgangszustand.
- * Alle haben heute schon aufgeladen, damit der gespeicherte Stand dem entspricht, was die App zeigt.
+ * Alle haben heute schon aufgeladen, damit der gespeicherte Stand dem entspricht, was die App zeigt. Wer einen Streak hat,
+ * hat am letzten Lerntag auch eine Lerneinheit abgeschlossen, sonst hielte der Hub den Besuch für den ersten.
  * Läuft nach db:seed, Import und DemoSchoolSeeder:
  * `./vendor/bin/sail artisan db:seed --class=TestPersonasSeeder`
  */
@@ -56,12 +61,42 @@ class TestPersonasSeeder extends Seeder
     /** @param  callable(UserFactory): UserFactory  $build */
     private function persona(string $tag, callable $build): User
     {
-        return $build(User::factory())->create([
+        $user = $build(User::factory())->create([
             'gamer_tag' => $tag,
             'email' => strtolower($tag).'@'.self::DOMAIN,
             // Schüler:innen haben keinen Namen (E-025)
             'name' => null,
             'password' => Hash::make('learnharder123'),
+        ]);
+        $this->lastLesson($user);
+
+        return $user;
+    }
+
+    /**
+     * Eine abgeschlossene Lerneinheit am letzten Lerntag, im ersten Thema, das die Person sieht. Der Hub liest daraus
+     * last_study_at und das nächste Thema. Heute: gerade eben, gestern: um 17 Uhr in Wien. Ohne Streak passiert nichts.
+     */
+    private function lastLesson(User $user): void
+    {
+        $stats = $user->stats;
+        if (! $stats?->current_streak || ! $stats->last_study_date) {
+            return;
+        }
+
+        $topic = Subject::visibleTo($user)->orderBy('order_index')->get()
+            ->map(fn (Subject $subject) => $subject->topics()->published()->orderBy('order_index')->first())
+            ->filter()
+            ->first();
+        if (! $topic) {
+            return;
+        }
+
+        $day = $stats->last_study_date->toDateString();
+        QuizAttempt::create([
+            'user_id' => $user->id,
+            'topic_id' => $topic->id,
+            'finished_at' => $day === DailyXp::today() ? now() : CarbonImmutable::parse($day.' 17:00', DailyXp::TIMEZONE)->utc(),
         ]);
     }
 }
