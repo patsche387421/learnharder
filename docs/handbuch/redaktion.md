@@ -100,7 +100,7 @@ Ein Thema hat mehrere **Abschnitte**, jeder mit Titel, Reihenfolge und Text.
 | Erklärung | Erscheint nach dem Antworten und begründet die richtige Lösung |
 | Typ | „Eine richtige Antwort“ oder „Mehrere richtige Antworten“ |
 | Schwierigkeit | 1 (sehr leicht) bis 5 (sehr schwer) |
-| Antworten | 2 bis 6. Bei einer richtigen Antwort genau eine markieren, bei mehreren mindestens eine. Die Reihenfolge lässt sich verschieben |
+| Antworten | 2 bis 6. Bei einer richtigen Antwort genau eine markieren, bei mehreren mindestens eine. Die App mischt die Antworten in jeder Lerneinheit neu, die Reihenfolge hier gilt nur im CMS. Deshalb keine Antworten wie „Alle oben genannten“ oder „A und B“ |
 | EP | Erfahrungspunkte für eine richtige Antwort, Standard `2` |
 | Reihenfolge | Position im Thema |
 
@@ -132,5 +132,6 @@ Das CMS meldet dann „Nicht gelöscht“ und sagt, was stattdessen geht:
 
 - Stimmt die richtige Antwort, und ist die Erklärung verständlich ohne Theorie daneben?
 - Sind die falschen Antworten plausibel, aber eindeutig falsch?
+- Versteht man jede Antwort für sich, ohne zu wissen, an welcher Stelle sie steht?
 - Passen Schwierigkeit und EP zu ähnlichen Fragen im Thema?
 - Hast du die Begriffe aus dem Glossar verwendet (`docs/design/Sprache.md`)?

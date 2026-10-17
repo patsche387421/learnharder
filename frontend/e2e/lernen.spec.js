@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test'
 import { loginAs } from './personas.js'
 
 // Eine Lerneinheit wie ein Mensch: Die richtigen Antworten kennt der Test vorher nicht. Er tippt zuerst die letzte Option
-// (im importierten Inhalt steht die richtige immer vorne, so kommen sicher Fehler und Wiederholungen vor),
+// (der Server mischt die Antworten, also mal richtig, mal falsch),
 // merkt sich nach einem Fehler die als „Richtig“ markierten Optionen und nimmt sie, wenn die Frage am Ende wiederkommt.
 // Ändert Streak und EP von Mittendrin, der nächste Lauf setzt sie zurück.
 

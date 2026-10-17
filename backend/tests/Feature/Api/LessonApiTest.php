@@ -125,6 +125,25 @@ class LessonApiTest extends TestCase
         $this->assertDatabaseHas('quiz_attempts', ['id' => $response->json('data.id'), 'total_questions' => 2, 'finished_at' => null]);
     }
 
+    public function test_antworten_kommen_gemischt_die_fragen_nicht(): void
+    {
+        // Wie im importierten Inhalt: die richtige Option steht vorne
+        $vier = $this->question($this->schleifen, ['richtig' => true, 'zwei' => false, 'drei' => false, 'vier' => false], order: 3);
+
+        $positions = collect(range(1, 20))->map(function () use ($vier) {
+            $questions = collect($this->start()->assertCreated()->json('data.questions'));
+            $this->assertSame([$this->einfach->id, $this->mehrfach->id, $vier->id], $questions->pluck('id')->all());
+
+            $texts = collect($questions->firstWhere('id', $vier->id)['options'])->pluck('text');
+            $this->assertEqualsCanonicalizing(['richtig', 'zwei', 'drei', 'vier'], $texts->all());
+
+            return $texts->search('richtig');
+        });
+
+        // 20-mal vorne wäre bei echtem Mischen 1 zu 4^20
+        $this->assertGreaterThan(1, $positions->unique()->count());
+    }
+
     public function test_start_nur_fuer_sichtbare_themen_mit_fragen(): void
     {
         $entwurf = $this->topic('entwurf', ['status' => ContentStatus::Draft]);

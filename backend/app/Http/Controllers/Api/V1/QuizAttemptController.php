@@ -49,6 +49,14 @@ class QuizAttemptController extends Controller
             'total_questions' => $questions->count(),
         ]);
 
+        // Antworten gemischt, die Fragen nicht (Themen bauen aufeinander auf). Im CMS steht die richtige oft vorne,
+        // sonst wäre „A“ immer richtig. Der Startwert hängt an Lerneinheit und Frage: jede Einheit anders, nachvollziehbar.
+        // Geprüft wird über die IDs der Optionen, die Reihenfolge spielt dabei keine Rolle.
+        $questions->each(fn (Question $question) => $question->setRelation(
+            'options',
+            $question->options->shuffle(crc32($attempt->id.$question->id))->values(),
+        ));
+
         return response()->json(['data' => [
             'id' => $attempt->id,
             'questions' => LessonQuestionResource::collection($questions),
