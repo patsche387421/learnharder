@@ -150,7 +150,7 @@ const nextStep = computed(() => (auth.player.level < 100 ? `Level ${auth.player.
 </template>
 
 <style scoped>
-.hub { display: grid; gap: var(--space-4); }
+.hub { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-4); }
 .hub__head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
 .hub__hello { display: grid; gap: var(--space-1); }
 .hub__title { margin: 0; font: 700 26px/32px var(--font-text); color: var(--ink); }
@@ -158,7 +158,7 @@ const nextStep = computed(() => (auth.player.level < 100 ? `Level ${auth.player.
 .hub__avatar { flex: none; width: 96px; height: 116px; }
 .hub__progress { display: grid; gap: var(--space-3); }
 .hub__level { display: flex; align-items: center; gap: var(--space-3); }
-.hub__levelname { flex: 1; font: 700 16px/24px var(--font-text); color: var(--ink); }
+.hub__levelname { flex: 1; min-width: 0; font: 700 16px/24px var(--font-text); color: var(--ink); }
 .hub__loading { margin: 0; color: var(--ink-muted); }
-.hub__eyebrow { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); }
+.hub__eyebrow { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-2); }
 </style>
