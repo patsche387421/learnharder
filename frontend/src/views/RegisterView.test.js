@@ -69,7 +69,7 @@ describe('RegisterView', () => {
       token: 'einmal', gamer_tag: 'Neo_2026', password: 'geheim123', password_confirmation: 'geheim123', is_14: true, accepts_terms: true,
     })
     expect(useAuthStore().me.gamer_tag).toBe('Neo_2026')
-    expect(router.currentRoute.value.path).toBe('/learn')
+    expect(router.currentRoute.value.path).toBe('/')
   })
 
   it('zeigt die Meldung, wenn die Mail keine Schul-Mail ist', async () => {

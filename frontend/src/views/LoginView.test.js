@@ -38,14 +38,14 @@ describe('LoginView', () => {
     expect(button.attributes('disabled')).toBeUndefined()
   })
 
-  it('nach dem Login geht es zu Lernen', async () => {
+  it('nach dem Login geht es zum Hub', async () => {
     mockFetch({ status: 204 }, { status: 200, body: { data: { gamer_tag: 'lena42' } } })
     const { wrapper, router } = await view()
 
     await fill(wrapper)
     await wrapper.find('form').trigger('submit')
     await flushPromises()
-    expect(router.currentRoute.value.path).toBe('/learn')
+    expect(router.currentRoute.value.path).toBe('/')
   })
 
   it('führt zurück zur Seite, von der man kam, aber nie auf eine fremde Seite', async () => {
@@ -61,7 +61,7 @@ describe('LoginView', () => {
     await fill(wrapper)
     await wrapper.find('form').trigger('submit')
     await flushPromises()
-    expect(router.currentRoute.value.path).toBe('/learn')
+    expect(router.currentRoute.value.path).toBe('/')
   })
 
   it('zeigt die Meldung des Servers am E-Mail-Feld', async () => {

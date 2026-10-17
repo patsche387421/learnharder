@@ -67,7 +67,7 @@ function register() {
       }
       throw e
     }
-    await router.replace('/learn')
+    await router.replace('/')
   }, 'gamer_tag')
 }
 

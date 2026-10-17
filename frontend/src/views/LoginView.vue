@@ -22,7 +22,7 @@ const notice = NOTICES[route.query.hinweis] ?? ''
 // Nur Pfade innerhalb der App, kein //andere-seite.at
 function target() {
   const redirect = route.query.redirect
-  return typeof redirect === 'string' && redirect.startsWith('/') && !redirect.startsWith('//') ? redirect : '/learn'
+  return typeof redirect === 'string' && redirect.startsWith('/') && !redirect.startsWith('//') ? redirect : '/'
 }
 
 async function submit() {
