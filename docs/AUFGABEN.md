@@ -29,7 +29,7 @@ Meilensteine und Reihenfolge: `plans/README.md`. Entscheidungen: `ENTSCHEIDUNGEN
 - [ ] Löschlauf nach 12 Monaten und Hinweis-Mail 30 Tage vorher per Scheduler (E-028) @claude
 - [ ] Erneute Zustimmung bei neuer `terms_version` @claude
 - [ ] DNS umstellen, Neuregistrierung ankündigen, V1-Supabase abschalten @patsche
-- [ ] CMS-Handbuch für die Redaktion: Fächer, Themen, Fragen anlegen, Prüfen und Veröffentlichen (E-014), warum manches nicht löschbar ist @claude
+- [x] CMS-Handbuch für die Redaktion: Fächer, Themen, Fragen anlegen, Prüfen und Veröffentlichen (E-014), warum manches nicht löschbar ist @claude
 - [ ] Betriebshandbuch für Admins: Konten, Sperren, Löschfristen (E-027, E-028), Notfall-Befehl `learnharder:make-admin` @claude
 
 ## Nebenbei
@@ -39,6 +39,7 @@ Meilensteine und Reihenfolge: `plans/README.md`. Entscheidungen: `ENTSCHEIDUNGEN
 - [ ] `DemoSchoolSeeder`: prüfen, warum MEDT keine Themen bekommt @claude
 - [ ] Unit-Test für die Weiterleitung nach einer Sperre in `main.js` @claude
 - [ ] Python-Tests aus `scripts/` in die CI @claude
+- [ ] Fach im CMS: Feld „Icon“ nutzt die App nicht, Bild und Farbe hängen am URL-Kürzel (`subject-<kürzel>`, `color_token` nicht im Formular). Klären, dann Formular und `handbuch/redaktion.md` anpassen @claude
 - [ ] Testzentrale fertig durchklicken: Details, Suche, „Ältere ausblenden“ im Log @patsche
 
 ## Übergabe (E-029)
