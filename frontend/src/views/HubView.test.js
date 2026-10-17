@@ -114,11 +114,21 @@ describe('HubView', () => {
     expect(wrapper.find('.lh-card--featured').attributes('href')).toBe('/learn/pos/schleifen')
   })
 
-  it('hält Platz für Avatar und kommende Spiel-Elemente frei', async () => {
+  it('zeigt den Roboter: winkt, Stimmung nach Uhrzeit, Akku aus der Brainpower', async () => {
+    at(23)
     mockFetch({ status: 200, body: { data: { next_topic: NEXT } } })
     const { wrapper } = await show()
 
-    expect(wrapper.find('.hub__avatar').attributes('aria-label')).toBe('Avatar, kommt bald')
+    const robot = wrapper.find('.hub__avatar .robot')
+    expect(robot.attributes('aria-label')).toBe('Dein Roboter')
+    expect(robot.classes()).toEqual(expect.arrayContaining(['robot--sleepy', 'robot--wave']))
+    expect(robot.find('.robot__charge').attributes('width')).toBe(String(28 * 0.8))
+  })
+
+  it('hält Platz für kommende Spiel-Elemente frei', async () => {
+    mockFetch({ status: 200, body: { data: { next_topic: NEXT } } })
+    const { wrapper } = await show()
+
     const soon = wrapper.findAll('.hub__soonitem').map((item) => item.text())
     expect(soon).toEqual(['Streak', 'Herausforderung', 'Spielhalle', 'Liga-Platz', 'Shop', 'Erfolge'])
     expect(wrapper.find('.hub__soon a').exists()).toBe(false)

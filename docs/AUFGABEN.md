@@ -49,7 +49,10 @@ Meilensteine und Reihenfolge: `plans/README.md`. Entscheidungen: `ENTSCHEIDUNGEN
 
 - [ ] Avatar-Teile mit KI-Hilfe entwerfen und als PNG an Claude geben, Stil in Konzept Spielwelt §7 (E-031) @patsche
 - [ ] Werkzeug je Fach und Starter-Kit je Abteilung festlegen (Konzept Spielwelt §7) @patsche
-- [ ] Avatar-Engine mit Platzhalter-Teilen: Skelett, 8 Slots, Lackierung, Stimmungen, Posen (Konzept Spielwelt §7, E-031, E-033) @claude
+- [ ] Avatar: Starter-Kit je Abteilung, dafür die Abteilung in `/me` @claude
+- [ ] Avatar speichern: Teile, Pose und Lackierung am Konto, der Server prüft den Besitz (E-031) @claude
+- [ ] Avatar-Stimmung: Fakten vom Server (letzter Lerntag, Tage weg, noch nicht gesehener Aufstieg), zusammen mit den Hub-Zuständen (G1) @claude
+- [ ] Avatar: Reaktion beim Antippen, Porträt für Listen, `celebrate` auf dem Ergebnis der Lerneinheit (Konzept Spielwelt §7) @claude
 - [ ] Werkhalle: Klassenseite mit Posen, Klassenprojekt, Meilensteine (Opt-in) und Reaktionen (E-034) @claude
 
 ## G5 — Shop

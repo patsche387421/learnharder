@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240">
+  <path class="p-line" d="M100 18 C100 12 104 10 109 8"/>
+  <polygon class="p-accent" points="118,7 115,12.2 109,12.2 106,7 109,1.8 115,1.8"/>
+  <circle class="p-ink" cx="112" cy="7" r="2"/>
+</svg>
