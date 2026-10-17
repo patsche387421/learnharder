@@ -12,6 +12,7 @@ Pläne, Entscheidungen und Produktkonzepte für V2. Allgemeine Regeln: `../CLAUD
 | `plans/GAMIFICATION_OEKONOMIE_MODELL.md` | XP-, Level- und Brainpower-Formeln |
 | `plans/DATENMODELL_SCHULE.md` | Schule, Abteilungen, Klassen, Lehrkräfte, Registrierung |
 | `ENTSCHEIDUNGEN.md` | Entscheidungslog: was entschieden ist, was offen ist |
+| `AUFGABEN.md` | Alle offenen Aufgaben mit Zuständigkeit, Quelle für den Projekt-Tab der Testzentrale |
 | `design/` | Brand Book, Sprache & Glossar, Komponenten-Anleitungen. Kopie aus dem Design-System-Artefakt, Änderungen dort machen (siehe `frontend/src/styles/CLAUDE.md`) |
 
 ## Regeln
