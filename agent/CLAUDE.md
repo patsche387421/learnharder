@@ -14,10 +14,12 @@ Das V1-Protokoll und die V1-Prompts liegen unter `_archiv/agent/`.
 
 ## Ablauf einer Session
 
-1. `../CLAUDE.md`, die CLAUDE.md des betroffenen Ordners und `docs/plans/README.md` lesen.
+1. `../CLAUDE.md`, die CLAUDE.md des betroffenen Ordners, `docs/plans/README.md` und `docs/AUFGABEN.md` lesen.
+   Gibt es eine Aufgabe mit `!fokus`, mit ihr weitermachen, sonst eine `@claude`-Aufgabe vorschlagen.
 2. Branch prüfen (`dev` oder `feat/…`).
 3. In kleinen Schritten arbeiten. Jeder Schritt: Ankündigung → Änderung → roher Diff → OK → Commit.
-4. Am Ende: Eintrag in `SESSION_REPORT.md` (Datum, Branch, Commits, Ergebnis, offene Punkte).
+4. Am Ende: `docs/AUFGABEN.md` abgleichen, dann Eintrag in `SESSION_REPORT.md` (Datum, Branch, Commits, Ergebnis).
+   Offene Punkte stehen nur in `AUFGABEN.md`, der Report nennt, was neu dazukam.
 
 ## Subagent-Roster
 
