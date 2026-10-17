@@ -21,6 +21,9 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         // Sanctum-SPA-Modus: Anfragen von SANCTUM_STATEFUL_DOMAINS bekommen Session-Cookie und CSRF-Schutz
         $middleware->statefulApi();
+        // Ohne Login: Die API antwortet mit 401 (JSON), statt auf eine Route `login` umzuleiten, die es nicht gibt.
+        // Das CMS bringt mit Filament seine eigene Anmeldung mit.
+        $middleware->redirectGuestsTo(fn (Request $request) => $request->is('api/*') ? null : route('filament.admin.auth.login'));
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
