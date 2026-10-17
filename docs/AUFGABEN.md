@@ -35,10 +35,6 @@ Meilensteine und Reihenfolge: `plans/README.md`. Entscheidungen: `ENTSCHEIDUNGEN
 - [ ] Profil: Fach-Level-Liste wird bei vielen Fächern eng, „Fach-Level n“ bricht bei langen Fachnamen um @claude
 - [ ] Profil: Roboter-Bereich braucht viel Platz, kompakter machen @claude
 
-## G2 — Brainpower & Streaks
-
-- [ ] Shop, EP-Booster, Streak und Brainpower in der laufenden App ansehen, auch bei 320 und 360 px Breite @patsche
-
 ## G3 — Erfolge
 
 - [ ] „Erfolge“ ins Glossar des Design-Artefakts, danach Kopie `design/Sprache.md` @claude
