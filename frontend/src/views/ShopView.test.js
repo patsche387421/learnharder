@@ -90,6 +90,20 @@ describe('ShopView', () => {
     expect(useAuthStore().me.booster).toEqual(started.booster)
   })
 
+  it('der Roboter im Kopf zeigt die Brainpower und jubelt nur nach einem Kauf', async () => {
+    const started = { brainpower: { current: 20, max: 100 }, booster: { multiplier: 2, ends_at: '2026-10-17T12:37:00+00:00' } }
+    const { wrapper } = await show(shop(), { status: 201, body: { data: started } })
+    const robot = () => wrapper.find('.lh-shop__head .robot')
+
+    expect(robot().classes()).not.toContain('robot--celebrate')
+    expect(robot().find('.robot__charge').attributes('width')).toBe(String(28 * 0.6))
+
+    await wrapper.findAll('.lh-offer button')[1].trigger('click')
+    await flushPromises()
+    expect(robot().classes()).toContain('robot--celebrate')
+    expect(robot().find('.robot__charge').attributes('width')).toBe(String(28 * 0.2))
+  })
+
   it('zählt die Restzeit in Minuten und gibt die Angebote nach Ablauf wieder frei', async () => {
     const { wrapper } = await show(shop({ booster: { multiplier: 1.5, ends_at: '2026-10-17T12:09:30+00:00' } }))
 

@@ -3,12 +3,14 @@
 // Preise, Faktoren und Dauer kommen vom Server. Höchstens ein Booster läuft, die Restzeit zählt in Minuten.
 // Läuft einer, sagt das der Hinweis oben einmal, die Buttons verweisen darauf (aria-describedby).
 // Bringt heute keine Frage mehr EP (xp_left_today vom Server), sagt das ein Satz über den Angeboten. Kaufen bleibt möglich.
+// Im Kopf der eigene Roboter klein, Akku aus der Brainpower. Nach einem Kauf jubelt er einmal (neu eingehängt per key).
 import { computed, onMounted, ref } from 'vue'
 import LoadError from '../components/LoadError.vue'
 import LhArt from '../components/ui/LhArt.vue'
 import LhButton from '../components/ui/LhButton.vue'
 import LhCurrencyChip from '../components/ui/LhCurrencyChip.vue'
 import { getShop, startBooster } from '../api/shop.js'
+import RobotAvatar from '../avatar/RobotAvatar.vue'
 import { formatFactor, useBooster } from '../composables/useBooster.js'
 import { useLoad } from '../composables/useLoad.js'
 import { useAuthStore } from '../stores/auth.js'
@@ -23,6 +25,12 @@ onMounted(load)
 const running = useBooster(() => shop.value?.booster)
 
 const brainpower = computed(() => shop.value?.brainpower.current ?? 0)
+const battery = computed(() => {
+  const bp = shop.value?.brainpower
+  return bp?.max ? bp.current / bp.max : null
+})
+// Zählt die Käufe auf dieser Seite: neuer key, damit der Jubel auch beim zweiten Kauf noch einmal läuft
+const cheers = ref(0)
 
 // Grund unter dem Button, nur wenn die Brainpower nicht reicht. Läuft einer, steht der Grund oben im Hinweis
 function why(offer) {
@@ -38,6 +46,7 @@ async function buy(offer) {
     const result = await startBooster(offer.kind)
     shop.value = { ...shop.value, ...result }
     auth.applyProgress(result)
+    cheers.value++
   } catch (e) {
     buyError.value = e.message
   } finally {
@@ -50,7 +59,12 @@ async function buy(offer) {
   <div class="lh-shop">
     <div class="lh-shop__head">
       <h1 class="h1 shop__title">Shop</h1>
-      <LhCurrencyChip v-if="shop" icon="icon-brainpower" :value="brainpower" label="Brainpower" />
+      <div v-if="shop" class="shop__side">
+        <div class="shop__robot">
+          <RobotAvatar :key="cheers" :action="cheers ? 'celebrate' : null" :battery="battery" label="Dein Roboter" />
+        </div>
+        <LhCurrencyChip icon="icon-brainpower" :value="brainpower" label="Brainpower" />
+      </div>
     </div>
 
     <p v-if="loading && !shop" class="shop__muted" aria-live="polite">Lädt …</p>
@@ -93,6 +107,8 @@ async function buy(offer) {
 
 <style scoped>
 .shop__title { margin: 0; color: var(--ink); }
+.shop__side { display: flex; align-items: center; gap: var(--space-2); }
+.shop__robot { flex: none; width: 48px; height: 58px; }
 .shop__muted { margin: 0; color: var(--ink-muted); }
 .shop__error { margin: 0; font: 400 14px/20px var(--font-text); color: var(--wrong); }
 </style>
