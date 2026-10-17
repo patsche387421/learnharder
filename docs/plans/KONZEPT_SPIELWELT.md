@@ -75,7 +75,7 @@ Bei vier Abteilungen sind das etwa 31 Zeichnungen plus Werkzeuge.
 
 **Akku.** Der Akku zeigt die Brainpower, die sich täglich auflädt. Ist sie niedrig, zeigt ein Blitz, dass er lädt. Keine rote Warnung.
 
-**Größen.** Ab 72 px (Platz im Hub) die ganze Figur, in Listen (32–40 px) nur ein Porträt aus Kopf, Aufsatz und Display, als statisches Bild ohne Animation.
+**Größen.** Ab etwa 96 px Breite (Platz im Hub) die ganze Figur, kleiner ist das Display nicht mehr lesbar, in Listen (32–40 px) nur ein Porträt aus Kopf, Aufsatz und Display, als statisches Bild ohne Animation.
 
 **Stimmungen.** Das Display zeigt eine Stimmung. Die App wählt sie aus Fakten des Servers (letzter Lerntag, Aufstieg, neue Erfolge) und der Uhrzeit des Geräts, passend zur Begrüßung im Hub. Es gilt die oberste, die zutrifft:
 
@@ -83,9 +83,9 @@ Bei vier Abteilungen sind das etwa 31 Zeichnungen plus Werkzeuge.
 |---|---|---|
 | Stolz | Aufstieg, Erfolg oder neue Werkzeug-Stufe, noch nicht gesehen | einmal `celebrate`, danach strahlende Augen |
 | Wiedersehen | zurück nach 3 oder mehr Tagen | `wave`, große Augen. Text „Schön, dass du da bist“, nie „Wo warst du?“ |
+| Müde | 22 bis 5 Uhr Gerätezeit | halb geschlossene Augen, „zZz“. Antippen weckt ihn mit Gähnen und `wave` |
 | Zufrieden | heute schon gelernt | entspanntes Lächeln, ruhigeres `idle` |
 | Neugierig (Standard) | heute noch nicht gelernt, erster Besuch | Blick wandert ab und zu zu „Weiterlernen“ |
-| Müde | 22 bis 5 Uhr Gerätezeit | halb geschlossene Augen, „zZz“. Antippen weckt ihn mit Gähnen und `wave` |
 
 Kurze Reaktionen gehen vor: `think`, während eine Quiz-Antwort geprüft wird, Sternaugen nach einem fehlerfreien Quiz, ein „?“ auf der 404-Seite. Antippen löst eine kleine Reaktion aus (blinzeln, Räder drehen, Antenne wackeln). Am Jahrestag des Kontos trägt er einen Tag lang einen Partyhut.
 

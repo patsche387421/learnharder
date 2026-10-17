@@ -23,6 +23,8 @@ npm --prefix frontend run check:tokens   # tokens.css gegen tokens.json prüfen
 src/
   styles/       Design-System (Wahrheit) → styles/CLAUDE.md
   assets/icons/ subjects/, game/ (illustriert, als <img>), ui/ (einfarbig, currentColor). Regeln im README.md je Ordner
+  assets/avatar/ Avatar-Teile als SVG je Slot, Format im README.md dort
+  avatar/       Avatar-Engine: RobotAvatar.vue, Katalog, Lackierungen, Posen, Gesichter, Stimmung
   components/   wiederverwendbare UI-Bausteine (nutzen lh-Klassen)
   views/        Seiten (eine pro Route)
   stores/       Pinia-Stores (auth, user, quiz)
@@ -42,15 +44,16 @@ public/assets/fonts/   selbst gehostete Schriften (keine CDNs)
 - Keine Secrets im Frontend. Konfiguration über `import.meta.env.VITE_*`.
 - `public/` wird 1:1 ausgeliefert, deshalb dort keine CLAUDE.md und keine internen Notizen.
 
-## Stand (2026-10-16, nach M4a)
+## Stand (2026-10-17, nach G1 Hub und G4 Avatar-Engine)
 
 - **Ankommen (M4a, E-025, E-027):** ohne Login und ohne Rahmen. `meta.guest` schickt Angemeldete weiter zu `/learn`. `LoginView` verlinkt `RegisterView` (`/registrieren`: Schul-Mail → Code → Gamer-Tag, Passwort, Häkchen ab 14 und Zustimmung) und `ForgotPasswordView` (`/passwort-vergessen`) und zeigt danach Hinweise über `?hinweis=passwort|geloescht`. `LegalView` zeigt `/datenschutz`, `/impressum`, `/nutzungsregeln` und `/einwilligung-eltern` (beim Drucken ohne „Zurück“).
 - **Login:** Der Router-Guard schickt ohne Login zu `/login`, eine 401 leert den Store. Eine 403 mit `reason: account_deactivated` leert ihn auch und führt zu `/login?gesperrt=1` (`main.js`).
 - **API:** `api/client.js` ist der einzige Ort mit `fetch` (Cookies, `X-XSRF-TOKEN`, bei 419 ein gemeinsamer CSRF-Refresh und genau eine Wiederholung, deutsche Fehlertexte). `api/learn.js` bündelt die Lern-Routen, `api/account.js` Registrierung, Rechtstexte und Passwort. Basis-URL aus `VITE_API_URL` (`.env.example`, lokal `.env.local`).
 - **Store:** `stores/auth.js` hält `me`, daraus Level, Rang und Prestige für den Rahmen. `register()` und `deleteAccount()` für M4a. `isStaff`: Personal-Rolle. `waitingForClass`: keine Klasse und kein Personal (E-024). `applyProgress` übernimmt den Fortschritt nach einer Lerneinheit.
 - **Lernen:** `/learn` → `LearnView` (Fächer mit Fach-Level) → `SubjectView` (Themen) → `TopicView` → `TheoryView` und `LessonView` (beide `meta.focus`, ohne Tab-Leiste). Laden und Fehler über `composables/useLoad.js` und `LoadError`. Ohne Klasse zeigt `LearnView` „Noch keiner Klasse zugeordnet.“
-- **Profil:** `ProfileView` zeigt Gamer-Tag, Klasse, „Abmelden“ und die Rechtstexte, dazu für Schüler:innen „Konto löschen“ (`/profile/delete`, `meta.focus`, nur mit Passwort).
-- **Hub (G1):** `/` → `HubView`: Begrüßung nach Tageszeit, Level, EP und Brainpower aus `auth.me`, „Weiterlernen“ aus `GET /hub` (`api/hub.js`). Avatar und kommende Spiel-Elemente sind Platzhalter („Bald“).
+- **Profil:** `ProfileView` zeigt Gamer-Tag, Klasse, den Roboter mit Slots, „Abmelden“ und die Rechtstexte, dazu für Schüler:innen „Konto löschen“ (`/profile/delete`, `meta.focus`, nur mit Passwort). Pose und Lackierung sind nur Vorschau, gespeichert wird noch nichts.
+- **Hub (G1):** `/` → `HubView`: Begrüßung nach Tageszeit, Level, EP und Brainpower aus `auth.me`, „Weiterlernen“ aus `GET /hub` (`api/hub.js`). Der Roboter winkt beim Öffnen, Stimmung nach Gerätezeit, Akku aus der Brainpower. Kommende Spiel-Elemente sind Platzhalter („Bald“).
+- **Avatar (G4):** `avatar/RobotAvatar.vue` legt die Teile aus `assets/avatar/` übereinander und zeichnet Display, Akku und Bewegung selbst (nur `transform` und `opacity`, außerhalb des Bildes pausiert). `avatar/catalog.test.js` prüft das Format jeder Teil-Datei. Die Teile sind Platzhalter von Claude.
 - **Offen:** Team und Liga sind noch `PlaceholderView`.
 
-14 `Lh`-Bausteine in `src/components/ui/` (seit M4a mit `LhCheckbox` und `LhButton variant="danger"`, Design-Artefakt Version 29), jeder mit Test. `/styleguide` zeigt alle Tokens, Icons und Bausteine (nur in der Entwicklung). Beide Schriften liegen selbst gehostet in `public/assets/fonts/`. In WSL2 sind 135 Tests, `build` und `check:tokens` grün.
+14 `Lh`-Bausteine in `src/components/ui/` (seit M4a mit `LhCheckbox` und `LhButton variant="danger"`, Design-Artefakt Version 29), jeder mit Test. `/styleguide` zeigt alle Tokens, Icons und Bausteine (nur in der Entwicklung). Beide Schriften liegen selbst gehostet in `public/assets/fonts/`. In WSL2 sind 153 Tests, `build` und `check:tokens` grün.

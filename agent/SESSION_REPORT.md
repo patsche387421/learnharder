@@ -401,3 +401,15 @@ V1-Protokoll: `_archiv/agent/SESSION_REPORT.md` und `SESSION_REPORT_ARCHIVE.md`.
   - Klasse: Werkhalle, Klassenprojekt mit Klassenfoto, Meilensteine nur nach Opt-in, Reaktionen nur gezählt (E-034). Alles in `plans/KONZEPT_SPIELWELT.md` §7.
 - **Geprüft:** Nur Doku. Abteilung über Klasse → Ausbildungsgang → Abteilung im Schema nachgesehen. Keine Tests gelaufen.
 - **Offen:** neu in `docs/AUFGABEN.md` unter G4: wer die endgültigen Teile zeichnet, Werkzeug je Fach und Starter-Kit je Abteilung, Avatar-Engine mit Platzhaltern, Werkhalle.
+
+## 2026-10-17 — Avatar-Stil und Avatar-Engine (G4)
+
+- **Branch:** `dev` für die Doku, `feat/avatar` für die Engine, danach mit `--no-ff` nach `dev`. Nicht gepusht.
+- **Commits:** `8ef68e2` (Avatar-Stil, Leistung und Schutz vor Mobbing), dazu die Engine und dieser Eintrag.
+- **Ergebnis:**
+  - Stil: Werkstatt-Roboter mit LED-Punktmatrix, warme Farben, Akzent = Abteilung. Referenz `docs/plans/avatar-referenz-v1.webp` (KI-Entwurf, austauschbar). Akku für andere unsichtbar, Grundausstattung ohne Anfänger-Stigma (Präzisierungen zu E-031 und E-034).
+  - Engine `frontend/src/avatar/`: `RobotAvatar.vue` legt SVG-Teile auf einer Fläche (200 × 240) übereinander, Arme gespiegelt, Werkzeug an der rechten Hand. Display mit 6 Gesichtern, Akku mit Blitz, Posen, `wave`, `celebrate`, `think`, Atmen, Blinzeln, Antenne. Nur `transform` und `opacity`, pausiert außerhalb des Bildes, still bei `prefers-reduced-motion`. `pickMood` wählt die Stimmung, Müde geht vor Zufrieden (Tabelle im Konzept angepasst).
+  - Platzhalter-Teile, Vorlage und Format-Regeln in `frontend/src/assets/avatar/`. Ein Test prüft jede Teil-Datei (Fläche, Klassen, keine Farben, unter 3 KB).
+  - Hub: Roboter neben der Begrüßung (96 px statt 72, sonst ist das Display nicht lesbar). Profil: Roboter mit Slot-Liste, Pose und Lackierung als Vorschau ohne Speichern.
+- **Geprüft:** Frontend 153 Tests grün (18 neu), `build` und `check:tokens` grün. Varianten als statisches SVG gerendert und mit Chrome ohne Fenster angesehen. In der laufenden App nicht angesehen.
+- **Offen:** neu in `docs/AUFGABEN.md` unter G4: Starter-Kit je Abteilung, Avatar speichern, Stimmungs-Fakten vom Server, Antippen, Porträt und `celebrate` auf dem Ergebnis.
