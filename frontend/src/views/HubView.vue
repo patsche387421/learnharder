@@ -1,6 +1,7 @@
 <script setup>
 // Hub (Startseite, Konzept Spielwelt §4): Begrüßung nach Tageszeit, Level und Brainpower aus /me, „Weiterlernen“ aus /hub.
-// Platz für später: Avatar neben der Begrüßung (G4), Spielhalle und die anderen Spiel-Elemente im Raster „Bald“.
+// Neben der Begrüßung der Avatar (G4): winkt beim Öffnen, Stimmung nach Gerätezeit, Akku zeigt die Brainpower.
+// Platz für später: Spielhalle und die anderen Spiel-Elemente im Raster „Bald“.
 import { computed, onMounted } from 'vue'
 import LoadError from '../components/LoadError.vue'
 import LhArt from '../components/ui/LhArt.vue'
@@ -10,6 +11,8 @@ import LhEmptyState from '../components/ui/LhEmptyState.vue'
 import LhLevelBadge from '../components/ui/LhLevelBadge.vue'
 import LhXpBar from '../components/ui/LhXpBar.vue'
 import { getHub } from '../api/hub.js'
+import { pickMood } from '../avatar/mood.js'
+import RobotAvatar from '../avatar/RobotAvatar.vue'
 import { useLoad } from '../composables/useLoad.js'
 import { useAuthStore } from '../stores/auth.js'
 
@@ -43,6 +46,13 @@ const greeting = computed(() => {
 
 const next = computed(() => hub.value?.next_topic ?? null)
 
+// Weitere Fakten für die Stimmung (letzter Lerntag, Aufstieg) liefert der Server noch nicht
+const mood = pickMood({ now: new Date() })
+const battery = computed(() => {
+  const bp = auth.me?.brainpower
+  return bp?.max ? bp.current / bp.max : null
+})
+
 const levelBar = computed(() => {
   const xp = auth.me?.xp
   return xp ? { value: xp.total - xp.level_start, max: xp.next_level - xp.level_start, left: xp.next_level - xp.total } : null
@@ -59,8 +69,9 @@ const nextStep = computed(() => (auth.player.level < 100 ? `Level ${auth.player.
         <h1 class="hub__title">{{ greeting }}</h1>
         <p v-if="next" class="hub__sub">Weiter mit {{ next.title }}? 5 Min. reichen.</p>
       </div>
-      <!-- Platzhalter für den Avatar (G4) -->
-      <div class="hub__avatar" role="img" aria-label="Avatar, kommt bald"><span aria-hidden="true">Bald</span></div>
+      <div class="hub__avatar">
+        <RobotAvatar :mood="mood" action="wave" :battery="battery" label="Dein Roboter" />
+      </div>
     </header>
 
     <section class="hub__progress lh-card" aria-label="Fortschritt">
@@ -121,10 +132,7 @@ const nextStep = computed(() => (auth.player.level < 100 ? `Level ${auth.player.
 .hub__hello { display: grid; gap: var(--space-1); }
 .hub__title { margin: 0; font: 700 26px/32px var(--font-text); color: var(--ink); }
 .hub__sub { margin: 0; color: var(--ink-muted); }
-.hub__avatar {
-  flex: none; display: grid; place-items: center; width: 72px; height: 72px; border-radius: var(--radius-full);
-  border: 2px dashed var(--line-strong); font: 400 13px/16px var(--font-mono); color: var(--ink-muted);
-}
+.hub__avatar { flex: none; width: 96px; height: 116px; }
 .hub__progress { display: grid; gap: var(--space-3); }
 .hub__level { display: flex; align-items: center; gap: var(--space-3); }
 .hub__levelname { flex: 1; font: 700 16px/24px var(--font-text); color: var(--ink); }

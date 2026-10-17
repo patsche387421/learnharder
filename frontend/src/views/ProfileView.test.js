@@ -26,7 +26,7 @@ describe('ProfileView', () => {
 
     expect(wrapper.text()).toContain('lena42')
     expect(wrapper.text()).not.toContain('Klasse')
-    await wrapper.find('button').trigger('click')
+    await wrapper.findAll('button').find((b) => b.text() === 'Abmelden').trigger('click')
     await flushPromises()
     expect(useAuthStore().me).toBeNull()
     expect(router.currentRoute.value.path).toBe('/login')
@@ -41,6 +41,30 @@ describe('ProfileView', () => {
 
     expect(wrapper.findAll('.lh-card')[1].text()).toContain('Klasse')
     expect(wrapper.findAll('.lh-card')[1].text()).toContain('2AHIT')
+  })
+
+  it('zeigt den Roboter mit Grundausstattung, Pose und Lackierung als Vorschau', async () => {
+    useAuthStore().me = { gamer_tag: 'lena42', brainpower: { current: 50, max: 100 } }
+    const router = testRouter()
+    router.push('/profile')
+    await router.isReady()
+    const wrapper = mount(ProfileView, { global: { plugins: [router] } })
+
+    const section = wrapper.find('.profile__robot')
+    expect(section.find('.robot').attributes('aria-label')).toBe('Dein Roboter')
+    expect(section.find('.robot__charge').attributes('width')).toBe('14')
+    expect(section.text()).toContain('Antrieb')
+    expect(section.text()).toContain('Beine')
+    expect(section.text()).toContain('Leer, das erste kommt mit Fach-Level 3')
+
+    const choose = (name) => section.findAll('button').find((b) => b.text() === name)
+    await choose('Jubeln').trigger('click')
+    expect(choose('Jubeln').attributes('aria-pressed')).toBe('true')
+    expect(section.find('.robot__arm--left').element.style.getPropertyValue('--pose')).toBe('140deg')
+
+    await choose('Graphit').trigger('click')
+    expect(section.find('.robot').element.style.getPropertyValue('--paint-main')).toBe('#5F5A52')
+    expect(section.text()).toContain('Graphit')
   })
 
   it('Konto löschen nur für Schüler:innen, Rechtstexte für alle', async () => {
