@@ -74,7 +74,7 @@ Regeln:
 |---|---|---|
 | Fächer | Lernen / Learn | Nur freigeschaltete Fächer |
 | Social | Team / Team | Team, Team-Herausforderungen |
-| **Hub** (Startseite) | *das eigene Level-Badge* | Streak, Weiterlernen, Prüfung, Herausforderung, Kampagne |
+| **Hub** (Startseite) | *das eigene Level-Badge* | Streak, Weiterlernen, Prüfung, Herausforderung, Kampagne, Shop |
 | Ranglisten | Liga / League | Monatliche Liga |
 | Profil | Profil / Profile | Errungenschaften, Einstellungen |
 
@@ -104,6 +104,7 @@ Dateinamen sind englisch (`subject-pos`, `icon-xp`, `ui-learn`). Patina kommt in
 | `CurrencyChip` | Brainpower, Trophäen, Streak, EP |
 | `SubjectCard` | Fach mit Fortschritt oder gesperrt |
 | `AnswerOption` | Antwort im Quiz: ausgewählt, richtig, falsch |
+| `Shop` | Brainpower einsetzen: Abschnitte mit Angeboten, zuerst EP-Booster |
 | `LearnFlow` | Hub (Alltag und Prüfung) → Thema → Fragen mit Feedback → Ergebnis; Theorie-Modus |
 
 ## Qualitätscheck vor dem Release

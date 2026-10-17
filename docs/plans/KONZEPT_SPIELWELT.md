@@ -105,7 +105,7 @@ Kurze Reaktionen gehen vor: `think`, während eine Quiz-Antwort geprüft wird, S
 
 **Kein Zufall** (E-032). Jedes Teil hat eine sichtbare Quelle: Fach-Level, Erfolg, Trophäen oder der Shop, später Minispiele und eine Lackierung je Saison fürs Mitmachen, nicht für den Platz. Eine Bauplan-Ansicht zeigt alle Teile und wie man sie bekommt. Keine Lootboxen, keine Zufalls-Drops.
 
-**Ökonomie.** Der Shop ist eine neue Brainpower-Senke neben Booster und Challenge. Die Preise kommen vor G5 als §3.4 ins Ökonomie-Modell.
+**Ökonomie.** Der Shop ist der Ort, an dem man Brainpower einsetzt: EP-Booster seit G2 (E-037), dazu in G5 Teile und Animationen in eigenen Abschnitten. Herausforderungen kosten Brainpower außerhalb des Shops. Die Preise kommen vor G5 als §3.4 ins Ökonomie-Modell.
 
 **Stil.** Ein Schulprojekt aus der HTL-Werkstatt: sichtbare Schrauben, Klebeband, Kabelbinder, Aufkleber, eine Sechskantmutter auf der Antenne. Das Display ist eine LED-Punktmatrix. Flach, gleichmäßige dunkle Kontur, ohne Verlauf, Schatten und Leuchten. Warme Farben aus dem Design-System, der Akzent ist die Farbe der Abteilung, nie Patina (nur Prestige) und nie Grün (richtig).
 
