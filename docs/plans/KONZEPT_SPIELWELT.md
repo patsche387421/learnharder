@@ -19,8 +19,8 @@ Alleinstellungsmerkmale: ein Hub, der auf die Person reagiert, ein eigener Avata
 ## 3. Was es schon gibt
 
 - EP, Level, Rang, Prestige und Fach-Level rechnet der Server (`User::progression`), die App bekommt sie über `GET /api/v1/me`.
-- Spalten ohne Logik: `users.brainpower_current` und `brainpower_max` (schon in `/me`), `user_stats.trophies`, `current_streak`, `longest_streak`, `last_study_date`.
-- Hub (`/`) und Profil nach §4, ohne Streak und Erfolge (Stand 2026-10-17).
+- Streak und Brainpower-Aufladen rechnet der Server (Stand 2026-10-17, E-036), Ausgeben noch nicht. Ohne Logik: `user_stats.trophies`.
+- Hub (`/`) und Profil nach §4, ohne Erfolge. Den längsten Streak zeigt bisher nur das Profil (Stand 2026-10-17).
 
 ## 4. Hub und Profil (G1)
 
@@ -105,7 +105,7 @@ Kurze Reaktionen gehen vor: `think`, während eine Quiz-Antwort geprüft wird, S
 
 **Kein Zufall** (E-032). Jedes Teil hat eine sichtbare Quelle: Fach-Level, Erfolg, Trophäen oder der Shop, später Minispiele und eine Lackierung je Saison fürs Mitmachen, nicht für den Platz. Eine Bauplan-Ansicht zeigt alle Teile und wie man sie bekommt. Keine Lootboxen, keine Zufalls-Drops.
 
-**Ökonomie.** Der Shop ist eine neue Brainpower-Senke neben Booster und Challenge. Die Preise kommen vor G5 als §3.4 ins Ökonomie-Modell.
+**Ökonomie.** Der Shop ist der Ort, an dem man Brainpower einsetzt: EP-Booster seit G2 (E-037), dazu in G5 Teile und Animationen in eigenen Abschnitten. Herausforderungen kosten Brainpower außerhalb des Shops. Die Preise kommen vor G5 als §3.4 ins Ökonomie-Modell.
 
 **Stil.** Ein Schulprojekt aus der HTL-Werkstatt: sichtbare Schrauben, Klebeband, Kabelbinder, Aufkleber, eine Sechskantmutter auf der Antenne. Das Display ist eine LED-Punktmatrix. Flach, gleichmäßige dunkle Kontur, ohne Verlauf, Schatten und Leuchten. Warme Farben aus dem Design-System, der Akzent ist die Farbe der Abteilung, nie Patina (nur Prestige) und nie Grün (richtig).
 

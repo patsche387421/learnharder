@@ -6,6 +6,7 @@ use App\Exceptions\AccountRuleViolation;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\MeResource;
 use App\Support\Accounts;
+use App\Support\Brainpower;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -37,6 +38,8 @@ class AuthController extends Controller
         $guard->login($user);
         $request->session()->regenerate();
 
+        Brainpower::refill($request->user());
+
         return new MeResource($request->user());
     }
 
@@ -51,6 +54,8 @@ class AuthController extends Controller
 
     public function me(Request $request): MeResource
     {
+        Brainpower::refill($request->user());
+
         return new MeResource($request->user());
     }
 

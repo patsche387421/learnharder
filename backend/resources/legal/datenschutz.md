@@ -20,7 +20,7 @@ Fragen zum Datenschutz: [[E-Mail]]. [[Datenschutzbeauftragte:r, falls vorhanden]
 | Passwort, nur als Hash (niemand kann es lesen) | Anmelden | bis dein Konto gelöscht ist |
 | Zeitpunkt deiner Zustimmung und die Fassung dieser Erklärung | Nachweis deiner Einwilligung | bis dein Konto gelöscht ist |
 | Klasse und Schuljahr (trägt ein Admin ein) | du siehst die Fächer deiner Klasse | bis dein Konto gelöscht ist |
-| Lernfortschritt: Lerneinheiten (Thema, Zeitpunkt, Ergebnis), deine Antworten je Frage (gewählte Antworten, richtig oder falsch, Erfahrungspunkte), Erfahrungspunkte gesamt | Level, Fach-Level, Erfahrungspunkte je Frage höchstens einmal am Tag | bis dein Konto gelöscht ist |
+| Lernfortschritt: Lerneinheiten (Thema, Zeitpunkt, Ergebnis), deine Antworten je Frage (gewählte Antworten, richtig oder falsch, Erfahrungspunkte), Erfahrungspunkte gesamt, Streak (Lerntage in Folge, längste Serie, letzter Lerntag), Brainpower (Stand, Tag des letzten Aufladens), laufender Booster (Faktor, Ende, bei jeder Antwort der Faktor) | Level, Fach-Level, Streak, Brainpower, Booster, Erfahrungspunkte je Frage höchstens einmal am Tag | bis dein Konto gelöscht ist |
 | Zeitpunkt der letzten Anmeldung | Löschen nach 12 Monaten ohne Anmeldung | bis dein Konto gelöscht ist |
 | Sitzung: IP-Adresse, Browser-Kennung, letzte Aktivität | angemeldet bleiben, Missbrauch erkennen | bis zum Abmelden, spätestens 2 Stunden ohne Aktivität |
 | Codes per Mail, nur als Hash | Registrierung, neues Passwort | 10 Minuten |

@@ -37,7 +37,6 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Administrator',
                 'gamer_tag' => 'AdminRoot',
                 'brainpower_current' => 200,
-                'brainpower_max' => 200,
                 'password' => Hash::make('learnharder123'),
             ]
         );
@@ -50,7 +49,6 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Content Autor',
                 'gamer_tag' => 'ContentCreator',
                 'brainpower_current' => 150,
-                'brainpower_max' => 150,
                 'password' => Hash::make('learnharder123'),
             ]
         );
@@ -63,7 +61,6 @@ class DatabaseSeeder extends Seeder
                 'name' => 'QA Tester',
                 'gamer_tag' => 'BugHunter',
                 'brainpower_current' => 100,
-                'brainpower_max' => 100,
                 'password' => Hash::make('learnharder123'),
             ]
         );
@@ -76,7 +73,6 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Prof. Dr. Mustermann',
                 'gamer_tag' => 'ProfMuster',
                 'brainpower_current' => 100,
-                'brainpower_max' => 100,
                 'password' => Hash::make('learnharder123'),
             ]
         );
@@ -88,8 +84,6 @@ class DatabaseSeeder extends Seeder
             [
                 'gamer_tag' => 'CodeNinja99',
                 'brainpower_current' => 100,
-                'brainpower_max' => 100,
-                'current_streak' => 5,
                 'password' => Hash::make('learnharder123'),
             ]
         );

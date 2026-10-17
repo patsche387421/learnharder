@@ -427,3 +427,16 @@ V1-Protokoll: `_archiv/agent/SESSION_REPORT.md` und `SESSION_REPORT_ARCHIVE.md`.
   - `.git` war durch einen abgebrochenen Schreibvorgang beschädigt (8 leere Objekte, Branch auf leerem Commit). Repariert, `fsck` sauber, Sicherung im Scratchpad der Session.
 - **Geprüft:** Backend 273 Tests grün, `pint --test` sauber. Frontend 163 Tests grün, `build` und `check:tokens` grün. In der laufenden App nicht angesehen.
 - **Offen:** neu in `docs/AUFGABEN.md`: Hub und Profil in der App ansehen (Patsche), längster Streak im Profil (G2). Die Zuordnung Rang → Name steht dreimal im Code (`LhLevelBadge`, Hub, Profil), nicht als Aufgabe eingetragen.
+
+## 2026-10-17 — G2: Streak, Brainpower, EP-Booster und Shop
+
+- **Branch:** `feat/g2-brainpower`, danach mit `--no-ff` nach `dev`. Nicht gepusht.
+- **Commits:** `a1dfe92` (Streak), `015754f` (längster Streak im Profil), `108c5c6` (Brainpower mit Maximum und Aufladen, E-036), `4df8ec7` (Booster im Backend), `cf0ea9d` (Shop-Design aus dem Artefakt, E-037), `8448a61` (Shop-Seite), `e82ba83` (Hub führt in den Shop), `50e947c` (Booster-Anteil in der Lerneinheit), dazu dieser Doku-Commit.
+- **Ergebnis:**
+  - Streak: eine abgeschlossene Lerneinheit am Kalendertag in Wien zählt, ein ausgelassener Tag setzt auf 0. `users.current_streak` entfällt, der Streak steht nur in `user_stats`.
+  - Brainpower (E-036): Maximum aus dem Level, ab Prestige 1 fest 200. Aufladen einmal je Tag in Wien beim ersten Lesen, ohne Scheduler. Werte in `config/gamification.php`.
+  - EP-Booster: Kauf über `POST /boosters` unter Sperre, nur der laufende Booster steht am Konto, jede Antwort merkt sich ihren Faktor. Es zählt der Booster beim Antworten, die Tagesregel (E-015) bleibt.
+  - Shop (E-037): erst im Design-Artefakt (Version 32: Komponente `Shop`, Marken, `icon-booster`, Glossar), dann Kopie ins Repo und Vue-Seite `/shop`. Hub mit Shop-Zeile, Chip als Link, Marke auf „Weiterlernen“. In der Lerneinheit nur „2×“, im Ergebnis der Anteil.
+  - Datenschutzerklärung (Entwurf) um Streak, Brainpower und Booster ergänzt.
+- **Geprüft:** Backend 312 Tests grün, `pint --test` sauber. Frontend 179 Tests grün, `build` und `check:tokens` grün. Shop-Design als Vorschau in hell und dunkel mit Chrome gerendert, Kontraste nachgerechnet. In der laufenden App nicht angesehen. Die App wurde einmal mitten in der Arbeit beendet, danach war `.git` heil (`fsck`), Sail musste neu gestartet werden.
+- **Offen:** neu in `docs/AUFGABEN.md` unter G2: ansehen (Patsche), Hinweis „Heute bringen deine Themen keine EP mehr“, Streak im Hub, Herausforderung, Jubel beim Kauf.

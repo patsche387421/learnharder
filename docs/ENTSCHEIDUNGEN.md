@@ -184,6 +184,16 @@ Jede Entscheidung: Nummer, Datum, was, warum, Folgen. Offene Fragen stehen unten
 - **Warum:** Das Design-Artefakt ist die Quelle (E-006) und baut die Leiste für genau fünf Ziele. Ausblenden bräuchte dort eine Änderung, die zum Start wieder zurückkäme.
 - **Folgen:** Ersetzt den Teil von E-022 zur Tab-Leiste. Team und Liga (G6, nach O-006) werden Startbedingung. Für diese beiden Seiten gilt damit nicht mehr, dass die Liga erst nach dem Start kommt (E-021) und der Start nicht auf die Spielwelt wartet (E-030).
 
+### E-036 — Brainpower: Aufladen um Mitternacht in Wien, Maximum ab Prestige fest (2026-10-17)
+- **Entscheidung:** Brainpower lädt sich einmal je Kalendertag in `Europe/Vienna` auf, nicht um 00:00 UTC. Das Maximum folgt dem Level (Ökonomie-Modell §3.1), ab Prestige 1 bleibt es beim Deckel von 200. Aufgeladen wird beim ersten Lesen an einem neuen Tag, verpasste Tage zählen mit, bis zum Maximum.
+- **Warum:** Derselbe Tag wie bei EP (E-015) und Streak, sonst lädt sich Brainpower um 1 oder 2 Uhr nachts auf. Ohne festes Maximum fiele es beim Prestige von 200 auf 100, das wäre eine Strafe für die Fleißigsten (E-010). Mehr Kapazität je Prestige brächte einen Vorteil in der Rangliste, weil Booster EP bringen. Prestige belohnen Kosmetik und Trophäen. Aufladen beim Lesen braucht keinen Scheduler und keinen nächtlichen Schreibvorgang für alle Konten.
+- **Folgen:** Werte in `config/gamification.php`, Rechnung in `App\Support\Brainpower`. `users.brainpower_max` entfällt, neu ist `users.brainpower_refilled_on`. Ökonomie-Modell §3.1 und §3.2 entsprechend ergänzt.
+
+### E-037 — EP-Booster im Shop, Shop-Zeile im Hub, ruhige Marken (2026-10-17)
+- **Entscheidung:** EP-Booster kauft man im Shop, einer Seite mit Abschnitten: zuerst „EP-Booster“, in G5 Roboter-Teile und Animationen. In den Shop führen eine ruhige Zeile im Hub und als Abkürzung der Brainpower-Chip. Ein laufender Booster zeigt sich als Marke auf „Weiterlernen“ („2× EP · 23 Min.“) und als „2×“ am Chip, in der Lerneinheit nur als „2×“ ohne Restzeit. Kein Leuchten, kein Countdown in Sekunden, kein Bestätigungsdialog.
+- **Warum:** Ein Ort für alles, was Brainpower kostet, statt eines eigenen Dialogs jetzt und eines Shops später. Die Zeile im Hub findet man, einen antippbaren Chip kaum. Die Marke auf „Weiterlernen“ lenkt zum Lernen statt zum Ausgeben. Dauerndes Leuchten oder eine Sekunden-Uhr machen Druck, das widerspricht der ruhigen Oberfläche (Konzept Spielwelt §2) und dem Fokus ohne Zeitdruck (LearnFlow). Vor dem Kauf sagt der Shop ehrlich, dass der Faktor nur für Fragen gilt, die heute noch EP bringen (E-015).
+- **Folgen:** Design im Artefakt (Version 32, E-006): Komponente `Shop`, Marken `lh-chip__boost` und `lh-tag--boost`, `icon-booster`, Glossar „EP-Booster“ und „Shop“. Booster (Vorteil) und Roboter-Teile (Kosmetik) stehen nie im selben Abschnitt. Der Hinweis „Heute bringen deine Themen keine EP mehr“ braucht eine Angabe vom Server.
+
 ## Offen
 
 | Nr. | Frage | Empfehlung | Warum offen |

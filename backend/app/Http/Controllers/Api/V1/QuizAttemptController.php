@@ -9,6 +9,7 @@ use App\Models\Question;
 use App\Models\QuestionAnswer;
 use App\Models\QuizAttempt;
 use App\Models\Topic;
+use App\Support\Booster;
 use App\Support\DailyXp;
 use App\Support\Progression;
 use Illuminate\Http\JsonResponse;
@@ -90,14 +91,15 @@ class QuizAttemptController extends Controller
         // Nur die erste Antwort zählt. Spätere Antworten auf dieselbe Frage sind die Wiederholung am Ende (0 EP).
         $answer = QuestionAnswer::createOrFirst(
             ['quiz_attempt_id' => $attempt->id, 'question_id' => $question->id],
-            ['user_id' => $attempt->user_id, 'selected_option_ids' => $selected, 'is_correct' => $isCorrect],
+            ['user_id' => $attempt->user_id, 'selected_option_ids' => $selected, 'is_correct' => $isCorrect,
+                'xp_multiplier' => Booster::multiplier($request->user())],
         );
         // Dieselbe erste Antwort noch einmal (z. B. nach einem Netzfehler) ist keine Wiederholung
         $repeat = ! $answer->wasRecentlyCreated && $answer->selected_option_ids !== $selected;
 
         $xp = ! $repeat && $answer->is_correct
             && ! in_array($question->id, DailyXp::alreadyEarned($attempt->user_id, [$question->id]), true)
-            ? $question->xp_reward
+            ? Booster::apply($question->xp_reward, $answer->xp_multiplier)
             : 0;
 
         return response()->json(['data' => [
@@ -105,6 +107,8 @@ class QuizAttemptController extends Controller
             'correct_option_ids' => $correctIds,
             'explanation' => $question->explanation,
             'xp' => $xp,
+            // Faktor des Boosters, der beim ersten Antworten lief (1 ohne). Die App zeigt „2×“ nur, wenn es EP gab.
+            'multiplier' => $answer->xp_multiplier,
             'repeat' => $repeat,
         ]]);
     }
@@ -120,16 +124,22 @@ class QuizAttemptController extends Controller
         $attempt->finish();
 
         // Vorher-Werte aus den EP dieser Lerneinheit, damit ein wiederholter Abschluss dasselbe zeigt
-        $after = $attempt->user()->first()->progression();
+        $user = $attempt->user()->first();
+        $after = $user->progression();
         $before = Progression::fromTotalXp($after->total - $attempt->xp_earned);
+        // Anteil des Boosters: vergebene EP minus die EP der Fragen ohne Faktor
+        $fromBooster = $attempt->answers()->with('question:id,xp_reward')->get()
+            ->sum(fn (QuestionAnswer $answer) => $answer->xp_awarded > 0 ? $answer->xp_awarded - $answer->question->xp_reward : 0);
 
         return response()->json(['data' => [
             'xp_earned' => $attempt->xp_earned,
+            'xp_from_booster' => $fromBooster,
             'correct_count' => $attempt->correct_count,
             'total_questions' => $attempt->total_questions,
             'level_up' => $after->level !== $before->level || $after->prestige !== $before->prestige,
             'before' => $before->toArray(),
             'progress' => $after->toArray(),
+            'streak' => $user->streak(),
         ]]);
     }
 }

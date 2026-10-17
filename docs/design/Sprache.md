@@ -24,6 +24,8 @@ learnharder klingt **locker und direkt**, wie jemand aus der Klasse, der schon e
 | Thema fertig | Schleifen geschafft · 4 von 5 richtig | Quiz abgeschlossen. Ergebnis: 80 %. |
 | Leerer Zustand | Noch keine Themen gelernt. Fang mit POS an. | – / Keine Daten vorhanden. |
 | Gesperrt | Wird nach „Schleifen“ freigeschaltet. | Gesperrt. |
+| Booster läuft | 2× EP · noch 23 Min. | BOOST AKTIV! Nur noch 23 Minuten! |
+| Zu wenig Brainpower | Noch 30 Brainpower. Morgen lädt sie sich wieder auf. | Nicht genug Brainpower! |
 | Technischer Fehler | Das hat nicht geklappt. Prüf deine Verbindung und versuch’s nochmal. | Error 500 / Ein unerwarteter Fehler ist aufgetreten. |
 | Prüfung | DBI-Test in 3 Tagen. 2 Themen sind noch schwach. | Bevorstehende Prüfung: DBI (17.10.2026) |
 
@@ -64,8 +66,10 @@ Diese Begriffe sind fix. Spiel-Begriffe, die man aus Games kennt, bleiben englis
 | **Team** | Team | Gruppe mit gemeinsamen Herausforderungen | Gruppe, Clan |
 | **Team-Herausforderung** | Team challenge | Herausforderung, die ein Team gemeinsam spielt | Team-Challenge |
 | **Errungenschaft** | Achievement | Auszeichnung für besondere Leistungen | Achievement, Badge |
-| **Brainpower** | Brainpower | Wird für Herausforderungen verbraucht | Energie, Akku, Leben |
+| **Brainpower** | Brainpower | Wird für Herausforderungen und im Shop eingesetzt | Energie, Akku, Leben |
 | **Trophäen** | Trophies | Belohnung, gegen Brainpower tauschbar | Pokale, Münzen |
+| **Shop** | Shop | Hier setzt man Brainpower ein: EP-Booster, später Roboter-Teile | Laden, Store, Markt |
+| **EP-Booster** | XP booster | Mehr EP für richtige Antworten, eine Zeit lang. Kostet Brainpower | XP-Booster, Boost, Power-up |
 | **Hub** | Hub | Startseite (nur intern; im UI ist der Hub das Level-Badge) | Dashboard |
 
 Im Code und in Dateinamen wird immer der englische Begriff verwendet (`icon-xp`, `ui-league`), damit er sprachneutral ist.

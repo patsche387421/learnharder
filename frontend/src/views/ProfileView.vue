@@ -1,6 +1,6 @@
 <script setup>
 // Profil: Gamer-Tag, Klasse, Fortschritt, Roboter, Abmelden, Rechtstexte und „Konto löschen“ (nur Schüler:innen, E-027).
-// Fortschritt: Level, Rang und EP aus /me, Fach-Level aus /subjects (E-018). Der längste Streak kommt mit G2.
+// Fortschritt: Level, Rang, EP und längster Streak aus /me, Fach-Level aus /subjects (E-018).
 // Klarnamen und E-Mail zeigt die App nie. Pose und Lackierung sind nur Vorschau, gespeichert wird noch nichts.
 import { computed, onMounted, ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
@@ -27,6 +27,12 @@ const { data: subjects, error: subjectsError, load: loadSubjects } = useLoad(get
 // Ohne Klasse liefert der Server keine Fächer (E-024)
 onMounted(() => {
   if (!auth.waitingForClass) loadSubjects()
+})
+
+const longestStreak = computed(() => {
+  const days = auth.me?.streak?.longest ?? 0
+  if (!days) return 'Noch kein Streak'
+  return `Längster Streak: ${days} ${days === 1 ? 'Tag' : 'Tage'}`
 })
 
 const levelName = computed(() =>
@@ -72,6 +78,7 @@ async function logout() {
         <div>
           <p class="profile__tag">{{ levelName }}</p>
           <p class="profile__xp">{{ number.format(auth.me?.xp?.total ?? 0) }} EP gesamt</p>
+          <p class="profile__xp profile__streak">{{ longestStreak }}</p>
         </div>
       </div>
       <LoadError v-if="subjectsError" :error="subjectsError" @retry="loadSubjects" />

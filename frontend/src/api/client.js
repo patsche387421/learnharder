@@ -68,6 +68,8 @@ async function send(path, method, body) {
 function errorMessage(status, data) {
   if (status === 422 && data?.errors) return Object.values(data.errors)[0][0]
   if (data?.reason === 'account_deactivated') return data.message
+  // 409 kommt nur aus der eigenen Spiellogik und ist deutsch formuliert („Es läuft schon ein Booster.“)
+  if (status === 409 && data?.message) return data.message
   if (status === 429) return MESSAGES.tooMany
   return MESSAGES.generic
 }

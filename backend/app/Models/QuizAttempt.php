@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\Booster;
 use App\Support\DailyXp;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
@@ -90,7 +91,7 @@ class QuizAttempt extends Model
 
             foreach ($answers as $answer) {
                 $answer->xp_awarded = $answer->is_correct && ! in_array($answer->question_id, $earned, true)
-                    ? $answer->question->xp_reward
+                    ? Booster::apply($answer->question->xp_reward, $answer->xp_multiplier)
                     : 0;
                 $answer->xp_date = $today;
                 $answer->save();
@@ -100,6 +101,8 @@ class QuizAttempt extends Model
             $correct = $answers->where('is_correct', true)->count();
 
             $stats->increment('total_xp', $xp);
+            $stats->recordStudyDay($today);
+            $stats->save();
             $attempt->update([
                 'correct_count' => $correct,
                 'score_percentage' => $attempt->total_questions > 0 ? (int) round($correct / $attempt->total_questions * 100) : 0,

@@ -28,6 +28,15 @@ describe('LhCurrencyChip', () => {
     expect(w.find('img').attributes('width')).toBe('32')
   })
 
+  it('zeigt einen laufenden Booster als Marke und im Namen', () => {
+    const w = chip(20, { icon: 'icon-brainpower', label: 'Brainpower', boost: '2×' })
+    expect(w.text()).toBe('202×')
+    expect(w.find('.lh-chip__boost').text()).toBe('2×')
+    expect(w.find('.lh-chip__boost').attributes('aria-hidden')).toBe('true')
+    expect(w.attributes('aria-label')).toBe('20 Brainpower, 2× EP läuft')
+    expect(chip(20).find('.lh-chip__boost').exists()).toBe(false)
+  })
+
   it('ist ohne Link kein antippbares Element', () => {
     const w = chip(5)
     expect(w.element.tagName).toBe('SPAN')

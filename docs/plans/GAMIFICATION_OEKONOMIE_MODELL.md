@@ -71,11 +71,12 @@ $$\text{BP}_{\text{max}}(L) = 100 + \left\lfloor \frac{L}{5} \right\rfloor \time
 * **Level 25:** $125\text{ BP}$
 * **Level 50:** $150\text{ BP}$
 * **Level 100:** $200\text{ BP}$ (Maximaler Deckel)
+* **Ab Prestige 1:** immer $200\text{ BP}$, auch wenn das Level wieder bei 1 beginnt (E-036)
 
 ---
 
 ### 3.2 Tägliche Regeneration & Streak-Multiplikator
-Jeden Kalendertag um **00:00 UTC** lädt sich Brainpower automatisch auf (bis zum jeweiligen $\text{BP}_{\text{max}}$).
+Jeden Kalendertag um **00:00 in Wien** (wie EP und Streak, E-015, E-036) lädt sich Brainpower auf (bis zum jeweiligen $\text{BP}_{\text{max}}$). Der Server lädt beim ersten Lesen an einem neuen Tag auf, verpasste Tage zählen mit.
 
 $$\text{Tägliche Regeneration} = \text{Basis (50 BP)} + \min(\text{Streak-Tage} \times 2, 30\text{ BP})$$
 
@@ -99,7 +100,7 @@ $$\text{Tägliche Regeneration} = \text{Basis (50 BP)} + \min(\text{Streak-Tage}
 | **XP-Booster 2× (60 Min)** | **70 BP** | $2\times$ XP auf richtige Antworten für 60 Minuten | Prüfungsvorbereitung |
 | **1v1 Duell (Phase 2)** | **15 BP** | Sieger: $+30\text{ XP}$ + Ranglistenpunkte; Verlierer: $+10\text{ XP}$ | Synchroner Wettbewerb |
 
-Booster-Regeln (E-010): Der Server rechnet, der Client zeigt nur die Restzeit. Höchstens ein Booster gleichzeitig, solange einer läuft, ist kein Kauf möglich. Die Zeit läuft in Echtzeit weiter, auch bei geschlossener App.
+Booster-Regeln (E-010): Der Server rechnet, der Client zeigt nur die Restzeit. Höchstens ein Booster gleichzeitig, solange einer läuft, ist kein Kauf möglich. Die Zeit läuft in Echtzeit weiter, auch bei geschlossener App. Es zählt der Booster beim Antworten, nicht beim Abschluss der Lerneinheit, halbe EP werden aufgerundet. Gespeichert wird nur der laufende Booster, kein Kaufverlauf (Stand 2026-10-17). Ob es für Shop und Herausforderungen ein gemeinsames Brainpower-Konto mit Verlauf braucht, klärt G5.
 
 ---
 

@@ -72,6 +72,7 @@ describe('ProfileView', () => {
     useAuthStore().me = {
       gamer_tag: 'lena42', roles: ['student'], school_class: { name: '2AHIT' },
       level: 25, rank: 'silver', prestige: 1, xp: { total: 8941, level_start: 8941, next_level: 9000 },
+      streak: { current: 0, longest: 12 },
     }
     const fetch = mockFetch({ status: 200, body: { data: [
       { code: 'pos', name: 'Programmieren', level: 4 },
@@ -91,7 +92,7 @@ describe('ProfileView', () => {
     expect(stats.find('.profile__xp').text()).toBe('8.941 EP gesamt')
     const rows = stats.findAll('.profile__slot').map((row) => [row.find('dt').text(), row.find('dd').text()])
     expect(rows).toEqual([['Programmieren', 'Fach-Level 4'], ['Datenbanken', 'Fach-Level 1']])
-    expect(stats.text()).not.toContain('Streak')
+    expect(stats.find('.profile__streak').text()).toBe('Längster Streak: 12 Tage')
   })
 
   it('ohne Klasse fragt das Profil keine Fächer ab und lässt Prestige 0 weg', async () => {
@@ -108,6 +109,20 @@ describe('ProfileView', () => {
     expect(wrapper.find('.profile__stats').text()).not.toContain('Prestige')
     expect(wrapper.find('.profile__xp').text()).toBe('11 EP gesamt')
     expect(wrapper.find('.profile__stats dl').exists()).toBe(false)
+  })
+
+  it.each([
+    [undefined, 'Noch kein Streak'],
+    [{ current: 0, longest: 0 }, 'Noch kein Streak'],
+    [{ current: 1, longest: 1 }, 'Längster Streak: 1 Tag'],
+  ])('längster Streak %j: „%s“', async (streak, text) => {
+    useAuthStore().me = { gamer_tag: 'lena42', roles: ['student'], streak }
+    const router = testRouter()
+    router.push('/profile')
+    await router.isReady()
+    const wrapper = mount(ProfileView, { global: { plugins: [router] } })
+
+    expect(wrapper.find('.profile__streak').text()).toBe(text)
   })
 
   it('lässt die Fach-Level nach einem Fehler neu laden', async () => {

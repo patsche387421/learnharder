@@ -66,7 +66,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  /** Nach dem Abschluss einer Lerneinheit: neuer Fortschritt vom Server (level, rank, prestige, xp). */
+  /** Nach dem Abschluss einer Lerneinheit: neuer Fortschritt vom Server (level, rank, prestige, xp, streak). */
   function applyProgress(progress, levelUp = false) {
     if (me.value) me.value = { ...me.value, ...progress }
     if (levelUp) unseenLevelUp.value = true

@@ -99,6 +99,12 @@ describe('api', () => {
     expect(error.errors.email).toEqual(['E-Mail oder Passwort stimmt nicht.'])
   })
 
+  it('409 zeigt die Meldung der Spiellogik', async () => {
+    mockFetch({ status: 409, body: { message: 'Es läuft schon ein Booster.' } })
+
+    await expect(api('/boosters', { method: 'POST', body: {} })).rejects.toMatchObject({ status: 409, message: 'Es läuft schon ein Booster.' })
+  })
+
   it('ohne Netz und bei 429 kommen verständliche Texte', async () => {
     mockFetch(new TypeError('Failed to fetch'))
     await expect(api('/me')).rejects.toMatchObject({ status: 0, message: MESSAGES.network })

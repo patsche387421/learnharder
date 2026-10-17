@@ -13,6 +13,7 @@ Illustrierte Spiel-Icons im Stil der Fach-Icons. viewBox 48×48, bei 32px erkenn
 | `icon-campaign.svg` | Kampagne | Platin |
 | `icon-team-challenge.svg` | Team-Herausforderung | eigenes Rot-Orange |
 | `icon-achievement.svg` | Errungenschaft | Platin |
+| `icon-booster.svg` | EP-Booster (Rakete, steigt nach oben) | Bronze |
 
 Regeln:
 - Patina (`rank-prestige`) kommt in keinem Spiel-Icon vor. Sie gehört allein dem Prestige-Ring.

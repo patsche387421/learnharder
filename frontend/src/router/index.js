@@ -30,6 +30,7 @@ const routes = [
   },
   { path: '/team', component: placeholder, meta: { title: 'Team' } },
   { path: '/league', component: placeholder, meta: { title: 'Liga' } },
+  { path: '/shop', component: () => import('../views/ShopView.vue'), meta: { title: 'Shop' } },
   { path: '/profile', component: () => import('../views/ProfileView.vue'), meta: { title: 'Profil' } },
   { path: '/profile/delete', component: () => import('../views/DeleteAccountView.vue'), meta: { title: 'Konto löschen', focus: true } },
 ]

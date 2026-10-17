@@ -249,6 +249,32 @@
 /* ---------- Währungs-Chip ---------- */
 .lh-chip--lg { height: 40px; padding: 0 var(--space-4) 0 var(--space-1); font-size: 16px; }
 .lh-chip--lg img { width: 32px; height: 32px; }
+/* Marke am Brainpower-Chip, solange ein EP-Booster läuft. Statisch: kein Leuchten, keine Bewegung */
+.lh-chip__boost { margin-left: var(--space-1); padding: 2px 6px; border-radius: var(--radius-full);
+  background: var(--accent); color: var(--ink-inverse); font: 700 11px/1 var(--font-mono); }
+
+/* ---------- Shop ---------- */
+/* Seite in Abschnitten (EP-Booster, später Roboter-Teile). Vorteil und Kosmetik stehen nie im selben Abschnitt */
+.lh-shop { display: grid; gap: var(--space-6); }
+.lh-shop__head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+.lh-shop__section { display: grid; gap: var(--space-3); }
+.lh-shop__title { margin: 0; font: 700 18px/24px var(--font-text); color: var(--ink); }
+.lh-shop__intro { margin: 0; font: 400 14px/20px var(--font-text); color: var(--ink-muted); }
+/* Angebot: Icon · Name und Dauer · Kosten und Button. Reicht die Brainpower nicht, sagt die Zeile, wie viel fehlt */
+.lh-offer { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg); background: var(--surface-raised); box-shadow: inset 0 0 0 1px var(--line); }
+.lh-offer__body { flex: 1; display: grid; gap: 2px; min-width: 0; }
+.lh-offer__name { font: 700 16px/24px var(--font-text); color: var(--ink); }
+.lh-offer__meta { font: 400 13px/16px var(--font-mono); color: var(--ink-muted); }
+.lh-offer__buy { display: grid; justify-items: end; gap: var(--space-1); flex: none; }
+.lh-offer__buy .lh-btn { min-width: 112px; padding: 0 var(--space-4); }
+.lh-offer__why { font: 400 12px/16px var(--font-mono); color: var(--ink-muted); }
+/* Läuft ein Booster: statt der Buttons ein ruhiger Hinweis über den Angeboten */
+.lh-shop__running { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg); background: var(--surface-sunken); font: 700 14px/20px var(--font-mono); color: var(--ink); }
+/* Marke für einen laufenden EP-Booster auf „Weiterlernen“ und neben den EP in der Lerneinheit */
+/* Umrandet statt auf surface-sunken: Bronze auf Beige hätte hell nur 4,4:1 */
+.lh-tag--boost { background: transparent; color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
 
 /* =========================================================
    App-Rahmen: mobile first, Tablet = Rail, Desktop = Seitenleiste
