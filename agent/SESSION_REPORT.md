@@ -360,3 +360,19 @@ V1-Protokoll: `_archiv/agent/SESSION_REPORT.md` und `SESSION_REPORT_ARCHIVE.md`.
   - Handbücher Satz für Satz gegen Policies, Formulare, Models und API geprüft. Nicht im laufenden CMS angesehen (Docker war aus).
   - CI auf `dev` grün für `3a732eb` (Lauf `39008683410`). Die späteren Doku-Merges nicht abgewartet.
 - **Offen:** neu in `docs/AUFGABEN.md`: Gruppe „Übergabe“ (Scramble, Architektur-Überblick, Docblocks, Larastan, ESLint, README-Einstieg), Icon-Feld im Fach-Formular, Testzentrale bei Handy-Breite, Handbücher im laufenden CMS gegenlesen.
+
+## 2026-10-17 — Projekt-Tab aufgeräumt, Spielwelt geplant
+
+- **Branch:** je Schritt ein Branch, mit `--no-ff` nach `dev` gemerged und gepusht: `chore/projekt-tab` (`25c24fd`), `docs/spielwelt` (`4249a4d`). Dazu `docs/session-spielwelt` mit diesem Eintrag.
+- **Commits:** `32ae50a` (Projekt-Tab mit Jetzt, Wartet auf und zugeklappten Abschnitten), `6a2179b` (Konzept Spielwelt, E-030, Tracks G1–G6 und L1).
+- **Ergebnis:**
+  - Testzentrale, Tab „Projekt“: Stand in einer Zeile, fertige Meilensteine in einem Kästchen, „Wartet auf die Schule“ als Streifen, „Jetzt“ zeigt nur die Gruppe mit `!fokus` (sonst den ersten offenen Meilenstein), der Rest zugeklappt mit Anzahl. Zeilennummern nur noch beim Darüberfahren. `parse_milestones` kennt Tracks (`G1`, `L1`) und pausierte Meilensteine (`⏸`) und liefert `status` statt `done`. Der Umschalter „Bis zum Start / Alles“ ist weg.
+  - `docs/plans/KONZEPT_SPIELWELT.md`: Hub und Profil, Brainpower und Streaks, Erfolge (getrennt von Trophäen), Avatar aus SVG-Ebenen ohne fremde Laufzeit, Shop (freischalten, dann kaufen), Rangliste, Wow-Momente, Landing Page. Geparkt: Forschungsbaum, Minispiel, native App.
+  - E-030: Die Spielwelt entsteht lokal, solange M4 auf die Schule wartet. M5 wartet nicht auf sie. O-006 (Grundlage der Rangliste) offen, Empfehlung EP pro Saison in der Klasse, nicht Brainpower.
+  - `plans/README.md`: M4 pausiert, Tracks G1–G6 und L1 in der Meilenstein-Tabelle, Umfang als größtes Risiko. `AUFGABEN.md` nach Tracks gegliedert, „Hub schlank“ von M5 nach G1, `!fokus` auf dem Hub.
+  - Gelernt: Chrome ohne Fenster unter Windows hat eine Mindestbreite von etwa 500 px. Für die Handy-Ansicht die Seite in einem 375 px breiten `iframe` aufnehmen.
+- **Geprüft:**
+  - Python-Tests 29 grün (`python3 -m unittest discover -s scripts`), der Meilenstein-Test deckt `⏸` und Tracks ab. Backend und Frontend unverändert, nicht neu gelaufen.
+  - Projekt-Tab mit Probe-Server auf Port 8091 und Chrome ohne Fenster bei 1400 px und 375 px (im `iframe`), nur dunkel. Vor und nach dem neuen `AUFGABEN.md`. Auf- und Zuklappen nicht im Browser geklickt.
+  - CI auf `dev` grün für `25c24fd` (Lauf `39011829130`). Den Lauf für `4249a4d` nicht abgewartet.
+- **Offen:** neu in `docs/AUFGABEN.md`: Gruppen G1–G6 und L1 mit ersten Aufgaben (Hub, Tab-Leiste, Hub-Zustände, Profil, Brainpower, Glossar „Erfolge“, Erfolge, Avatar-Stil und Avatar, Shop-Preise und Shop, O-006, Landing Page).
