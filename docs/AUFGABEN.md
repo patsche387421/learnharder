@@ -37,8 +37,11 @@ Meilensteine und Reihenfolge: `plans/README.md`. Entscheidungen: `ENTSCHEIDUNGEN
 
 ## G2 — Brainpower & Streaks
 
-- [ ] Brainpower und Streaks nach Ökonomie-Modell §3, Werte in `config/` (Konzept Spielwelt §5) @claude
-- [ ] Längsten Streak im Profil zeigen, sobald G2 ihn füllt @claude
+- [ ] Shop, EP-Booster, Streak und Brainpower in der laufenden App ansehen @patsche
+- [ ] Shop: Hinweis „Heute bringen deine Themen keine EP mehr“, dafür eine Angabe vom Server (E-037) @claude
+- [ ] Streak im Hub zeigen, auch „läuft“ und „in Gefahr“ im Ton von `design/Sprache.md` (Konzept Spielwelt §4) @claude
+- [ ] Herausforderung: zufällige Fragen aus allen Fächern für 25 Brainpower (Ökonomie-Modell §3.3) @claude
+- [ ] Roboter jubelt beim Kauf eines Boosters (`celebrate`, `design/components/Shop.md`) @claude
 
 ## G3 — Erfolge
 

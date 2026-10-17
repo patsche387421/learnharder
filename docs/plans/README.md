@@ -56,7 +56,7 @@ Der kritische Pfad zum ersten echten Nutzer ist kürzer:
 | **M4** ⏸ | Hetzner läuft | Prod-Stack in `infra/` (Caddy nach E-019), TLS, tägliche Backups mit Restore-Test, Staging, Mailversand aus der EU. Patsche führt am Server aus. Pausiert, bis die Schule den Vertragspartner nennt (Stand 2026-10-17) |
 | **M5** | Start | Lernablauf, EP-Regeln und Brainpower-Konzept mit betreuenden Lehrkräften abgestimmt, Hub schlank (E-022), Team und Liga fertig (E-035), DNS umgestellt, Registrierung offen, Neuregistrierung angekündigt, V1-Supabase abgeschaltet → Tag `v2.0.0-alpha.1` (E-020) |
 | **G1** ✅ | Hub & Profil | Hub statt Platzhalter: Begrüßung nach Zustand und Tageszeit, Level, Brainpower, „Weiterlernen“. Profil mit Statistik, der längste Streak kommt mit G2 (Konzept Spielwelt §4) |
-| **G2** | Brainpower & Streaks | Aufladen, Streak, Booster und Challenge nach Ökonomie-Modell §3, Werte in `config/` (§5) |
+| **G2** | Brainpower & Streaks | Aufladen, Streak, Booster und Challenge nach Ökonomie-Modell §3, Werte in `config/` (§5). Stand 2026-10-17: Streak, Aufladen und EP-Booster im Shop fertig (E-036, E-037), offen Herausforderung und Streak im Hub |
 | **G3** | Erfolge | Katalog im CMS, Vergabe auf dem Server, Raster im Profil (§6) |
 | **G4** | Avatar | Figur aus SVG-Teilen mit `idle`, `celebrate`, `wave`, `think`, im Hub und auf dem Ergebnis (§7) |
 | **G5** | Shop | Teile und Animationen freischalten, dann mit Brainpower kaufen. Preise im Ökonomie-Modell §3.4 (§7) |
@@ -66,9 +66,9 @@ Der kritische Pfad zum ersten echten Nutzer ist kürzer:
 
 ### Nächste Schritte (Stand 2026-10-17)
 
-1. **G1 ansehen:** Code fertig (Stand 2026-10-17), Patsche prüft Hub-Zustände und Profil in der laufenden App.
+1. **Ansehen:** Patsche prüft Hub-Zustände (G1) sowie Shop, EP-Booster und Streak (G2) in der laufenden App.
 2. **G4 weiter, sobald Patsche liefert:** Werkzeug je Fach und Starter-Kit je Abteilung festlegen, Teile mit KI-Hilfe entwerfen. Dann Abteilung in `/me`, Starter-Kits, Avatar speichern (Server prüft den Besitz), Antippen, Porträt, `celebrate` auf dem Ergebnis.
-3. **G2 Brainpower und Streaks:** Erst damit bekommt der Akku echte Werte und der Shop (G5) eine Währung.
+3. **G2 fertig machen:** Hinweis im Shop, wenn heute nichts mehr EP bringt, Streak im Hub, Herausforderung für 25 Brainpower.
 4. **Danach** G3 Erfolge, G5 Shop, Werkhalle, G6 Rangliste. Team und Liga müssen zum Start fertig sein (E-035). M4 geht weiter, sobald die Schule antwortet.
 
 ### Größte Risiken jetzt
