@@ -99,7 +99,7 @@ class User extends Authenticatable implements FilamentUser
     {
         return $this->belongsToMany(Achievement::class, 'user_achievements')
             ->using(UserAchievement::class)
-            ->withPivot(['id', 'unlocked_at', 'trophies_awarded']);
+            ->withPivot(['id', 'unlocked_at', 'trophies_awarded', 'quiz_attempt_id']);
     }
 
     public function enrollments(): HasMany

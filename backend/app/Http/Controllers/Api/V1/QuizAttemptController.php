@@ -9,6 +9,7 @@ use App\Models\Question;
 use App\Models\QuestionAnswer;
 use App\Models\QuizAttempt;
 use App\Models\Topic;
+use App\Models\UserAchievement;
 use App\Support\Booster;
 use App\Support\DailyXp;
 use App\Support\Progression;
@@ -141,6 +142,8 @@ class QuizAttemptController extends Controller
         $before = Progression::fromTotalXp($after->total - $attempt->xp_earned);
         // Anteil des Boosters aus den gespeicherten EP und Faktoren, unabhängig vom heutigen xp_reward
         $fromBooster = $attempt->answers()->get()->sum(fn (QuestionAnswer $answer) => Booster::share($answer));
+        // Gespeichert mit der Lerneinheit, damit ein wiederholter Abschluss dieselben Erfolge zeigt
+        $unlocks = $attempt->achievementUnlocks()->with('achievement')->get()->sortBy('achievement.sort')->values();
 
         return response()->json(['data' => [
             'xp_earned' => $attempt->xp_earned,
@@ -151,6 +154,13 @@ class QuizAttemptController extends Controller
             'before' => $before->toArray(),
             'progress' => $after->toArray(),
             'streak' => $user->streak(),
+            'achievements_unlocked' => $unlocks->map(fn (UserAchievement $unlock) => [
+                'slug' => $unlock->achievement->slug,
+                'title' => $unlock->achievement->title,
+                'icon_name' => $unlock->achievement->icon_name,
+                'trophies' => $unlock->trophies_awarded,
+            ])->all(),
+            'trophies_earned' => $unlocks->sum('trophies_awarded'),
         ]]);
     }
 }

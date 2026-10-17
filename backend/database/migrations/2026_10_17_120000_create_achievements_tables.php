@@ -44,6 +44,8 @@ return new class extends Migration
             $table->foreignUuid('achievement_id')->index()->constrained('achievements')->restrictOnDelete(); // Verlauf bleibt
             $table->timestamp('unlocked_at')->useCurrent();
             $table->integer('trophies_awarded')->default(0); // Wert bei der Vergabe, eine spätere Änderung im CMS verschiebt nichts
+            // Lerneinheit, deren Abschluss den Erfolg gebracht hat. Leer, wenn er beim Laden der Erfolge nachträglich kam
+            $table->foreignUuid('quiz_attempt_id')->nullable()->index()->constrained('quiz_attempts')->nullOnDelete();
 
             $table->unique(['user_id', 'achievement_id']);
         });

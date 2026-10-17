@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\Achievements;
 use App\Support\Booster;
 use App\Support\DailyXp;
 use Illuminate\Database\Eloquent\Attributes\Scope;
@@ -54,6 +55,12 @@ class QuizAttempt extends Model
         return $this->hasMany(QuestionAnswer::class);
     }
 
+    /** Erfolge, die der Abschluss dieser Lerneinheit gebracht hat. */
+    public function achievementUnlocks(): HasMany
+    {
+        return $this->hasMany(UserAchievement::class);
+    }
+
     #[Scope]
     protected function finished(Builder $query): void
     {
@@ -68,7 +75,7 @@ class QuizAttempt extends Model
     /**
      * Schließt die Lerneinheit ab und schreibt die EP gut. Ein zweiter Aufruf ändert nichts.
      * Die Sperre auf user_stats lässt Abschlüsse derselben Person nacheinander laufen, erst danach
-     * wird die Tagesregel geprüft (E-015).
+     * wird die Tagesregel geprüft (E-015). Zuletzt, noch unter der Sperre, kommen die Erfolge (E-042).
      */
     public function finish(): void
     {
@@ -109,6 +116,7 @@ class QuizAttempt extends Model
                 'xp_earned' => $xp,
                 'finished_at' => now(),
             ]);
+            Achievements::check($attempt->user, $attempt);
             $this->setRawAttributes($attempt->getAttributes(), true);
         });
     }

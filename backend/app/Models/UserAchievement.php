@@ -21,6 +21,7 @@ class UserAchievement extends Pivot
         'achievement_id',
         'unlocked_at',
         'trophies_awarded',
+        'quiz_attempt_id',
     ];
 
     protected $casts = [
