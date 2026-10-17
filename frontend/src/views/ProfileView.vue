@@ -1,5 +1,5 @@
 <script setup>
-// Profil: Gamer-Tag, Klasse, Fortschritt, Roboter, Abmelden, Rechtstexte und „Konto löschen“ (nur Schüler:innen, E-027).
+// Profil: Gamer-Tag, Klasse, Fortschritt, Roboter, Darstellung, Abmelden, Rechtstexte und „Konto löschen“ (nur Schüler:innen, E-027).
 // Fortschritt: Level, Rang, EP und längster Streak aus /me, Fach-Level aus /subjects (E-018).
 // Klarnamen und E-Mail zeigt die App nie. Pose und Lackierung sind nur Vorschau, gespeichert wird noch nichts.
 import { computed, onMounted, ref } from 'vue'
@@ -14,7 +14,9 @@ import LoadError from '../components/LoadError.vue'
 import LhButton from '../components/ui/LhButton.vue'
 import LhCard from '../components/ui/LhCard.vue'
 import LhLevelBadge from '../components/ui/LhLevelBadge.vue'
+import LhSegmented from '../components/ui/LhSegmented.vue'
 import { useLoad } from '../composables/useLoad.js'
+import { THEMES, useTheme } from '../composables/useTheme.js'
 import { useAuthStore } from '../stores/auth.js'
 
 const RANKS = { bronze: 'Bronze', silver: 'Silber', gold: 'Gold', platin: 'Platin' }
@@ -23,6 +25,7 @@ const number = new Intl.NumberFormat('de')
 const auth = useAuthStore()
 const router = useRouter()
 const { data: subjects, error: subjectsError, load: loadSubjects } = useLoad(getSubjects)
+const theme = useTheme()
 
 // Ohne Klasse liefert der Server keine Fächer (E-024)
 onMounted(() => {
@@ -126,6 +129,9 @@ async function logout() {
         </div>
       </dl>
       <p class="profile__hint">Nur Vorschau, gespeichert wird später.</p>
+    </section>
+    <section class="lh-card">
+      <LhSegmented v-model="theme" legend="Darstellung" :options="THEMES" hint="Gilt nur auf diesem Gerät." />
     </section>
     <LhButton variant="secondary" block @click="logout">Abmelden</LhButton>
     <LhButton v-if="!auth.isStaff" variant="ghost" block to="/profile/delete">Konto löschen</LhButton>

@@ -1,7 +1,7 @@
 <script setup>
 // Styleguide (nur in der Entwicklung): alle Tokens, Icons und lh-Bausteine auf einer Seite, in Hell und Dunkel.
 // Farben und Text-Stile kommen direkt aus tokens.json, damit hier nichts doppelt gepflegt wird.
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import tokens from '../styles/tokens.json'
 import { icons } from '../components/ui/icons.js'
 import LhAnswerOption from '../components/ui/LhAnswerOption.vue'
@@ -13,16 +13,15 @@ import LhCurrencyChip from '../components/ui/LhCurrencyChip.vue'
 import LhEmptyState from '../components/ui/LhEmptyState.vue'
 import LhIcon from '../components/ui/LhIcon.vue'
 import LhLevelBadge from '../components/ui/LhLevelBadge.vue'
+import LhSegmented from '../components/ui/LhSegmented.vue'
 import LhSubjectCard from '../components/ui/LhSubjectCard.vue'
 import LhTabBar from '../components/ui/LhTabBar.vue'
 import LhTextField from '../components/ui/LhTextField.vue'
 import LhXpBar from '../components/ui/LhXpBar.vue'
+import { THEMES, useTheme } from '../composables/useTheme.js'
 
-const theme = ref('system')
-watch(theme, (t) => {
-  if (t === 'system') document.documentElement.removeAttribute('data-theme')
-  else document.documentElement.setAttribute('data-theme', t)
-}, { immediate: true })
+// Dieselbe Darstellung wie im Profil, die Wahl gilt danach auch in der App
+const theme = useTheme()
 
 const iconGroups = ['ui', 'subject', 'icon'].map((prefix) => ({
   prefix,
@@ -57,17 +56,7 @@ function check() {
   <main class="sg">
     <header class="sg__head">
       <h1 class="h1">Styleguide</h1>
-      <div class="sg__row" role="group" aria-label="Theme">
-        <LhButton
-          v-for="t in ['system', 'light', 'dark']"
-          :key="t"
-          :variant="theme === t ? 'primary' : 'secondary'"
-          :aria-pressed="theme === t"
-          @click="theme = t"
-        >
-          {{ { system: 'System', light: 'Hell', dark: 'Dunkel' }[t] }}
-        </LhButton>
-      </div>
+      <LhSegmented v-model="theme" legend="Darstellung" :options="THEMES" />
     </header>
 
     <section class="sg__section">

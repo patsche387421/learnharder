@@ -14,6 +14,8 @@ describe('ProfileView', () => {
   afterEach(() => {
     vi.unstubAllGlobals()
     setXsrfCookie(null)
+    localStorage.clear()
+    document.documentElement.removeAttribute('data-theme')
   })
 
   it('zeigt den Gamer-Tag und meldet ab', async () => {
@@ -154,5 +156,22 @@ describe('ProfileView', () => {
     links = mount(ProfileView, { global: { plugins: [router] } }).findAll('a').map((a) => a.attributes('href'))
     expect(links).not.toContain('/profile/delete')
     expect(links).toContain('/datenschutz')
+  })
+
+  it('Darstellung: folgt zuerst dem Gerät, Dunkel gilt sofort und bleibt auf dem Gerät', async () => {
+    useAuthStore().me = { gamer_tag: 'lena42', roles: ['student'] }
+    const router = testRouter()
+    router.push('/profile')
+    await router.isReady()
+    const wrapper = mount(ProfileView, { global: { plugins: [router] } })
+
+    const group = wrapper.findAll('fieldset').find((f) => f.find('legend').text() === 'Darstellung')
+    expect(group.findAll('label').map((l) => l.text())).toEqual(['Wie Gerät', 'Hell', 'Dunkel'])
+    expect(group.find('input:checked').element.value).toBe('system')
+    expect(group.text()).toContain('Gilt nur auf diesem Gerät.')
+
+    await group.findAll('input')[2].setValue()
+    expect(document.documentElement.getAttribute('data-theme')).toBe('dark')
+    expect(localStorage.getItem('lh-theme')).toBe('dark')
   })
 })
