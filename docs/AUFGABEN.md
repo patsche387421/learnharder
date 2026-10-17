@@ -31,7 +31,9 @@ Meilensteine und Reihenfolge: `plans/README.md`. Entscheidungen: `ENTSCHEIDUNGEN
 
 ## G1 — Hub & Profil
 
-- [ ] Hub-Zustände und Profil-Fortschritt in der laufenden App ansehen @patsche
+- [ ] Hub-Zustände in der laufenden App ansehen @patsche
+- [ ] Profil: Fach-Level-Liste wird bei vielen Fächern eng, „Fach-Level n“ bricht bei langen Fachnamen um @claude
+- [ ] Profil: Roboter-Bereich braucht viel Platz, kompakter machen @claude
 
 ## G2 — Brainpower & Streaks
 
