@@ -96,6 +96,38 @@ class BoosterApiTest extends TestCase
         $this->buy('x2_30')->assertCreated()->assertJsonPath('data.brainpower.current', 20);
     }
 
+    public function test_shop_liefert_brainpower_laufenden_booster_und_angebote(): void
+    {
+        $this->actingAs($this->user)->getJson('/api/v1/shop')
+            ->assertOk()
+            ->assertExactJson(['data' => [
+                'brainpower' => ['current' => 100, 'max' => 100],
+                'booster' => null,
+                'boosters' => [
+                    ['kind' => 'x1_5_30', 'multiplier' => 1.5, 'minutes' => 30, 'cost' => 20],
+                    ['kind' => 'x2_30', 'multiplier' => 2, 'minutes' => 30, 'cost' => 40],
+                    ['kind' => 'x2_60', 'multiplier' => 2, 'minutes' => 60, 'cost' => 70],
+                ],
+            ]]);
+
+        $this->buy('x2_30');
+        $this->actingAs($this->user->fresh())->getJson('/api/v1/shop')
+            ->assertJsonPath('data.brainpower.current', 60)
+            ->assertJsonPath('data.booster', ['multiplier' => 2, 'ends_at' => '2026-10-17T12:30:00+00:00']);
+    }
+
+    public function test_shop_laedt_vorher_auf(): void
+    {
+        $this->user->update(['brainpower_current' => 10, 'brainpower_refilled_on' => '2026-10-16']);
+
+        $this->actingAs($this->user)->getJson('/api/v1/shop')->assertJsonPath('data.brainpower.current', 60);
+    }
+
+    public function test_shop_nur_mit_login(): void
+    {
+        $this->getJson('/api/v1/shop')->assertUnauthorized();
+    }
+
     public function test_abgelaufener_booster_fehlt_in_me(): void
     {
         $this->buy('x2_30');

@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\V1\LegalController;
 use App\Http\Controllers\Api\V1\PasswordResetController;
 use App\Http\Controllers\Api\V1\QuizAttemptController;
 use App\Http\Controllers\Api\V1\RegistrationController;
+use App\Http\Controllers\Api\V1\ShopController;
 use App\Http\Controllers\Api\V1\SubjectController;
 use App\Http\Controllers\Api\V1\TopicController;
 use App\Http\Middleware\EnsureAccountActive;
@@ -36,7 +37,8 @@ Route::prefix('v1')->group(function () {
 
         Route::get('hub', [HubController::class, 'show']);
 
-        // XP-Booster mit Brainpower kaufen (E-010)
+        // Shop (E-037) und XP-Booster mit Brainpower kaufen (E-010)
+        Route::get('shop', [ShopController::class, 'show']);
         Route::post('boosters', [BoosterController::class, 'store']);
 
         Route::get('subjects', [SubjectController::class, 'index']);
