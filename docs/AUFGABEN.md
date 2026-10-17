@@ -31,7 +31,6 @@ Meilensteine und Reihenfolge: `plans/README.md`. Entscheidungen: `ENTSCHEIDUNGEN
 
 ## G1 — Hub & Profil
 
-- [ ] Team und Liga aus der Tab-Leiste (E-022) @claude
 - [ ] Hub-Zustände: erster Besuch, Pause, Aufstieg, alles erledigt, Tageszeit @claude !fokus
 - [ ] Profil mit Statistik: EP, Level, Rang, Fach-Level, längster Streak @claude
 - [ ] Nach dem Login zum Hub statt zu `/learn` (`meta.guest` im Router-Guard) @claude

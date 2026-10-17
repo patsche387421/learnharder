@@ -115,6 +115,7 @@ Jede Entscheidung: Nummer, Datum, was, warum, Folgen. Offene Fragen stehen unten
 - **Entscheidung:** Der Hub zeigt Begrüßung, Level-Leiste und „Weiterlernen“ (nächstes offenes Thema). Team und Liga verschwinden aus der Tab-Leiste, bis es sie gibt. Die Tab-Leiste hat dann Hub, Lernen und Profil.
 - **Warum:** Leere Tabs wirken unfertig. „Kommt bald“ weckt Erwartungen, die nach E-021 länger offen bleiben.
 - **Folgen:** Kommt in M5. Die Routen `/team` und `/league` bleiben im Code, nur ohne Tab.
+- **Teilweise ersetzt (2026-10-17):** Die Tab-Leiste behält ihre fünf Tabs (E-035). Der schlanke Hub gilt weiter.
 
 ### E-023 — Rechtstexte: Entwurf von Claude, Prüfung durch die Schule (2026-10-16)
 - **Entscheidung:** Claude entwirft Datenschutzerklärung, Impressum und Einwilligung (auch für unter 14-Jährige) aus dem, was die App wirklich speichert. Patsche klärt mit der Schule oder ihrer Datenschutzstelle, wer verantwortlich ist, und lässt die Texte prüfen.
@@ -177,6 +178,11 @@ Jede Entscheidung: Nummer, Datum, was, warum, Folgen. Offene Fragen stehen unten
 - **Warum:** Datenschutz durch Voreinstellung (DSGVO Art. 25) bei Minderjährigen: Meilensteine verraten Aktivität. Gemeinsam bauen statt vergleichen, ohne Einzelbeiträge, damit niemand bloßgestellt wird. Ohne freien Text und ohne Namen bei Reaktionen gibt es nichts zu moderieren, keinen Druck und keine sichtbaren Grüppchen.
 - **Folgen:** Details in `plans/KONZEPT_SPIELWELT.md` §7. Die Werkhalle kann später den Tab „Team“ füllen (E-022). Podest und Porträts in der Rangliste hängen an O-006.
 - **Präzisierung (2026-10-17):** Der Akku ist für andere unsichtbar, er verrät Aktivität wie die Stimmung. Die Grundausstattung sieht so gut aus wie verdiente Teile, damit niemand als Anfänger:in auffällt.
+
+### E-035 — Tab-Leiste mit fünf Tabs, Team und Liga zum Start fertig (2026-10-17)
+- **Entscheidung:** Die Tab-Leiste bleibt, wie das Design-Artefakt sie vorgibt: Lernen · Team · Hub · Liga · Profil. Team und Liga werden nicht ausgeblendet, sondern sind zum Start (M5) fertig.
+- **Warum:** Das Design-Artefakt ist die Quelle (E-006) und baut die Leiste für genau fünf Ziele. Ausblenden bräuchte dort eine Änderung, die zum Start wieder zurückkäme.
+- **Folgen:** Ersetzt den Teil von E-022 zur Tab-Leiste. Team und Liga (G6, nach O-006) werden Startbedingung. Für diese beiden Seiten gilt damit nicht mehr, dass die Liga erst nach dem Start kommt (E-021) und der Start nicht auf die Spielwelt wartet (E-030).
 
 ## Offen
 

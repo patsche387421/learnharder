@@ -93,7 +93,7 @@ Kurze Reaktionen gehen vor: `think`, während eine Quiz-Antwort geprüft wird, S
 
 **Mit der Klasse** (E-034). Sichtbar nur in der eigenen Klasse (E-024), nur mit Gamer-Tag. Der Akku bleibt wie die Stimmung privat. Die Grundausstattung sieht so gut aus wie verdiente Teile, damit niemand als Anfänger:in auffällt.
 
-- **Werkhalle:** Klassenseite, auf der alle Roboter der Klasse in ihrer Pose stehen, mit Gamer-Tag und Level. Antippen zeigt eine Karte mit Roboter, Level, Erfolgen und längstem Streak, aber ohne laufenden Streak und ohne „zuletzt online“. Die Werkhalle kann später den ausgeblendeten Tab „Team“ füllen (E-022).
+- **Werkhalle:** Klassenseite, auf der alle Roboter der Klasse in ihrer Pose stehen, mit Gamer-Tag und Level. Antippen zeigt eine Karte mit Roboter, Level, Erfolgen und längstem Streak, aber ohne laufenden Streak und ohne „zuletzt online“. Die Werkhalle kann den Tab „Team“ füllen, der zum Start fertig sein muss (E-035).
 - **Klassenprojekt:** Die Klasse baut gemeinsam eine große Maschine in der Werkhalle (z. B. Rakete, Roboterarm, Brücke). Jede abgeschlossene Lerneinheit der Klasse bringt sie ein Stück weiter. Gezeigt wird nur die Summe der Klasse, nie, wer wie viel beigetragen hat. Ist sie fertig, bekommen alle mit mindestens einer Lerneinheit eine Klassen-Lackierung oder ein Abzeichen. Am Ende der Saison gibt es ein Klassenfoto aller Roboter vor der Maschine.
 - **Posen:** feste Haltungen (Arme verschränkt, winken, Daumen hoch, Werkzeug heben, sitzen). Drei sind kostenlos, weitere sind Kosmetik. Technisch gedrehte Arme an den Steckplätzen, ohne neue Zeichnungen. Die Pose erscheint in der Werkhalle, auf der Karte und in der Rangliste: die drei Besten der Saison ganz auf einem Podest, alle anderen als Porträt.
 - **Meilensteine:** Aufstieg, Erfolg oder neue Werkzeug-Stufe erscheinen in der Werkhalle nur, wenn die Person das einschaltet (Opt-in), und nur mit Tag, ohne Uhrzeit.
@@ -118,7 +118,7 @@ Offen als O-006. Empfehlung:
 - **EP pro Saison (Monat) in der eigenen Klasse**, daneben Ranglisten je Fach.
 - **Nicht nach Brainpower:** Brainpower lädt sich täglich auf und sinkt beim Ausgeben. Wer im Shop kauft, fiele zurück, und „verdiente Brainpower“ zählt fast nur die Tage. EP messen das Lernen, die Tagesregel (E-015) bremst Farming.
 - **Transparent:** Die Seite zeigt die Formel und die eigenen Punkte.
-- **Datenschutz:** nur Gamer-Tags, nur die eigene Klasse (Projektplan R1). Bis dahin bleibt die Liga ausgeblendet (E-022).
+- **Datenschutz:** nur Gamer-Tags, nur die eigene Klasse (Projektplan R1). Die Liga ist zum Start fertig (E-035).
 
 ## 9. Wow-Momente
 
