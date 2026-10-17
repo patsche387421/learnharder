@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\Brainpower;
 use App\Support\DailyXp;
 use App\Support\Progression;
 use Database\Factories\UserFactory;
@@ -32,7 +33,7 @@ class User extends Authenticatable implements FilamentUser
         'email',
         'gamer_tag',
         'brainpower_current',
-        'brainpower_max',
+        'brainpower_refilled_on',
         'last_active_at',
         'password',
     ];
@@ -57,6 +58,7 @@ class User extends Authenticatable implements FilamentUser
         return [
             'email_verified_at' => 'datetime',
             'last_active_at' => 'datetime',
+            'brainpower_refilled_on' => 'date',
             'consented_at' => 'datetime',
             'parental_consent_at' => 'datetime',
             'deactivated_at' => 'datetime',
@@ -109,6 +111,18 @@ class User extends Authenticatable implements FilamentUser
     public function progression(): Progression
     {
         return Progression::fromTotalXp($this->stats->total_xp ?? 0);
+    }
+
+    /**
+     * Stand und Maximum. Vorher Brainpower::refill() aufrufen, sonst fehlt das Aufladen des heutigen Tages.
+     *
+     * @return array{current: int, max: int}
+     */
+    public function brainpower(): array
+    {
+        $max = Brainpower::max($this->progression());
+
+        return ['current' => min($this->brainpower_current, $max), 'max' => $max];
     }
 
     /**

@@ -71,11 +71,12 @@ $$\text{BP}_{\text{max}}(L) = 100 + \left\lfloor \frac{L}{5} \right\rfloor \time
 * **Level 25:** $125\text{ BP}$
 * **Level 50:** $150\text{ BP}$
 * **Level 100:** $200\text{ BP}$ (Maximaler Deckel)
+* **Ab Prestige 1:** immer $200\text{ BP}$, auch wenn das Level wieder bei 1 beginnt (E-036)
 
 ---
 
 ### 3.2 Tägliche Regeneration & Streak-Multiplikator
-Jeden Kalendertag um **00:00 UTC** lädt sich Brainpower automatisch auf (bis zum jeweiligen $\text{BP}_{\text{max}}$).
+Jeden Kalendertag um **00:00 in Wien** (wie EP und Streak, E-015, E-036) lädt sich Brainpower auf (bis zum jeweiligen $\text{BP}_{\text{max}}$). Der Server lädt beim ersten Lesen an einem neuen Tag auf, verpasste Tage zählen mit.
 
 $$\text{Tägliche Regeneration} = \text{Basis (50 BP)} + \min(\text{Streak-Tage} \times 2, 30\text{ BP})$$
 

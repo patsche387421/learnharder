@@ -8,7 +8,7 @@ Schema, Migrationen, Seeder und Factories. Allgemeine Regeln: `../../CLAUDE.md`,
 - **Gamification:** `user_stats`, `quiz_attempts` (mit `finished_at`), `question_answers` (erste Antwort je Frage und Lerneinheit, mit `xp_awarded` und `xp_date`), `trophies`, `user_trophies`
 - **Schule:** `schools` → `departments` → `programs` → `school_classes` (je Schuljahr) mit `class_enrollments` und `teaching_assignments`, dazu `school_email_domains`, `school_years`, `curriculum_entries`. Plan: `docs/plans/DATENMODELL_SCHULE.md`. Einschreibungen werden ausgetragen (`left_at`), nicht gelöscht. Demo-Daten: `DemoSchoolSeeder` (nur `local`/`testing`, nach dem Import)
 - **Teams:** `teams`, `team_members`
-- **Benutzer:** `users` (bigint-ID) mit `gamer_tag`, `brainpower_current`/`_max`, `current_streak`. `name` nur fürs Personal, Schüler:innen ohne Namen (E-025). Konten: `consented_at`, `terms_version`, `parental_consent_at`/`_by`, `deactivated_at`/`_by`, `deactivation_reason`, `last_login_at` (E-027, E-028)
+- **Benutzer:** `users` (bigint-ID) mit `gamer_tag`, `brainpower_current`, `brainpower_refilled_on` (das Maximum rechnet der Server, E-036). Streak in `user_stats` (`current_streak`, `longest_streak`, `last_study_date` als Tag in Wien). `name` nur fürs Personal, Schüler:innen ohne Namen (E-025). Konten: `consented_at`, `terms_version`, `parental_consent_at`/`_by`, `deactivated_at`/`_by`, `deactivation_reason`, `last_login_at` (E-027, E-028)
 
 ## Regeln
 
@@ -20,10 +20,8 @@ Schema, Migrationen, Seeder und Factories. Allgemeine Regeln: `../../CLAUDE.md`,
 
 ## Bekannte Schema-Lücken
 
-1. `current_streak` liegt doppelt in `users` und `user_stats`.
-2. Für die Brainpower-Regeneration fehlt ein Zeitstempel (z. B. `brainpower_refilled_at`).
-3. `user_stats.trophies` (Währung) und die Tabelle `trophies` (Errungenschaften) tragen denselben Namen.
-4. Das Antwort-Log gibt es seit M3 (`question_answers`), ein XP-Ereignis-Log (`xp_events`) für EP außerhalb von Lerneinheiten noch nicht.
+1. `user_stats.trophies` (Währung) und die Tabelle `trophies` (Errungenschaften) tragen denselben Namen.
+2. Das Antwort-Log gibt es seit M3 (`question_answers`), ein XP-Ereignis-Log (`xp_events`) für EP außerhalb von Lerneinheiten noch nicht.
 
 ## Datenmigration aus V1
 

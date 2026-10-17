@@ -36,7 +36,7 @@ Die Tests laufen gegen die Datenbank `testing` (`phpunit.xml`) und loggen nach `
 | `GET legal/{slug}` | Rechtstexte ohne Login (E-023): `datenschutz`, `impressum`, `nutzungsregeln`, `einwilligung-eltern` aus `resources/legal/`, Fassung aus `config/legal.php`. Neue Spalte mit Personendaten → `LegalTest` schlägt an, Datenschutzerklärung ergänzen |
 | `POST register/code`, `POST register/verify`, `POST register` | Registrierung (E-025): Code an die Schul-Mail (nur freigegebene Domain, `App\Support\EmailCode`), Code gegen Einmal-Token, Konto als `student` anlegen und anmelden. Limits je E-Mail, IP und Tag (`config/accounts.php`) |
 | `POST password/code`, `POST password/reset` | Passwort vergessen: Code nur für aktive Konten (Antwort immer gleich), neues Passwort beendet alle Anmeldungen (`Accounts::logoutEverywhere`). Auch der Weg zum ersten Passwort für Konten aus dem CMS |
-| `POST login`, `POST logout`, `GET me` | Login per Session, `me` liefert Gamer-Tag, eigene Klasse und Fortschritt (Level, Rang, Prestige, EP) |
+| `POST login`, `POST logout`, `GET me` | Login per Session, `me` liefert Gamer-Tag, eigene Klasse, Fortschritt (Level, Rang, Prestige, EP), Streak und Brainpower. `login` und `me` laden Brainpower vorher auf (`App\Support\Brainpower`, E-036) |
 | `DELETE me` | Eigenes Konto mit Passwort löschen, sofort und vollständig, nur Schüler:innen (E-027). Danach nicht `logout()` aufrufen: Das speichert das Remember-Token und legt das Konto neu an |
 | `GET hub` | Fakten für den Hub: `next_topic` (zuerst im Fach der letzten Lerneinheit, sonst nach Reihenfolge; nur spielbar, nicht gesperrt, nicht erledigt) oder `null` |
 | `GET subjects`, `GET subjects/{slug}` | sichtbare Fächer mit Themen, Fortschritt und Fach-Level (E-018) |

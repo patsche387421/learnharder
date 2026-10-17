@@ -67,8 +67,9 @@ class LegalTest extends TestCase
         $described = [
             'users' => ['id', 'name', 'email', 'gamer_tag', 'password', 'remember_token', 'email_verified_at', 'consented_at', 'terms_version',
                 'parental_consent_at', 'parental_consent_by', 'deactivated_at', 'deactivated_by', 'deactivation_reason', 'last_login_at',
-                // Noch ohne Funktion, nur Standardwerte (Brainpower kommt mit G2)
-                'brainpower_current', 'brainpower_max', 'last_active_at', 'created_at', 'updated_at'],
+                'brainpower_current', 'brainpower_refilled_on',
+                // Noch ohne Funktion
+                'last_active_at', 'created_at', 'updated_at'],
             'sessions' => ['id', 'user_id', 'ip_address', 'user_agent', 'payload', 'last_activity'],
         ];
 

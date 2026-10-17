@@ -26,7 +26,7 @@ class AuthTest extends TestCase
             'gamer_tag' => 'lena42',
             'name' => 'Lena Huber',
             'brainpower_current' => 80,
-            'brainpower_max' => 100,
+            'brainpower_refilled_on' => now('Europe/Vienna')->toDateString(),
         ]);
         // 8.450 EP: Prestige 1, im Zyklus 450 EP = Level 15 (ab 419, Level 16 ab 465)
         UserStat::create(['user_id' => $this->user->id, 'total_xp' => 8450]);
@@ -80,7 +80,7 @@ class AuthTest extends TestCase
                 'prestige' => 1,
                 'xp' => ['total' => 8450, 'level_start' => 8419, 'next_level' => 8465],
                 'streak' => ['current' => 0, 'longest' => 0],
-                'brainpower' => ['current' => 80, 'max' => 100],
+                'brainpower' => ['current' => 80, 'max' => 200],
             ]]);
     }
 

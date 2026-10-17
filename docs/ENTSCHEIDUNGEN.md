@@ -184,6 +184,11 @@ Jede Entscheidung: Nummer, Datum, was, warum, Folgen. Offene Fragen stehen unten
 - **Warum:** Das Design-Artefakt ist die Quelle (E-006) und baut die Leiste für genau fünf Ziele. Ausblenden bräuchte dort eine Änderung, die zum Start wieder zurückkäme.
 - **Folgen:** Ersetzt den Teil von E-022 zur Tab-Leiste. Team und Liga (G6, nach O-006) werden Startbedingung. Für diese beiden Seiten gilt damit nicht mehr, dass die Liga erst nach dem Start kommt (E-021) und der Start nicht auf die Spielwelt wartet (E-030).
 
+### E-036 — Brainpower: Aufladen um Mitternacht in Wien, Maximum ab Prestige fest (2026-10-17)
+- **Entscheidung:** Brainpower lädt sich einmal je Kalendertag in `Europe/Vienna` auf, nicht um 00:00 UTC. Das Maximum folgt dem Level (Ökonomie-Modell §3.1), ab Prestige 1 bleibt es beim Deckel von 200. Aufgeladen wird beim ersten Lesen an einem neuen Tag, verpasste Tage zählen mit, bis zum Maximum.
+- **Warum:** Derselbe Tag wie bei EP (E-015) und Streak, sonst lädt sich Brainpower um 1 oder 2 Uhr nachts auf. Ohne festes Maximum fiele es beim Prestige von 200 auf 100, das wäre eine Strafe für die Fleißigsten (E-010). Mehr Kapazität je Prestige brächte einen Vorteil in der Rangliste, weil Booster EP bringen. Prestige belohnen Kosmetik und Trophäen. Aufladen beim Lesen braucht keinen Scheduler und keinen nächtlichen Schreibvorgang für alle Konten.
+- **Folgen:** Werte in `config/gamification.php`, Rechnung in `App\Support\Brainpower`. `users.brainpower_max` entfällt, neu ist `users.brainpower_refilled_on`. Ökonomie-Modell §3.1 und §3.2 entsprechend ergänzt.
+
 ## Offen
 
 | Nr. | Frage | Empfehlung | Warum offen |

@@ -8,7 +8,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
  * Was die Vue-App über den eingeloggten Nutzer erfährt. Bewusst ohne E-Mail und Klarnamen.
- * Level, Rang und Prestige rechnet der Server aus den Gesamt-EP (User::progression), den Streak aus den Lerntagen (UserStat).
+ * Level, Rang und Prestige rechnet der Server aus den Gesamt-EP (User::progression), den Streak aus den Lerntagen (UserStat),
+ * das Brainpower-Maximum aus Level und Prestige (App\Support\Brainpower).
  *
  * @mixin User
  */
@@ -26,10 +27,7 @@ class MeResource extends JsonResource
             'roles' => $this->getRoleNames(),
             ...$this->progression()->toArray(),
             'streak' => $this->streak(),
-            'brainpower' => [
-                'current' => $this->brainpower_current,
-                'max' => $this->brainpower_max,
-            ],
+            'brainpower' => $this->brainpower(),
         ];
     }
 }
