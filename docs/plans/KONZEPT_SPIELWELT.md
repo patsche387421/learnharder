@@ -19,8 +19,8 @@ Alleinstellungsmerkmale: ein Hub, der auf die Person reagiert, ein eigener Avata
 ## 3. Was es schon gibt
 
 - EP, Level, Rang, Prestige und Fach-Level rechnet der Server (`User::progression`), die App bekommt sie über `GET /api/v1/me`.
-- Streak und Brainpower-Aufladen rechnet der Server (Stand 2026-10-17, E-036), Ausgeben noch nicht. Ohne Logik: `user_stats.trophies`.
-- Hub (`/`) und Profil nach §4, ohne Erfolge. Den längsten Streak zeigt bisher nur das Profil (Stand 2026-10-17).
+- Streak, Brainpower-Aufladen und EP-Booster rechnet der Server (Stand 2026-10-17, E-036, E-037). Ohne Logik: `user_stats.trophies`.
+- Hub (`/`) und Profil nach §4, ohne Erfolge. Der Hub zeigt den laufenden Streak und „in Gefahr“, das Profil den längsten (Stand 2026-10-17).
 
 ## 4. Hub und Profil (G1)
 

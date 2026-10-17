@@ -16,11 +16,11 @@
 | PSP | Inhalt | Stand |
 |---|---|---|
 | 1.4 | Design-System | ✅ Tokens, `tokens.json`, Komponenten und beide Schriften da |
-| 2.1 | Laravel-Setup | 🟡 läuft lokal in WSL2, Postgres (E-007), API für Login, Registrierung, Passwort, Konto löschen, Rechtstexte, Fächer, Themen, Lerneinheiten und Hub (`/api/v1/…`), Sichtbarkeit nach Klasse (E-024), Mail lokal über Mailpit (E-026), 271 Backend-Tests |
+| 2.1 | Laravel-Setup | 🟡 läuft lokal in WSL2, Postgres (E-007), API für Login, Registrierung, Passwort, Konto löschen, Rechtstexte, Fächer, Themen, Lerneinheiten, Hub, Shop und Booster (`/api/v1/…`), Sichtbarkeit nach Klasse (E-024), Mail lokal über Mailpit (E-026), 324 Backend-Tests |
 | 2.2 | Rollen | ✅ Policies für Fach, Thema, Theorie, Frage (autor ohne Löschen, tester nur lesen). Veröffentlichen nur Admin (E-014) |
 | 2.3 | CMS | ✅ redaktionstauglich auf Deutsch (E-012): Wertelisten, Antworten, Theorie, Veröffentlichen, Design-System. KI-Übersetzung offen (nach M5) |
-| 2.4–2.7 | Spiellogik, Klassen, API, Echtzeit | 🟡 EP, Level, Rang, Prestige und Fach-Level rechnet der Server (E-015, E-016, E-018), EP je Frage einmal pro Tag. Klassen mit Einschreibungen und Lehrkräften im CMS (M3b). Konten im CMS mit Sperren und Admin-Schutz (M4a, E-027). Brainpower, Streaks, Trophäen, Join-Codes und Echtzeit offen |
-| 3.x | Vue-Frontend | 🟡 Login, Fächer, Thema, Theorie, Lerneinheit mit Ergebnis (M3), Hinweis ohne Klasse (M3b), Registrierung, Passwort vergessen, Rechtstexte und Konto löschen (M4a), Hub mit Weiterlernen (G1), Avatar-Engine mit Platzhalter-Teilen im Hub und im Profil (G4, E-031 bis E-034), 153 Tests. Team, Liga und PWA offen |
+| 2.4–2.7 | Spiellogik, Klassen, API, Echtzeit | 🟡 EP, Level, Rang, Prestige und Fach-Level rechnet der Server (E-015, E-016, E-018), EP je Frage einmal pro Tag. Klassen mit Einschreibungen und Lehrkräften im CMS (M3b). Konten im CMS mit Sperren und Admin-Schutz (M4a, E-027). Streak, Brainpower und EP-Booster seit G2 (E-036, E-037). Trophäen, Join-Codes und Echtzeit offen |
+| 3.x | Vue-Frontend | 🟡 Login, Fächer, Thema, Theorie, Lerneinheit mit Ergebnis (M3), Hinweis ohne Klasse (M3b), Registrierung, Passwort vergessen, Rechtstexte und Konto löschen (M4a), Hub mit Weiterlernen und Streak (G1, G2), Shop mit EP-Boostern (G2), Avatar-Engine mit Platzhalter-Teilen im Hub, im Shop und im Profil (G4, E-031 bis E-034), 186 Tests. Team, Liga und PWA offen |
 | 5.x | Tests, CI, Hetzner | 🟡 CI bei jedem Push (Pint, Backend-Tests gegen Postgres, Frontend-Tests und Build). Hetzner offen |
 | — | Content-Import aus V1 | ✅ 7 Fächer, 32 Themen, 158 Theorieblöcke, 158 Fragen (lokal). Überschreibt keine gepflegten Themen |
 | — | Nutzer-Migration aus Supabase | entfällt, alle registrieren sich neu (E-011) |
@@ -56,8 +56,8 @@ Der kritische Pfad zum ersten echten Nutzer ist kürzer:
 | **M4** ⏸ | Hetzner läuft | Prod-Stack in `infra/` (Caddy nach E-019), TLS, tägliche Backups mit Restore-Test, Staging, Mailversand aus der EU. Patsche führt am Server aus. Pausiert, bis die Schule den Vertragspartner nennt (Stand 2026-10-17) |
 | **M5** | Start | Lernablauf, EP-Regeln und Brainpower-Konzept mit betreuenden Lehrkräften abgestimmt, Hub schlank (E-022), Team und Liga fertig (E-035), DNS umgestellt, Registrierung offen, Neuregistrierung angekündigt, V1-Supabase abgeschaltet → Tag `v2.0.0-alpha.1` (E-020) |
 | **G1** ✅ | Hub & Profil | Hub statt Platzhalter: Begrüßung nach Zustand und Tageszeit, Level, Brainpower, „Weiterlernen“. Profil mit Statistik, der längste Streak kommt mit G2 (Konzept Spielwelt §4) |
-| **G2** | Brainpower & Streaks | Aufladen, Streak, Booster und Challenge nach Ökonomie-Modell §3, Werte in `config/` (§5). Stand 2026-10-17: Streak, Aufladen und EP-Booster im Shop fertig (E-036, E-037), offen Herausforderung und Streak im Hub |
-| **G3** | Erfolge | Katalog im CMS, Vergabe auf dem Server, Raster im Profil (§6) |
+| **G2** ✅ | Brainpower & Streaks | Streak (auch im Hub), Aufladen, EP-Booster im Shop mit Hinweis ohne EP, Werte in `config/` (E-036, E-037). Die Herausforderung kam nach G3 (E-038) |
+| **G3** | Erfolge | Katalog im CMS, Vergabe auf dem Server, Raster im Profil (§6), Herausforderung für 25 Brainpower (Ökonomie-Modell §3.3, E-038) |
 | **G4** | Avatar | Figur aus SVG-Teilen mit `idle`, `celebrate`, `wave`, `think`, im Hub und auf dem Ergebnis (§7) |
 | **G5** | Shop | Teile und Animationen freischalten, dann mit Brainpower kaufen. Preise im Ökonomie-Modell §3.4 (§7) |
 | **G6** | Rangliste | Nach Entscheidung O-006, nur Gamer-Tags der eigenen Klasse (§8) |
@@ -66,10 +66,9 @@ Der kritische Pfad zum ersten echten Nutzer ist kürzer:
 
 ### Nächste Schritte (Stand 2026-10-17)
 
-1. **Ansehen:** Patsche prüft Hub-Zustände (G1) sowie Shop, EP-Booster und Streak (G2) in der laufenden App.
+1. **Ansehen:** Patsche prüft Hub-Zustände (G1) sowie Shop, EP-Booster und Streak (G2) in der laufenden App, auch bei Handy-Breite.
 2. **G4 weiter, sobald Patsche liefert:** Werkzeug je Fach und Starter-Kit je Abteilung festlegen, Teile mit KI-Hilfe entwerfen. Dann Abteilung in `/me`, Starter-Kits, Avatar speichern (Server prüft den Besitz), Antippen, Porträt, `celebrate` auf dem Ergebnis.
-3. **G2 fertig machen:** Hinweis im Shop, wenn heute nichts mehr EP bringt, Streak im Hub, Herausforderung für 25 Brainpower.
-4. **Danach** G3 Erfolge, G5 Shop, Werkhalle, G6 Rangliste. Team und Liga müssen zum Start fertig sein (E-035). M4 geht weiter, sobald die Schule antwortet.
+3. **Danach** G3 Erfolge mit Herausforderung, G5 Shop, Werkhalle, G6 Rangliste. Team und Liga müssen zum Start fertig sein (E-035). M4 geht weiter, sobald die Schule antwortet.
 
 ### Größte Risiken jetzt
 

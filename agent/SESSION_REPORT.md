@@ -440,3 +440,18 @@ V1-Protokoll: `_archiv/agent/SESSION_REPORT.md` und `SESSION_REPORT_ARCHIVE.md`.
   - Datenschutzerklärung (Entwurf) um Streak, Brainpower und Booster ergänzt.
 - **Geprüft:** Backend 312 Tests grün, `pint --test` sauber. Frontend 179 Tests grün, `build` und `check:tokens` grün. Shop-Design als Vorschau in hell und dunkel mit Chrome gerendert, Kontraste nachgerechnet. In der laufenden App nicht angesehen. Die App wurde einmal mitten in der Arbeit beendet, danach war `.git` heil (`fsck`), Sail musste neu gestartet werden.
 - **Offen:** neu in `docs/AUFGABEN.md` unter G2: ansehen (Patsche), Hinweis „Heute bringen deine Themen keine EP mehr“, Streak im Hub, Herausforderung, Jubel beim Kauf.
+
+## 2026-10-17 — G2 abgeschlossen: Fixes aus den Screenshots, Hinweis ohne EP, Streak im Hub
+
+- **Branch:** `feat/g2-abschluss` von `dev`, danach mit `--no-ff` nach `dev`. Nicht gepusht.
+- **Commits:** `dff4d67` (Hub bei Handy-Breite), `e55a485` (Shop sagt einmal, dass ein Booster läuft), `5e4e7f0` (Booster nur am Tag der Antwort), `b2ed3e0` (Hinweis ohne EP), `54d5e54` (`streak.today` in `/me`), `84b0b35` (Streak im Hub), `b38f534` (Roboter jubelt beim Kauf), dazu dieser Doku-Commit.
+- **Ergebnis:**
+  - Hub: Bei laufendem Booster war die Seite bei etwa 360 px breiter als der Bildschirm. Ursache war die Grid-Spalte, die auf die Mindestbreite der Marke „1,5× EP · 26 Min.“ wuchs (`minmax(0, 1fr)`, Marke bricht um).
+  - Shop: „Läuft schon einer“ stand dreimal unter den Buttons. Jetzt steht oben einmal „Danach kannst du den nächsten starten.“, die Buttons verweisen per `aria-describedby` darauf. Design-Artefakt Version 33.
+  - Booster: Antworten unter einem Booster ließen sich über Nacht sammeln und am nächsten Tag doppelt abschließen. Der Faktor zählt jetzt nur, wenn Antwort und Abschluss am selben Wiener Tag liegen (`Booster::multiplierFor`). Der Booster-Anteil rechnet aus den gespeicherten EP, eine spätere Änderung von `xp_reward` im CMS verschiebt ihn nicht mehr.
+  - Shop-Hinweis „Heute bringen deine Themen keine EP mehr“: `GET /shop` liefert `xp_left_today` aus einer `EXISTS`-Abfrage (`DailyXp::anyLeft`), ohne Klasse sofort `false`. `EXPLAIN ANALYZE` auf den Seed-Daten etwa 1 ms, Anti-Join über den Index `(user_id, question_id, xp_date)`. Ein Test prüft, dass die Zahl der Abfragen nicht mit den Inhalten wächst.
+  - Streak im Hub: Chip-Zeile `lh-chiprow` unter der EP-Leiste mit Streak und Brainpower (Design-Artefakt Version 34, ändert die Regel in `CurrencyChip`). „Streak in Gefahr“ nur als Text der Begrüßung. „Heute gelernt“ kommt vom Server (`streak.today`).
+  - Shop: kleiner Roboter im Kopf mit Akku aus der Brainpower, jubelt einmal nach dem Kauf (Version 35).
+  - E-038: Herausforderung nach G3, Theme folgt dem Gerät (dunkel, weil das Gerät dunkel eingestellt ist), Umschalter später.
+- **Geprüft:** Backend 324 Tests grün, `pint --test` sauber. Frontend 186 Tests grün, `build` und `check:tokens` grün. Kontrast der neuen Zeile im Shop nachgerechnet (5,51:1 hell, 7,59:1 dunkel). Layout ohne Browser nicht angesehen, in der laufenden App nicht geprüft.
+- **Offen:** in `docs/AUFGABEN.md`: G2 in der App bei 320 und 360 px ansehen (Patsche), Herausforderung unter G3, LearnFlow-Storyboard auf die Chip-Zeile umstellen, Theme-Umschalter.

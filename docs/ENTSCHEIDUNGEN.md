@@ -194,6 +194,11 @@ Jede Entscheidung: Nummer, Datum, was, warum, Folgen. Offene Fragen stehen unten
 - **Warum:** Ein Ort für alles, was Brainpower kostet, statt eines eigenen Dialogs jetzt und eines Shops später. Die Zeile im Hub findet man, einen antippbaren Chip kaum. Die Marke auf „Weiterlernen“ lenkt zum Lernen statt zum Ausgeben. Dauerndes Leuchten oder eine Sekunden-Uhr machen Druck, das widerspricht der ruhigen Oberfläche (Konzept Spielwelt §2) und dem Fokus ohne Zeitdruck (LearnFlow). Vor dem Kauf sagt der Shop ehrlich, dass der Faktor nur für Fragen gilt, die heute noch EP bringen (E-015).
 - **Folgen:** Design im Artefakt (Version 32, E-006): Komponente `Shop`, Marken `lh-chip__boost` und `lh-tag--boost`, `icon-booster`, Glossar „EP-Booster“ und „Shop“. Booster (Vorteil) und Roboter-Teile (Kosmetik) stehen nie im selben Abschnitt. Der Hinweis „Heute bringen deine Themen keine EP mehr“ braucht eine Angabe vom Server.
 
+### E-038 — G2 ohne Herausforderung, Theme folgt dem Gerät (2026-10-17)
+- **Entscheidung:** Die Herausforderung für 25 Brainpower (Ökonomie-Modell §3.3) wandert von G2 nach G3. G2 ist mit Streak, Aufladen, EP-Booster, Shop und Streak im Hub fertig. Die App folgt beim Theme weiter der Einstellung des Geräts, ein Umschalter System · Hell · Dunkel im Profil kommt später.
+- **Warum:** Die Herausforderung braucht eigene Regeln (Fragen-Pool, EP-Bonus, Verhältnis zur Tagesregel E-015) und vergibt Trophäen, gehört also zu den Erfolgen. Hell ist im Design-Artefakt nur der Standard ohne Geräte-Einstellung. Wer am Gerät Dunkel eingestellt hat, sieht die App dunkel, das ist gewollt.
+- **Folgen:** Aufgabe in `AUFGABEN.md` unter G3, Umschalter unter „Nebenbei“. Im Hub stehen Streak und Brainpower als Chip-Zeile unter der EP-Leiste (Design-Artefakt Version 34, ändert die Regel „Streak hat einen eigenen Platz“ in `CurrencyChip`). Ein Booster zählt nur, wenn Antwort und Abschluss am selben Wiener Tag liegen (Ökonomie-Modell §3.3).
+
 ## Offen
 
 | Nr. | Frage | Empfehlung | Warum offen |

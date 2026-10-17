@@ -305,7 +305,7 @@ class LessonApiTest extends TestCase
             ->orderBy('id')->pluck('xp_date')->map->toDateString()->all());
     }
 
-    /** @return array{current: int, longest: int} */
+    /** @return array{current: int, longest: int, today: bool} */
     private function streak(): array
     {
         // Wie bei einer echten Anfrage frisch laden, sonst hängt noch user_stats von vor der ersten Lerneinheit am Objekt
@@ -320,15 +320,15 @@ class LessonApiTest extends TestCase
 
     public function test_streak_zaehlt_tage_mit_abgeschlossener_lerneinheit(): void
     {
-        $this->assertSame(['current' => 0, 'longest' => 0], $this->streak());
+        $this->assertSame(['current' => 0, 'longest' => 0, 'today' => false], $this->streak());
 
         $this->playOn('2026-10-16 10:00');
         $this->playOn('2026-10-16 18:00');
-        $this->assertSame(['current' => 1, 'longest' => 1], $this->streak());
+        $this->assertSame(['current' => 1, 'longest' => 1, 'today' => true], $this->streak());
 
         $this->playOn('2026-10-17 07:00');
         $this->playOn('2026-10-18 21:00');
-        $this->assertSame(['current' => 3, 'longest' => 3], $this->streak());
+        $this->assertSame(['current' => 3, 'longest' => 3, 'today' => true], $this->streak());
         $this->assertSame('2026-10-18', UserStat::where('user_id', $this->user->id)->first()->last_study_date->toDateString());
     }
 
@@ -339,13 +339,13 @@ class LessonApiTest extends TestCase
         // Am nächsten Tag nur angefangen: kein Lerntag
         $this->travelTo(CarbonImmutable::parse('2026-10-17 10:00', 'Europe/Vienna'));
         $this->answer($this->start()->json('data.id'), $this->einfach, 'falsch');
-        $this->assertSame(['current' => 1, 'longest' => 1], $this->streak());
+        $this->assertSame(['current' => 1, 'longest' => 1, 'today' => false], $this->streak());
 
         // Falsch beantwortet und abgeschlossen, 0 EP: zählt trotzdem
         $id = $this->start()->json('data.id');
         $this->answer($id, $this->einfach, 'falsch');
         $this->finish($id)->assertJsonPath('data.xp_earned', 0);
-        $this->assertSame(['current' => 2, 'longest' => 2], $this->streak());
+        $this->assertSame(['current' => 2, 'longest' => 2, 'today' => true], $this->streak());
     }
 
     public function test_nach_einem_ausgelassenen_tag_beginnt_der_streak_neu(): void
@@ -355,12 +355,12 @@ class LessonApiTest extends TestCase
 
         // Am Tag danach läuft er noch, erst nach einem ganzen Tag ohne Lerneinheit ist er weg
         $this->travelTo(CarbonImmutable::parse('2026-10-18 23:00', 'Europe/Vienna'));
-        $this->assertSame(['current' => 2, 'longest' => 2], $this->streak());
+        $this->assertSame(['current' => 2, 'longest' => 2, 'today' => false], $this->streak());
         $this->travelTo(CarbonImmutable::parse('2026-10-19 08:00', 'Europe/Vienna'));
-        $this->assertSame(['current' => 0, 'longest' => 2], $this->streak());
+        $this->assertSame(['current' => 0, 'longest' => 2, 'today' => false], $this->streak());
 
         $this->playOn('2026-10-19 08:00');
-        $this->assertSame(['current' => 1, 'longest' => 2], $this->streak());
+        $this->assertSame(['current' => 1, 'longest' => 2, 'today' => true], $this->streak());
     }
 
     public function test_streak_tage_gelten_in_wien(): void
@@ -369,7 +369,7 @@ class LessonApiTest extends TestCase
         $this->playOn('2026-10-16 23:59');
         $this->playOn('2026-10-17 00:01');
 
-        $this->assertSame(['current' => 2, 'longest' => 2], $this->streak());
+        $this->assertSame(['current' => 2, 'longest' => 2, 'today' => true], $this->streak());
     }
 
     public function test_abschluss_meldet_den_neuen_streak(): void
@@ -377,7 +377,7 @@ class LessonApiTest extends TestCase
         $this->playOn('2026-10-16 10:00');
         $this->travelTo(CarbonImmutable::parse('2026-10-17 10:00', 'Europe/Vienna'));
 
-        $this->playPerfect()->assertJsonPath('data.streak', ['current' => 2, 'longest' => 2]);
+        $this->playPerfect()->assertJsonPath('data.streak', ['current' => 2, 'longest' => 2, 'today' => true]);
     }
 
     public function test_doppelter_abschluss_zaehlt_den_tag_nur_einmal(): void
@@ -388,7 +388,7 @@ class LessonApiTest extends TestCase
         $this->travelTo(CarbonImmutable::parse('2026-10-17 10:00', 'Europe/Vienna'));
         $this->finish($id);
 
-        $this->assertSame(['current' => 1, 'longest' => 1], $this->streak());
+        $this->assertSame(['current' => 1, 'longest' => 1, 'today' => false], $this->streak());
     }
 
     private function boost(string $kind): void
@@ -433,6 +433,43 @@ class LessonApiTest extends TestCase
         $this->travelTo(CarbonImmutable::parse('2026-10-16 10:31', 'Europe/Vienna'));
         $this->answer($id, $this->mehrfach, 'a', 'b')->assertJsonPath('data.xp', 2)->assertJsonPath('data.multiplier', 1);
         $this->finish($id)->assertJsonPath('data.xp_earned', 6)->assertJsonPath('data.xp_from_booster', 2);
+    }
+
+    public function test_antworten_unter_booster_von_gestern_bekommen_heute_keinen_faktor(): void
+    {
+        $this->boost('x2_30');
+        $id = $this->start()->json('data.id');
+        $this->answer($id, $this->einfach, 'richtig')->assertJsonPath('data.xp', 4);
+
+        // Lerneinheit über Nacht offen gelassen, Abschluss am nächsten Tag
+        $this->travelTo(CarbonImmutable::parse('2026-10-17 08:00', 'Europe/Vienna'));
+        $this->answer($id, $this->einfach, 'richtig')->assertJsonPath('data.xp', 2)->assertJsonPath('data.multiplier', 1);
+        $this->finish($id)->assertJsonPath('data.xp_earned', 2)->assertJsonPath('data.xp_from_booster', 0);
+
+        $this->assertSame(2, $this->totalXp());
+    }
+
+    public function test_booster_zaehlt_bis_zur_wiener_mitternacht(): void
+    {
+        $this->travelTo(CarbonImmutable::parse('2026-10-16 23:40', 'Europe/Vienna'));
+        $this->boost('x2_30');
+        $id = $this->start()->json('data.id');
+        $this->answer($id, $this->einfach, 'richtig');
+
+        $this->travelTo(CarbonImmutable::parse('2026-10-16 23:59', 'Europe/Vienna'));
+        $this->finish($id)->assertJsonPath('data.xp_earned', 4)->assertJsonPath('data.xp_from_booster', 2);
+    }
+
+    public function test_booster_anteil_bleibt_wenn_das_cms_die_ep_der_frage_aendert(): void
+    {
+        $this->einfach->update(['xp_reward' => 3]);
+        $this->boost('x1_5_30');
+        $id = $this->start()->json('data.id');
+        $this->answer($id, $this->einfach, 'richtig');
+        $this->finish($id)->assertJsonPath('data.xp_earned', 5)->assertJsonPath('data.xp_from_booster', 2);
+
+        $this->einfach->update(['xp_reward' => 10]);
+        $this->finish($id)->assertJsonPath('data.xp_earned', 5)->assertJsonPath('data.xp_from_booster', 2);
     }
 
     public function test_booster_hebt_die_tagesregel_nicht_auf(): void

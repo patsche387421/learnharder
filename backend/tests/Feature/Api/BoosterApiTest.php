@@ -108,6 +108,7 @@ class BoosterApiTest extends TestCase
                     ['kind' => 'x2_30', 'multiplier' => 2, 'minutes' => 30, 'cost' => 40],
                     ['kind' => 'x2_60', 'multiplier' => 2, 'minutes' => 60, 'cost' => 70],
                 ],
+                'xp_left_today' => false, // ohne Klasse nichts zu spielen
             ]]);
 
         $this->buy('x2_30');

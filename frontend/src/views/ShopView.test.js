@@ -12,7 +12,10 @@ const BOOSTERS = [
   { kind: 'x2_30', multiplier: 2, minutes: 30, cost: 40 },
   { kind: 'x2_60', multiplier: 2, minutes: 60, cost: 70 },
 ]
-const shop = (extra) => ({ status: 200, body: { data: { brainpower: { current: 60, max: 100 }, booster: null, boosters: BOOSTERS, ...extra } } })
+const shop = (extra) => ({
+  status: 200,
+  body: { data: { brainpower: { current: 60, max: 100 }, booster: null, boosters: BOOSTERS, xp_left_today: true, ...extra } },
+})
 
 async function show(...responses) {
   const fetch = mockFetch(...responses)
@@ -59,6 +62,14 @@ describe('ShopView', () => {
     ])
     expect(wrapper.find('.lh-offer img').attributes('src')).toBe(icons['icon-booster'])
     expect(wrapper.find('.lh-shop__running').exists()).toBe(false)
+    expect(wrapper.find('.shop__no-xp').exists()).toBe(false)
+  })
+
+  it('sagt ehrlich, wenn heute keine Frage mehr EP bringt, und lässt trotzdem kaufen', async () => {
+    const { wrapper } = await show(shop({ xp_left_today: false }))
+
+    expect(wrapper.find('.shop__no-xp').text()).toBe('Heute bringen deine Themen keine EP mehr. Morgen lohnt sich ein Booster wieder.')
+    expect(offers(wrapper)[0]).toMatchObject({ disabled: false, why: '' })
   })
 
   it('startet einen Booster und übernimmt Brainpower und Booster vom Server', async () => {
@@ -71,22 +82,39 @@ describe('ShopView', () => {
     expect(fetch.mock.calls[1][0]).toMatch(/\/boosters$/)
     expect(JSON.parse(fetch.mock.calls[1][1].body)).toEqual({ kind: 'x2_30' })
     expect(wrapper.find('.lh-chip').attributes('aria-label')).toBe('20 Brainpower')
-    expect(wrapper.find('.lh-shop__running').text()).toBe('2× EP läuft · noch 30 Min.')
-    expect(offers(wrapper).every((o) => o.disabled && o.why === 'Läuft schon einer')).toBe(true)
+    expect(wrapper.find('.lh-shop__running').text()).toBe('2× EP läuft · noch 30 Min.Danach kannst du den nächsten starten.')
+    expect(offers(wrapper).every((o) => o.disabled && o.why === '')).toBe(true)
+    expect(wrapper.findAll('.lh-offer button').map((b) => b.attributes('aria-describedby'))).toEqual(Array(3).fill('shop-running'))
+    expect(wrapper.find('#shop-running').exists()).toBe(true)
     expect(useAuthStore().me.brainpower).toEqual({ current: 20, max: 100 })
     expect(useAuthStore().me.booster).toEqual(started.booster)
+  })
+
+  it('der Roboter im Kopf zeigt die Brainpower und jubelt nur nach einem Kauf', async () => {
+    const started = { brainpower: { current: 20, max: 100 }, booster: { multiplier: 2, ends_at: '2026-10-17T12:37:00+00:00' } }
+    const { wrapper } = await show(shop(), { status: 201, body: { data: started } })
+    const robot = () => wrapper.find('.lh-shop__head .robot')
+
+    expect(robot().classes()).not.toContain('robot--celebrate')
+    expect(robot().find('.robot__charge').attributes('width')).toBe(String(28 * 0.6))
+
+    await wrapper.findAll('.lh-offer button')[1].trigger('click')
+    await flushPromises()
+    expect(robot().classes()).toContain('robot--celebrate')
+    expect(robot().find('.robot__charge').attributes('width')).toBe(String(28 * 0.2))
   })
 
   it('zählt die Restzeit in Minuten und gibt die Angebote nach Ablauf wieder frei', async () => {
     const { wrapper } = await show(shop({ booster: { multiplier: 1.5, ends_at: '2026-10-17T12:09:30+00:00' } }))
 
-    expect(wrapper.find('.lh-shop__running').text()).toBe('1,5× EP läuft · noch 3 Min.')
+    expect(wrapper.find('.lh-shop__running').text()).toContain('1,5× EP läuft · noch 3 Min.')
     await vi.advanceTimersByTimeAsync(60_000)
-    expect(wrapper.find('.lh-shop__running').text()).toBe('1,5× EP läuft · noch 2 Min.')
+    expect(wrapper.find('.lh-shop__running').text()).toContain('1,5× EP läuft · noch 2 Min.')
 
     await vi.advanceTimersByTimeAsync(3 * 60_000)
     expect(wrapper.find('.lh-shop__running').exists()).toBe(false)
     expect(offers(wrapper)[0]).toMatchObject({ disabled: false, why: '' })
+    expect(wrapper.find('.lh-offer button').attributes('aria-describedby')).toBeUndefined()
   })
 
   it('zeigt die Meldung des Servers, wenn der Kauf nicht klappt', async () => {

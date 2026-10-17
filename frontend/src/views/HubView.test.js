@@ -208,6 +208,44 @@ describe('HubView', () => {
     expect(wrapper.find('.robot').classes()).toContain(mood)
   })
 
+  it('zeigt den Streak als ersten Chip unter der EP-Leiste, vor der Brainpower', async () => {
+    useAuthStore().me = { ...ME, streak: { current: 7, longest: 9, today: true } }
+    const wrapper = await hubWith(null)
+
+    const chips = wrapper.findAll('.lh-chiprow .lh-chip')
+    expect(chips.map((c) => c.attributes('aria-label'))).toEqual(['7 Tage Streak', '80 Brainpower'])
+    expect(chips[0].find('img').attributes('src')).toBe(icons['icon-streak'])
+    expect(chips[0].attributes('href')).toBeUndefined()
+  })
+
+  it.each([
+    [0, []],
+    [1, ['1 Tag Streak']],
+  ])('Streak %i: Chip %j', async (current, labels) => {
+    useAuthStore().me = { ...ME, streak: { current, longest: 3, today: true } }
+    const wrapper = await hubWith(null)
+
+    expect(wrapper.findAll('.lh-chiprow .lh-chip').map((c) => c.attributes('aria-label')).slice(0, -1)).toEqual(labels)
+  })
+
+  it('Streak in Gefahr: freundlicher Hinweis statt Angebot, der Roboter bleibt neutral', async () => {
+    at(14)
+    useAuthStore().me = { ...ME, streak: { current: 4, longest: 4, today: false } }
+    const wrapper = await hubWith(localIso(16, 18))
+
+    expect(wrapper.find('.hub__sub').text()).toBe('Noch nichts gelernt heute. 5 Min. reichen.')
+    expect(wrapper.find('.robot').classes()).toContain('robot--curious')
+  })
+
+  it('„heute gelernt“ kommt vom Server (Wiener Tag), nicht von der Gerätezeit', async () => {
+    at(14)
+    useAuthStore().me = { ...ME, streak: { current: 4, longest: 4, today: true } }
+    // Gerätezeit sagt gestern, der Server sagt heute
+    const wrapper = await hubWith(localIso(16, 23, 50))
+
+    expect(wrapper.find('.hub__sub').text()).toBe('Heute schon gelernt. Noch eine Runde Schleifen?')
+  })
+
   it('zeigt einen Aufstieg aus der Lerneinheit einmal, mit Jubel', async () => {
     at(14)
     useAuthStore().applyProgress({ level: 8 }, true)

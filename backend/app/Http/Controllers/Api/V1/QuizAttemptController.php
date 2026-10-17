@@ -96,10 +96,12 @@ class QuizAttemptController extends Controller
         );
         // Dieselbe erste Antwort noch einmal (z. B. nach einem Netzfehler) ist keine Wiederholung
         $repeat = ! $answer->wasRecentlyCreated && $answer->selected_option_ids !== $selected;
+        // Eine Antwort von gestern (Lerneinheit über Nacht offen) bekommt beim Abschluss heute keinen Faktor mehr
+        $multiplier = Booster::multiplierFor($answer, DailyXp::today());
 
         $xp = ! $repeat && $answer->is_correct
             && ! in_array($question->id, DailyXp::alreadyEarned($attempt->user_id, [$question->id]), true)
-            ? Booster::apply($question->xp_reward, $answer->xp_multiplier)
+            ? Booster::apply($question->xp_reward, $multiplier)
             : 0;
 
         return response()->json(['data' => [
@@ -107,8 +109,8 @@ class QuizAttemptController extends Controller
             'correct_option_ids' => $correctIds,
             'explanation' => $question->explanation,
             'xp' => $xp,
-            // Faktor des Boosters, der beim ersten Antworten lief (1 ohne). Die App zeigt „2×“ nur, wenn es EP gab.
-            'multiplier' => $answer->xp_multiplier,
+            // Faktor des Boosters, der beim ersten Antworten lief, nur am selben Tag (1 ohne). Die App zeigt „2×“ nur, wenn es EP gab.
+            'multiplier' => $multiplier,
             'repeat' => $repeat,
         ]]);
     }
@@ -127,9 +129,8 @@ class QuizAttemptController extends Controller
         $user = $attempt->user()->first();
         $after = $user->progression();
         $before = Progression::fromTotalXp($after->total - $attempt->xp_earned);
-        // Anteil des Boosters: vergebene EP minus die EP der Fragen ohne Faktor
-        $fromBooster = $attempt->answers()->with('question:id,xp_reward')->get()
-            ->sum(fn (QuestionAnswer $answer) => $answer->xp_awarded > 0 ? $answer->xp_awarded - $answer->question->xp_reward : 0);
+        // Anteil des Boosters aus den gespeicherten EP und Faktoren, unabhängig vom heutigen xp_reward
+        $fromBooster = $attempt->answers()->get()->sum(fn (QuestionAnswer $answer) => Booster::share($answer));
 
         return response()->json(['data' => [
             'xp_earned' => $attempt->xp_earned,
