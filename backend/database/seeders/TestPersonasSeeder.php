@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Hash;
 
 /**
  * Feste Testpersonen in der Demo-Klasse, um Zustände in der App von Hand zu prüfen (Level, Prestige, Streak, Brainpower,
- * Booster, ohne Klasse, gesperrt). Anmelden mit <gamer-tag>@test.learnharder.app und dem Passwort der Demo-Konten.
+ * Booster, Herausforderung und Erfolge, ohne Klasse, gesperrt). Anmelden mit <gamer-tag>@test.learnharder.app und dem Passwort der Demo-Konten.
  * Jeder Lauf löscht die Testpersonen samt Lernverlauf und legt sie neu an, so kommt alles in den Ausgangszustand.
  * Alle haben heute schon aufgeladen, damit der gespeicherte Stand dem entspricht, was die App zeigt. Wer einen Streak hat,
  * hat am letzten Lerntag auch eine Lerneinheit abgeschlossen, sonst hielte der Hub den Besuch für den ersten.
@@ -52,10 +52,12 @@ class TestPersonasSeeder extends Seeder
         $this->persona('Boosterfan', fn (UserFactory $f) => $f->inClass($class)->level(30)->streak(3, today: true)->brainpower(60)->booster(2.0, minutes: 25));
         $this->persona('FastPrestige', fn (UserFactory $f) => $f->inClass($class)->xp(Progression::CYCLE_XP - 10)->streak(12, today: true)->brainpower(150));
         $this->persona('PrestigeProfi', fn (UserFactory $f) => $f->inClass($class)->level(10, prestige: 2)->streak(40, longest: 55)->brainpower(200));
+        // 24 Lerneinheiten: genug gelernte Fragen für die Herausforderung, die 25. bringt „Dranbleiben“ (E-044)
+        $this->lessonHistory($this->persona('Herausforderer', fn (UserFactory $f) => $f->inClass($class)->level(20)->brainpower(100)), 24);
         $this->persona('OhneKlasse', fn (UserFactory $f) => $f->student()->brainpower(100));
         Accounts::deactivate($this->persona('Gesperrt', fn (UserFactory $f) => $f->inClass($class)->brainpower(100)), $admin, 'Testperson');
 
-        $this->command?->info('Testpersonen angelegt: Neuling, Mittendrin, Boosterfan, FastPrestige, PrestigeProfi, OhneKlasse, Gesperrt (@'.self::DOMAIN.').');
+        $this->command?->info('Testpersonen angelegt: Neuling, Mittendrin, Boosterfan, FastPrestige, PrestigeProfi, Herausforderer, OhneKlasse, Gesperrt (@'.self::DOMAIN.').');
     }
 
     /** @param  callable(UserFactory): UserFactory  $build */
@@ -71,6 +73,31 @@ class TestPersonasSeeder extends Seeder
         $this->lastLesson($user);
 
         return $user;
+    }
+
+    /**
+     * $count abgeschlossene Lerneinheiten ohne EP in den ersten drei Themen mit Fragen je sichtbarem Fach, reihum, an den
+     * $count Tagen vor heute um 17 Uhr in Wien. Ohne Streak, der Hub sieht trotzdem einen letzten Lerntag (gestern).
+     */
+    private function lessonHistory(User $user, int $count): void
+    {
+        $topics = Subject::visibleTo($user)->orderBy('order_index')->get()
+            ->flatMap(fn (Subject $subject) => $subject->topics()->published()
+                ->whereHas('questions', fn ($questions) => $questions->published())
+                ->orderBy('order_index')->take(3)->get())
+            ->values();
+        if ($topics->isEmpty()) {
+            return;
+        }
+
+        $evening = CarbonImmutable::parse(DailyXp::today().' 17:00', DailyXp::TIMEZONE);
+        foreach (range(1, $count) as $i) {
+            QuizAttempt::create([
+                'user_id' => $user->id,
+                'topic_id' => $topics[($i - 1) % $topics->count()]->id,
+                'finished_at' => $evening->subDays($count - $i + 1)->utc(),
+            ]);
+        }
     }
 
     /**
