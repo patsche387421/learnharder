@@ -38,7 +38,7 @@ class Subject extends Model
         return $this->hasMany(Topic::class)->orderBy('order_index');
     }
 
-    /** Lernverlauf in einem seiner Themen, oder das Fach steht im Lehrplan oder in einer Lehrkraft-Zuordnung. */
+    /** Lernverlauf in einem seiner Themen, oder das Fach steht im Lehrplan, in einer Lehrkraft-Zuordnung oder in einem Erfolg. */
     public function isInUse(): bool
     {
         $topics = Topic::where('subject_id', $this->id)->select('id');
@@ -46,7 +46,8 @@ class Subject extends Model
         return QuizAttempt::whereIn('topic_id', $topics)->exists()
             || QuestionAnswer::whereIn('question_id', Question::whereIn('topic_id', $topics)->select('id'))->exists()
             || CurriculumEntry::where('subject_id', $this->id)->exists()
-            || DB::table('teaching_assignments')->where('subject_id', $this->id)->exists();
+            || DB::table('teaching_assignments')->where('subject_id', $this->id)->exists()
+            || Achievement::where('subject_id', $this->id)->exists();
     }
 
     /** Aktive Fächer mit mindestens einem veröffentlichten Thema, noch ohne Blick auf die Person. */
