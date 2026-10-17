@@ -305,6 +305,84 @@ class LessonApiTest extends TestCase
             ->orderBy('id')->pluck('xp_date')->map->toDateString()->all());
     }
 
+    /** @return array{current: int, longest: int} */
+    private function streak(): array
+    {
+        // Wie bei einer echten Anfrage frisch laden, sonst hängt noch user_stats von vor der ersten Lerneinheit am Objekt
+        return $this->actingAs($this->user->unsetRelation('stats'))->getJson('/api/v1/me')->json('data.streak');
+    }
+
+    private function playOn(string $viennaTime): void
+    {
+        $this->travelTo(CarbonImmutable::parse($viennaTime, 'Europe/Vienna'));
+        $this->playPerfect()->assertOk();
+    }
+
+    public function test_streak_zaehlt_tage_mit_abgeschlossener_lerneinheit(): void
+    {
+        $this->assertSame(['current' => 0, 'longest' => 0], $this->streak());
+
+        $this->playOn('2026-10-16 10:00');
+        $this->playOn('2026-10-16 18:00');
+        $this->assertSame(['current' => 1, 'longest' => 1], $this->streak());
+
+        $this->playOn('2026-10-17 07:00');
+        $this->playOn('2026-10-18 21:00');
+        $this->assertSame(['current' => 3, 'longest' => 3], $this->streak());
+        $this->assertSame('2026-10-18', UserStat::where('user_id', $this->user->id)->first()->last_study_date->toDateString());
+    }
+
+    public function test_streak_zaehlt_auch_ohne_ep_und_offene_lerneinheiten_zaehlen_nicht(): void
+    {
+        $this->playOn('2026-10-16 10:00');
+
+        // Am nächsten Tag nur angefangen: kein Lerntag
+        $this->travelTo(CarbonImmutable::parse('2026-10-17 10:00', 'Europe/Vienna'));
+        $this->answer($this->start()->json('data.id'), $this->einfach, 'falsch');
+        $this->assertSame(['current' => 1, 'longest' => 1], $this->streak());
+
+        // Falsch beantwortet und abgeschlossen, 0 EP: zählt trotzdem
+        $id = $this->start()->json('data.id');
+        $this->answer($id, $this->einfach, 'falsch');
+        $this->finish($id)->assertJsonPath('data.xp_earned', 0);
+        $this->assertSame(['current' => 2, 'longest' => 2], $this->streak());
+    }
+
+    public function test_nach_einem_ausgelassenen_tag_beginnt_der_streak_neu(): void
+    {
+        $this->playOn('2026-10-16 10:00');
+        $this->playOn('2026-10-17 10:00');
+
+        // Am Tag danach läuft er noch, erst nach einem ganzen Tag ohne Lerneinheit ist er weg
+        $this->travelTo(CarbonImmutable::parse('2026-10-18 23:00', 'Europe/Vienna'));
+        $this->assertSame(['current' => 2, 'longest' => 2], $this->streak());
+        $this->travelTo(CarbonImmutable::parse('2026-10-19 08:00', 'Europe/Vienna'));
+        $this->assertSame(['current' => 0, 'longest' => 2], $this->streak());
+
+        $this->playOn('2026-10-19 08:00');
+        $this->assertSame(['current' => 1, 'longest' => 2], $this->streak());
+    }
+
+    public function test_streak_tage_gelten_in_wien(): void
+    {
+        // 23:59 und 00:01 in Wien sind zwei Lerntage, obwohl beides in UTC am 16. liegt
+        $this->playOn('2026-10-16 23:59');
+        $this->playOn('2026-10-17 00:01');
+
+        $this->assertSame(['current' => 2, 'longest' => 2], $this->streak());
+    }
+
+    public function test_doppelter_abschluss_zaehlt_den_tag_nur_einmal(): void
+    {
+        $id = $this->start()->json('data.id');
+        $this->answer($id, $this->einfach, 'richtig');
+        $this->finish($id);
+        $this->travelTo(CarbonImmutable::parse('2026-10-17 10:00', 'Europe/Vienna'));
+        $this->finish($id);
+
+        $this->assertSame(['current' => 1, 'longest' => 1], $this->streak());
+    }
+
     public function test_zwei_offene_lerneinheiten_mit_derselben_frage_nur_die_erste_bekommt_ep(): void
     {
         $erste = $this->start()->json('data.id');

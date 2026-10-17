@@ -79,6 +79,7 @@ class AuthTest extends TestCase
                 'rank' => 'bronze',
                 'prestige' => 1,
                 'xp' => ['total' => 8450, 'level_start' => 8419, 'next_level' => 8465],
+                'streak' => ['current' => 0, 'longest' => 0],
                 'brainpower' => ['current' => 80, 'max' => 100],
             ]]);
     }
@@ -93,7 +94,8 @@ class AuthTest extends TestCase
             ->assertJsonPath('data.level', 1)
             ->assertJsonPath('data.rank', 'bronze')
             ->assertJsonPath('data.prestige', 0)
-            ->assertJsonPath('data.xp', ['total' => 0, 'level_start' => 0, 'next_level' => 8]);
+            ->assertJsonPath('data.xp', ['total' => 0, 'level_start' => 0, 'next_level' => 8])
+            ->assertJsonPath('data.streak', ['current' => 0, 'longest' => 0]);
     }
 
     public function test_logout_beendet_die_session(): void

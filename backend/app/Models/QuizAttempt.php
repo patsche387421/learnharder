@@ -100,6 +100,8 @@ class QuizAttempt extends Model
             $correct = $answers->where('is_correct', true)->count();
 
             $stats->increment('total_xp', $xp);
+            $stats->recordStudyDay($today);
+            $stats->save();
             $attempt->update([
                 'correct_count' => $correct,
                 'score_percentage' => $attempt->total_questions > 0 ? (int) round($correct / $attempt->total_questions * 100) : 0,

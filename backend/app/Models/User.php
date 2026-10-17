@@ -32,7 +32,6 @@ class User extends Authenticatable implements FilamentUser
         'gamer_tag',
         'brainpower_current',
         'brainpower_max',
-        'current_streak',
         'last_active_at',
         'password',
     ];

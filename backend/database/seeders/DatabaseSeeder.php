@@ -89,7 +89,6 @@ class DatabaseSeeder extends Seeder
                 'gamer_tag' => 'CodeNinja99',
                 'brainpower_current' => 100,
                 'brainpower_max' => 100,
-                'current_streak' => 5,
                 'password' => Hash::make('learnharder123'),
             ]
         );
