@@ -10,7 +10,7 @@ Inhalte pflegen: `redaktion.md`. Konten und Klassen verwalten: `betrieb.md`. Reg
 | Backend | `backend/tests/Feature`, `backend/tests/Unit` | PHPUnit über Sail | API, Spielregeln, Rechte, CMS, Datenbank-Regeln |
 | Frontend | `*.test.js` direkt neben der Datei, die geprüft wird | Vitest mit jsdom | Seiten, Bausteine, Store, Router |
 | Testzentrale | `scripts/test_*.py` | `unittest` | die Auswertung der Testzentrale selbst |
-| Abläufe im echten Browser | noch keine | Playwright, geplant | z. B. registrieren → lernen → Level-Up |
+| Abläufe im echten Browser | `frontend/e2e/*.spec.js` | Playwright mit Chromium | Anmelden mit den Testpersonen, später registrieren → lernen → Level-Up |
 
 Tests sind Code und liegen im Git neben dem Code, den sie prüfen. Wer einen Test geschrieben oder zuletzt geändert hat, zeigt `git log` oder `git blame` auf die Datei. Ein eigenes Autor-Feld gibt es nicht.
 
@@ -42,9 +42,18 @@ cd backend && ./vendor/bin/sail artisan test tests/Feature/Factories  # ein Ordn
 npm --prefix frontend run test                                        # alle Frontend-Tests
 npm --prefix frontend run test -- src/views/ShopView.test.js          # eine Datei
 python3 -m unittest discover -s scripts                               # Testzentrale
+npm --prefix frontend run e2e                                         # Abläufe im Browser (Stack muss laufen)
 ```
 
 Beim Arbeiten reichen die betroffenen Tests. **Vor jedem Commit laufen alle**, dazu `sail pint --test` (Code-Stil) und im Frontend `npm --prefix frontend run build` und `run check:tokens`. Die CI auf GitHub macht bei jedem Push dasselbe noch einmal. Eine Reihenfolge nach Wichtigkeit gibt es nicht: Es laufen immer alle, ein roter Test macht den ganzen Lauf rot.
+
+## Abläufe im echten Browser (Playwright)
+
+- Laufen gegen den lokalen Stack: App auf http://localhost:5173, API auf http://localhost. Beides muss laufen, sonst bricht der Lauf mit einem Hinweis ab.
+- Daten: die Entwicklungs-Datenbank `laravel`. Vor jedem Lauf setzt `e2e/global-setup.js` die Testpersonen zurück, andere Konten bleiben.
+- Die Tests melden sich wie ein Mensch über das Formular an (`loginAs(page, 'Boosterfan')` aus `e2e/personas.js`) und prüfen, was auf dem Bildschirm steht. Gerät: ein Android-Handy (Pixel 7), Zeitzone Wien.
+- Einmal pro Rechner braucht Chromium ein paar Systembibliotheken: `cd frontend && sudo npx playwright install-deps chromium`, danach `npx playwright install chromium`.
+- Schlägt ein Test fehl, liegt in `frontend/test-results/` eine Aufzeichnung (Trace). Ansehen mit `npx playwright show-trace <datei>`, den Bericht mit `npx playwright show-report`. Beide Ordner sind nicht im Git.
 
 ## Logs
 
