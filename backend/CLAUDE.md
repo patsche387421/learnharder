@@ -38,6 +38,7 @@ Die Tests laufen gegen die Datenbank `testing` (`phpunit.xml`) und loggen nach `
 | `POST password/code`, `POST password/reset` | Passwort vergessen: Code nur für aktive Konten (Antwort immer gleich), neues Passwort beendet alle Anmeldungen (`Accounts::logoutEverywhere`). Auch der Weg zum ersten Passwort für Konten aus dem CMS |
 | `POST login`, `POST logout`, `GET me` | Login per Session, `me` liefert Gamer-Tag, eigene Klasse und Fortschritt (Level, Rang, Prestige, EP) |
 | `DELETE me` | Eigenes Konto mit Passwort löschen, sofort und vollständig, nur Schüler:innen (E-027). Danach nicht `logout()` aufrufen: Das speichert das Remember-Token und legt das Konto neu an |
+| `GET hub` | Fakten für den Hub: `next_topic` (zuerst im Fach der letzten Lerneinheit, sonst nach Reihenfolge; nur spielbar, nicht gesperrt, nicht erledigt) oder `null` |
 | `GET subjects`, `GET subjects/{slug}` | sichtbare Fächer mit Themen, Fortschritt und Fach-Level (E-018) |
 | `GET subjects/{slug}/topics/{slug}` | Thema mit Theorie als sicherem HTML (`Str::markdown` mit `html_input: escape`) |
 | `POST topics/{id}/attempts` | Lerneinheit starten, Fragen ohne Lösung |

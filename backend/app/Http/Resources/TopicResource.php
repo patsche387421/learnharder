@@ -29,6 +29,7 @@ class TopicResource extends JsonResource
             'xp_total' => $this->whenHas('xp_total', fn ($xp) => (int) $xp), // höchstens so viele EP, je Frage einmal pro Tag
             'done' => $this->whenHas('done'),
             'theory' => TheorySectionResource::collection($this->whenLoaded('theorySections')),
+            'subject' => new SubjectResource($this->whenLoaded('subject')), // nur im Hub, sonst kennt die App das Fach schon
         ];
     }
 }

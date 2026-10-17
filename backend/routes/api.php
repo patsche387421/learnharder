@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\HubController;
 use App\Http\Controllers\Api\V1\LegalController;
 use App\Http\Controllers\Api\V1\PasswordResetController;
 use App\Http\Controllers\Api\V1\QuizAttemptController;
@@ -31,6 +32,8 @@ Route::prefix('v1')->group(function () {
         Route::get('me', [AuthController::class, 'me']);
         // Eigenes Konto löschen (E-027), mit Passwort, deshalb wie der Login begrenzt
         Route::delete('me', [AuthController::class, 'destroy'])->middleware('throttle:5,1');
+
+        Route::get('hub', [HubController::class, 'show']);
 
         Route::get('subjects', [SubjectController::class, 'index']);
         Route::get('subjects/{subject}', [SubjectController::class, 'show']);
