@@ -35,6 +35,8 @@ VITE_LOG = STATE_DIR / 'vite.log'
 TEST_HISTORY = STATE_DIR / 'test-history.json'
 TEST_HISTORY_LIMIT = 50
 VITE_PORT = 5173
+ENV_FILE = BACKEND / '.env'
+PHPUNIT_XML = BACKEND / 'phpunit.xml'
 TASKS = ROOT / 'docs' / 'AUFGABEN.md'
 PLANS_README = ROOT / 'docs' / 'plans' / 'README.md'
 SESSION_REPORT = ROOT / 'agent' / 'SESSION_REPORT.md'
@@ -67,6 +69,8 @@ LOG_KEEP = 300
 ANSI = re.compile(r'\x1b\[[0-9;?]*[A-Za-z]')
 MIB_PER_UNIT = {'b': 1 / 1048576, 'kib': 1 / 1024, 'kb': 1 / 1024, 'mib': 1, 'mb': 1, 'gib': 1024, 'gb': 1024}
 TEST_KINDS = ('passed', 'failed', 'skipped', 'todo', 'incomplete', 'risky')
+ENV_LINE = re.compile(r'^\s*([A-Z][A-Z0-9_]*)\s*=\s*(.*?)\s*$')
+PHPUNIT_ENV = re.compile(r'<env\s+name="([A-Z][A-Z0-9_]*)"\s+value="([^"]*)"')
 
 _vite_process = None
 
@@ -301,6 +305,39 @@ def parse_ci(data):
             'url': latest.get('html_url', ''), 'time': latest.get('created_at', '')}
 
 
+def parse_env(text):
+    """Schlüssel und Werte aus einer .env, ohne Kommentare und Anführungszeichen."""
+    values = {}
+    for line in text.splitlines():
+        if (match := ENV_LINE.match(line)) and not line.lstrip().startswith('#'):
+            values[match.group(1)] = match.group(2).strip('"\'')
+    return values
+
+
+def databases(env_text, phpunit_text):
+    """Welche Datenbank die App (backend/.env) und die Tests (phpunit.xml) nutzen. Produktion gibt es lokal nie.
+    same: Tests und App teilen sich eine Datenbank, dann würde jeder Testlauf die Entwicklungsdaten löschen."""
+    env = parse_env(env_text)
+    tests = dict(PHPUNIT_ENV.findall(phpunit_text))
+    app = env.get('DB_DATABASE') or None
+    test_db = tests.get('DB_DATABASE') or app
+    return {
+        'app': app, 'tests': test_db, 'connection': env.get('DB_CONNECTION'), 'environment': env.get('APP_ENV'),
+        'same': app is not None and app == test_db,
+    }
+
+
+def parse_personas(output):
+    """JSON-Liste aus `artisan learnharder:test-personas`, None wenn keine kam."""
+    for line in reversed(output.splitlines()):
+        if line.startswith('['):
+            try:
+                return json.loads(line)
+            except ValueError:
+                return None
+    return None
+
+
 def parse_percent(text):
     try:
         return float(text.rstrip('%'))
@@ -411,6 +448,24 @@ TEST_SUITES = {
     'backend': ('Backend', [str(SAIL), 'artisan', 'test'], BACKEND),
     'frontend': ('Frontend', ['npm', '--prefix', 'frontend', 'run', 'test'], ROOT),
 }
+# Gezielt testen: Teil der Tests nach Thema. Pfade relativ zu backend/ bzw. frontend/, ein Test in test_dev.py prüft, dass es sie gibt
+TEST_GROUPS = {
+    'testnutzer': ('Testnutzer', 'backend', ['tests/Feature/Factories', 'tests/Feature/TestPersonasSeederTest.php',
+                                             'tests/Feature/TestPersonasCommandTest.php']),
+    'lernen': ('Lernen', 'backend', ['tests/Feature/Api/LessonApiTest.php', 'tests/Feature/Api/ContentApiTest.php',
+                                     'tests/Feature/Api/VisibilityApiTest.php', 'tests/Feature/Api/HubApiTest.php']),
+    'spielwerte': ('Brainpower und Booster', 'backend', ['tests/Feature/Api/BrainpowerApiTest.php', 'tests/Feature/Api/BoosterApiTest.php',
+                                                        'tests/Feature/Api/XpLeftTodayTest.php', 'tests/Unit/ProgressionTest.php']),
+    'konten': ('Konten', 'backend', ['tests/Feature/Api/AuthTest.php', 'tests/Feature/Api/RegistrationTest.php',
+                                     'tests/Feature/Api/PasswordResetTest.php', 'tests/Feature/Api/DeleteAccountTest.php',
+                                     'tests/Feature/Accounts']),
+    'cms': ('CMS', 'backend', ['tests/Feature/Filament', 'tests/Feature/Policies']),
+    'app-hub': ('Hub und Shop', 'frontend', ['src/views/HubView.test.js', 'src/views/ShopView.test.js', 'src/avatar']),
+    'app-lernen': ('Lernen', 'frontend', ['src/views/LearnView.test.js', 'src/views/SubjectView.test.js', 'src/views/TopicView.test.js',
+                                          'src/views/TheoryView.test.js', 'src/views/LessonView.test.js']),
+    'app-bausteine': ('Bausteine', 'frontend', ['src/components']),
+}
+GROUP_ROOTS = {'backend': BACKEND, 'frontend': ROOT / 'frontend'}
 _history_lock = threading.Lock()
 
 
@@ -432,20 +487,45 @@ def save_test_run(entry, output):
         TEST_HISTORY.write_text(json.dumps(history[-TEST_HISTORY_LIMIT:], ensure_ascii=False, indent=1))
 
 
-def run_tests(suites, log):
+def run_suite(suite, log, group=None):
+    """Einen Teil laufen lassen und im Verlauf speichern. Mit group nur die Pfade dieser Gruppe (TEST_GROUPS)."""
     _, branch, _ = run(['git', 'branch', '--show-current'], timeout=5)
     _, commit, _ = run(['git', 'rev-parse', '--short', 'HEAD'], timeout=5)
+    name, cmd, cwd = TEST_SUITES[suite]
+    if group:
+        group_name, _, paths = TEST_GROUPS[group]
+        name = f'{name} · {group_name}'
+        cmd = cmd + (paths if suite == 'backend' else ['--', *paths])
+    log(f'{name}: Tests laufen …' if group else f'{name}-Tests laufen …')
+    started, stamp = time.monotonic(), datetime.now()
+    code, out, err = run(cmd, cwd=cwd)
+    save_test_run({
+        'id': f'tests-{group or suite}-{stamp:%Y%m%d-%H%M%S}', 'suite': suite, 'group': group, 'name': name,
+        'time': stamp.isoformat(timespec='seconds'),
+        'ok': code == 0, 'counts': test_counts(out + err), 'failures': failed_tests(out + err),
+        'duration': round(time.monotonic() - started, 1), 'branch': branch.strip(), 'commit': commit.strip(),
+    }, out + err)
+    log(f'{name}: {test_summary(out + err, code)}')
+
+
+def run_tests(suites, log):
     for suite in suites:
-        name, cmd, cwd = TEST_SUITES[suite]
-        log(f'{name}-Tests laufen …')
-        started, stamp = time.monotonic(), datetime.now()
-        code, out, err = run(cmd, cwd=cwd)
-        save_test_run({
-            'id': f'tests-{suite}-{stamp:%Y%m%d-%H%M%S}', 'suite': suite, 'time': stamp.isoformat(timespec='seconds'),
-            'ok': code == 0, 'counts': test_counts(out + err), 'failures': failed_tests(out + err),
-            'duration': round(time.monotonic() - started, 1), 'branch': branch.strip(), 'commit': commit.strip(),
-        }, out + err)
-        log(f'{name}: {test_summary(out + err, code)}')
+        run_suite(suite, log)
+
+
+def run_group(group, log):
+    run_suite(TEST_GROUPS[group][1], log, group=group)
+
+
+def personas():
+    """Stand der Testpersonen in der Entwicklungs-Datenbank, None wenn Sail nicht läuft oder es keine gibt."""
+    code, out, _ = sail('artisan', 'learnharder:test-personas')
+    return parse_personas(out) if code == 0 else None
+
+
+def action_reset_personas(log):
+    code, out, err = sail('artisan', 'db:seed', '--class=TestPersonasSeeder')
+    log('Testpersonen zurückgesetzt.' if code == 0 and 'angelegt' in out else f'Testpersonen nicht zurückgesetzt: {last_line(err or out)}')
 
 
 def action_tests(log):
@@ -482,7 +562,7 @@ ACTIONS = {
     'x': ('Stoppen', action_stop, None),
     't': ('Tests', action_tests, None),
     'c': ('config:clear', action_config_clear, None),
-    'f': ('Neu aufsetzen', action_fresh, 'Datenbank leeren und neu befüllen (migrate:fresh, Import, Demo-Klasse)?'),
+    'f': ('Neu aufsetzen', action_fresh, 'Datenbank leeren und neu befüllen (migrate:fresh, Import, Demo-Klasse, Testpersonen)?'),
     'd': ('Mails leeren', action_clear_mails, None),
 }
 
@@ -602,6 +682,7 @@ def snapshot(mail_limit=3):
         'vite': port_open(VITE_PORT), 'vite_own': vite_pid() is not None,
         'up': health(), 'mails': mails(mail_limit), 'log': tail(LARAVEL_LOG),
         'branch': branch.strip() or '?', 'commit': commit.strip(), 'changes': len(changes.splitlines()),
+        'databases': databases(read_text(ENV_FILE), read_text(PHPUNIT_XML)),
     }
 
 

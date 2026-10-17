@@ -59,7 +59,7 @@ class ServerTest(unittest.TestCase):
 
         status, body = self.request('GET', '/api/state')
         self.assertEqual(200, status)
-        self.assertEqual({'state', 'history', 'activity', 'busy', 'tests', 'project', 'ci'}, set(json.loads(body)))
+        self.assertEqual({'state', 'history', 'activity', 'busy', 'tests', 'project', 'ci', 'personas', 'groups'}, set(json.loads(body)))
 
         status, body = self.request('GET', '/styles/tokens.css')
         self.assertEqual((200, True), (status, b'--surface' in body))
@@ -100,6 +100,24 @@ class ServerTest(unittest.TestCase):
 
         self.assertIsNone(self.center.busy)
         self.assertTrue(self.center.activity[-1].endswith('fertig'))
+
+
+    def test_testlauf_mit_reset_setzt_danach_die_testpersonen_zurueck(self):
+        calls = []
+        with mock.patch.dict(dev_web.ACTIONS, {'tests-probe': ('Probe', lambda log: calls.append('test'))}), \
+                mock.patch.object(dev_web.dev, 'action_reset_personas', lambda log: calls.append('reset')):
+            self.assertEqual(202, self.request('POST', '/api/actions/tests-probe?reset=1', {'X-LH-Dev': '1'})[0])
+            for _ in range(50):
+                if self.center.busy is None:
+                    break
+                time.sleep(0.05)
+
+        self.assertEqual(['test', 'reset'], calls)
+
+    def test_reset_nur_nach_testlaeufen(self):
+        action = mock.Mock()
+        self.assertIs(action, dev_web.with_reset('fresh', action))
+        self.assertIsNot(action, dev_web.with_reset('group-lernen', action))
 
 
 if __name__ == '__main__':

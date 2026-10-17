@@ -144,6 +144,12 @@
   .stat div strong { font: 700 20px/28px var(--font-mono); }
   .suite { display: grid; grid-template-columns: auto 1fr auto; gap: var(--space-2) var(--space-3); align-items: center; padding: 8px 0; border-top: 1px solid var(--line); }
   .suite:first-child { border-top: 0; }
+  .db { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 6px var(--space-3); align-items: baseline; font-size: 14px; }
+  .groups { display: grid; gap: var(--space-3); }
+  .groups div { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+  .groups strong { min-width: 80px; font-size: 13px; color: var(--ink-muted); }
+  .check { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; cursor: pointer; }
+  .check input { width: 18px; height: 18px; accent-color: var(--accent); }
 
   dialog { width: min(1000px, 92vw); max-height: 86vh; padding: 0; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface-raised); color: var(--ink); }
   dialog::backdrop { background: rgb(0 0 0 / .55); }
@@ -211,7 +217,7 @@
     <button class="btn btn--primary" data-action="start">▶ Start</button>
     <button class="btn" data-action="stop">■ Stop</button>
     <button class="btn" data-action="config-clear">config:clear</button>
-    <button class="btn btn--danger" data-action="fresh" data-confirm="Lokale Datenbank leeren und neu befüllen (migrate:fresh, Import, Demo-Klasse)? Alle Testkonten sind danach weg.">Neu aufsetzen</button>
+    <button class="btn btn--danger" data-action="fresh" data-confirm="Lokale Datenbank leeren und neu befüllen (migrate:fresh, Import, Demo-Klasse, Testpersonen)? Alles, was du angelegt hast, ist danach weg.">Neu aufsetzen</button>
     <span class="sep"></span>
     <a class="btn" href="http://localhost:5173" target="_blank" rel="noopener">App ↗</a>
     <a class="btn" href="http://localhost/admin" target="_blank" rel="noopener">CMS ↗</a>
@@ -238,6 +244,10 @@
       <article class="card span-2">
         <h2>Dienste <span class="muted" id="services-note"></span></h2>
         <div id="services"></div>
+      </article>
+      <article class="card">
+        <h2>Datenbanken</h2>
+        <div id="databases"></div>
       </article>
       <article class="card" id="code-card">
         <h2>Letzter Code <button class="btn btn--small" data-tab-link="mails">Alle Mails</button></h2>
@@ -302,7 +312,18 @@
       <button class="btn btn--primary" data-action="tests">▶ Alle Tests</button>
       <button class="btn" data-action="tests-backend">▶ Backend</button>
       <button class="btn" data-action="tests-frontend">▶ Frontend</button>
-      <span class="muted">Backend über Sail gegen die Datenbank <code>testing</code>, Frontend mit Vitest. Die letzten 50 Läufe bleiben gespeichert.</span>
+      <label class="check"><input type="checkbox" id="auto-reset"> Danach Testpersonen zurücksetzen</label>
+      <span class="muted" id="tests-db"></span>
+    </div>
+    <div class="grid" style="margin-bottom: var(--space-4)">
+      <article class="card">
+        <h2>Gezielt testen</h2>
+        <div class="groups" id="groups"></div>
+      </article>
+      <article class="card span-2">
+        <h2>Testpersonen <button class="btn btn--small" data-action="reset-personas">Zurücksetzen</button></h2>
+        <div class="table-wrap" id="personas"></div>
+      </article>
     </div>
     <div class="grid" style="margin-bottom: var(--space-4)">
       <article class="card"><h2>Backend · Verlauf</h2><div id="trend-backend"></div></article>
@@ -531,7 +552,7 @@ function renderCode(state) {
 
 function renderLastTests(tests) {
   $('#last-tests').innerHTML = Object.entries(SUITES).map(([suite, name]) => {
-    const run = tests.find((t) => t.suite === suite)
+    const run = tests.find((t) => t.suite === suite && !t.group)
     if (!run) return `<div class="suite"><strong>${name}</strong><span class="muted">noch nicht gelaufen</span><button class="btn btn--small" data-action="tests-${suite}">▶</button></div>`
     const counts = run.counts ? `${run.counts.passed}/${run.counts.total}` : '?'
     return `<div class="suite"><strong>${name}</strong>
@@ -609,9 +630,10 @@ function renderTests(tests) {
   badge.textContent = latest ? (latest.ok ? '✓' : '✗') : '–'
   badge.className = `badge ${latest ? (latest.ok ? 'badge--ok' : 'badge--bad') : ''}`
   if (tab !== 'tests') return
-  for (const suite of Object.keys(SUITES)) $(`#trend-${suite}`).innerHTML = trend(tests.filter((t) => t.suite === suite))
+  // Verlauf nur aus ganzen Läufen, gezielte Gruppen haben weniger Tests und würden die Kurve verfälschen
+  for (const suite of Object.keys(SUITES)) $(`#trend-${suite}`).innerHTML = trend(tests.filter((t) => t.suite === suite && !t.group))
   $('#test-rows').innerHTML = tests.length ? tests.map((t) => `<tr>
-      <td class="mono">${esc(new Date(t.time).toLocaleString('de-AT'))}</td><td>${SUITES[t.suite] || esc(t.suite)}</td>
+      <td class="mono">${esc(new Date(t.time).toLocaleString('de-AT'))}</td><td>${esc(t.name || SUITES[t.suite] || t.suite)}</td>
       <td><span class="pill ${t.ok ? 'pill--ok' : 'pill--bad'}">${t.ok ? 'grün' : 'rot'}</span></td>
       <td class="mono">${t.counts ? `${t.counts.passed}/${t.counts.total}${t.counts.failed ? ` <span class="bad">(${t.counts.failed} rot)</span>` : ''}` : '?'}
         ${t.failures?.length ? `<ul class="failures">${t.failures.map((f) => `<li>${esc(f)}</li>`).join('')}</ul>` : ''}</td>
@@ -727,6 +749,44 @@ function renderActivity(activity) {
     : '<li class="muted">Noch nichts passiert.</li>'
 }
 
+/* ---------- Datenbanken, Testpersonen, Gruppen ---------- */
+
+function renderDatabases(state) {
+  const db = state?.databases
+  if (!db) return setHtml($('#databases'), '<div class="empty">Lese …</div>')
+  setHtml($('#tests-db'), `Tests laufen gegen die Datenbank <code>${esc(db.tests)}</code> und ändern nichts an <code>${esc(db.app)}</code> oder den Testpersonen. Die letzten 50 Läufe bleiben gespeichert.`)
+  setHtml($('#databases'), `<div class="db">
+      <span class="muted">App</span><span><code>${esc(db.app || '?')}</code> · Entwicklung (${esc(db.connection || '?')}, <code>APP_ENV=${esc(db.environment || '?')}</code>)</span>
+      <span class="muted">Tests</span><span><code>${esc(db.tests || '?')}</code> · wird bei jedem Test geleert</span>
+      <span class="muted">Produktion</span><span class="muted">noch keine (Hetzner, M4)</span>
+    </div>${db.same ? '<p class="bad">App und Tests nutzen dieselbe Datenbank: Ein Testlauf löscht deine Entwicklungsdaten.</p>' : ''}`)
+}
+
+function renderGroups(groups) {
+  if (!groups) return
+  setHtml($('#groups'), Object.entries(SUITES).map(([suite, name]) => `<div><strong>${name}</strong>${
+    Object.entries(groups).filter(([, g]) => g.suite === suite)
+      .map(([key, g]) => `<button class="btn btn--small" data-action="group-${esc(key)}">▶ ${esc(g.name)}</button>`).join('')}</div>`).join(''))
+}
+
+function renderPersonas(personas) {
+  if (personas === null || personas === undefined) {
+    return setHtml($('#personas'), '<div class="empty">Keine Testpersonen gefunden. Läuft Sail? Sonst „Zurücksetzen“ legt sie an.</div>')
+  }
+  if (!personas.length) return setHtml($('#personas'), '<div class="empty">Noch keine Testpersonen. „Zurücksetzen“ legt sie an.</div>')
+  const rows = personas.map((p) => `<tr>
+      <td><strong>${esc(p.gamer_tag)}</strong></td>
+      <td><button class="codebtn mono" data-copy="${esc(p.email)}" title="Kopieren">${esc(p.email)}</button></td>
+      <td class="mono">${p.prestige ? `P${p.prestige} · ` : ''}L${p.level} <span class="muted">${p.xp} EP</span></td>
+      <td class="mono">${p.streak.current}${p.streak.current ? (p.streak.today ? ' <span class="ok">heute</span>' : ' <span class="warn">in Gefahr</span>') : ''}</td>
+      <td class="mono">${p.brainpower.current}/${p.brainpower.max}</td>
+      <td class="mono">${p.booster ? `${String(p.booster.multiplier).replace('.', ',')}× · ${p.booster.minutes} Min.` : '–'}</td>
+      <td>${p.deactivated ? '<span class="pill pill--bad">gesperrt</span>' : p.school_class ? esc(p.school_class) : '<span class="muted">ohne Klasse</span>'}</td></tr>`).join('')
+  setHtml($('#personas'), `<table><thead><tr><th>Testperson</th><th>Anmeldung</th><th>Level</th><th>Streak</th><th>Brainpower</th><th>Booster</th><th>Klasse</th></tr></thead>
+    <tbody>${rows}</tbody></table>
+    <p class="muted" style="margin: var(--space-3) 0 0; font-size: 13px">Passwort für alle: <code>learnharder123</code> · Stand der Datenbank <code>${esc(data?.state?.databases?.app || '')}</code>, alle 10 s. Brainpower ohne das Aufladen beim nächsten Login.</p>`)
+}
+
 function renderBusy(busy) {
   $('#busy').hidden = !busy
   $('#busy-text').textContent = busy ? `${busy} läuft … (Details unter „Aktivität“)` : ''
@@ -744,6 +804,9 @@ function render() {
   renderMails(state)
   renderTests(tests)
   renderProject(data.project, data.ci)
+  renderDatabases(state)
+  renderGroups(data.groups)
+  renderPersonas(data.personas)
   renderActivity(activity)
   renderBusy(busy)
 }
@@ -845,7 +908,9 @@ async function poll() {
 async function runAction(button) {
   if (button.dataset.confirm && !confirm(button.dataset.confirm)) return
   try {
-    await api(`/api/actions/${button.dataset.action}`, { method: 'POST' })
+    const name = button.dataset.action
+    const reset = $('#auto-reset').checked && (name.startsWith('tests') || name.startsWith('group-'))
+    await api(`/api/actions/${name}${reset ? '?reset=1' : ''}`, { method: 'POST' })
     toast(`${button.textContent.replace(/[▶■]/g, '').trim()} gestartet.`)
   } catch (error) {
     toast(error.message)
@@ -896,6 +961,8 @@ $('#theme').addEventListener('click', () => {
 })
 
 document.documentElement.dataset.theme = store.get('lh-dev-theme') || 'dark'
+$('#auto-reset').checked = store.get('lh-dev-auto-reset') === '1'
+$('#auto-reset').addEventListener('change', (event) => store.set('lh-dev-auto-reset', event.target.checked ? '1' : ''))
 const tabs = ['overview', 'project', 'mails', 'tests', 'log', 'activity']
 // Adresse wie #tests oder #log:database öffnet Tab und Log-Quelle direkt
 const [hashTab, hashSource] = location.hash.slice(1).split(':')

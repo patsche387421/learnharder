@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Hash;
  * Feste Testpersonen in der Demo-Klasse, um Zustände in der App von Hand zu prüfen (Level, Prestige, Streak, Brainpower,
  * Booster, ohne Klasse, gesperrt). Anmelden mit <gamer-tag>@test.learnharder.app und dem Passwort der Demo-Konten.
  * Jeder Lauf löscht die Testpersonen samt Lernverlauf und legt sie neu an, so kommt alles in den Ausgangszustand.
+ * Alle haben heute schon aufgeladen, damit der gespeicherte Stand dem entspricht, was die App zeigt.
  * Läuft nach db:seed, Import und DemoSchoolSeeder:
  * `./vendor/bin/sail artisan db:seed --class=TestPersonasSeeder`
  */
@@ -41,13 +42,13 @@ class TestPersonasSeeder extends Seeder
 
         User::where('email', 'like', '%@'.self::DOMAIN)->get()->each->delete();
 
-        $this->persona('Neuling', fn (UserFactory $f) => $f->inClass($class));
+        $this->persona('Neuling', fn (UserFactory $f) => $f->inClass($class)->brainpower(100));
         $this->persona('Mittendrin', fn (UserFactory $f) => $f->inClass($class)->level(12)->streak(6)->brainpower(15));
         $this->persona('Boosterfan', fn (UserFactory $f) => $f->inClass($class)->level(30)->streak(3, today: true)->brainpower(60)->booster(2.0, minutes: 25));
-        $this->persona('FastPrestige', fn (UserFactory $f) => $f->inClass($class)->xp(Progression::CYCLE_XP - 10)->streak(12, today: true));
-        $this->persona('PrestigeProfi', fn (UserFactory $f) => $f->inClass($class)->level(10, prestige: 2)->streak(40, longest: 55));
-        $this->persona('OhneKlasse', fn (UserFactory $f) => $f->student());
-        Accounts::deactivate($this->persona('Gesperrt', fn (UserFactory $f) => $f->inClass($class)), $admin, 'Testperson');
+        $this->persona('FastPrestige', fn (UserFactory $f) => $f->inClass($class)->xp(Progression::CYCLE_XP - 10)->streak(12, today: true)->brainpower(150));
+        $this->persona('PrestigeProfi', fn (UserFactory $f) => $f->inClass($class)->level(10, prestige: 2)->streak(40, longest: 55)->brainpower(200));
+        $this->persona('OhneKlasse', fn (UserFactory $f) => $f->student()->brainpower(100));
+        Accounts::deactivate($this->persona('Gesperrt', fn (UserFactory $f) => $f->inClass($class)->brainpower(100)), $admin, 'Testperson');
 
         $this->command?->info('Testpersonen angelegt: Neuling, Mittendrin, Boosterfan, FastPrestige, PrestigeProfi, OhneKlasse, Gesperrt (@'.self::DOMAIN.').');
     }

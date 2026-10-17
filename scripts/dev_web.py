@@ -1,6 +1,7 @@
 """Testzentrale im Browser: `scripts/dev.py web` → http://localhost:8090.
 
 Gleiche Daten und Aktionen wie das Terminal-Dashboard (dev.py), dazu Grafiken, Mails im Volltext, der Testverlauf,
+Tests nach Gruppen, die Testpersonen mit ihrem Stand, welche Datenbank App und Tests nutzen,
 die Logs getrennt nach Quelle (App, Anfragen, Datenbank, Tests, Vite) und der Projektstand aus docs/AUFGABEN.md.
 Nur Standardbibliothek. Die Seite ist dev_web.html, Farben und Schriften kommen aus dem Design-System der App.
 Hört nur auf 127.0.0.1. Host und Origin müssen zu dieser Adresse passen, Aktionen brauchen den Header `X-LH-Dev: 1`:
@@ -34,6 +35,7 @@ MAIL_LIMIT = 25
 LOG_SOURCES = ('app', 'requests', 'database', 'tests', 'vite')
 CI_INTERVAL = 60  # Sekunden, GitHub erlaubt ohne Anmeldung 60 Anfragen pro Stunde
 CI_INTERVAL_ERROR = 600  # nach einem Fehler (meist das Limit) länger warten
+PERSONAS_INTERVAL = 10  # Sekunden, jede Abfrage startet PHP im Container
 
 ACTIONS = {
     'start': ('Starten', dev.action_start),
@@ -44,7 +46,21 @@ ACTIONS = {
     'config-clear': ('config:clear', dev.action_config_clear),
     'fresh': ('Neu aufsetzen', dev.action_fresh),
     'clear-mails': ('Mails leeren', dev.action_clear_mails),
+    'reset-personas': ('Testpersonen zurücksetzen', dev.action_reset_personas),
+    **{f'group-{key}': (f'Tests {name}', lambda log, key=key: dev.run_group(key, log))
+       for key, (name, _, _) in dev.TEST_GROUPS.items()},
 }
+
+
+def with_reset(name, action):
+    """Testlauf, danach die Testpersonen zurücksetzen (Häkchen in der Testzentrale). Nur für Testläufe."""
+    if not (name.startswith('tests') or name.startswith('group-')):
+        return action
+
+    def both(log):
+        action(log)
+        dev.action_reset_personas(log)
+    return both
 
 
 def allowed(method, host, origin, marker, port):
@@ -77,6 +93,7 @@ class Center(dev.Runner):
         self.history = deque(maxlen=HISTORY_SIZE)
         self.project = None
         self.ci = None
+        self.personas = None
 
     def collect(self):
         while True:
@@ -100,11 +117,21 @@ class Center(dev.Runner):
                 self.ci = ci
             time.sleep(CI_INTERVAL_ERROR if 'error' in ci else CI_INTERVAL)
 
+    def watch_personas(self):
+        """Eigener, langsamer Takt: Die Abfrage startet PHP im Container und soll die Grafiken nicht verfälschen."""
+        while True:
+            personas = dev.personas()
+            with self.lock:
+                self.personas = personas
+            time.sleep(PERSONAS_INTERVAL)
+
     def payload(self):
         with self.lock:
             return {
                 'state': self.state, 'history': list(self.history), 'activity': list(self.activity)[::-1],
                 'busy': self.busy, 'tests': dev.load_test_history()[::-1], 'project': self.project, 'ci': self.ci,
+                'personas': self.personas, 'groups': {key: {'name': name, 'suite': suite}
+                                                      for key, (name, suite, _) in dev.TEST_GROUPS.items()},
             }
 
 
@@ -168,12 +195,16 @@ def make_handler(center):
         def do_POST(self):
             if not self.guard():
                 return
-            match = re.fullmatch(r'/api/actions/([a-z-]+)', self.path)
+            path, _, query = self.path.partition('?')
+            match = re.fullmatch(r'/api/actions/([a-z0-9-]+)', path)
             if not match or match.group(1) not in ACTIONS:
                 return self.respond(404, {'error': 'Unbekannte Aktion.'})
             if center.busy:
                 return self.respond(409, {'error': f'„{center.busy}“ läuft noch.'})
-            center.run_action(*ACTIONS[match.group(1)])
+            label, action = ACTIONS[match.group(1)]
+            if query == 'reset=1' and (wrapped := with_reset(match.group(1), action)) is not action:
+                action, label = wrapped, f'{label} + Zurücksetzen'
+            center.run_action(label, action)
             self.respond(202, {'ok': True})
 
     return Handler
@@ -183,6 +214,7 @@ def serve(port=PORT):
     center = Center()
     threading.Thread(target=center.collect, daemon=True).start()
     threading.Thread(target=center.watch_ci, daemon=True).start()
+    threading.Thread(target=center.watch_personas, daemon=True).start()
     server = ThreadingHTTPServer(('127.0.0.1', port), make_handler(center))
     url = f'http://localhost:{port}'
     print(f'Testzentrale: {url}  (Strg+C beendet sie, die Dienste laufen weiter)')

@@ -35,6 +35,7 @@ Startet und stoppt Sail und Vite und zeigt live: Dienste mit CPU und RAM, `/up`,
 Dazu: Tests, `config:clear`, Datenbank neu aufsetzen (mit Rückfrage), Mailpit leeren, App, CMS oder Mailpit öffnen. Nur Python-Standardbibliothek.
 Die **Testzentrale** im Browser zeigt zusätzlich Grafiken, Mails im Volltext und den Verlauf der Testläufe (die letzten 50, in `~/.cache/learnharder-dev/`).
 Logs getrennt nach Quelle: App (`laravel.log`), Anfragen, Datenbank (Postgres, nur `laravel`), Tests (`testing.log` und Datenbank `testing`, meist gewollte Fehler) und Vite.
+Im Tab „Tests“: Tests gezielt nach Gruppe (z. B. Testnutzer, Lernen, Brainpower und Booster, Hub und Shop), die sieben Testpersonen mit ihrem Stand (`TestPersonasSeeder`, Passwort wie die Demo-Konten) samt „Zurücksetzen“ und das Häkchen „Danach Testpersonen zurücksetzen“. Die Übersicht zeigt, welche Datenbank App (`backend/.env`) und Tests (`phpunit.xml`) nutzen. Nach einem Update der Testzentrale sie einmal neu starten, sonst läuft der alte Code weiter.
 Sie hört nur auf `127.0.0.1`, Aktionen brauchen einen eigenen Header (`scripts/dev_web.py`).
 
 ```bash
