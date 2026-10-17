@@ -188,13 +188,4 @@ describe('HubView', () => {
     expect(again.find('h1').text()).toBe('Hey lena42!')
     expect(again.find('.robot').classes()).toEqual(expect.arrayContaining(['robot--satisfied', 'robot--wave']))
   })
-
-  it('hält Platz für kommende Spiel-Elemente frei', async () => {
-    mockFetch({ status: 200, body: { data: { next_topic: NEXT } } })
-    const { wrapper } = await show()
-
-    const soon = wrapper.findAll('.hub__soonitem').map((item) => item.text())
-    expect(soon).toEqual(['Streak', 'Herausforderung', 'Spielhalle', 'Liga-Platz', 'Shop', 'Erfolge'])
-    expect(wrapper.find('.hub__soon a').exists()).toBe(false)
-  })
 })

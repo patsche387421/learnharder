@@ -3,7 +3,6 @@
 // Zustände in dieser Reihenfolge: gerade aufgestiegen, zurück nach 3 oder mehr Tagen, heute schon gelernt, erster Besuch.
 // Ob „heute“, rechnet die App nach Gerätezeit aus last_study_at. Den Aufstieg merkt sich die App aus der Lerneinheit.
 // Neben der Begrüßung der Avatar (G4): winkt beim Öffnen, Stimmung passend zum Zustand, Akku zeigt die Brainpower.
-// Platz für später: Spielhalle und die anderen Spiel-Elemente im Raster „Bald“.
 import { computed, onMounted } from 'vue'
 import LoadError from '../components/LoadError.vue'
 import LhArt from '../components/ui/LhArt.vue'
@@ -19,16 +18,6 @@ import { useLoad } from '../composables/useLoad.js'
 import { useAuthStore } from '../stores/auth.js'
 
 const RANKS = { bronze: 'Bronze', silver: 'Silber', gold: 'Gold', platin: 'Platin' }
-
-// Kommt nach und nach mit G2–G6. Icons vorläufig, bis es eigene für Spielhalle und Shop gibt.
-const SOON = [
-  { icon: 'icon-streak', name: 'Streak' },
-  { icon: 'icon-challenge', name: 'Herausforderung' },
-  { icon: 'icon-campaign', name: 'Spielhalle' },
-  { icon: 'icon-league', name: 'Liga-Platz' },
-  { icon: 'icon-trophy', name: 'Shop' },
-  { icon: 'icon-achievement', name: 'Erfolge' },
-]
 
 const auth = useAuthStore()
 const { data: hub, error, loading, load } = useLoad(getHub)
@@ -141,16 +130,6 @@ const nextStep = computed(() => (auth.player.level < 100 ? `Level ${auth.player.
       text="Wiederhol ein Thema, dann sitzt es."
       to="/learn"
     />
-
-    <section class="hub__soon" aria-labelledby="hub-soon">
-      <h2 id="hub-soon" class="hub__soontitle">Bald</h2>
-      <ul class="hub__soonlist">
-        <li v-for="item in SOON" :key="item.name" class="hub__soonitem">
-          <LhArt :name="item.icon" :size="32" />
-          <span>{{ item.name }}</span>
-        </li>
-      </ul>
-    </section>
   </div>
 </template>
 
@@ -165,14 +144,4 @@ const nextStep = computed(() => (auth.player.level < 100 ? `Level ${auth.player.
 .hub__level { display: flex; align-items: center; gap: var(--space-3); }
 .hub__levelname { flex: 1; font: 700 16px/24px var(--font-text); color: var(--ink); }
 .hub__loading { margin: 0; color: var(--ink-muted); }
-.hub__soon { display: grid; gap: var(--space-2); }
-.hub__soontitle { margin: 0; font: 400 13px/16px var(--font-mono); color: var(--ink-muted); }
-.hub__soonlist { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-2); }
-.hub__soonitem {
-  display: flex; align-items: center; gap: var(--space-2); padding: var(--space-3); border-radius: var(--radius-md);
-  box-shadow: inset 0 0 0 1px var(--line); font: 400 14px/20px var(--font-text); color: var(--ink-muted);
-}
-@media (min-width: 768px) {
-  .hub__soonlist { grid-template-columns: repeat(3, 1fr); }
-}
 </style>
