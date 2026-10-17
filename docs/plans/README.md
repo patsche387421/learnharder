@@ -1,4 +1,4 @@
-# Pläne — Stand und Einordnung (2026-10-16)
+# Pläne — Stand und Einordnung (2026-10-17)
 
 ## Welcher Plan gilt
 
@@ -7,6 +7,7 @@
 | `LEARNHARDER_V2_PROJEKTPLAN_PSP_RISIKEN.md` | **gültig**: Zielbild, PSP, Releases, Risiken |
 | `SETUP_DOMAIN_UND_DATENBANK_MIGRATION.md` | **gültig**: Hetzner, Domains. §2 Datenmigration entfällt (E-011) |
 | `GAMIFICATION_OEKONOMIE_MODELL.md` | **gültig**: Level-Tabelle seit E-010 korrigiert |
+| `KONZEPT_SPIELWELT.md` | **Entwurf**: Hub, Erfolge, Avatar, Shop, Rangliste, Landing Page (E-030) |
 | `DATENMODELL_SCHULE.md` | **gültig**: Abteilungen, Ausbildungsgänge, Klassen, Lehrkräfte, Registrierung (E-013). §8 Schritte 1–4 umgesetzt (bis M4a), offen nur §7.2 |
 | World4You-/Plain-PHP-Pläne | überholt und gelöscht (Tag `v1.1.0-w4y-plans-and-review`) |
 
@@ -42,7 +43,7 @@ Der kritische Pfad zum ersten echten Nutzer ist kürzer:
 
 **Hetzner-Server steht → API mit Login → Lern-Screens → Klassen und Registrierung → DNS umgestellt.** (Keine Nutzer-Migration, E-011.)
 
-### Meilensteine (Reihenfolge bestätigt 2026-10-16: M3b → M4a, parallel M4 → M5)
+### Meilensteine (Reihenfolge bestätigt 2026-10-16: M3b → M4a, parallel M4 → M5; Spielwelt-Tracks seit 2026-10-17, E-030)
 
 | M | Ziel | Fertig, wenn … |
 |---|---|---|
@@ -52,12 +53,19 @@ Der kritische Pfad zum ersten echten Nutzer ist kürzer:
 | **M3** ✅ | Lernen funktioniert | Login → Fächer → Thema → Theorie → Quiz → Ergebnis mit serverseitigen XP/Level, Vue mit `lh-`-Komponenten. EP je Frage einmal pro Tag (E-015), Ränge (E-016), ohne Klassenfilter (E-017), Fach-Level (E-018) |
 | **M3b** ✅ | Klassen und Sichtbarkeit | Klassen und Einschreibungen in Filament, App zeigt nur Fächer der eigenen Klasse (Plan Schule §8 Schritte 2–3, E-024) |
 | **M4a** ✅ | Ankommen | Registrierung mit Mail-Code (Plan Schule §8 Schritt 4, E-025), „Passwort vergessen“, Datenschutzerklärung, Impressum, Nutzungsregeln und Elternformular als Entwurf und von der Schule geprüft (E-023), eigenes Konto löschen. Benutzerverwaltung im CMS mit Sperren und Schutz des letzten Admins (E-027), `last_login_at` für die Frist (E-028). Mail lokal über Mailpit (E-026). Offen: Rechtstexte von der Schule prüfen lassen (Platzhalter `[[…]]`) |
-| **M4** | Hetzner läuft | Prod-Stack in `infra/` (Caddy nach E-019), TLS, tägliche Backups mit Restore-Test, Staging, Mailversand aus der EU. Parallel zu M4a, Patsche führt am Server aus |
+| **M4** ⏸ | Hetzner läuft | Prod-Stack in `infra/` (Caddy nach E-019), TLS, tägliche Backups mit Restore-Test, Staging, Mailversand aus der EU. Patsche führt am Server aus. Pausiert, bis die Schule den Vertragspartner nennt (Stand 2026-10-17) |
 | **M5** | Start | Lernablauf, EP-Regeln und Brainpower-Konzept mit betreuenden Lehrkräften abgestimmt, Hub schlank, Team und Liga ausgeblendet (E-022), DNS umgestellt, Registrierung offen, Neuregistrierung angekündigt, V1-Supabase abgeschaltet → Tag `v2.0.0-alpha.1` (E-020) |
-| danach | | Nach E-021: Brainpower, Streaks, Trophäen, Liga → Lehrkraft-Dashboard → Englisch + KI-Übersetzung → PWA-Offline → Landing Page → Reverb |
+| **G1** | Hub & Profil | Hub statt Platzhalter: Begrüßung nach Zustand und Tageszeit, Level, Brainpower, „Weiterlernen“. Team und Liga aus der Tab-Leiste (E-022). Profil mit Statistik (Konzept Spielwelt §4) |
+| **G2** | Brainpower & Streaks | Aufladen, Streak, Booster und Challenge nach Ökonomie-Modell §3, Werte in `config/` (§5) |
+| **G3** | Erfolge | Katalog im CMS, Vergabe auf dem Server, Raster im Profil (§6) |
+| **G4** | Avatar | Figur aus SVG-Teilen mit `idle`, `celebrate`, `wave`, `think`, im Hub und auf dem Ergebnis (§7) |
+| **G5** | Shop | Teile und Animationen freischalten, dann mit Brainpower kaufen. Preise im Ökonomie-Modell §3.4 (§7) |
+| **G6** | Rangliste | Nach Entscheidung O-006, nur Gamer-Tags der eigenen Klasse (§8) |
+| **L1** | Landing Page | Ersetzt die Wartungsseite, Demo-Lerneinheit ohne Login, ohne Hetzner (§10) |
+| danach | | Lehrkraft-Dashboard → Englisch + KI-Übersetzung → PWA-Offline → Reverb |
 
 ### Größte Risiken jetzt
 
-1. **Prod-Daten aus Supabase.** Seit 2026-10-15 gesichert (E-009). Kein Import, V2 startet ohne V1-Nutzer (E-011).
-2. **Umfang.** MVP gekürzt (E-021). Bleibt ein Risiko, wenn neue Wünsche vor den Start rutschen.
+1. **Umfang.** MVP gekürzt (E-021). Mit den Spielwelt-Tracks (E-030) wächst die Liste wieder. Der Start wartet deshalb nicht auf sie, und neue Wünsche kommen ins Konzept, nicht in M5.
+2. **Prod-Daten aus Supabase.** Seit 2026-10-15 gesichert (E-009). Kein Import, V2 startet ohne V1-Nutzer (E-011).
 3. **Framework-Versionen.** Entschieden: Filament 5 (E-008). Translatable-Plugin geprüft, vorerst keins, CMS nur Deutsch (E-012).
