@@ -31,10 +31,10 @@ Meilensteine und Reihenfolge: `plans/README.md`. Entscheidungen: `ENTSCHEIDUNGEN
 
 ## G1 — Hub & Profil
 
-- [ ] Hub statt Platzhalter: Begrüßung, Level, Brainpower, „Weiterlernen“ (Konzept Spielwelt §4). Zuerst prüfen, ob `GET /api/v1/subjects` fürs nächste Thema reicht @claude !fokus
 - [ ] Team und Liga aus der Tab-Leiste (E-022) @claude
 - [ ] Hub-Zustände: erster Besuch, Pause, Aufstieg, alles erledigt, Tageszeit @claude
 - [ ] Profil mit Statistik: EP, Level, Rang, Fach-Level, längster Streak @claude
+- [ ] Nach dem Login zum Hub statt zu `/learn` (`meta.guest` im Router-Guard) @claude
 
 ## G2 — Brainpower & Streaks
 
@@ -67,6 +67,7 @@ Meilensteine und Reihenfolge: `plans/README.md`. Entscheidungen: `ENTSCHEIDUNGEN
 
 - [ ] Verschlüsselte Zweitkopie des Supabase-Dumps (E-009) @patsche
 - [ ] Design-Artefakt: Häkchen und Gefahr-Button in die Komponententabelle der README, `lastChange` im Index, danach Kopie `design/README.md` @claude
+- [ ] Design-Artefakt: Icons für Spielhalle und Shop. Der Hub nutzt vorläufig `icon-campaign` und `icon-trophy` @claude
 - [ ] `DemoSchoolSeeder`: prüfen, warum MEDT keine Themen bekommt @claude
 - [ ] Unit-Test für die Weiterleitung nach einer Sperre in `main.js` @claude
 - [ ] Python-Tests aus `scripts/` in die CI @claude
