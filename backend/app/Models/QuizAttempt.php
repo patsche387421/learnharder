@@ -91,7 +91,7 @@ class QuizAttempt extends Model
 
             foreach ($answers as $answer) {
                 $answer->xp_awarded = $answer->is_correct && ! in_array($answer->question_id, $earned, true)
-                    ? Booster::apply($answer->question->xp_reward, $answer->xp_multiplier)
+                    ? Booster::apply($answer->question->xp_reward, Booster::multiplierFor($answer, $today))
                     : 0;
                 $answer->xp_date = $today;
                 $answer->save();

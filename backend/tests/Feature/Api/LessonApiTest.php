@@ -435,6 +435,43 @@ class LessonApiTest extends TestCase
         $this->finish($id)->assertJsonPath('data.xp_earned', 6)->assertJsonPath('data.xp_from_booster', 2);
     }
 
+    public function test_antworten_unter_booster_von_gestern_bekommen_heute_keinen_faktor(): void
+    {
+        $this->boost('x2_30');
+        $id = $this->start()->json('data.id');
+        $this->answer($id, $this->einfach, 'richtig')->assertJsonPath('data.xp', 4);
+
+        // Lerneinheit über Nacht offen gelassen, Abschluss am nächsten Tag
+        $this->travelTo(CarbonImmutable::parse('2026-10-17 08:00', 'Europe/Vienna'));
+        $this->answer($id, $this->einfach, 'richtig')->assertJsonPath('data.xp', 2)->assertJsonPath('data.multiplier', 1);
+        $this->finish($id)->assertJsonPath('data.xp_earned', 2)->assertJsonPath('data.xp_from_booster', 0);
+
+        $this->assertSame(2, $this->totalXp());
+    }
+
+    public function test_booster_zaehlt_bis_zur_wiener_mitternacht(): void
+    {
+        $this->travelTo(CarbonImmutable::parse('2026-10-16 23:40', 'Europe/Vienna'));
+        $this->boost('x2_30');
+        $id = $this->start()->json('data.id');
+        $this->answer($id, $this->einfach, 'richtig');
+
+        $this->travelTo(CarbonImmutable::parse('2026-10-16 23:59', 'Europe/Vienna'));
+        $this->finish($id)->assertJsonPath('data.xp_earned', 4)->assertJsonPath('data.xp_from_booster', 2);
+    }
+
+    public function test_booster_anteil_bleibt_wenn_das_cms_die_ep_der_frage_aendert(): void
+    {
+        $this->einfach->update(['xp_reward' => 3]);
+        $this->boost('x1_5_30');
+        $id = $this->start()->json('data.id');
+        $this->answer($id, $this->einfach, 'richtig');
+        $this->finish($id)->assertJsonPath('data.xp_earned', 5)->assertJsonPath('data.xp_from_booster', 2);
+
+        $this->einfach->update(['xp_reward' => 10]);
+        $this->finish($id)->assertJsonPath('data.xp_earned', 5)->assertJsonPath('data.xp_from_booster', 2);
+    }
+
     public function test_booster_hebt_die_tagesregel_nicht_auf(): void
     {
         $this->playPerfect()->assertJsonPath('data.xp_earned', 4);

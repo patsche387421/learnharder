@@ -2,6 +2,7 @@
 
 namespace App\Support;
 
+use App\Models\QuestionAnswer;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -25,6 +26,30 @@ final class Booster
         return self::running($user)
             ? ['multiplier' => (float) $user->booster_multiplier, 'ends_at' => $user->booster_ends_at->toIso8601String()]
             : null;
+    }
+
+    /**
+     * Faktor, der für diese Antwort zählt: der beim Antworten, aber nur, wenn die Antwort am Wiener Tag $day gegeben wurde
+     * (Tag des Abschlusses). Sonst ließen sich Antworten unter einem Booster sammeln und an einem späteren Tag abschließen.
+     */
+    public static function multiplierFor(QuestionAnswer $answer, string $day): float
+    {
+        return $answer->created_at->clone()->setTimezone(DailyXp::TIMEZONE)->toDateString() === $day
+            ? $answer->xp_multiplier
+            : 1.0;
+    }
+
+    /**
+     * EP einer abgeschlossenen Antwort, die vom Booster kommen. Rechnet aus den gespeicherten EP zurück, damit eine spätere
+     * Änderung von xp_reward im CMS nichts verschiebt. round(round(x · m) / m) = x gilt für jeden Faktor m ≥ 1.
+     */
+    public static function share(QuestionAnswer $answer): int
+    {
+        if ($answer->xp_awarded <= 0 || $answer->xp_date === null) {
+            return 0;
+        }
+
+        return $answer->xp_awarded - (int) round($answer->xp_awarded / self::multiplierFor($answer, $answer->xp_date->toDateString()));
     }
 
     /** EP einer richtigen Antwort mit Faktor, halbe Punkte aufgerundet (3 × 1,5 = 5). */

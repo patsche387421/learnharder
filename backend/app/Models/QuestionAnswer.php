@@ -8,7 +8,8 @@ use Illuminate\Support\Collection;
 
 /**
  * Erste Antwort pro Frage in einer Lerneinheit. xp_awarded und xp_date setzt erst der Abschluss.
- * xp_multiplier ist der Faktor des Boosters, der beim Antworten lief (E-010), sonst 1.
+ * xp_multiplier ist der Faktor des Boosters, der beim Antworten lief (E-010), sonst 1. Er zählt nur, wenn Antwort und
+ * Abschluss am selben Wiener Tag liegen (Booster::multiplierFor).
  */
 class QuestionAnswer extends Model
 {

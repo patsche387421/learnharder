@@ -100,7 +100,7 @@ $$\text{Tägliche Regeneration} = \text{Basis (50 BP)} + \min(\text{Streak-Tage}
 | **XP-Booster 2× (60 Min)** | **70 BP** | $2\times$ XP auf richtige Antworten für 60 Minuten | Prüfungsvorbereitung |
 | **1v1 Duell (Phase 2)** | **15 BP** | Sieger: $+30\text{ XP}$ + Ranglistenpunkte; Verlierer: $+10\text{ XP}$ | Synchroner Wettbewerb |
 
-Booster-Regeln (E-010): Der Server rechnet, der Client zeigt nur die Restzeit. Höchstens ein Booster gleichzeitig, solange einer läuft, ist kein Kauf möglich. Die Zeit läuft in Echtzeit weiter, auch bei geschlossener App. Es zählt der Booster beim Antworten, nicht beim Abschluss der Lerneinheit, halbe EP werden aufgerundet. Gespeichert wird nur der laufende Booster, kein Kaufverlauf (Stand 2026-10-17). Ob es für Shop und Herausforderungen ein gemeinsames Brainpower-Konto mit Verlauf braucht, klärt G5.
+Booster-Regeln (E-010): Der Server rechnet, der Client zeigt nur die Restzeit. Höchstens ein Booster gleichzeitig, solange einer läuft, ist kein Kauf möglich. Die Zeit läuft in Echtzeit weiter, auch bei geschlossener App. Es zählt der Booster beim Antworten, nicht beim Abschluss der Lerneinheit, aber nur, wenn Antwort und Abschluss am selben Wiener Tag liegen (sonst ließen sich Antworten unter einem Booster für den nächsten Tag sammeln). Halbe EP werden aufgerundet. Gespeichert wird nur der laufende Booster, kein Kaufverlauf (Stand 2026-10-17). Ob es für Shop und Herausforderungen ein gemeinsames Brainpower-Konto mit Verlauf braucht, klärt G5.
 
 ---
 
