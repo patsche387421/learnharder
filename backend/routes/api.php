@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\V1\AchievementController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\BoosterController;
+use App\Http\Controllers\Api\V1\ChallengeController;
 use App\Http\Controllers\Api\V1\HubController;
 use App\Http\Controllers\Api\V1\LegalController;
 use App\Http\Controllers\Api\V1\PasswordResetController;
@@ -44,6 +45,10 @@ Route::prefix('v1')->group(function () {
 
         // Erfolge für das Profil, prüft vorher nach (E-042)
         Route::get('achievements', [AchievementController::class, 'index']);
+
+        // Herausforderung für Brainpower (E-045). Antworten und Abschluss über die Routen der Lerneinheit
+        Route::post('challenges', [ChallengeController::class, 'store']);
+        Route::get('challenges/current', [ChallengeController::class, 'current']);
 
         Route::get('subjects', [SubjectController::class, 'index']);
         Route::get('subjects/{subject}', [SubjectController::class, 'show']);

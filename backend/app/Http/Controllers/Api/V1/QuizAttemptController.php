@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Enums\AttemptType;
 use App\Enums\QuestionType;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\LessonQuestionResource;
@@ -11,6 +12,7 @@ use App\Models\QuizAttempt;
 use App\Models\Topic;
 use App\Models\UserAchievement;
 use App\Support\Booster;
+use App\Support\Challenge;
 use App\Support\DailyXp;
 use App\Support\Progression;
 use Illuminate\Http\JsonResponse;
@@ -23,6 +25,8 @@ use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 
 /**
  * Lerneinheit: starten, Antworten prüfen, abschließen. Der Server prüft und rechnet, die App zeigt nur an.
+ * Antworten und Abschluss gelten auch für die Herausforderung (E-045): Fragen aus ihrer Liste, feste EP, kein Booster,
+ * keine Tagesregel, am nächsten Tag abgelaufen.
  */
 class QuizAttemptController extends Controller
 {
@@ -55,7 +59,7 @@ class QuizAttemptController extends Controller
         // Geprüft wird über die IDs der Optionen, die Reihenfolge spielt dabei keine Rolle.
         $questions->each(fn (Question $question) => $question->setRelation(
             'options',
-            $question->options->shuffle(crc32($attempt->id.$question->id))->values(),
+            $question->shuffledOptions($attempt->id),
         ));
 
         return response()->json(['data' => [
@@ -71,6 +75,8 @@ class QuizAttemptController extends Controller
         if ($attempt->isFinished()) {
             throw new ConflictHttpException('Diese Lerneinheit ist schon abgeschlossen.');
         }
+        $challenge = $attempt->attempt_type === AttemptType::Challenge;
+        $this->ensureNotExpired($attempt);
 
         $data = $request->validate([
             'question_id' => ['required', 'uuid'],
@@ -79,7 +85,9 @@ class QuizAttemptController extends Controller
         ]);
 
         $question = Question::published()
-            ->where('topic_id', $attempt->topic_id)
+            ->when($challenge,
+                fn ($questions) => $questions->whereIn('id', $attempt->question_ids),
+                fn ($questions) => $questions->where('topic_id', $attempt->topic_id))
             ->whereKey($data['question_id'])
             ->with('options')
             ->first();
@@ -103,17 +111,19 @@ class QuizAttemptController extends Controller
         $answer = QuestionAnswer::firstOrCreate(
             ['quiz_attempt_id' => $attempt->id, 'question_id' => $question->id],
             ['user_id' => $attempt->user_id, 'selected_option_ids' => $selected, 'is_correct' => $isCorrect,
-                'xp_multiplier' => Booster::multiplier($request->user())],
+                'xp_multiplier' => $challenge ? 1 : Booster::multiplier($request->user())],
         );
         // Dieselbe erste Antwort noch einmal (z. B. nach einem Netzfehler) ist keine Wiederholung
         $repeat = ! $answer->wasRecentlyCreated && $answer->selected_option_ids !== $selected;
         // Eine Antwort von gestern (Lerneinheit über Nacht offen) bekommt beim Abschluss heute keinen Faktor mehr
         $multiplier = Booster::multiplierFor($answer, DailyXp::today());
 
-        $xp = ! $repeat && $answer->is_correct
-            && ! in_array($question->id, DailyXp::alreadyEarned($attempt->user_id, [$question->id]), true)
-            ? Booster::apply($question->xp_reward, $multiplier)
-            : 0;
+        $xp = match (true) {
+            $repeat || ! $answer->is_correct => 0,
+            $challenge => config('gamification.challenge.xp_per_correct'),
+            in_array($question->id, DailyXp::alreadyEarned($attempt->user_id, [$question->id]), true) => 0,
+            default => Booster::apply($question->xp_reward, $multiplier),
+        };
 
         return response()->json(['data' => [
             'correct' => $isCorrect,
@@ -133,6 +143,9 @@ class QuizAttemptController extends Controller
         if (! $attempt->answers()->exists()) {
             throw ValidationException::withMessages(['answers' => 'Beantworte zuerst mindestens eine Frage.']);
         }
+        if (! $attempt->isFinished()) {
+            $this->ensureNotExpired($attempt);
+        }
 
         $attempt->finish();
 
@@ -147,6 +160,7 @@ class QuizAttemptController extends Controller
 
         return response()->json(['data' => [
             'xp_earned' => $attempt->xp_earned,
+            'xp_bonus' => $attempt->xp_bonus, // nur in der Herausforderung, steckt schon in xp_earned
             'xp_from_booster' => $fromBooster,
             'correct_count' => $attempt->correct_count,
             'total_questions' => $attempt->total_questions,
@@ -160,7 +174,16 @@ class QuizAttemptController extends Controller
                 'icon_name' => $unlock->achievement->icon_name,
                 'trophies' => $unlock->trophies_awarded,
             ])->all(),
-            'trophies_earned' => $unlocks->sum('trophies_awarded'),
+            // Trophäe der fehlerfreien Herausforderung und die der neuen Erfolge
+            'trophies_earned' => $attempt->trophies_earned + $unlocks->sum('trophies_awarded'),
         ]]);
+    }
+
+    /** Eine Herausforderung gilt bis Mitternacht in Wien (E-045). */
+    private function ensureNotExpired(QuizAttempt $attempt): void
+    {
+        if ($attempt->attempt_type === AttemptType::Challenge && Challenge::expired($attempt)) {
+            throw new ConflictHttpException('Diese Herausforderung ist abgelaufen.');
+        }
     }
 }

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\AttemptType;
 use App\Support\Achievements;
 use App\Support\Booster;
+use App\Support\Challenge;
 use App\Support\DailyXp;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
@@ -86,6 +87,7 @@ class QuizAttempt extends Model
      * Schließt die Lerneinheit ab und schreibt die EP gut. Ein zweiter Aufruf ändert nichts.
      * Die Sperre auf user_stats lässt Abschlüsse derselben Person nacheinander laufen, erst danach
      * wird die Tagesregel geprüft (E-015). Zuletzt, noch unter der Sperre, kommen die Erfolge (E-042).
+     * Herausforderung (E-045): feste EP je richtiger Antwort ohne Tagesregel und Booster, dazu Bonus und bei 10 von 10 eine Trophäe.
      */
     public function finish(): void
     {
@@ -101,29 +103,40 @@ class QuizAttempt extends Model
                 return;
             }
 
+            $challenge = $attempt->attempt_type === AttemptType::Challenge;
             $answers = $attempt->answers()->with('question:id,xp_reward')->get();
-            $earned = DailyXp::alreadyEarned($this->user_id, $answers->pluck('question_id')->all());
+            $earned = $challenge ? [] : DailyXp::alreadyEarned($this->user_id, $answers->pluck('question_id')->all());
             $today = DailyXp::today();
             $xp = 0;
 
             foreach ($answers as $answer) {
-                $answer->xp_awarded = $answer->is_correct && ! in_array($answer->question_id, $earned, true)
-                    ? Booster::apply($answer->question->xp_reward, Booster::multiplierFor($answer, $today))
-                    : 0;
+                $answer->xp_awarded = match (true) {
+                    ! $answer->is_correct || in_array($answer->question_id, $earned, true) => 0,
+                    $challenge => config('gamification.challenge.xp_per_correct'),
+                    default => Booster::apply($answer->question->xp_reward, Booster::multiplierFor($answer, $today)),
+                };
                 $answer->xp_date = $today;
                 $answer->save();
                 $xp += $answer->xp_awarded;
             }
 
             $correct = $answers->where('is_correct', true)->count();
+            // Der Bonus zählt zu den Gesamt-EP, nicht zum Fach-Level: Er hängt an keiner Antwort
+            $bonus = $challenge ? Challenge::bonus($correct) : 0;
+            $trophies = $challenge && $correct === $attempt->total_questions ? config('gamification.challenge.perfect_trophies') : 0;
 
-            $stats->increment('total_xp', $xp);
+            $stats->increment('total_xp', $xp + $bonus);
+            if ($trophies > 0) {
+                $stats->increment('trophies', $trophies);
+            }
             $stats->recordStudyDay($today);
             $stats->save();
             $attempt->update([
                 'correct_count' => $correct,
                 'score_percentage' => $attempt->total_questions > 0 ? (int) round($correct / $attempt->total_questions * 100) : 0,
-                'xp_earned' => $xp,
+                'xp_earned' => $xp + $bonus,
+                'xp_bonus' => $bonus,
+                'trophies_earned' => $trophies,
                 'finished_at' => now(),
             ]);
             Achievements::check($attempt->user, $attempt);

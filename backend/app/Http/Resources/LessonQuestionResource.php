@@ -8,6 +8,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
  * Frage in der Lerneinheit, ohne Lösung und ohne Erklärung. Beides kommt erst nach dem Prüfen.
+ * subject nur in der Herausforderung, deren Fragen aus mehreren Fächern kommen (Fach-Tag im Design `Challenge`).
  *
  * @mixin Question
  */
@@ -23,6 +24,10 @@ class LessonQuestionResource extends JsonResource
             'type' => $this->type,
             'text' => $this->question_text,
             'xp_reward' => $this->xp_reward,
+            'subject' => $this->when($this->relationLoaded('topic') && $this->topic->relationLoaded('subject'), fn () => [
+                'slug' => $this->topic->subject->slug,
+                'name' => $this->topic->subject->name,
+            ]),
             'options' => $this->options->map(fn ($option) => [
                 'id' => $option->id,
                 'text' => $option->option_text,

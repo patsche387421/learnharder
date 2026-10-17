@@ -2,6 +2,7 @@
 
 namespace App\Support;
 
+use App\Enums\AttemptType;
 use App\Models\Question;
 use App\Models\QuestionAnswer;
 use App\Models\User;
@@ -11,6 +12,7 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
 
 /**
  * EP je Frage höchstens einmal pro Kalendertag (E-015). Der Tag gilt in Wien, nicht in UTC.
+ * Es zählen nur Lerneinheiten zu einem Thema: Die Herausforderung ist ausgenommen und sperrt auch nichts (E-045).
  */
 final class DailyXp
 {
@@ -34,6 +36,7 @@ final class DailyXp
             ->whereIn('question_id', $questionIds)
             ->where('xp_date', self::today())
             ->where('xp_awarded', '>', 0)
+            ->whereHas('attempt', fn (Builder $attempts) => $attempts->where('attempt_type', AttemptType::Standard))
             ->pluck('question_id')
             ->all();
     }
@@ -59,7 +62,10 @@ final class DailyXp
                 ->whereColumn('question_answers.question_id', 'questions.id')
                 ->where('question_answers.user_id', $user->id)
                 ->where('question_answers.xp_date', self::today())
-                ->where('question_answers.xp_awarded', '>', 0))
+                ->where('question_answers.xp_awarded', '>', 0)
+                ->whereExists(fn (QueryBuilder $attempts) => $attempts->from('quiz_attempts')
+                    ->whereColumn('quiz_attempts.id', 'question_answers.quiz_attempt_id')
+                    ->where('quiz_attempts.attempt_type', AttemptType::Standard->value)))
             ->exists();
     }
 }
