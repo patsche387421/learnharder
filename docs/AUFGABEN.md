@@ -40,7 +40,6 @@ Meilensteine und Reihenfolge: `plans/README.md`. Entscheidungen: `ENTSCHEIDUNGEN
 - [ ] „Erfolge“ ins Glossar des Design-Artefakts, danach Kopie `design/Sprache.md` @claude
 - [ ] Erfolge: Katalog im CMS, Vergabe auf dem Server, Raster im Profil (Konzept Spielwelt §6) @claude
 - [ ] Herausforderung: zufällige Fragen aus allen Fächern für 25 Brainpower, Regeln vorher festlegen (Ökonomie-Modell §3.3, E-038) @claude
-- [ ] LearnFlow-Storyboard im Design-Artefakt: Hub noch mit alter Streak-Karte, auf die Chip-Zeile umstellen @claude
 
 ## G4 — Avatar
 

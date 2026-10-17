@@ -10,8 +10,8 @@ Der Kern-Flow von learnharder als Storyboard in acht Momenten: Hub (Alltag und P
 
 ## Die acht Momente
 
-1. **Hub im Alltag:** Der Streak steht als Chip in der Chip-Zeile der Fortschritts-Karte (siehe `CurrencyChip`). Ist er in Gefahr, sagt die Begrüßung „Noch nichts gelernt heute. 5 Min. reichen.“ (Das Storyboard zeigt noch die ältere Streak-Karte.) Darunter steht *ein* großer Button „Weiterlernen“ mit Thema und Dauer, danach Herausforderung, Liga und Shop als ruhige Zeilen. Läuft ein EP-Booster, trägt „Weiterlernen“ die Marke `lh-tag--boost` („2× EP · 23 Min.“), denn genau dort lohnt er sich.
-2. **Hub mit Prüfung:** Die Prüfungskarte (`lh-exam`) steht oben. Sie zeigt Fach, Datum und Tage bis zur Prüfung, wie viel Prozent man vorbereitet ist (Leiste in `accent`) und welche Themen schwach oder sicher sind. Der große Button heißt „Für den Test üben“. Weiterlernen wird zur kleinen Zeile.
+1. **Hub im Alltag:** Oben steht die Fortschritts-Karte mit Level, EP-Leiste und der Chip-Zeile: Streak, dann Brainpower (siehe `CurrencyChip`). Ist der Streak in Gefahr, sagt die Begrüßung „Noch nichts gelernt heute. 5 Min. reichen.“ Darunter steht *ein* großer Button „Weiterlernen“ mit Thema und Dauer, danach Herausforderung, Liga und Shop als ruhige Zeilen. Läuft ein EP-Booster, trägt „Weiterlernen“ die Marke `lh-tag--boost` („2× EP · 23 Min.“), denn genau dort lohnt er sich.
+2. **Hub mit Prüfung:** Die Prüfungskarte (`lh-exam`) steht oben. Sie zeigt Fach, Datum und Tage bis zur Prüfung, wie viel Prozent man vorbereitet ist (Leiste in `accent`) und welche Themen schwach oder sicher sind. Der große Button heißt „Für den Test üben“. Die Fortschritts-Karte rückt darunter, Weiterlernen wird zur kleinen Zeile.
 3. **Thema starten:** Was man lernt, wie viele Fragen, wie lange es dauert und wie viele EP es bringt. Dazu zwei Wege: **Los geht’s** (primär) und **Nur Theorie lesen** (sekundär).
 4. **Frage:** Fokus-Modus ohne Tab-Leiste. Oben stehen Schließen und die Schritt-Leiste. Erst nach dem Auswählen wird „Prüfen“ aktiv. Es gibt keinen Zeitdruck.
 5. **Feedback:** Ein Sheet von unten mit richtig/falsch, Icon und **Begründung**. Falsche Antworten kosten nichts und kommen am Ende der Einheit noch einmal („Kommt am Ende noch einmal“).
@@ -30,7 +30,7 @@ Der Kern-Flow von learnharder als Storyboard in acht Momenten: Hub (Alltag und P
 
 ## Bausteine
 
-`TabBar`, `LevelBadge`, `XpBar`, `Button`, `AnswerOption` sowie die Screen-Bausteine in `bundle.css`: `lh-screen`, `lh-lessonbar`, `lh-steps`, `lh-hubhead`, `lh-chip`, `lh-card`, `lh-exam`, `lh-tag`, `lh-note`, `lh-feedback`, `lh-result`, `lh-stats`.
+`TabBar`, `LevelBadge`, `XpBar`, `Button`, `AnswerOption` sowie die Screen-Bausteine in `bundle.css`: `lh-screen`, `lh-lessonbar`, `lh-steps`, `lh-hubhead`, `lh-chip`, `lh-chiprow`, `lh-card`, `lh-exam`, `lh-tag`, `lh-note`, `lh-feedback`, `lh-result`, `lh-stats`.
 
 **Die App liefert:** Vorname, Streak, nächstes Thema, Prüfungen (Fach, Datum, Themen mit Sicherheit), Fragen mit Erklärungen, EP, Level und Rang.
 
