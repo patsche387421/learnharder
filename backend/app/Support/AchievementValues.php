@@ -3,6 +3,7 @@
 namespace App\Support;
 
 use App\Enums\AchievementRule;
+use App\Enums\AttemptType;
 use App\Models\Achievement;
 use App\Models\QuestionAnswer;
 use App\Models\QuizAttempt;
@@ -27,8 +28,8 @@ final class AchievementValues
         $threshold = $achievement->threshold;
 
         return match ($achievement->rule) {
-            AchievementRule::LessonsFinished => $this->remember('lessons', fn () => $this->finished('standard')->count()) >= $threshold,
-            AchievementRule::PerfectLessons => $this->remember('perfect', fn () => $this->finished('standard')
+            AchievementRule::LessonsFinished => $this->remember('lessons', fn () => $this->finished(AttemptType::Standard)->count()) >= $threshold,
+            AchievementRule::PerfectLessons => $this->remember('perfect', fn () => $this->finished(AttemptType::Standard)
                 ->where('total_questions', '>=', Achievements::PERFECT_MIN_QUESTIONS)
                 ->whereColumn('correct_count', 'total_questions')
                 ->count()) >= $threshold,
@@ -36,16 +37,16 @@ final class AchievementValues
             // Das Level beginnt nach einem Prestige wieder bei 1, der Erfolg bleibt erreicht
             AchievementRule::Level => $this->progression()->prestige > 0 || $this->progression()->level >= $threshold,
             AchievementRule::SubjectLevel => $this->subjectLevel($achievement->subject_id) >= $threshold,
-            AchievementRule::ChallengesFinished => $this->remember('challenges', fn () => $this->finished('challenge')->count()) >= $threshold,
+            AchievementRule::ChallengesFinished => $this->remember('challenges', fn () => $this->finished(AttemptType::Challenge)->count()) >= $threshold,
             AchievementRule::CorrectedMistakes => $this->remember('corrected', fn () => $this->correctedMistakes()) >= $threshold,
-            AchievementRule::SubjectsLearned => $this->remember('subjects', fn () => $this->finished('standard')
+            AchievementRule::SubjectsLearned => $this->remember('subjects', fn () => $this->finished(AttemptType::Standard)
                 ->join('topics', 'topics.id', '=', 'quiz_attempts.topic_id')
                 ->distinct()
                 ->count('topics.subject_id')) >= $threshold,
         };
     }
 
-    private function finished(string $type): Builder
+    private function finished(AttemptType $type): Builder
     {
         return QuizAttempt::finished()->where('user_id', $this->user->id)->where('attempt_type', $type);
     }

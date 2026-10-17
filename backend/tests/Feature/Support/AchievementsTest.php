@@ -3,6 +3,7 @@
 namespace Tests\Feature\Support;
 
 use App\Enums\AchievementRule;
+use App\Enums\AttemptType;
 use App\Models\Achievement;
 use App\Models\Question;
 use App\Models\QuestionAnswer;
@@ -42,7 +43,7 @@ class AchievementsTest extends TestCase
         $zwei = Achievement::factory()->rule(AchievementRule::LessonsFinished, 2)->create();
         $this->attempt();
         $this->attempt(finished: false);
-        $this->attempt(type: 'challenge');
+        $this->attempt(type: AttemptType::Challenge);
 
         $this->assertNotUnlocked($zwei);
 
@@ -99,11 +100,11 @@ class AchievementsTest extends TestCase
     {
         $erste = Achievement::factory()->rule(AchievementRule::ChallengesFinished)->create();
         $this->attempt();
-        $this->attempt(type: 'challenge', finished: false);
+        $this->attempt(type: AttemptType::Challenge, finished: false);
 
         $this->assertNotUnlocked($erste);
 
-        $this->attempt(type: 'challenge');
+        $this->attempt(type: AttemptType::Challenge);
         $this->assertUnlocked($erste);
     }
 
@@ -187,10 +188,14 @@ class AchievementsTest extends TestCase
         return $topic->questions()->create(['question_text' => ['de' => 'Frage?']]);
     }
 
-    private function attempt(?Topic $topic = null, string $type = 'standard', bool $finished = true, int $total = 1, int $correct = 1): QuizAttempt
+    /** Herausforderungen ohne Thema, mit Fragenliste (E-045). */
+    private function attempt(?Topic $topic = null, AttemptType $type = AttemptType::Standard, bool $finished = true, int $total = 1, int $correct = 1): QuizAttempt
     {
+        $challenge = $type === AttemptType::Challenge;
+
         return QuizAttempt::create([
-            'user_id' => $this->user->id, 'topic_id' => ($topic ?? $this->schleifen)->id, 'attempt_type' => $type,
+            'user_id' => $this->user->id, 'attempt_type' => $type,
+            'topic_id' => $challenge ? null : ($topic ?? $this->schleifen)->id, 'question_ids' => $challenge ? [] : null,
             'total_questions' => $total, 'correct_count' => $correct, 'finished_at' => $finished ? now() : null,
         ]);
     }

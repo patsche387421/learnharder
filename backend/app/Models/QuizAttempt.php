@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\AttemptType;
 use App\Support\Achievements;
 use App\Support\Booster;
 use App\Support\DailyXp;
@@ -14,7 +15,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Eine Lerneinheit zu einem Thema. Die ID ist der Idempotency-Key für den Abschluss.
+ * Eine Lerneinheit zu einem Thema oder eine Herausforderung aus mehreren Themen (E-045, ohne topic_id, mit question_ids).
+ * Die ID ist der Idempotency-Key für den Abschluss.
  */
 class QuizAttempt extends Model
 {
@@ -29,6 +31,9 @@ class QuizAttempt extends Model
         'xp_earned',
         'brainpower_spent',
         'attempt_type',
+        'question_ids',
+        'xp_bonus',
+        'trophies_earned',
         'finished_at',
     ];
 
@@ -37,6 +42,11 @@ class QuizAttempt extends Model
         'total_questions' => 'integer',
         'score_percentage' => 'integer',
         'xp_earned' => 'integer',
+        'brainpower_spent' => 'integer',
+        'attempt_type' => AttemptType::class,
+        'question_ids' => 'array',
+        'xp_bonus' => 'integer',
+        'trophies_earned' => 'integer',
         'finished_at' => 'datetime',
     ];
 

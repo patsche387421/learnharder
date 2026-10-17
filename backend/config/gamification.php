@@ -25,4 +25,19 @@ return [
         'x2_60' => ['multiplier' => 2.0, 'minutes' => 60, 'cost' => 70],
     ],
 
+    // Herausforderung (E-045, Ökonomie-Modell §3.3): zufällige Fragen aus Themen mit abgeschlossener Lerneinheit.
+    // Kosten beim Start, je richtiger erster Antwort feste EP statt xp_reward, kein Booster, nicht unter der Tagesregel (E-015).
+    // Der Pool braucht mindestens so viele Fragen, wie gestellt werden.
+    'challenge' => [
+        'cost' => 25,
+        'questions' => 10,
+        'xp_per_correct' => 5,
+        // Bonus nach richtigen ersten Antworten: ab so vielen => EP, es zählt die höchste erreichte Stufe
+        'bonus' => [8 => 20, 10 => 50],
+        // Trophäe, wenn alle Fragen richtig waren (E-046)
+        'perfect_trophies' => 1,
+        // Starts je Wiener Tag, verfallene zählen mit
+        'daily_limit' => 2,
+    ],
+
 ];
