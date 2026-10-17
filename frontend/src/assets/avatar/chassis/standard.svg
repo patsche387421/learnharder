@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240">
+  <rect class="p-trim" x="88" y="104" width="24" height="12" rx="3"/>
+  <rect class="p-trim" x="70" y="170" width="60" height="12" rx="5"/>
+  <rect class="p-main" x="62" y="114" width="76" height="62" rx="10"/>
+  <path class="p-line" d="M62 150 H80 M120 150 H138"/>
+  <circle class="p-trim" cx="69" cy="121" r="2.5"/>
+  <circle class="p-trim" cx="131" cy="121" r="2.5"/>
+  <circle class="p-trim" cx="69" cy="169" r="2.5"/>
+  <circle class="p-trim" cx="131" cy="169" r="2.5"/>
+  <rect class="p-main" x="67" y="128" width="14" height="9" rx="2"/>
+  <rect class="p-main" x="117" y="126" width="16" height="7" rx="1" transform="rotate(25 125 129)"/>
+</svg>

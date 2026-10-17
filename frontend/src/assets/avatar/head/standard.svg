@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240">
+  <rect class="p-trim" x="88" y="16" width="24" height="10" rx="3"/>
+  <rect class="p-main" x="44" y="24" width="112" height="84" rx="20"/>
+  <circle class="p-trim" cx="52" cy="32" r="2.5"/>
+  <circle class="p-trim" cx="148" cy="32" r="2.5"/>
+</svg>

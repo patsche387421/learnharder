@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240">
+  <rect class="p-main" x="50" y="124" width="12" height="46" rx="6" transform="rotate(14 56 126)"/>
+  <circle class="p-trim" cx="58" cy="124" r="8"/>
+  <path class="p-line" d="M39 178 Q36 186 41 190 M51 178 Q54 186 49 190"/>
+  <circle class="p-trim" cx="45" cy="173" r="7"/>
+</svg>
