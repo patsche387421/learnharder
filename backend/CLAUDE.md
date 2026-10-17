@@ -19,6 +19,7 @@ cp .env.example .env                  # nur beim ersten Mal
 ./vendor/bin/sail artisan migrate --seed
 ./vendor/bin/sail artisan learnharder:import-legacy-content
 ./vendor/bin/sail artisan db:seed --class=DemoSchoolSeeder   # Demo-Klasse mit Lehrplan, nach dem Import
+./vendor/bin/sail artisan db:seed --class=TestPersonasSeeder  # Testpersonen in der Demo-Klasse, setzt sie bei jedem Lauf zurück
 ./vendor/bin/sail artisan test
 ./vendor/bin/sail pint
 ```

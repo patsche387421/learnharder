@@ -74,6 +74,12 @@ class UserFactory extends Factory
         return $this->withStats(['total_xp' => $total]);
     }
 
+    /** Gesamt-EP direkt, z. B. 10 EP vor dem nächsten Prestige: xp(Progression::CYCLE_XP - 10). */
+    public function xp(int $total): static
+    {
+        return $this->withStats(['total_xp' => $total]);
+    }
+
     /**
      * Laufender Streak von $days Tagen (Tag in Wien). Ohne $today zuletzt gestern gelernt, der Streak ist also in Gefahr.
      * Der längste Streak ist mindestens so lang.

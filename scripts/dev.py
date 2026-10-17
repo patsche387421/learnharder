@@ -458,8 +458,9 @@ def action_config_clear(log):
 
 
 def action_fresh(log):
-    """Wie in backend/CLAUDE.md: Migrationen mit Seeder, Import aus V1, dann die Demo-Klasse."""
-    for args in [('migrate:fresh', '--seed'), ('learnharder:import-legacy-content',), ('db:seed', '--class=DemoSchoolSeeder')]:
+    """Wie in backend/CLAUDE.md: Migrationen mit Seeder, Import aus V1, die Demo-Klasse, dann die Testpersonen."""
+    for args in [('migrate:fresh', '--seed'), ('learnharder:import-legacy-content',), ('db:seed', '--class=DemoSchoolSeeder'),
+                 ('db:seed', '--class=TestPersonasSeeder')]:
         log(f'artisan {" ".join(args)} …')
         code, out, err = sail('artisan', *args)
         if code != 0:
