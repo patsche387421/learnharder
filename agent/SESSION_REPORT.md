@@ -343,3 +343,20 @@ V1-Protokoll: `_archiv/agent/SESSION_REPORT.md` und `SESSION_REPORT_ARCHIVE.md`.
   - Die Python-Tests laufen nicht in der CI (nur lokales Werkzeug).
   - In der Testzentrale nur teilweise im Browser geklickt: Details aufklappen, Suche und „Ältere ausblenden“ im Log.
   - Weiter offen aus dem Eintrag davor: Rechtstexte mit der Schule, Löschlauf per Scheduler, erneute Zustimmung, Design-Artefakt-README.
+
+## 2026-10-17 — Aufgabenliste, Projekt-Tab, Handbücher
+
+- **Branch:** je Schritt ein Branch, mit `--no-ff` nach `dev` gemerged und gepusht: `docs/aufgaben` (`b6a3657`), `feat/aufgaben-parser` (`2267660`), `feat/projekt-tab` (`3a732eb`), `docs/aufgaben-regel` (`8b04546`), `docs/doku-werkzeuge` (`42f229e`), `docs/cms-handbuch` (`47f1c65`), `docs/betriebshandbuch` (`5b040be`). Dazu `docs/session-projekt` mit diesem Eintrag.
+- **Ergebnis:**
+  - `docs/AUFGABEN.md`: alle offenen Punkte an einer Stelle, mit `@claude`, `@patsche`, `@schule`, `seit:` und `!fokus`. Gesammelt aus allen Session-Reports, `plans/README.md` und Plan Schule §7, gegen den Code geprüft.
+  - Testzentrale, Tab „Projekt“: Fokus, Stand (Branch, ungepushte Commits auf `dev`, CI von `dev` höchstens einmal pro Minute, nicht gemergte Branches, letzte Session), Meilensteine aus `plans/README.md`, drei Spalten nach Zuständigkeit, Formfehler der Aufgabenliste.
+  - Session-Ablauf (`CLAUDE.md`, `agent/CLAUDE.md`, Skill `doku-pflegen`): Aufgabenliste am Anfang lesen und am Ende abgleichen. Offene Punkte stehen nicht mehr im Report.
+  - E-029: API-Referenz mit Scramble, VitePress erst mit Publikum, kein DocFX. Neue Gruppe „Übergabe“ in der Aufgabenliste.
+  - `docs/handbuch/redaktion.md` (Inhalte pflegen, Prüfen und Veröffentlichen, Löschen) und `docs/handbuch/betrieb.md` (Konten, Registrierung, Schulstruktur, Sichtbarkeit, Notfall-Befehl).
+  - Gelernt: Das Feld „Icon“ im Fach-Formular nutzt die App nicht, Bild und Farbe hängen am URL-Kürzel. Admins können Schüler:innen-Konten löschen (⋮), nicht nur diese selbst. „Bis Abschnitt“ im Lehrplan blendet nichts aus.
+- **Geprüft:**
+  - Python-Tests 20 → 29 grün (`python3 -m unittest discover -s scripts`), Gegenproben für die Tag-Erkennung und den Fokus auf erledigten Aufgaben. Backend und Frontend unverändert, nicht neu gelaufen.
+  - Projekt-Tab mit Probe-Server auf Port 8091 und Chrome ohne Fenster bei 1400 und 390 px Breite angesehen.
+  - Handbücher Satz für Satz gegen Policies, Formulare, Models und API geprüft. Nicht im laufenden CMS angesehen (Docker war aus).
+  - CI auf `dev` grün für `3a732eb` (Lauf `39008683410`). Die späteren Doku-Merges nicht abgewartet.
+- **Offen:** neu in `docs/AUFGABEN.md`: Gruppe „Übergabe“ (Scramble, Architektur-Überblick, Docblocks, Larastan, ESLint, README-Einstieg), Icon-Feld im Fach-Formular, Testzentrale bei Handy-Breite, Handbücher im laufenden CMS gegenlesen.
