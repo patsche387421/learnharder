@@ -146,6 +146,11 @@ Jede Entscheidung: Nummer, Datum, was, warum, Folgen. Offene Fragen stehen unten
 - **Warum:** Die Regel deckt Matura, Schulwechsel, nie zugeordnete und vergessene Konten ab. Die Sommerferien liegen weit darunter. Gesperrte können sich nicht anmelden, ihr Konto verschwindet damit nach 12 Monaten von selbst.
 - **Folgen:** `users.last_login_at` kommt in M4a, damit die Frist ab dem Start richtig läuft. Hinweis-Mail und Löschlauf brauchen den Scheduler (M4) und kommen vor M5. Die Frist steht in der Datenschutzerklärung.
 
+### E-029 — Doku-Werkzeuge: Scramble ja, VitePress später, DocFX nein (2026-10-17)
+- **Entscheidung:** Die API-Referenz erzeugt Scramble (`dedoc/scramble`) aus Routen, Validierung und Resources, nur lokal sichtbar. Die übrige Doku bleibt Markdown im Repo. Eine Doku-Seite mit VitePress kommt erst, wenn es Leser:innen außerhalb des Repos gibt. DocFX kommt nicht.
+- **Warum:** Das Projekt soll übergeben werden können (CMS, Betrieb, Entwicklung). Eine API-Doku, die aus dem Code entsteht, kann nicht veralten. DocFX erzeugt API-Doku nur für .NET und bräuchte die .NET-Werkzeuge. VitePress passt zum Frontend (Vue, Vite), lohnt sich aber erst mit Publikum. Bis dahin zeigt GitHub das Markdown gut an.
+- **Folgen:** Scramble ist eine 0.x-Version (Stand 2026-10-17: 0.13.48, unterstützt Laravel 13). Die Version wird deshalb fest gepinnt und in Produktion nicht ausgeliefert. Die Schritte stehen in `AUFGABEN.md` unter „Übergabe“.
+
 ## Offen
 
 | Nr. | Frage | Empfehlung | Warum offen |
